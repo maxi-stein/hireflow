@@ -1,0 +1,40 @@
+services:
+  # PostgreSQL database service
+  postgres:
+    # PostgreSQL container name
+    container_name: hireflow_postgres
+
+    # PostgreSQL image version
+    image: postgres:13
+
+    # environment variables for PostgreSQL
+    environment:
+      - POSTGRES_DB=hireflow_db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=a-very-secure-password
+
+    # postgres port mapping
+    ports:
+      - '5432:5432'
+
+    # volumes for PostgreSQL data persistence
+    # This volume will persist PostgreSQL data even if the container is removed
+    volumes:
+      - ./data/hireflow:/var/lib/postgresql/data
+
+    # pgAdmin service for managing PostgreSQL databases
+  pgadmin:
+    # pgAdmin container name
+    container_name: hireflow_pgadmin
+
+    # pgAdmin image version
+    image: dpage/pgadmin4
+
+    # environment variables for pgAdmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=a-very-secure-password
+
+    # pgAdmin port mapping
+    ports:
+      - '5050:80'
