@@ -23,11 +23,6 @@ export class Candidate extends User {
   portfolio_url: string;
   github?: string;
   linkedin?: string;
+  //@OneToMany(() => Education, (education) => education.candidate)
   education: Education[];
-  certifications: string[];
-  portfolio: string[];
-  references: string[];
-  cover_letter: string;
-  availability: string;
-  location: string;
 }
