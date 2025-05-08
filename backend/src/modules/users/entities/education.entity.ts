@@ -1,39 +1,33 @@
-export enum DegreeType {
-  BACHELOR = 'Licenciatura',
-  MASTER = 'Maestría',
-  DOCTORATE = 'Doctorado',
-  ASSOCIATE = 'Técnico Superior',
-  DIPLOMA = 'Diploma',
-  CERTIFICATION = 'Certificación',
-  OTHER = 'Otro',
-}
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { DegreeType } from '../interfaces';
+import { Candidate } from './user.entity';
 
+@Entity('educations')
 export class Education {
-  id: string; // Unique identifier for the education record
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  //@Column()
-  institution: string; // Ej: "Universidad de Buenos Aires"
+  @Column({ type: 'varchar' })
+  institution: string;
 
-  //   @Column({
-  //     type: 'enum',
-  //     enum: DegreeType,
-  //     default: DegreeType.BACHELOR,
-  //   })
+  @Column({
+    type: 'enum',
+    enum: DegreeType,
+  })
   degree_type: DegreeType;
 
-  //@Column()
+  @Column({ type: 'varchar' })
   field_of_study: string; // Eg: "Computer Science"
 
-  //@Column({ type: 'date' })
+  @Column({ type: 'date' })
   start_date: Date;
 
-  //@Column({ type: 'date', nullable: true })
-  end_date: Date | null; // Null if still studying
+  @Column({ type: 'date', nullable: true })
+  end_date: Date | null; // Nullable in case the education is ongoing
 
-  //@Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true })
   description?: string; // Additional details about the education (optional)
 
-  //   // Relación Many-to-One con Candidate
-  //   @ManyToOne(() => Candidate, (candidate) => candidate.education)
-  //   candidate: Candidate;
+  @ManyToOne(() => Candidate, (candidate) => candidate.education)
+  candidate: Candidate;
 }
