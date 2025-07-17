@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { DegreeType } from '../interfaces';
-import { Candidate } from './user.entity';
+import { Candidate } from './candidate.entity';
 
 @Entity('educations')
 export class Education {
@@ -28,6 +28,8 @@ export class Education {
   @Column({ type: 'text', nullable: true })
   description?: string; // Additional details about the education (optional)
 
-  @ManyToOne(() => Candidate, (candidate) => candidate.education)
+  @ManyToOne(() => Candidate, (candidate) => candidate.education, {
+    onDelete: 'CASCADE',
+  })
   candidate: Candidate;
 }

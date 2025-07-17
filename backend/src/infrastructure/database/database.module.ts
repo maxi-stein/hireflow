@@ -1,26 +1,34 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { getDatabaseConfig } from './helper';
+import { DatabaseConfig } from './helper';
+import {
+  User,
+  Employee,
+  Candidate,
+  Education,
+} from '../../modules/users/entities';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const { database, host, port, username, password } =
-          getDatabaseConfig(configService);
+        const { host, port, username, password, database, logging } =
+          configService.get('database') as DatabaseConfig;
         return {
           type: 'postgres',
-          host: host,
-          port: port,
-          username: username,
-          password: password,
-          database: database,
-          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-          synchronize: false,
-          logging: true, // Habilita logs de SQL en desarrollo
-          autoLoadEntities: true,
+          host,
+          port,
+          username,
+          password,
+          database,
+          logging,
+          entities: [User, Employee, Candidate, Education],
+          autoLoadEntities: false,
+          cli: {
+            migrationsDir: 'src/infrastructure/database/migrations',
+          },
         };
       },
       inject: [ConfigService],

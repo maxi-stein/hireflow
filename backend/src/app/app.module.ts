@@ -4,16 +4,18 @@ import { AppService } from './app.service';
 import { UsersModule } from '../modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from 'src/config/app.config';
+import authConfig from 'src/config/auth.config';
 import { enviorments } from 'src/config/enviorments';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import databaseConfig from 'src/config/database.config';
+import { AuthModule } from '../modules/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, authConfig, databaseConfig],
       envFilePath: enviorments[process.env.NODE_ENV] || '.env',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
@@ -25,10 +27,13 @@ import databaseConfig from 'src/config/database.config';
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_PORT: Joi.number(),
         POSTGRES_HOST: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().default('1d'),
       }),
     }),
     UsersModule,
     DatabaseModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -22,17 +22,114 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+# HireFlow Backend
+
+A NestJS backend application for managing job candidates and employees.
+
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This project is built with [NestJS](https://github.com/nestjs/nest) framework and provides APIs for:
 
-## Project setup
+- User authentication and authorization (JWT + Passport)
+- Candidate profile management
+- Employee management
+- Education records for candidates
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- Docker
+- npm or yarn
+
+### 1. Clone and Install
 
 ```bash
-$ npm install
+# Clone the repository
+git clone <repository-url>
+cd hireflow/backend
+
+# Install dependencies
+npm install
 ```
 
-## Compile and run the project
+### 2. Environment Configuration
+
+Create a `.env` file in the backend directory:
+
+```env
+# Environment
+NODE_ENV=development
+PORT=3000
+
+# Database Configuration
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=root
+POSTGRES_PASSWORD=a-very-secure-password
+POSTGRES_DB=hireflow_db
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-here-make-it-long-and-random
+JWT_EXPIRATION_TIME=1d
+```
+
+### 3. Start Database with Docker
+
+```bash
+# Start PostgreSQL and pgAdmin
+docker-compose up -d
+
+# Verify containers are running
+docker ps
+```
+
+**Database Access:**
+
+- **PostgreSQL**: `localhost:5432`
+- **pgAdmin**: `http://localhost:5050`
+  - Email: `root@admin.com`
+  - Password: `a-very-secure-password`
+
+### 4. Run Database Migrations
+
+```bash
+# Apply migrations (creates tables and initial data)
+npm run migration:up
+
+# Check migration status
+npm run migration:show
+```
+
+### 5. Start the Application
+
+```bash
+# Development mode with hot reload
+npm run start:dev
+
+# Production mode
+npm run start:prod
+```
+
+The API will be available at `http://localhost:3550`
+
+## Database Management
+
+### Migration Commands
+
+```bash
+# Apply all pending migrations
+npm run migration:up
+
+# Revert the last migration
+npm run migration:down
+
+# Check migration status
+npm run migration:show
+```
+
+## Running the Application
 
 ```bash
 # development
@@ -45,7 +142,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
+## Testing
 
 ```bash
 # unit tests
@@ -58,28 +155,20 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Resources
+### Project Structure
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+src/
+├── app/                    # Main application module
+├── config/                 # Configuration files
+├── infrastructure/         # Database and external services
+│   └── database/          # Database configuration and migrations
+├── modules/               # Feature modules
+│   ├── auth/             # Authentication module (JWT + Passport)
+│   └── users/            # Users, candidates, employees module
+└── shared/               # Shared constants and utilities
+```
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is [MIT licensed](LICENSE).

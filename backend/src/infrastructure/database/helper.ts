@@ -1,5 +1,13 @@
 import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from 'src/config/database.config';
+
+export interface DatabaseConfig {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+  logging: boolean;
+}
 
 export const getDatabaseConfig = (
   configService: ConfigService,
