@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 import { DegreeType } from '../../interfaces';
 import { Type } from 'class-transformer';
 
@@ -24,4 +24,7 @@ export class CreateEducationDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsUUID()
+  candidate_id: string;
 }
