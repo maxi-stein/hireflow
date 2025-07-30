@@ -17,6 +17,7 @@ import {
   PaginatedResponse,
   PaginationDto,
 } from '../dto/pagination/pagination.dto';
+import { UuidValidationPipe } from '../../../shared/pipes/uuid-validation.pipe';
 
 @Controller('educations')
 export class EducationsController {
@@ -37,14 +38,16 @@ export class EducationsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<EducationResponseDto> {
+  async findOne(
+    @Param('id', UuidValidationPipe) id: string,
+  ): Promise<EducationResponseDto> {
     const education = await this.educationsService.findOne(id);
     return education;
   }
 
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', UuidValidationPipe) id: string,
     @Body() updateEducationDto: UpdateEducationDto,
   ): Promise<EducationResponseDto> {
     const updated = await this.educationsService.update(id, updateEducationDto);
@@ -52,7 +55,7 @@ export class EducationsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id', UuidValidationPipe) id: string): Promise<void> {
     await this.educationsService.remove(id);
   }
 }

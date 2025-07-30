@@ -16,6 +16,7 @@ import {
   PaginatedResponse,
   PaginationDto,
 } from '../dto/pagination/pagination.dto';
+import { UuidValidationPipe } from '../../../shared/pipes/uuid-validation.pipe';
 
 @Controller('employees')
 export class EmployeesController {
@@ -29,7 +30,9 @@ export class EmployeesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<EmployeeResponseDto> {
+  findOne(
+    @Param('id', UuidValidationPipe) id: string,
+  ): Promise<EmployeeResponseDto> {
     return this.employeesService.findOne(id);
   }
 
@@ -42,14 +45,16 @@ export class EmployeesController {
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', UuidValidationPipe) id: string,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
   ): Promise<EmployeeResponseDto> {
     return this.employeesService.update(id, updateEmployeeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<EmployeeResponseDto> {
+  remove(
+    @Param('id', UuidValidationPipe) id: string,
+  ): Promise<EmployeeResponseDto> {
     return this.employeesService.remove(id);
   }
 }
