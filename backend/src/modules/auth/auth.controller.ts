@@ -15,6 +15,7 @@ import { CreateUserDto } from '../users/dto/user/create-user.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
