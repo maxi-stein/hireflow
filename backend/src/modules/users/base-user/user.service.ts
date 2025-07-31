@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from '../dto/user/update-user.dto';
 import { CreateUserDto } from '../dto/user/create-user.dto';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { User } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  PaginatedResponse,
+  PaginationDto,
+} from '../dto/pagination/pagination.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,12 +21,31 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(
+    paginationDto: PaginationDto = { page: 1, limit: 10 },
+  ): Promise<PaginatedResponse<User>> {
+    const [users, total] = await this.userRepository.findAndCount({
+      skip: (paginationDto.page - 1) * paginationDto.limit,
+      take: paginationDto.limit,
+    });
+
+    return {
+      data: users,
+      pagination: {
+        page: paginationDto.page,
+        limit: paginationDto.limit,
+        total,
+        totalPages: Math.ceil(total / paginationDto.limit),
+      },
+    };
   }
 
-  findOne(id: string): Promise<User> {
-    return this.userRepository.findOne({ where: { id } });
+  async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
   }
 
   findByEmail(email: string): Promise<User> {
@@ -39,12 +62,32 @@ export class UsersService {
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.userRepository.update(id, updateUserDto);
-    return this.findOne(id);
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<{ user: User; affected: number }> {
+    const userToUpdate = await this.userRepository.findOne({ where: { id } });
+    if (!userToUpdate) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    // Perform update and get result
+    const updateResult: UpdateResult = await this.userRepository.update(
+      id,
+      updateUserDto,
+    );
+
+    // Get updated user
+    const updatedUser = await this.findOne(id);
+
+    return {
+      user: updatedUser,
+      affected: updateResult.affected,
+    };
   }
 
   async remove(id: string): Promise<void> {
+    const user = await this.findOne(id);
     await this.userRepository.delete(id);
   }
 }

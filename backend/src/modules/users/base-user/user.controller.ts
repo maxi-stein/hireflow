@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { UpdateUserDto } from '../dto/user/update-user.dto';
 import { CreateUserDto } from '../dto/user/create-user.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { UuidValidationPipe } from '../../../shared/pipes/uuid-validation.pipe';
+import { UuidValidationPipe, NotEmptyDtoPipe } from '../../../shared/pipes';
+import { PaginationDto } from '../dto/pagination/pagination.dto';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -25,8 +27,8 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.usersService.findAll(paginationDto);
   }
 
   @Get(':id')
@@ -37,7 +39,7 @@ export class UsersController {
   @Patch(':id')
   update(
     @Param('id', UuidValidationPipe) id: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body(NotEmptyDtoPipe) updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(id, updateUserDto);
   }
