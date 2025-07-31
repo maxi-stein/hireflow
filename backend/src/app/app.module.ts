@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from '../modules/users/user.module';
@@ -10,6 +11,7 @@ import * as Joi from 'joi';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import databaseConfig from 'src/config/database.config';
 import { AuthModule } from '../modules/auth/auth.module';
+import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -36,6 +38,12 @@ import { AuthModule } from '../modules/auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
