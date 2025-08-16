@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from '../modules/users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from 'src/config/app.config';
 import authConfig from 'src/config/auth.config';
@@ -10,8 +9,11 @@ import { enviorments } from 'src/config/enviorments';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import databaseConfig from 'src/config/database.config';
-import { AuthModule } from '../modules/auth/auth.module';
+import { AuthModule } from '../domain/auth/auth.module';
 import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
+import { UsersModule } from 'src/domain/users/base-user/user.module';
+import { CandidatesModule } from 'src/domain/users/candidate/candidate.module';
+import { EmployeesModule } from 'src/domain/users/employee/employee.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
       }),
     }),
     UsersModule,
+    EmployeesModule,
+    CandidatesModule,
     DatabaseModule,
     AuthModule,
   ],

@@ -3,10 +3,10 @@ import { config } from 'dotenv';
 import { join } from 'path';
 
 // Import entities explicitly
-import { User } from '../../modules/users/entities/user.entity';
-import { Candidate } from '../../modules/users/entities/candidate.entity';
-import { Employee } from '../../modules/users/entities/employee.entity';
-import { Education } from '../../modules/users/entities/education.entity';
+import { User } from '../../domain/users/entities/user.entity';
+import { Candidate } from '../../domain/users/entities/candidate.entity';
+import { Employee } from '../../domain/users/entities/employee.entity';
+import { Education } from '../../domain/users/entities/education.entity';
 
 // Load environment variables
 config();

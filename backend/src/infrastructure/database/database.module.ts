@@ -7,7 +7,7 @@ import {
   Employee,
   Candidate,
   Education,
-} from '../../modules/users/entities';
+} from '../../domain/users/entities';
 
 @Module({
   imports: [
