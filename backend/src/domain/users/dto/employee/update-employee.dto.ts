@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { EmployeeRole } from '../../interfaces';
+import { EmployeeRole } from '../../interfaces/user.enum';
 
 export class UpdateEmployeeDto {
   @IsEnum(EmployeeRole)

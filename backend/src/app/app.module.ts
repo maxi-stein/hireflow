@@ -14,6 +14,7 @@ import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
 import { UsersModule } from 'src/domain/users/base-user/user.module';
 import { CandidatesModule } from 'src/domain/users/candidate/candidate.module';
 import { EmployeesModule } from 'src/domain/users/employee/employee.module';
+import { JobOfferModule } from 'src/domain/job-offer/job-offer.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { EmployeesModule } from 'src/domain/users/employee/employee.module';
     UsersModule,
     EmployeesModule,
     CandidatesModule,
+    JobOfferModule,
     DatabaseModule,
     AuthModule,
   ],

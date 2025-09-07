@@ -1,10 +1,10 @@
 import { IsString, IsEmail, IsEnum, ValidateIf } from 'class-validator';
-import { UserType } from '../../interfaces';
 
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { CreateEmployeeDto } from '../employee/create-employee.dto';
 import { CreateCandidateDto } from '../candidate/create-candidate.dto';
+import { UserType } from '../../interfaces/user.enum';
 
 export class CreateUserDto {
   @IsString()

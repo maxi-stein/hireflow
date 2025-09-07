@@ -17,6 +17,7 @@ export class SeedData9999999999999 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Clean all tables (this removes all data)
+    await queryRunner.query(`DELETE FROM "job_offers"`);
     await queryRunner.query(`DELETE FROM "employees"`);
     await queryRunner.query(`DELETE FROM "candidates"`);
     await queryRunner.query(`DELETE FROM "educations"`);

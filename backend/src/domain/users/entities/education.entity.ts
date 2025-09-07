@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { DegreeType } from '../interfaces';
 import { Candidate } from './candidate.entity';
+import { DegreeType } from '../interfaces/education.enum';
 
 @Entity('educations')
 export class Education {

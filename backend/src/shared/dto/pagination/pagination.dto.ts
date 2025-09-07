@@ -1,6 +1,5 @@
 import { IsOptional, IsInt, Min, Max } from 'class-validator';
 
-// pagination.dto.ts
 export class PaginationDto {
   @IsOptional()
   @IsInt()
@@ -14,7 +13,6 @@ export class PaginationDto {
   limit: number = 10;
 }
 
-// response.interface.ts
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: {

@@ -1,9 +1,9 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UserType } from '../interfaces';
 import { Candidate } from './candidate.entity';
 import { Employee } from './employee.entity';
 import { USER } from '../../../shared/constants/user.constants';
 import { AUTH } from '../../../shared/constants/auth.constants';
+import { UserType } from '../interfaces/user.enum';
 
 @Entity('users')
 export class User {

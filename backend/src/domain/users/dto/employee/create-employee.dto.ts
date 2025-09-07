@@ -1,6 +1,6 @@
 import { IsEnum, IsString, IsUUID, MaxLength } from 'class-validator';
-import { EmployeeRole } from '../../interfaces';
 import { EMPLOYEE } from 'src/shared/constants/user.constants';
+import { EmployeeRole } from '../../interfaces/user.enum';
 
 export class CreateEmployeeDto {
   @IsEnum(EmployeeRole)

@@ -1,6 +1,6 @@
 import { IsDate, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
-import { DegreeType } from '../../interfaces';
 import { Type } from 'class-transformer';
+import { DegreeType } from '../../interfaces/education.enum';
 
 export class CreateEducationDto {
   @IsString()

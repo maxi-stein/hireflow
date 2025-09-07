@@ -6,8 +6,8 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { EmployeeRole } from '../interfaces';
 import { User } from './user.entity';
+import { EmployeeRole } from '../interfaces/user.enum';
 
 @Entity('employees')
 export class Employee {

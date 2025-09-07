@@ -11,13 +11,13 @@ import { User } from '../entities/user.entity';
 import { Education } from '../entities/education.entity';
 import { CreateCandidateDto } from '../dto/candidate/create-candidate.dto';
 import { UpdateCandidateDto } from '../dto/candidate/update-candidate.dto';
-import { UserType } from '../interfaces';
 import { CandidateResponseDto } from '../dto/candidate/candidate-response.dto';
 import {
   PaginatedResponse,
   PaginationDto,
 } from '../../../shared/dto/pagination/pagination.dto';
 import { EducationService } from '../education/education.service';
+import { UserType } from '../interfaces/user.enum';
 
 @Injectable()
 export class CandidateService {

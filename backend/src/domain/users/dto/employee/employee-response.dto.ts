@@ -1,4 +1,4 @@
-import { EmployeeRole } from '../../interfaces';
+import { EmployeeRole } from '../../interfaces/user.enum';
 
 export class EmployeeResponseDto {
   id: string;

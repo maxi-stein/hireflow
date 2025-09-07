@@ -1,6 +1,6 @@
 // conditional-validation.pipe.ts
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
-import { UserType } from 'src/domain/users/interfaces';
+import { UserType } from 'src/domain/users/interfaces/user.enum';
 
 @Injectable()
 export class ConditionalValidationPipe implements PipeTransform {

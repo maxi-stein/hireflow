@@ -1,4 +1,4 @@
-import { DegreeType } from '../../interfaces';
+import { DegreeType } from '../../interfaces/education.enum';
 
 export class EducationResponseDto {
   id: string;

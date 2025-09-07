@@ -1,5 +1,4 @@
-import { IsString, IsEmail, IsEnum } from 'class-validator';
-import { UserType } from '../../interfaces';
+import { IsString, IsEmail } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()

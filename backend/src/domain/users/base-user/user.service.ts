@@ -17,8 +17,8 @@ import {
   PaginationDto,
 } from '../../../shared/dto/pagination/pagination.dto';
 import { EmployeesService } from '../employee/employee.service';
-import { UserType } from '../interfaces';
 import { CandidateService } from '../candidate/candidate.service';
+import { UserType } from '../interfaces/user.enum';
 
 @Injectable()
 export class UsersService {
