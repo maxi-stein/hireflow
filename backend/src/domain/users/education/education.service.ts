@@ -14,6 +14,8 @@ import {
   PaginationDto,
   PaginatedResponse,
 } from '../../../shared/dto/pagination/pagination.dto';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class EducationService {
@@ -178,7 +180,21 @@ export class EducationService {
         await this.update(eduDto.id, eduDto, entityManager);
       } else {
         // Create new education
-        this.validateEducationDto(eduDto);
+        const errors = await this.validateEducationDto(eduDto);
+        if (errors) {
+          const formattedErrors = errors
+            .map((err) => {
+              const constraints = Object.values(err.constraints || {}).join(
+                ', ',
+              );
+              return `Property "${err.property}": ${constraints}`;
+            })
+            .join('; ');
+
+          throw new BadRequestException(
+            `Validation failed for Education object with ID: ${eduDto.id}. Errors: ${formattedErrors}`,
+          );
+        }
         const newEducation = entityManager.create(Education, {
           ...eduDto,
           candidate: { id: candidateId },
@@ -195,8 +211,25 @@ export class EducationService {
     return updatedEducations.map(this.mapToResponseDto);
   }
 
-  validateEducationDto(eduDto: UpdateEducationDto) {
-    throw new Error('Method not implemented.');
+  async validateEducationDto(input: any) {
+    // Transform the plain object into an instance of the DTO
+    const dtoInstance = plainToInstance(CreateEducationDto, input);
+
+    // Validate the DTO (you can pass options like whitelist, forbidNonWhitelisted, etc.)
+    const errors = await validate(dtoInstance, {
+      whitelist: true, // removes properties not defined in the DTO
+      forbidNonWhitelisted: true, // throws an error if there are properties not allowed
+    });
+
+    if (errors.length > 0) {
+      // Return formatted errors
+      return errors.map((err) => ({
+        property: err.property,
+        constraints: err.constraints,
+      }));
+    }
+
+    return null;
   }
 
   async remove(id: string): Promise<void> {
