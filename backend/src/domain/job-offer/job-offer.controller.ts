@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { JobOfferService } from './job-offer.service';
 import {
@@ -14,14 +15,13 @@ import {
   JobOfferResponseDto,
   UpdateJobOfferDto,
 } from './dto';
-import {
-  PaginatedResponse,
-  PaginationDto,
-} from 'src/shared/dto/pagination/pagination.dto';
+import { PaginatedResponse } from 'src/shared/dto/pagination/pagination.dto';
 import { NotEmptyDtoPipe, UuidValidationPipe } from 'src/shared/pipes';
 import { FilterJobOfferDto } from './dto/filter-job-offer-dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('job-offers')
+@UseGuards(JwtAuthGuard)
 export class JobOfferController {
   constructor(private readonly jobOfferService: JobOfferService) {}
 
