@@ -20,9 +20,9 @@ export class FilterJobOfferDto extends PaginationDto {
 
   @IsOptional()
   @IsDateString()
-  startDate?: string;
+  start_date?: string;
 
   @IsOptional()
   @IsDateString()
-  endDate?: string;
+  end_date?: string;
 }

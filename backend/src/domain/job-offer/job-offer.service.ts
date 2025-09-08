@@ -35,7 +35,7 @@ export class JobOfferService {
   async findAll(
     filterDto: FilterJobOfferDto,
   ): Promise<PaginatedResponse<JobOfferResponseDto>> {
-    const { page, limit, status, positions, startDate, endDate } = filterDto;
+    const { page, limit, status, positions, start_date, end_date } = filterDto;
 
     const query = this.jobOfferRepository.createQueryBuilder('jobOffer');
 
@@ -47,12 +47,12 @@ export class JobOfferService {
       query.andWhere('jobOffer.position IN (:...positions)', { positions });
     }
 
-    if (startDate) {
-      query.andWhere('jobOffer.created_at >= :startDate', { startDate });
+    if (start_date) {
+      query.andWhere('jobOffer.created_at >= :start_date', { start_date });
     }
 
-    if (endDate) {
-      query.andWhere('jobOffer.created_at <= :endDate', { endDate });
+    if (end_date) {
+      query.andWhere('jobOffer.created_at <= :end_date', { end_date });
     }
 
     query.skip((page - 1) * limit).take(limit);
