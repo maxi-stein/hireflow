@@ -211,9 +211,9 @@ export class EducationService {
     return updatedEducations.map(this.mapToResponseDto);
   }
 
-  async validateEducationDto(input: any) {
+  async validateEducationDto(input: UpdateEducationDto) {
     // Transform the plain object into an instance of the DTO
-    const dtoInstance = plainToInstance(CreateEducationDto, input);
+    const dtoInstance = plainToInstance(UpdateEducationDto, input);
 
     // Validate the DTO (you can pass options like whitelist, forbidNonWhitelisted, etc.)
     const errors = await validate(dtoInstance, {

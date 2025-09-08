@@ -15,6 +15,7 @@ import { UsersModule } from 'src/domain/users/base-user/user.module';
 import { CandidatesModule } from 'src/domain/users/candidate/candidate.module';
 import { EmployeesModule } from 'src/domain/users/employee/employee.module';
 import { JobOfferModule } from 'src/domain/job-offer/job-offer.module';
+import { CandidateApplicationModule } from '../domain/candidate-application/candidate-application.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { JobOfferModule } from 'src/domain/job-offer/job-offer.module';
     EmployeesModule,
     CandidatesModule,
     JobOfferModule,
+    CandidateApplicationModule,
     DatabaseModule,
     AuthModule,
   ],

@@ -2,10 +2,12 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { JobOfferStatus } from '../interfaces/job-offer-status.enum';
 import { WorkMode } from '../interfaces/work-mode.enum';
+import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
 
 @Entity('job_offers')
 export class JobOffer {
@@ -40,6 +42,9 @@ export class JobOffer {
     default: JobOfferStatus.OPEN,
   })
   status: JobOfferStatus;
+
+  @OneToMany(() => CandidateApplication, (application) => application.job_offer)
+  applications: CandidateApplication[];
 
   @Column({ default: false })
   deleted: boolean;

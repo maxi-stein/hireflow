@@ -2,12 +2,12 @@ import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
 import { join } from 'path';
 
-// Import entities explicitly
 import { User } from '../../domain/users/entities/user.entity';
 import { Candidate } from '../../domain/users/entities/candidate.entity';
 import { Employee } from '../../domain/users/entities/employee.entity';
 import { Education } from '../../domain/users/entities/education.entity';
 import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
+import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
 
 // Load environment variables
 config();
@@ -19,7 +19,14 @@ export const AppDataSource = new DataSource({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [User, Candidate, Employee, Education, JobOffer],
+  entities: [
+    User,
+    Candidate,
+    Employee,
+    Education,
+    JobOffer,
+    CandidateApplication,
+  ],
   synchronize: false,
   logging: true,
   migrations: [join(__dirname, 'migrations', '*.ts')],

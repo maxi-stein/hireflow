@@ -9,6 +9,7 @@ import {
   Education,
 } from '../../domain/users/entities';
 import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
+import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
 
 @Module({
   imports: [
@@ -25,7 +26,14 @@ import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
           password,
           database,
           logging,
-          entities: [User, Employee, Candidate, Education, JobOffer],
+          entities: [
+            User,
+            Employee,
+            Candidate,
+            Education,
+            JobOffer,
+            CandidateApplication,
+          ],
           autoLoadEntities: false,
           cli: {
             migrationsDir: 'src/infrastructure/database/migrations',

@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Education } from './education.entity';
 import { User } from './user.entity';
+import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
 
 @Entity('candidates')
 export class Candidate {
@@ -39,6 +40,9 @@ export class Candidate {
   @OneToOne(() => User, (user) => user.candidate, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => CandidateApplication, (application) => application.candidate)
+  applications: CandidateApplication[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   profile_created_at: Date;
