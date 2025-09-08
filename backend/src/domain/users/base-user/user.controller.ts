@@ -21,6 +21,7 @@ import {
   ConditionalValidationPipe,
 } from '../../../shared/pipes';
 import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
+import { CanEditUser } from '../../auth/guards/can-edit.guard';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -47,6 +48,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(CanEditUser) //Employees and self-user can edit himself
   update(
     @Param('id', UuidValidationPipe) id: string,
     @Body(NotEmptyDtoPipe) updateUserDto: UpdateUserDto,
