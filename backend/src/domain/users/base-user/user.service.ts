@@ -19,6 +19,7 @@ import {
 import { EmployeesService } from '../employee/employee.service';
 import { CandidateService } from '../candidate/candidate.service';
 import { UserType } from '../interfaces/user.enum';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -144,7 +145,15 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<{ user: User; affected: number }> {
-    // Perform update and get result
+    // Hash password if it's included in the update
+    if (updateUserDto.password) {
+      const saltRounds = 10;
+      updateUserDto.password = await bcrypt.hash(
+        updateUserDto.password,
+        saltRounds,
+      );
+    }
+
     const updateResult: UpdateResult = await this.userRepository.update(
       id,
       updateUserDto,
@@ -154,7 +163,6 @@ export class UsersService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    // Get updated user
     const updatedUser = await this.findOne(id);
 
     return {
@@ -164,7 +172,7 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
-    const user = await this.findOne(id);
+    await this.findOne(id);
     await this.userRepository.delete(id);
   }
 }
