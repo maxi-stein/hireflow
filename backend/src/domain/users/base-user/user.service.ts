@@ -19,6 +19,7 @@ import {
 import { EmployeesService } from '../employee/employee.service';
 import { CandidateService } from '../candidate/candidate.service';
 import { UserType } from '../interfaces/user.enum';
+import { JwtUser } from '../interfaces/jwt.user';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -139,6 +140,34 @@ export class UsersService {
         'last_name',
       ],
     });
+  }
+
+  async findUserWithEntity(userId: string): Promise<JwtUser> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['candidate', 'employee'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    let entity_id: string;
+
+    if (user.user_type === UserType.CANDIDATE && user.candidate) {
+      entity_id = user.candidate.id;
+    } else if (user.user_type === UserType.EMPLOYEE && user.employee) {
+      entity_id = user.employee.id;
+    } else {
+      throw new NotFoundException(`Entity not found for user ${userId}`);
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      user_type: user.user_type,
+      entity_id,
+    };
   }
 
   async update(

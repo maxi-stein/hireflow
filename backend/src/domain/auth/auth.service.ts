@@ -3,10 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/base-user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtUser } from '../users/interfaces/jwt.user';
-import {
-  CreateUserDto,
-  RegisterCandidateDto,
-} from '../users/dto/user/create-user.dto';
+import { RegisterCandidateDto } from '../users/dto/user/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,18 +15,26 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<JwtUser> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
-      const { email, id, user_type } = user;
-      return { email, id, user_type };
+      // Fetch the specific entity (candidate or employee) to get the entity_id
+      const userWithEntity = await this.usersService.findUserWithEntity(
+        user.id,
+      );
+      const { email, id, user_type, entity_id } = userWithEntity;
+      return { email, id, user_type, entity_id };
     }
     return null;
   }
 
   async login(user: JwtUser) {
-    const payload = { email: user.email, sub: user.id, role: user.user_type };
+    const payload = {
+      email: user.email,
+      sub: user.entity_id, // Use entity_id as the subject
+      role: user.user_type,
+    };
     return {
       access_token: this.jwtService.sign(payload),
       user: {
-        id: user.id,
+        id: user.entity_id, // Return entity_id as the main ID
         email: user.email,
         role: user.user_type,
       },
