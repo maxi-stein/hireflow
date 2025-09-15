@@ -8,6 +8,7 @@ import { Employee } from '../../domain/users/entities/employee.entity';
 import { Education } from '../../domain/users/entities/education.entity';
 import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
 import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
+import { Interview } from '../../domain/interviews/entities/interview.entity';
 
 // Load environment variables
 config();
@@ -26,6 +27,7 @@ export const AppDataSource = new DataSource({
     Education,
     JobOffer,
     CandidateApplication,
+    Interview,
   ],
   synchronize: false,
   logging: true,

@@ -7,10 +7,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Unique,
+  ManyToMany,
 } from 'typeorm';
 import { ApplicationStatus } from '../interfaces/application-status';
 import { JobOffer } from '../../job-offer/entities/job-offer.entity';
 import { Candidate } from '../../users/entities';
+import { Interview } from '../../interviews/entities/interview.entity';
 
 @Entity('candidate_applications')
 @Unique(['job_offer_id', 'candidate_id'])
@@ -44,4 +46,7 @@ export class CandidateApplication {
   @ManyToOne(() => Candidate, (candidate) => candidate.applications)
   @JoinColumn({ name: 'candidate_id' })
   candidate: Candidate;
+
+  @ManyToMany(() => Interview, (interview) => interview.applications)
+  interviews: Interview[];
 }

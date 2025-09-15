@@ -5,9 +5,11 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  ManyToMany,
 } from 'typeorm';
 import { User } from './user.entity';
 import { EmployeeRole } from '../interfaces/user.enum';
+import { Interview } from '../../interviews/entities/interview.entity';
 
 @Entity('employees')
 export class Employee {
@@ -36,4 +38,7 @@ export class Employee {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   profile_updated_at: Date;
+
+  @ManyToMany(() => Interview, (interview) => interview.interviewers)
+  interviews: Interview[];
 }

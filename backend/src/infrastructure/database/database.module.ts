@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfig } from './helper';
 import {
@@ -10,6 +10,7 @@ import {
 } from '../../domain/users/entities';
 import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
 import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
+import { Interview } from '../../domain/interviews/entities/interview.entity';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CandidateApplication } from '../../domain/candidate-application/entitie
             Education,
             JobOffer,
             CandidateApplication,
+            Interview,
           ],
           autoLoadEntities: false,
           cli: {
