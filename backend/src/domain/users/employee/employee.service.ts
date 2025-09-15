@@ -18,7 +18,6 @@ import {
   PaginationDto,
   PaginatedResponse,
 } from '../../../shared/dto/pagination/pagination.dto';
-import { EmployeeResponseDto } from '../dto/employee/employee-response.dto';
 
 @Injectable()
 export class EmployeesService {
@@ -31,7 +30,7 @@ export class EmployeesService {
     userId: string,
     createEmployeeDto: CreateEmployeeDto,
     entityManager?: EntityManager,
-  ): Promise<EmployeeResponseDto> {
+  ): Promise<Employee> {
     return this.employeeRepository.manager.transaction(async () => {
       const manager = entityManager || this.employeeRepository.manager;
 
@@ -50,12 +49,12 @@ export class EmployeesService {
         select: this.getEmployeeSelectFields(),
       });
 
-      return this.mapToResponseDto(employeeWithRelations);
+      return employeeWithRelations;
     });
   }
   async findAll(
     paginationDto: PaginationDto = { page: 1, limit: 10 },
-  ): Promise<PaginatedResponse<EmployeeResponseDto>> {
+  ): Promise<PaginatedResponse<Employee>> {
     const [employees, total] = await this.employeeRepository.findAndCount({
       relations: { user: true },
       select: this.getEmployeeSelectFields(),
@@ -64,7 +63,7 @@ export class EmployeesService {
     });
 
     return {
-      data: employees.map(this.mapToResponseDto),
+      data: employees,
       pagination: {
         page: paginationDto.page,
         limit: paginationDto.limit,
@@ -74,7 +73,7 @@ export class EmployeesService {
     };
   }
 
-  async findOne(id: string): Promise<EmployeeResponseDto> {
+  async findOne(id: string): Promise<Employee> {
     const employee = await this.employeeRepository.findOne({
       where: { id },
       relations: { user: true },
@@ -85,13 +84,13 @@ export class EmployeesService {
       throw new NotFoundException(`Employee with ID ${id} not found`);
     }
 
-    return this.mapToResponseDto(employee);
+    return employee;
   }
 
   async update(
     id: string,
     updateEmployeeDto: UpdateEmployeeDto,
-  ): Promise<{ employee: EmployeeResponseDto; affected: number }> {
+  ): Promise<{ employee: Employee; affected: number }> {
     // Perform update and get result
     const updateResult: UpdateResult = await this.employeeRepository.update(
       id,
@@ -111,7 +110,7 @@ export class EmployeesService {
     };
   }
 
-  async remove(id: string): Promise<EmployeeResponseDto> {
+  async remove(id: string): Promise<Employee> {
     const employee = await this.employeeRepository.findOne({
       where: { id },
       relations: { user: true },
@@ -130,10 +129,8 @@ export class EmployeesService {
       );
     }
 
-    return this.mapToResponseDto(employee);
+    return employee;
   }
-
-  // ===== HELPER METHODS =====
 
   private getEmployeeSelectFields(): FindOptionsSelect<Employee> {
     return {
@@ -146,22 +143,6 @@ export class EmployeesService {
         last_name: true,
         email: true,
       },
-    };
-  }
-
-  private mapToResponseDto(employee: Employee): EmployeeResponseDto {
-    return {
-      id: employee.id,
-      role: employee.role,
-      position: employee.position,
-      user: {
-        id: employee.user.id,
-        first_name: employee.user.first_name,
-        last_name: employee.user.last_name,
-        email: employee.user.email,
-      },
-      profile_created_at: employee.profile_created_at,
-      profile_updated_at: employee.profile_updated_at,
     };
   }
 }

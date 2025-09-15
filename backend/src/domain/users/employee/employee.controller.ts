@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { EmployeesService } from './employee.service';
 import { UpdateEmployeeDto } from '../dto/employee/update-employee.dto';
-import { EmployeeResponseDto } from '../dto/employee/employee-response.dto';
 import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
 import { UuidValidationPipe, NotEmptyDtoPipe } from '../../../shared/pipes';
 import { JwtAuthGuard } from 'src/domain/auth/guards/jwt-auth.guard';
