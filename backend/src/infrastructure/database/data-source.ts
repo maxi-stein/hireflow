@@ -9,6 +9,7 @@ import { Education } from '../../domain/users/entities/education.entity';
 import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
 import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
 import { Interview } from '../../domain/interviews/entities/interview.entity';
+import { InterviewReview } from '../../domain/interview-review/entity/interview-review.entity';
 
 // Load environment variables
 config();
@@ -28,6 +29,7 @@ export const AppDataSource = new DataSource({
     JobOffer,
     CandidateApplication,
     Interview,
+    InterviewReview,
   ],
   synchronize: false,
   logging: true,

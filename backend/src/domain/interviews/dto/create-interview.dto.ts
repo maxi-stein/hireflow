@@ -1,4 +1,3 @@
-// dto/interview/create-interview.dto.ts
 import {
   IsEnum,
   IsDate,

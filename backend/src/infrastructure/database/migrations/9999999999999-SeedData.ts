@@ -86,7 +86,9 @@ export class SeedData9999999999999 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DELETE FROM candidate_applications`);
+    await queryRunner.query(`DELETE FROM "interview_reviews"`);
+    await queryRunner.query(`DELETE FROM "interviews"`);
+    await queryRunner.query(`DELETE FROM "candidate_applications"`);
     await queryRunner.query(`DELETE FROM "job_offers"`);
     await queryRunner.query(`DELETE FROM "employees"`);
     await queryRunner.query(`DELETE FROM "educations"`);

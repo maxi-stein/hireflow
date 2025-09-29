@@ -6,10 +6,12 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
+  OneToMany,
 } from 'typeorm';
 import { User } from './user.entity';
 import { EmployeeRole } from '../interfaces/user.enum';
 import { Interview } from '../../interviews/entities/interview.entity';
+import { InterviewReview } from '../../interview-review/entity/interview-review.entity';
 
 @Entity('employees')
 export class Employee {
@@ -41,4 +43,7 @@ export class Employee {
 
   @ManyToMany(() => Interview, (interview) => interview.interviewers)
   interviews: Interview[];
+
+  @OneToMany(() => InterviewReview, (review) => review.employee)
+  interview_reviews: InterviewReview[];
 }

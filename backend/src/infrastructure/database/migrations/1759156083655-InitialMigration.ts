@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialMigration1757895717563 implements MigrationInterface {
-    name = 'InitialMigration1757895717563'
+export class InitialMigration1759156083655 implements MigrationInterface {
+    name = 'InitialMigration1759156083655'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."educations_degree_type_enum" AS ENUM('Licenciatura', 'Maestría', 'Doctorado', 'Técnico Superior', 'Diploma', 'Certificación', 'Otro')`);
@@ -9,6 +9,8 @@ export class InitialMigration1757895717563 implements MigrationInterface {
         await queryRunner.query(`CREATE TYPE "public"."job_offers_work_mode_enum" AS ENUM('hybrid', 'full-remote', 'office')`);
         await queryRunner.query(`CREATE TYPE "public"."job_offers_status_enum" AS ENUM('OPEN', 'CLOSED')`);
         await queryRunner.query(`CREATE TABLE "job_offers" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "position" character varying NOT NULL, "location" character varying NOT NULL, "work_mode" "public"."job_offers_work_mode_enum" NOT NULL, "description" text NOT NULL, "salary" character varying, "benefits" text, "status" "public"."job_offers_status_enum" NOT NULL DEFAULT 'OPEN', "deleted" boolean NOT NULL DEFAULT false, "deleted_at" TIMESTAMP, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_9a54d36bd6829979f945defdeb5" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."interview_reviews_status_enum" AS ENUM('PASS', 'FAIL', 'PENDING')`);
+        await queryRunner.query(`CREATE TABLE "interview_reviews" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "interview_id" uuid NOT NULL, "employee_id" uuid NOT NULL, "candidate_application_id" uuid NOT NULL, "status" "public"."interview_reviews_status_enum" NOT NULL DEFAULT 'PENDING', "notes" text, "score" integer, "strengths" text, "weaknesses" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_6863005a77a547ca0bc3bccac51" UNIQUE ("interview_id", "employee_id", "candidate_application_id"), CONSTRAINT "PK_ee02b5ce68187a87e581e49e795" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."interviews_type_enum" AS ENUM('individual', 'group')`);
         await queryRunner.query(`CREATE TYPE "public"."interviews_status_enum" AS ENUM('scheduled', 'completed', 'cancelled', 'rescheduled')`);
         await queryRunner.query(`CREATE TABLE "interviews" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "type" "public"."interviews_type_enum" NOT NULL, "scheduled_time" TIMESTAMP NOT NULL, "meeting_link" character varying(500), "status" "public"."interviews_status_enum" NOT NULL DEFAULT 'scheduled', "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_fd41af1f96d698fa33c2f070f47" PRIMARY KEY ("id"))`);
@@ -25,6 +27,9 @@ export class InitialMigration1757895717563 implements MigrationInterface {
         await queryRunner.query(`CREATE INDEX "IDX_3fc25fb2eb3634de44d748baa6" ON "employee_interviews" ("interview_id") `);
         await queryRunner.query(`CREATE INDEX "IDX_4c72421c15cbb3372b83141131" ON "employee_interviews" ("employee_id") `);
         await queryRunner.query(`ALTER TABLE "educations" ADD CONSTRAINT "FK_da1ce5966e5d5a43a9e0797e0c0" FOREIGN KEY ("candidateId") REFERENCES "candidates"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "interview_reviews" ADD CONSTRAINT "FK_5d298ea0d28cd25d2902b55d466" FOREIGN KEY ("interview_id") REFERENCES "interviews"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "interview_reviews" ADD CONSTRAINT "FK_ca64b602ef1a2af26daa8f2dce7" FOREIGN KEY ("employee_id") REFERENCES "employees"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "interview_reviews" ADD CONSTRAINT "FK_1c456814d73b647fd72a4b5dd2d" FOREIGN KEY ("candidate_application_id") REFERENCES "candidate_applications"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "employees" ADD CONSTRAINT "FK_2d83c53c3e553a48dadb9722e38" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "candidate_applications" ADD CONSTRAINT "FK_ff0876d3b1ebb843cba7d8665ca" FOREIGN KEY ("job_offer_id") REFERENCES "job_offers"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "candidate_applications" ADD CONSTRAINT "FK_bdc76c70bcfed3f7c3be7d826f0" FOREIGN KEY ("candidate_id") REFERENCES "candidates"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -44,6 +49,9 @@ export class InitialMigration1757895717563 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "candidate_applications" DROP CONSTRAINT "FK_bdc76c70bcfed3f7c3be7d826f0"`);
         await queryRunner.query(`ALTER TABLE "candidate_applications" DROP CONSTRAINT "FK_ff0876d3b1ebb843cba7d8665ca"`);
         await queryRunner.query(`ALTER TABLE "employees" DROP CONSTRAINT "FK_2d83c53c3e553a48dadb9722e38"`);
+        await queryRunner.query(`ALTER TABLE "interview_reviews" DROP CONSTRAINT "FK_1c456814d73b647fd72a4b5dd2d"`);
+        await queryRunner.query(`ALTER TABLE "interview_reviews" DROP CONSTRAINT "FK_ca64b602ef1a2af26daa8f2dce7"`);
+        await queryRunner.query(`ALTER TABLE "interview_reviews" DROP CONSTRAINT "FK_5d298ea0d28cd25d2902b55d466"`);
         await queryRunner.query(`ALTER TABLE "educations" DROP CONSTRAINT "FK_da1ce5966e5d5a43a9e0797e0c0"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_4c72421c15cbb3372b83141131"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_3fc25fb2eb3634de44d748baa6"`);
@@ -60,6 +68,8 @@ export class InitialMigration1757895717563 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "interviews"`);
         await queryRunner.query(`DROP TYPE "public"."interviews_status_enum"`);
         await queryRunner.query(`DROP TYPE "public"."interviews_type_enum"`);
+        await queryRunner.query(`DROP TABLE "interview_reviews"`);
+        await queryRunner.query(`DROP TYPE "public"."interview_reviews_status_enum"`);
         await queryRunner.query(`DROP TABLE "job_offers"`);
         await queryRunner.query(`DROP TYPE "public"."job_offers_status_enum"`);
         await queryRunner.query(`DROP TYPE "public"."job_offers_work_mode_enum"`);

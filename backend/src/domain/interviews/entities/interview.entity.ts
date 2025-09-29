@@ -1,4 +1,3 @@
-// entities/interview.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,13 +6,13 @@ import {
   JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { InterviewType } from '../interfaces/interview-type.enum';
 import { InterviewStatus } from '../interfaces/interview-status.enum';
 import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
 import { Employee } from '../../users/entities';
+import { InterviewReview } from '../../interview-review/entity/interview-review.entity';
 
 @Entity('interviews')
 export class Interview {
@@ -76,7 +75,6 @@ export class Interview {
   })
   applications: CandidateApplication[];
 
-  // Relation ManyToMany to Employee (interviewers)
   @ManyToMany(() => Employee, (employee) => employee.interviews)
   @JoinTable({
     name: 'employee_interviews',
@@ -90,4 +88,7 @@ export class Interview {
     },
   })
   interviewers: Employee[];
+
+  @OneToMany(() => InterviewReview, (review) => review.interview)
+  reviews: InterviewReview[];
 }

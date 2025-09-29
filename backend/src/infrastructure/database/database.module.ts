@@ -11,6 +11,7 @@ import {
 import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
 import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
 import { Interview } from '../../domain/interviews/entities/interview.entity';
+import { InterviewReview } from '../../domain/interview-review/entity/interview-review.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { Interview } from '../../domain/interviews/entities/interview.entity';
             JobOffer,
             CandidateApplication,
             Interview,
+            InterviewReview,
           ],
           autoLoadEntities: false,
           cli: {

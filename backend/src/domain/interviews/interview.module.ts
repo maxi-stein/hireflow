@@ -1,4 +1,3 @@
-// interview.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CandidateApplicationModule } from '../candidate-application/candidate-application.module';

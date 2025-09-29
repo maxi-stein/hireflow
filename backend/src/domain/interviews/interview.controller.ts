@@ -1,4 +1,3 @@
-// controllers/interview.controller.ts
 import {
   Controller,
   Get,
@@ -10,7 +9,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { PaginationDto } from '../../shared/dto/pagination/pagination.dto';
 import { CreateInterviewDto } from './dto/create-interview.dto';
 import { UpdateInterviewDto } from './dto/update-interview.dto';
 import { InterviewService } from './interview.service';

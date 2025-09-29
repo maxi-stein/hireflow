@@ -17,6 +17,7 @@ import { EmployeesModule } from 'src/domain/users/employee/employee.module';
 import { JobOfferModule } from 'src/domain/job-offer/job-offer.module';
 import { CandidateApplicationModule } from '../domain/candidate-application/candidate-application.module';
 import { InterviewModule } from '../domain/interviews/interview.module';
+import { InterviewReviewModule } from '../domain/interview-review/interview-review.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { InterviewModule } from '../domain/interviews/interview.module';
     JobOfferModule,
     CandidateApplicationModule,
     InterviewModule,
+    InterviewReviewModule,
     DatabaseModule,
     AuthModule,
   ],
