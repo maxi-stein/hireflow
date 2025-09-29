@@ -16,8 +16,11 @@ import { InterviewReviewService } from './interview-review.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PaginationDto } from '../../shared/dto/pagination/pagination.dto';
 import { UuidValidationPipe } from '../../shared/pipes';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserType } from '../users/interfaces/user.enum';
 
 @Controller('interview-reviews')
+@Roles(UserType.EMPLOYEE)
 @UseGuards(JwtAuthGuard)
 export class InterviewReviewController {
   constructor(private readonly reviewService: InterviewReviewService) {}
