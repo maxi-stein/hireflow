@@ -11,7 +11,7 @@ import {
 import { CandidateApplicationService } from './candidate-application.service';
 import { CreateCandidateApplicationDto } from './dto/create-candidate-application.dto';
 import { UpdateCandidateApplicationDto } from './dto/update-candidate-application';
-import { NotEmptyDtoPipe } from '../../shared/pipes';
+import { NotEmptyDtoPipe, UuidValidationPipe } from '../../shared/pipes';
 import { FilterApplicationsDto } from './dto/filter-applications.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserType } from '../users/interfaces/user.enum';
@@ -36,7 +36,7 @@ export class CandidateApplicationController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', UuidValidationPipe) id: string) {
     return this.applicationService.findOne(id);
   }
 
@@ -45,7 +45,7 @@ export class CandidateApplicationController {
   @Roles(UserType.EMPLOYEE)
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', UuidValidationPipe) id: string,
     @Body(NotEmptyDtoPipe) updateDto: UpdateCandidateApplicationDto,
   ) {
     return this.applicationService.update(id, updateDto);

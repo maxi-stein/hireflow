@@ -17,6 +17,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserType } from '../users/interfaces/user.enum';
+import { UuidValidationPipe } from '../../shared/pipes';
 
 @Controller('interviews')
 @UseGuards(JwtAuthGuard)
@@ -34,21 +35,24 @@ export class InterviewController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', UuidValidationPipe) id: string) {
     return this.interviewService.findOne(id);
   }
 
   @UseGuards(RolesGuard)
   @Roles(UserType.EMPLOYEE)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateInterviewDto) {
+  update(
+    @Param('id', UuidValidationPipe) id: string,
+    @Body() updateDto: UpdateInterviewDto,
+  ) {
     return this.interviewService.update(id, updateDto);
   }
 
   @UseGuards(RolesGuard)
   @Roles(UserType.EMPLOYEE)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', UuidValidationPipe) id: string) {
     return this.interviewService.remove(id);
   }
 }
