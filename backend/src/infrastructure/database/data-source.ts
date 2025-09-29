@@ -32,7 +32,7 @@ export const AppDataSource = new DataSource({
     InterviewReview,
   ],
   synchronize: false,
-  logging: true,
+  logging: process.env.NODE_ENV !== 'production',
   migrations: [join(__dirname, 'migrations', '*.ts')],
   migrationsTableName: 'migrations',
 });

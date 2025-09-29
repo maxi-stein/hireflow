@@ -30,6 +30,8 @@ import { InterviewReviewModule } from '../domain/interview-review/interview-revi
           .valid('development', 'production', 'test')
           .default('development'),
         PORT: Joi.number(),
+        CORS_ENABLED: Joi.boolean().default(true),
+        CORS_ORIGINS: Joi.string().allow('').default(''),
         POSTGRES_DB: Joi.string().required(),
         POSTGRES_USER: Joi.string().required(),
         POSTGRES_PASSWORD: Joi.string().required(),
