@@ -15,7 +15,7 @@ import { RegisterCandidateDto } from '../users/dto/user/create-user.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  //User for registering Candidates only.
+  //Candidates use this endpoint to register.
   @UseGuards(JwtAuthGuard)
   @Post('register')
   async register(@Body() registerCandidateDto: RegisterCandidateDto) {
@@ -31,6 +31,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
-    return this.authService.getProfile(req.user.userId);
+    return this.authService.getProfileByEntity(req.user.userId, req.user.role);
   }
 }

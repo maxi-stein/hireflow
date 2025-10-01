@@ -13,9 +13,9 @@ import { CreateCandidateApplicationDto } from './dto/create-candidate-applicatio
 import { UpdateCandidateApplicationDto } from './dto/update-candidate-application';
 import { NotEmptyDtoPipe, UuidValidationPipe } from '../../shared/pipes';
 import { FilterApplicationsDto } from './dto/filter-applications.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { RequireUserType } from '../auth/decorators/roles.decorator';
 import { UserType } from '../users/interfaces/user.enum';
-import { RolesGuard } from '../auth/guards/roles.guard';
+import { UserTypeGuard } from '../auth/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('candidate-applications')
@@ -41,8 +41,8 @@ export class CandidateApplicationController {
   }
 
   //Only employees can edit a candidate application
-  @UseGuards(RolesGuard)
-  @Roles(UserType.EMPLOYEE)
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   @Patch(':id')
   update(
     @Param('id', UuidValidationPipe) id: string,

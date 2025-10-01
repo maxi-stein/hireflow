@@ -4,6 +4,7 @@ import { UsersService } from '../users/base-user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtUser } from '../users/interfaces/jwt.user';
 import { RegisterCandidateDto } from '../users/dto/user/create-user.dto';
+import { AUTH } from '../../shared/constants/auth.constants';
 
 @Injectable()
 export class AuthService {
@@ -12,15 +13,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  //Used in local strategy
   async validateUser(email: string, password: string): Promise<JwtUser> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
       // Fetch the specific entity (candidate or employee) to get the entity_id
-      const userWithEntity = await this.usersService.findUserWithEntity(
-        user.id,
-      );
-      const { email, id, user_type, entity_id } = userWithEntity;
-      return { email, id, user_type, entity_id };
+      return await this.usersService.findUserWithEntity(user.id);
     }
     return null;
   }
@@ -46,21 +44,28 @@ export class AuthService {
     const existingUser = await this.usersService.findByEmail(
       registerCandidate.email,
     );
+
     if (existingUser) {
       throw new UnauthorizedException('User with this email already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(registerCandidate.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      registerCandidate.password,
+      AUTH.BCRYPT_SALT_ROUNDS,
+    );
+
     const user = await this.usersService.registerCandidate({
       ...registerCandidate,
       password: hashedPassword,
     });
+
     const { password, ...result } = user;
+
     return result;
   }
 
-  async getProfile(userId: string) {
-    const user = await this.usersService.findOne(userId);
+  async getProfileByEntity(entityId: string, userType: JwtUser['user_type']) {
+    const user = await this.usersService.findUserByEntityId(entityId, userType);
     return user;
   }
 }

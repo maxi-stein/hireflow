@@ -1,10 +1,20 @@
-import { IsString, IsEmail, IsEnum, ValidateIf } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsEnum,
+  ValidateIf,
+  Min,
+  Max,
+} from 'class-validator';
 
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { CreateEmployeeDto } from '../employee/create-employee.dto';
 import { CreateCandidateDto } from '../candidate/create-candidate.dto';
 import { UserType } from '../../interfaces/user.enum';
+import { AUTH } from '../../../../shared/constants/auth.constants';
+
+const { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH } = AUTH;
 
 export class CreateUserDto {
   @IsString()
@@ -17,6 +27,8 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
+  @Min(MIN_PASSWORD_LENGTH)
+  @Max(MAX_PASSWORD_LENGTH)
   password: string;
 
   @IsEnum(UserType)

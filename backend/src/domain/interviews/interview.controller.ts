@@ -13,8 +13,8 @@ import { CreateInterviewDto } from './dto/create-interview.dto';
 import { UpdateInterviewDto } from './dto/update-interview.dto';
 import { InterviewService } from './interview.service';
 import { FilterInterviewsDto } from './dto/filter-interviews.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { RolesGuard } from '../auth/guards/roles.guard';
+import { RequireUserType } from '../auth/decorators/roles.decorator';
+import { UserTypeGuard } from '../auth/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserType } from '../users/interfaces/user.enum';
 import { UuidValidationPipe } from '../../shared/pipes';
@@ -39,8 +39,8 @@ export class InterviewController {
     return this.interviewService.findOne(id);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(UserType.EMPLOYEE)
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   @Patch(':id')
   update(
     @Param('id', UuidValidationPipe) id: string,
@@ -49,8 +49,8 @@ export class InterviewController {
     return this.interviewService.update(id, updateDto);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(UserType.EMPLOYEE)
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   @Delete(':id')
   remove(@Param('id', UuidValidationPipe) id: string) {
     return this.interviewService.remove(id);

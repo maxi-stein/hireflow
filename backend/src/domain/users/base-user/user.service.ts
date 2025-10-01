@@ -204,4 +204,37 @@ export class UsersService {
     await this.findOne(id);
     await this.userRepository.delete(id);
   }
+
+  /**
+   * Finds the base User using an entity id (candidate_id or employee_id)
+   * based on the provided user type.
+   */
+  async findUserByEntityId(
+    entityId: string,
+    userType: UserType,
+  ): Promise<User> {
+    let user: User | null = null;
+
+    if (userType === UserType.CANDIDATE) {
+      user = await this.userRepository.findOne({
+        where: { candidate: { id: entityId } },
+        relations: ['candidate'],
+      });
+    } else if (userType === UserType.EMPLOYEE) {
+      user = await this.userRepository.findOne({
+        where: { employee: { id: entityId } },
+        relations: ['employee'],
+      });
+    } else {
+      throw new BadRequestException(`Unknown user type: ${userType}`);
+    }
+
+    if (!user) {
+      throw new NotFoundException(
+        `User not found for ${userType} entity with ID ${entityId}`,
+      );
+    }
+
+    return user;
+  }
 }
