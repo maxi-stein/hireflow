@@ -18,7 +18,7 @@ import {
 import { PaginatedResponse } from 'src/shared/dto/pagination/pagination.dto';
 import { NotEmptyDtoPipe, UuidValidationPipe } from 'src/shared/pipes';
 import { FilterJobOfferDto } from './dto/filter-job-offer-dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('job-offers')
 @UseGuards(JwtAuthGuard)

@@ -14,10 +14,10 @@ import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
 import { UsersModule } from 'src/domain/users/base-user/user.module';
 import { CandidatesModule } from 'src/domain/users/candidate/candidate.module';
 import { EmployeesModule } from 'src/domain/users/employee/employee.module';
-import { JobOfferModule } from 'src/domain/job-offer/job-offer.module';
 import { CandidateApplicationModule } from '../domain/candidate-application/candidate-application.module';
 import { InterviewModule } from '../domain/interviews/interview.module';
 import { InterviewReviewModule } from '../domain/interview-review/interview-review.module';
+import { JobOfferModule } from '../domain/job-offer/job-offer/job-offer.module';
 
 @Module({
   imports: [

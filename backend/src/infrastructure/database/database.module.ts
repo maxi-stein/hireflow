@@ -8,10 +8,10 @@ import {
   Candidate,
   Education,
 } from '../../domain/users/entities';
-import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
 import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
 import { Interview } from '../../domain/interviews/entities/interview.entity';
 import { InterviewReview } from '../../domain/interview-review/entity/interview-review.entity';
+import { JobOffer } from '../../domain/job-offer/job-offer/entities/job-offer.entity';
 
 @Module({
   imports: [
