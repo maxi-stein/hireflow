@@ -19,7 +19,7 @@ export class User {
   @Column({ type: 'varchar', length: USER.EMAIL_LENGTH, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: AUTH.BCRYPT_SALT_ROUNDS, select: false })
+  @Column({ type: 'varchar', length: AUTH.MAX_PASSWORD_LENGTH, select: false })
   password: string;
 
   @Column({ enum: UserType })
