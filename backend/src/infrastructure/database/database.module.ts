@@ -12,6 +12,8 @@ import { CandidateApplication } from '../../domain/candidate-application/entitie
 import { Interview } from '../../domain/interviews/entities/interview.entity';
 import { InterviewReview } from '../../domain/interview-review/entity/interview-review.entity';
 import { JobOffer } from '../../domain/job-offer/job-offer/entities/job-offer.entity';
+import { JobOfferSkill } from '../../domain/job-offer/job-offer-skills/entity/job-offer-skill.entity';
+import { CandidateSkillAnswer } from '../../domain/job-offer/job-offer-skills/entity/candidate-skill-answer.entity';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { JobOffer } from '../../domain/job-offer/job-offer/entities/job-offer.en
             Candidate,
             Education,
             JobOffer,
+            JobOfferSkill,
             CandidateApplication,
+            CandidateSkillAnswer,
             Interview,
             InterviewReview,
           ],
