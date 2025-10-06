@@ -1,11 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { JobOffer } from './entities/job-offer.entity';
-import {
-  PaginationDto,
-  PaginatedResponse,
-} from '../../shared/dto/pagination/pagination.dto';
 import {
   CreateJobOfferDto,
   JobOfferResponseDto,
@@ -13,23 +9,52 @@ import {
 } from './dto';
 import { FilterJobOfferDto } from './dto/filter-job-offer-dto';
 import { JobOfferStatus } from './interfaces';
+import { JobOfferSkillService } from '../job-offer-skills/job-offer-skill.service';
+import { PaginatedResponse } from '../../../shared/dto/pagination/pagination.dto';
 
 @Injectable()
 export class JobOfferService {
   constructor(
     @InjectRepository(JobOffer)
     private readonly jobOfferRepository: Repository<JobOffer>,
+    @Inject(JobOfferSkillService)
+    private readonly jobOfferSkillService: JobOfferSkillService,
   ) {}
 
   async create(
     createJobOfferDto: CreateJobOfferDto,
   ): Promise<JobOfferResponseDto> {
-    const jobOffer = this.jobOfferRepository.create({
-      ...createJobOfferDto,
-      status: JobOfferStatus.OPEN,
-      deleted: false,
-    });
-    return await this.jobOfferRepository.save(jobOffer);
+    return this.jobOfferRepository.manager.transaction(
+      async (transactionalEntityManager: EntityManager) => {
+        // 1. Create the JobOffer
+        const jobOffer = transactionalEntityManager.create(JobOffer, {
+          ...createJobOfferDto,
+          status: JobOfferStatus.OPEN,
+          deleted: false,
+        });
+
+        const savedJobOffer = await transactionalEntityManager.save(jobOffer);
+
+        // 2. Create skills if provided
+        if (createJobOfferDto.skills && createJobOfferDto.skills.length > 0) {
+          await this.jobOfferSkillService.createForJobOffer(
+            savedJobOffer.id,
+            createJobOfferDto.skills,
+            transactionalEntityManager,
+          );
+        }
+
+        const fullJobOffer = await transactionalEntityManager.findOne(
+          JobOffer,
+          {
+            where: { id: savedJobOffer.id },
+            relations: ['skills'],
+          },
+        );
+
+        return fullJobOffer;
+      },
+    );
   }
 
   async findAll(

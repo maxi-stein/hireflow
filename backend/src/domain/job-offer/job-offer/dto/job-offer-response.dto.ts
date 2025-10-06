@@ -1,3 +1,4 @@
+import { JobOfferSkillResponseDto } from '../../job-offer-skills/dto/job-offer-skill-response-dto';
 import { JobOfferStatus } from '../interfaces';
 import { WorkMode } from '../interfaces/work-mode.enum';
 
@@ -12,4 +13,5 @@ export class JobOfferResponseDto {
   status: JobOfferStatus;
   created_at: Date;
   updated_at: Date;
+  skills: JobOfferSkillResponseDto[];
 }

@@ -7,7 +7,8 @@ import {
 } from 'typeorm';
 import { JobOfferStatus } from '../interfaces/job-offer-status.enum';
 import { WorkMode } from '../interfaces/work-mode.enum';
-import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
+import { JobOfferSkill } from '../../job-offer-skills/entity/job-offer-skill.entity';
+import { CandidateApplication } from '../../../candidate-application/entities/candidate-application.entity';
 
 @Entity('job_offers')
 export class JobOffer {
@@ -52,20 +53,8 @@ export class JobOffer {
   @DeleteDateColumn({ nullable: true })
   deleted_at: Date | null;
 
-  // TODO: Uncomment when SkillQuestion entity is created
-  // @ManyToMany(() => SkillQuestion, (skillQuestion) => skillQuestion.jobOffers)
-  // @JoinTable({
-  //   name: 'job_offer_skills',
-  //   joinColumn: {
-  //     name: 'job_offer_id',
-  //     referencedColumnName: 'id',
-  //   },
-  //   inverseJoinColumn: {
-  //     name: 'skill_question_id',
-  //     referencedColumnName: 'id',
-  //   },
-  // })
-  // skillQuestions: SkillQuestion[];
+  @OneToMany(() => JobOfferSkill, (skill) => skill.job_offer)
+  skills: JobOfferSkill[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

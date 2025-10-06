@@ -1,49 +1,131 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { CreateCandidateApplicationDto } from './dto/create-candidate-application.dto';
 import { UpdateCandidateApplicationDto } from './dto/update-candidate-application';
-import {
-  PaginatedResponse,
-  PaginationDto,
-} from '../../shared/dto/pagination/pagination.dto';
+import { PaginatedResponse } from '../../shared/dto/pagination/pagination.dto';
 import { CandidateApplication } from './entities/candidate-application.entity';
 import { ApplicationStatus } from './interfaces/application-status';
 import { FilterApplicationsDto } from './dto/filter-applications.dto';
+import { JobOfferSkillService } from '../job-offer/job-offer-skills/job-offer-skill.service';
+import { CandidateSkillAnswerService } from '../job-offer/job-offer-skills/candidate-skill-answer.service';
+import { JobOfferService } from '../job-offer/job-offer/job-offer.service';
+import { CreateCandidateSkillAnswerDto } from '../job-offer/job-offer-skills/dto/create-candidate-skill-answer.dto';
 
 @Injectable()
 export class CandidateApplicationService {
   constructor(
     @InjectRepository(CandidateApplication)
     private readonly applicationRepository: Repository<CandidateApplication>,
+    @Inject(CandidateSkillAnswerService)
+    private readonly candidateSkillAnswerService: CandidateSkillAnswerService,
+    @Inject(JobOfferService)
+    private readonly jobOfferService: JobOfferService,
+    @Inject(JobOfferSkillService)
+    private readonly jobOfferSkillService: JobOfferSkillService,
   ) {}
 
   async create(
     createDto: CreateCandidateApplicationDto,
   ): Promise<CandidateApplication> {
-    const { candidate_id, job_offer_id } = createDto;
+    const { candidate_id, job_offer_id, skill_answers } = createDto;
 
-    // Check if the combination already exists
-    const existing = await this.applicationRepository.findOne({
-      where: { candidate_id, job_offer_id },
-    });
+    return this.applicationRepository.manager.transaction(
+      async (transactionalEntityManager: EntityManager) => {
+        // Validate if the application already exists
+        const existing = await transactionalEntityManager.findOne(
+          CandidateApplication,
+          {
+            where: { candidate_id, job_offer_id },
+          },
+        );
 
-    if (existing) {
+        if (existing) {
+          throw new BadRequestException(
+            'This candidate has already applied to the selected job offer.',
+          );
+        }
+
+        // Validate if the job offer exists
+        const jobOffer = await this.jobOfferService.findOne(job_offer_id);
+        if (!jobOffer) {
+          throw new NotFoundException(
+            `Job offer with ID ${job_offer_id} not found`,
+          );
+        }
+
+        // Validate if job offer is open
+        if (jobOffer.status !== 'OPEN') {
+          throw new BadRequestException('Cannot apply to a closed job offer');
+        }
+
+        // Create the application
+        const application = transactionalEntityManager.create(
+          CandidateApplication,
+          {
+            candidate_id,
+            job_offer_id,
+            status: ApplicationStatus.IN_PROGRESS,
+          },
+        );
+
+        const savedApplication =
+          await transactionalEntityManager.save(application);
+
+        // Create skill answers if provided
+        if (skill_answers && skill_answers.length > 0) {
+          // First validate if all skill answers belong to the job offer
+          await this.validateSkillAnswers(job_offer_id, skill_answers);
+
+          await this.candidateSkillAnswerService.createForApplication(
+            savedApplication.id,
+            skill_answers,
+            transactionalEntityManager,
+          );
+        }
+
+        return await transactionalEntityManager.findOne(CandidateApplication, {
+          where: { id: savedApplication.id },
+          relations: ['skill_answers', 'skill_answers.job_offer_skill'],
+        });
+      },
+    );
+  }
+
+  private async validateSkillAnswers(
+    jobOfferId: string,
+    skillAnswers: CreateCandidateSkillAnswerDto[],
+  ): Promise<void> {
+    // Obtain all skills from job offer.
+    const jobOfferSkills =
+      await this.jobOfferSkillService.findByJobOffer(jobOfferId);
+    const jobOfferSkillIds = jobOfferSkills.map((skill) => skill.id);
+
+    // Validate if all answered skills belong to the job offer.
+    const invalidSkillIds = skillAnswers
+      .map((answer) => answer.job_offer_skill_id)
+      .filter((skillId) => !jobOfferSkillIds.includes(skillId));
+
+    if (invalidSkillIds.length > 0) {
       throw new BadRequestException(
-        'This candidate has already applied to the selected job offer.',
+        `The following skills do not belong to this job offer: ${invalidSkillIds.join(', ')}`,
       );
     }
 
-    const application = this.applicationRepository.create({
-      ...createDto,
-      status: ApplicationStatus.IN_PROGRESS,
-    });
+    // Do not allow duplicated answers
+    const answeredSkillIds = skillAnswers.map(
+      (answer) => answer.job_offer_skill_id,
+    );
+    const uniqueSkillIds = [...new Set(answeredSkillIds)];
 
-    return await this.applicationRepository.save(application);
+    if (uniqueSkillIds.length !== answeredSkillIds.length) {
+      throw new BadRequestException('Duplicate skill answers found');
+    }
   }
 
   async findAll(
@@ -113,7 +195,13 @@ export class CandidateApplicationService {
   async findOne(id: string): Promise<CandidateApplication> {
     const application = await this.applicationRepository.findOne({
       where: { id },
-      relations: ['candidate', 'job_offer'],
+      relations: [
+        'skill_answers',
+        'skill_answers.job_offer_skill',
+        'candidate',
+        'candidate.user',
+        'job_offer',
+      ],
     });
 
     if (!application) {

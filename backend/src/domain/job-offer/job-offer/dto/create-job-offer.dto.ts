@@ -1,5 +1,13 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { WorkMode } from '../interfaces/work-mode.enum';
+import { Type } from 'class-transformer';
+import { CreateJobOfferSkillDto } from '../../job-offer-skills/dto/create-job-offer-skill.dto';
 
 export class CreateJobOfferDto {
   @IsString()
@@ -21,4 +29,10 @@ export class CreateJobOfferDto {
   @IsOptional()
   @IsString()
   benefits?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateJobOfferSkillDto)
+  skills?: CreateJobOfferSkillDto[];
 }
