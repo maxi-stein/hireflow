@@ -12,7 +12,7 @@ import databaseConfig from 'src/config/database.config';
 import { AuthModule } from '../domain/auth/auth.module';
 import { HttpExceptionFilter } from '../shared/filters/http-exception.filter';
 import { UsersModule } from 'src/domain/users/base-user/user.module';
-import { CandidatesModule } from 'src/domain/users/candidate/candidate.module';
+import { CandidateModule } from 'src/domain/users/candidate/candidate.module';
 import { EmployeesModule } from 'src/domain/users/employee/employee.module';
 import { CandidateApplicationModule } from '../domain/candidate-application/candidate-application.module';
 import { InterviewModule } from '../domain/interviews/interview.module';
@@ -43,7 +43,7 @@ import { JobOfferModule } from '../domain/job-offer/job-offer/job-offer.module';
     }),
     UsersModule,
     EmployeesModule,
-    CandidatesModule,
+    CandidateModule,
     JobOfferModule,
     CandidateApplicationModule,
     InterviewModule,

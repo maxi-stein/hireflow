@@ -12,14 +12,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities';
 import { GuardsModule } from './guards/guards.module';
 import { UsersModule } from '../users/base-user/user.module';
-import { CandidatesModule } from '../users/candidate/candidate.module';
+import { CandidateModule } from '../users/candidate/candidate.module';
 import { EmployeesModule } from '../users/employee/employee.module';
 
 @Module({
   imports: [
     UsersModule,
     EmployeesModule,
-    CandidatesModule,
+    CandidateModule,
     PassportModule,
     GuardsModule,
     JwtModule.registerAsync({

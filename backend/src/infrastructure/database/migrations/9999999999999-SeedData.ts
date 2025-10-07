@@ -48,6 +48,15 @@ export class SeedData9999999999999 implements MigrationInterface {
          '550e8400-e29b-41d4-a716-446655440002', NOW(), NOW())
     `);
 
+    // Work experiences for Candidate 1 (Alice)
+    await queryRunner.query(`
+      INSERT INTO "work_experiences"
+        ("id", "candidate_id", "company_name", "position", "start_date", "end_date", "description", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440040', '550e8400-e29b-41d4-a716-446655440004', 'Acme Corp', 'Junior Developer', '2020-01-01', '2021-06-30', 'Worked on internal tools with Node.js and React.', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440041', '550e8400-e29b-41d4-a716-446655440004', 'Globex', 'Full Stack Developer', '2021-07-01', NULL, 'Building customer-facing apps with TypeScript and PostgreSQL.', NOW(), NOW())
+    `);
+
     // Candidate 2
     await queryRunner.query(`
       INSERT INTO "candidates" 
@@ -55,6 +64,15 @@ export class SeedData9999999999999 implements MigrationInterface {
       VALUES 
         ('550e8400-e29b-41d4-a716-446655440005', 30, '987654321', NULL, NULL, 'https://github.com/bob', 'https://linkedin.com/in/bob', 
          '550e8400-e29b-41d4-a716-446655440003', NOW(), NOW())
+    `);
+
+    // Work experiences for Candidate 2 (Bob)
+    await queryRunner.query(`
+      INSERT INTO "work_experiences"
+        ("id", "candidate_id", "company_name", "position", "start_date", "end_date", "description", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440042', '550e8400-e29b-41d4-a716-446655440005', 'Initech', 'Backend Developer', '2019-03-01', '2022-02-28', 'Designed REST APIs and database schemas.', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440043', '550e8400-e29b-41d4-a716-446655440005', 'Hooli', 'Senior Backend Developer', '2022-03-01', NULL, 'Leading backend services with NestJS and Docker.', NOW(), NOW())
     `);
 
     // Job Offer 1
@@ -159,6 +177,7 @@ export class SeedData9999999999999 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`DELETE FROM "work_experiences"`);
     await queryRunner.query(`DELETE FROM "interview_reviews"`);
     await queryRunner.query(`DELETE FROM "interviews"`);
     await queryRunner.query(`DELETE FROM "candidate_skill_answers"`);

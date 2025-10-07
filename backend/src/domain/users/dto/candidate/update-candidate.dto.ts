@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UpdateEducationDto } from '../education/update-education.dto';
+import { UpdateWorkExperienceDto } from '../work-experience/update-work-experience.dto';
 
 export class UpdateCandidateDto {
   @IsOptional()
@@ -40,4 +41,9 @@ export class UpdateCandidateDto {
   @Type(() => UpdateEducationDto)
   @ArrayNotEmpty()
   educations?: UpdateEducationDto[];
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateWorkExperienceDto)
+  work_experiences?: UpdateWorkExperienceDto[];
 }

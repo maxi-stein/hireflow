@@ -7,10 +7,18 @@ import { User, Employee, Candidate, Education } from '../entities';
 import { UsersController } from './user.controller';
 import { UsersService } from './user.service';
 import { EducationService } from '../education/education.service';
+import { WorkExperienceService } from '../work-experience/work-experience.service';
+import { WorkExperience } from '../entities/work-experience.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Employee, Candidate, Education]),
+    TypeOrmModule.forFeature([
+      User,
+      Employee,
+      Candidate,
+      Education,
+      WorkExperience,
+    ]),
     GuardsModule,
   ],
   controllers: [UsersController],
@@ -19,6 +27,7 @@ import { EducationService } from '../education/education.service';
     EmployeesService,
     CandidateService,
     EducationService,
+    WorkExperienceService,
   ],
 })
 export class UsersModule {}

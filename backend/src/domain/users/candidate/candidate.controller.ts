@@ -13,7 +13,7 @@ import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
 import { UuidValidationPipe, NotEmptyDtoPipe } from '../../../shared/pipes';
 
 @Controller('candidates')
-export class CandidatesController {
+export class CandidateController {
   constructor(private readonly candidateService: CandidateService) {}
 
   @Get()

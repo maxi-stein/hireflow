@@ -9,6 +9,7 @@ import { Repository, EntityManager } from 'typeorm';
 import { Candidate } from '../entities/candidate.entity';
 import { User } from '../entities/user.entity';
 import { Education } from '../entities/education.entity';
+import { WorkExperience } from '../entities/work-experience.entity';
 import { CreateCandidateDto } from '../dto/candidate/create-candidate.dto';
 import { UpdateCandidateDto } from '../dto/candidate/update-candidate.dto';
 import { CandidateResponseDto } from '../dto/candidate/candidate-response.dto';
@@ -17,6 +18,7 @@ import {
   PaginationDto,
 } from '../../../shared/dto/pagination/pagination.dto';
 import { EducationService } from '../education/education.service';
+import { WorkExperienceService } from '../work-experience/work-experience.service';
 import { UserType } from '../interfaces/user.enum';
 
 @Injectable()
@@ -25,6 +27,7 @@ export class CandidateService {
     @InjectRepository(Candidate)
     private readonly candidateRepository: Repository<Candidate>,
     private readonly educationService: EducationService,
+    private readonly workExperienceService: WorkExperienceService,
   ) {}
 
   async create(
@@ -86,6 +89,17 @@ export class CandidateService {
         await manager.save(educations);
       }
 
+      // Create work experience records if provided
+      if (createCandidateDto.work_experiences?.length > 0) {
+        const workExperiences = createCandidateDto.work_experiences.map((exp) =>
+          manager.create(WorkExperience, {
+            ...exp,
+            candidate: savedCandidate,
+          }),
+        );
+        await manager.save(workExperiences);
+      }
+
       // Return full candidate with relations
       return this.mapToResponseDto(
         await this.findCandidateWithRelations(savedCandidate.id, manager),
@@ -111,7 +125,7 @@ export class CandidateService {
     paginationDto: PaginationDto = { page: 1, limit: 10 },
   ): Promise<PaginatedResponse<CandidateResponseDto>> {
     const [candidates, total] = await this.candidateRepository.findAndCount({
-      relations: ['user', 'education'],
+      relations: ['user', 'education', 'work_experiences'],
       select: this.getCandidateSelectFields(),
       skip: (paginationDto.page - 1) * paginationDto.limit,
       take: paginationDto.limit,
@@ -130,7 +144,7 @@ export class CandidateService {
   async findOne(id: string): Promise<CandidateResponseDto> {
     const candidate = await this.candidateRepository.findOne({
       where: { id },
-      relations: ['user', 'education'],
+      relations: ['user', 'education', 'work_experiences'],
       select: this.getCandidateSelectFields(),
     });
 
@@ -149,14 +163,15 @@ export class CandidateService {
       async (transactionalEntityManager) => {
         const candidate = await transactionalEntityManager.findOne(Candidate, {
           where: { id },
-          relations: ['education'],
+          relations: ['education', 'work_experiences'],
         });
 
         if (!candidate) {
           throw new NotFoundException(`Candidate with ID ${id} not found`);
         }
 
-        const { educations, ...candidateFields } = updateCandidateDto;
+        const { educations, work_experiences, ...candidateFields } =
+          updateCandidateDto;
 
         // Update candidate fields
         const updatedCandidate = transactionalEntityManager.merge(
@@ -176,11 +191,20 @@ export class CandidateService {
           );
         }
 
+        // Update candidate work experiences
+        if (work_experiences) {
+          await this.workExperienceService.updateWorkExperiences(
+            candidate.id,
+            work_experiences,
+            transactionalEntityManager,
+          );
+        }
+
         const fullCandidate = await transactionalEntityManager.findOne(
           Candidate,
           {
             where: { id },
-            relations: ['user', 'education'],
+            relations: ['user', 'education', 'work_experiences'],
           },
         );
 
@@ -211,7 +235,7 @@ export class CandidateService {
   ): Promise<Candidate> {
     return entityManager.findOne(Candidate, {
       where: { id },
-      relations: ['user', 'education'],
+      relations: ['user', 'education', 'work_experiences'],
       select: this.getCandidateSelectFields(),
     });
   }
@@ -250,14 +274,19 @@ export class CandidateService {
         created_at: true,
         updated_at: true,
       },
+      work_experiences: {
+        id: true,
+        company_name: true,
+        position: true,
+        start_date: true,
+        end_date: true,
+        description: true,
+        created_at: true,
+        updated_at: true,
+      },
     };
   }
 
-  /**
-   * Maps Candidate entity to response DTO
-   * @param candidate - Candidate entity
-   * @returns Response DTO
-   */
   private mapToResponseDto(candidate: Candidate): CandidateResponseDto {
     return {
       id: candidate.id,
@@ -286,6 +315,17 @@ export class CandidateService {
         start_date: edu.start_date,
         end_date: edu.end_date,
         description: edu.description,
+      })),
+      work_experiences: candidate.work_experiences?.map((exp) => ({
+        candidate_id: candidate.id,
+        id: exp.id,
+        company_name: exp.company_name,
+        position: exp.position,
+        start_date: exp.start_date,
+        end_date: exp.end_date,
+        description: exp.description,
+        created_at: exp.created_at,
+        updated_at: exp.updated_at,
       })),
       profile_created_at: candidate.profile_created_at,
       profile_updated_at: candidate.profile_updated_at,

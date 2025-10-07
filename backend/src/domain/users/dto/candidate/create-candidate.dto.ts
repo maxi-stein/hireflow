@@ -7,6 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CreateEducationDto } from '../education/create-education.dto';
+import { CreateWorkExperienceDto } from '../work-experience/create-work-experience.dto';
 
 export class CreateCandidateDto {
   @IsInt()
@@ -33,4 +34,9 @@ export class CreateCandidateDto {
   @ValidateNested({ each: true })
   @Type(() => CreateEducationDto)
   educations?: CreateEducationDto[];
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateWorkExperienceDto)
+  work_experiences?: CreateWorkExperienceDto[];
 }

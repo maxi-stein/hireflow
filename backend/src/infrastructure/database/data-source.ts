@@ -12,6 +12,7 @@ import { InterviewReview } from '../../domain/interview-review/entity/interview-
 import { JobOffer } from '../../domain/job-offer/job-offer/entities/job-offer.entity';
 import { JobOfferSkill } from '../../domain/job-offer/job-offer-skills/entity/job-offer-skill.entity';
 import { CandidateSkillAnswer } from '../../domain/job-offer/job-offer-skills/entity/candidate-skill-answer.entity';
+import { WorkExperience } from '../../domain/users/entities/work-experience.entity';
 
 // Load environment variables
 config();
@@ -32,6 +33,7 @@ export const AppDataSource = new DataSource({
     JobOfferSkill,
     CandidateApplication,
     CandidateSkillAnswer,
+    WorkExperience,
     Interview,
     InterviewReview,
   ],

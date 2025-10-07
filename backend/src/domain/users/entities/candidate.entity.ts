@@ -10,6 +10,7 @@ import {
 import { Education } from './education.entity';
 import { User } from './user.entity';
 import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
+import { WorkExperience } from './work-experience.entity';
 
 @Entity('candidates')
 export class Candidate {
@@ -36,6 +37,9 @@ export class Candidate {
 
   @OneToMany(() => Education, (education) => education.candidate)
   education: Education[];
+
+  @OneToMany(() => WorkExperience, (workExperience) => workExperience.candidate)
+  work_experiences: WorkExperience[];
 
   @OneToOne(() => User, (user) => user.candidate, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
