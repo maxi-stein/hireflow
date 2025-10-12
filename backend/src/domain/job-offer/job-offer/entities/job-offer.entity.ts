@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { JobOfferStatus } from '../interfaces/job-offer-status.enum';
 import { WorkMode } from '../interfaces/work-mode.enum';
@@ -56,13 +58,9 @@ export class JobOffer {
   @OneToMany(() => JobOfferSkill, (skill) => skill.job_offer)
   skills: JobOfferSkill[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
 
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'updated_at' })
   updated_at: Date;
 }
