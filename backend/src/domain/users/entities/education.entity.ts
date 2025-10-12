@@ -28,7 +28,7 @@ export class Education {
   @Column({ type: 'text', nullable: true })
   description?: string; // Additional details about the education (optional)
 
-  @ManyToOne(() => Candidate, (candidate) => candidate.education, {
+  @ManyToOne(() => Candidate, (candidate) => candidate.educations, {
     onDelete: 'CASCADE',
   })
   candidate: Candidate;

@@ -36,7 +36,7 @@ export class Candidate {
   linkedin: string | null;
 
   @OneToMany(() => Education, (education) => education.candidate)
-  education: Education[];
+  educations: Education[];
 
   @OneToMany(() => WorkExperience, (workExperience) => workExperience.candidate)
   work_experiences: WorkExperience[];

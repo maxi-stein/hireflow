@@ -304,7 +304,7 @@ export class CandidateService {
         created_at: candidate.user.created_at,
         updated_at: candidate.user.updated_at,
       },
-      educations: candidate.education?.map((edu) => ({
+      educations: candidate.educations?.map((edu) => ({
         candidate_id: candidate.id,
         id: edu.id,
         institution: edu.institution,
