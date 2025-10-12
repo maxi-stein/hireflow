@@ -6,6 +6,8 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Education } from './education.entity';
 import { User } from './user.entity';
@@ -48,13 +50,9 @@ export class Candidate {
   @OneToMany(() => CandidateApplication, (application) => application.candidate)
   applications: CandidateApplication[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ name: 'profile_created_at' })
   profile_created_at: Date;
 
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'profile_updated_at' })
   profile_updated_at: Date;
 }

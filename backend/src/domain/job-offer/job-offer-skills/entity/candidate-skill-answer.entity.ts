@@ -5,7 +5,6 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { JobOfferSkill } from './job-offer-skill.entity';
 import { CandidateApplication } from '../../../candidate-application/entities/candidate-application.entity';

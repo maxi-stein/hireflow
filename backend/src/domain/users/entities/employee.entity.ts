@@ -7,6 +7,8 @@ import {
   JoinColumn,
   ManyToMany,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { EmployeeRole } from '../interfaces/user.enum';
@@ -31,14 +33,10 @@ export class Employee {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ name: 'profile_created_at' })
   profile_created_at: Date;
 
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'profile_updated_at' })
   profile_updated_at: Date;
 
   @ManyToMany(() => Interview, (interview) => interview.interviewers)
