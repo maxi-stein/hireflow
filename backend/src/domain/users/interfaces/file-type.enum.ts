@@ -1,4 +1,4 @@
 export enum FileType {
-  PROFILE = 'profile_picture',
+  PROFILE_PICTURE = 'profile_picture',
   RESUME = 'cv',
 }

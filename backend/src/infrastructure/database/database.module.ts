@@ -15,6 +15,7 @@ import { JobOffer } from '../../domain/job-offer/job-offer/entities/job-offer.en
 import { JobOfferSkill } from '../../domain/job-offer/job-offer-skills/entity/job-offer-skill.entity';
 import { CandidateSkillAnswer } from '../../domain/job-offer/job-offer-skills/entity/candidate-skill-answer.entity';
 import { WorkExperience } from '../../domain/users/entities/work-experience.entity';
+import { UserFile } from '../../domain/users/entities/user-files.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { WorkExperience } from '../../domain/users/entities/work-experience.enti
             User,
             Employee,
             Candidate,
+            UserFile,
             Education,
             JobOffer,
             JobOfferSkill,

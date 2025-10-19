@@ -184,6 +184,7 @@ export class SeedData9999999999999 implements MigrationInterface {
     await queryRunner.query(`DELETE FROM "candidate_applications"`);
     await queryRunner.query(`DELETE FROM "job_offer_skills"`);
     await queryRunner.query(`DELETE FROM "job_offers"`);
+    await queryRunner.query(`DELETE FROM "user_files"`);
     await queryRunner.query(`DELETE FROM "employees"`);
     await queryRunner.query(`DELETE FROM "educations"`);
     await queryRunner.query(`DELETE FROM "candidates"`);

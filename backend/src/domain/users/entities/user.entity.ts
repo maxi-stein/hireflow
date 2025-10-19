@@ -1,9 +1,18 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Candidate } from './candidate.entity';
 import { Employee } from './employee.entity';
 import { USER } from '../../../shared/constants/user.constants';
 import { AUTH } from '../../../shared/constants/auth.constants';
 import { UserType } from '../interfaces/user.enum';
+import { UserFile } from './user-files.entity';
 
 @Entity('users')
 export class User {
@@ -25,19 +34,18 @@ export class User {
   @Column({ enum: UserType })
   user_type: UserType;
 
+  @OneToMany(() => UserFile, (file) => file.user)
+  files: UserFile[];
+
   @OneToOne(() => Employee, (employee) => employee.user, { nullable: true })
   employee?: Employee;
 
   @OneToOne(() => Candidate, (candidate) => candidate.user, { nullable: true })
   candidate?: Candidate;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
 
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'updated_at' })
   updated_at: Date;
 }
