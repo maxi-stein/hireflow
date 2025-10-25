@@ -163,7 +163,7 @@ export class UsersService {
     }
 
     return {
-      id: user.id,
+      user_id: user.id,
       email: user.email,
       user_type: user.user_type,
       entity_id,

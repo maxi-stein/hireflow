@@ -28,6 +28,7 @@ export class AuthService {
       email: user.email,
       sub: user.entity_id, // Use entity_id as the subject
       role: user.user_type,
+      user_id: user.user_id, // Include the actual user_id
     };
     return {
       access_token: this.jwtService.sign(payload),
