@@ -45,7 +45,7 @@ export class FileStorageService {
           fileType === FileType.RESUME ||
           fileType === FileType.PROFILE_PICTURE
         ) {
-          await this.deletePreviousFiles(
+          await this.deletePreviousFile(
             user.user_id,
             fileType,
             transactionalEntityManager,
@@ -190,7 +190,12 @@ export class FileStorageService {
     const extension = path.extname(file.originalname);
     const fileName = `${userId}${extension}`;
 
-    const filePath = this.getFilePath(userId, fileType, fileName);
+    const filePath = path.join(
+      this.uploadBasePath,
+      fileType.toLowerCase(),
+      's',
+      fileName,
+    );
 
     // Create folders and sub folders recursively if they do not exist.
     // Otherwise do nothing
@@ -210,13 +215,13 @@ export class FileStorageService {
     };
   }
 
-  private async deletePreviousFiles(
+  private async deletePreviousFile(
     userId: string,
     fileType: FileType,
     transactionalEntityManager: EntityManager,
   ) {
     try {
-      const existingFiles = await transactionalEntityManager.find(UserFile, {
+      const { file_path } = await transactionalEntityManager.findOne(UserFile, {
         where: {
           user: { id: userId },
           file_type: fileType,
@@ -228,36 +233,22 @@ export class FileStorageService {
         file_type: fileType,
       });
 
-      await this.deletePhysicalFiles(existingFiles);
-    } catch (error) {
-      console.warn(`Error deleting previous files for user ${userId}:`, error);
-    }
-  }
-
-  private async deletePhysicalFiles(files: UserFile[]) {
-    for (const file of files) {
       try {
-        await fs.unlink(file.file_path);
+        await fs.unlink(file_path);
       } catch (error) {
-        console.warn(
-          `Could not delete physical file ${file.file_path}:`,
-          error,
-        );
+        console.warn(`Could not delete physical file ${file_path}:`, error);
       }
-    }
-
-    if (files.length > 0) {
-      const firstFile = files[0];
-      const dirPath = path.dirname(firstFile.file_path);
 
       try {
-        const filesInDir = await fs.readdir(dirPath);
+        const filesInDir = await fs.readdir(file_path);
         if (filesInDir.length === 0) {
-          await fs.rmdir(dirPath);
+          await fs.rmdir(file_path);
         }
       } catch (error) {
-        console.warn(`Could not delete directory ${dirPath}:`, error);
+        console.warn(`Could not delete directory ${file_path}:`, error);
       }
+    } catch (error) {
+      console.warn(`Error deleting previous files for user ${userId}:`, error);
     }
   }
 
@@ -265,14 +256,5 @@ export class FileStorageService {
     try {
       await fs.unlink(filePath);
     } catch (error) {}
-  }
-
-  private getFilePath(userId: string, fileType: FileType, fileName: string) {
-    return path.join(
-      this.uploadBasePath,
-      userId,
-      fileType.toLowerCase(),
-      fileName,
-    );
   }
 }
