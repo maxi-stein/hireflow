@@ -23,6 +23,7 @@ import { FILE } from '../../../shared/constants/file.constants';
 import { FileStorageService } from './user-file.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { UuidValidationPipe } from '../../../shared/pipes';
+import { CanAccessUser } from '../../auth/guards/can-edit.guard';
 
 @Controller('files')
 @UseGuards(JwtAuthGuard)
@@ -116,6 +117,7 @@ export class FileController {
   }
 
   @Get('/user/:userId')
+  @UseGuards(CanAccessUser) //Employees and self-user only can access this data
   @UsePipes(new UuidValidationPipe())
   async getAllFiles(@Param('userId', UuidValidationPipe) userId: string) {
     return await this.fileStorageService.getAllUserFilesMetadata(userId);

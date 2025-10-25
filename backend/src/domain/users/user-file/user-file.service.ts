@@ -192,8 +192,7 @@ export class FileStorageService {
 
     const filePath = path.join(
       this.uploadBasePath,
-      fileType.toLowerCase(),
-      's',
+      fileType.toLowerCase() + 's',
       fileName,
     );
 
@@ -221,12 +220,14 @@ export class FileStorageService {
     transactionalEntityManager: EntityManager,
   ) {
     try {
-      const { file_path } = await transactionalEntityManager.findOne(UserFile, {
+      const existingFile = await transactionalEntityManager.findOne(UserFile, {
         where: {
           user: { id: userId },
           file_type: fileType,
         },
       });
+
+      if (!existingFile) return;
 
       await transactionalEntityManager.delete(UserFile, {
         user: { id: userId },
@@ -234,18 +235,22 @@ export class FileStorageService {
       });
 
       try {
-        await fs.unlink(file_path);
+        await fs.unlink(existingFile.file_path);
       } catch (error) {
-        console.warn(`Could not delete physical file ${file_path}:`, error);
+        console.warn(
+          `Could not delete physical file ${existingFile.file_path}:`,
+          error,
+        );
       }
 
       try {
-        const filesInDir = await fs.readdir(file_path);
+        const dirPath = path.dirname(existingFile.file_path);
+        const filesInDir = await fs.readdir(dirPath);
         if (filesInDir.length === 0) {
-          await fs.rmdir(file_path);
+          await fs.rmdir(dirPath);
         }
       } catch (error) {
-        console.warn(`Could not delete directory ${file_path}:`, error);
+        console.warn(`Could not delete directory:`, error);
       }
     } catch (error) {
       console.warn(`Error deleting previous files for user ${userId}:`, error);

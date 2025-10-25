@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RegisterCandidateDto } from '../users/dto/user/create-user.dto';
+import { JwtUser } from '../users/interfaces/jwt.user';
 
 @Controller('auth')
 export class AuthController {
@@ -24,13 +25,13 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
+  async login(@Request() req: Request & { user: JwtUser }) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req) {
+  async getProfile(@Request() req: Request & { user: JwtUser }) {
     return this.authService.getProfileByEntity(
       req.user.entity_id,
       req.user.user_type,
