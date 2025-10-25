@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateWorkExperienceDto } from '../dto/work-experience/create-work-experience.dto';
 import { UpdateWorkExperienceDto } from '../dto/work-experience/update-work-experience.dto';
 import { WorkExperienceService } from './work-experience.service';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('candidates/:candidateId/work-experiences')
+@UseGuards(JwtAuthGuard)
 export class WorkExperienceController {
   constructor(private readonly workExperienceService: WorkExperienceService) {}
 

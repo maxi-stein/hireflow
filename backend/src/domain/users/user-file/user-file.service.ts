@@ -7,12 +7,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import * as crypto from 'crypto';
 import { UserFile } from '../entities/user-files.entity';
 import { FileType } from '../interfaces/file-type.enum';
 import { JwtUser } from '../interfaces/jwt.user';
-import { Candidate } from '../entities/candidate.entity';
-import { Employee } from '../entities/employee.entity';
+import { createReadStream } from 'fs';
+import * as sharp from 'sharp';
 
 @Injectable()
 export class FileStorageService {
@@ -21,10 +20,6 @@ export class FileStorageService {
   constructor(
     @InjectRepository(UserFile)
     private readonly userFileRepository: Repository<UserFile>,
-    @InjectRepository(Candidate)
-    private readonly candidateRepository: Repository<Candidate>,
-    @InjectRepository(Employee)
-    private readonly employeeRepository: Repository<Employee>,
   ) {}
 
   async storeUserFile(
@@ -35,48 +30,47 @@ export class FileStorageService {
   ): Promise<UserFile> {
     const manager = entityManager || this.userFileRepository.manager;
 
+    let fileMeta: any;
+
     return manager.transaction(async (transactionalEntityManager) => {
       try {
-        // 1. Validaciones específicas por tipo
+        //Validate type
         this.validateFileForType(file, fileType);
 
-        // 2. Procesar archivo si es necesario (ej: imágenes)
+        // Process file if needed
         const processedFile = await this.processFileIfNeeded(file, fileType);
 
-        // 3. Guardar en filesystem
-        const fileMeta = await this.saveToFilesystem(
-          user.id,
-          processedFile,
-          fileType,
-        );
-
-        // 4. Si es CV o Profile Picture, desactivar archivos anteriores del mismo tipo
+        // If Resume or Profile Picture, delete old file
         if (
           fileType === FileType.RESUME ||
           fileType === FileType.PROFILE_PICTURE
         ) {
-          await this.deactivatePreviousFiles(
-            user.id,
+          await this.deletePreviousFiles(
+            user.user_id,
             fileType,
             transactionalEntityManager,
           );
         }
 
+        // Save in filesystem
+        fileMeta = await this.saveToFilesystem(
+          user.user_id,
+          processedFile,
+          fileType,
+        );
+
         // Save metadata in BD
         const userFile = transactionalEntityManager.create(UserFile, {
           ...fileMeta,
           file_type: fileType,
-          user: { id: user.id },
+          user: { id: user.user_id },
         });
 
         const savedFile = await transactionalEntityManager.save(userFile);
 
-        // Actualizar profile_updated_at en Candidate o Employee
-        await this.updateProfileTimestamp(user, transactionalEntityManager);
-
         return savedFile;
       } catch (error) {
-        // Limpiar archivo si la transacción falla
+        // If transaction fails, clean up file data
         if (fileMeta?.file_path) {
           await this.cleanupFailedUpload(fileMeta.file_path);
         }
@@ -91,23 +85,27 @@ export class FileStorageService {
     });
 
     if (!userFile) {
-      throw new NotFoundException('Archivo no encontrado');
+      throw new NotFoundException('File metadata not found in DB');
     }
 
     try {
       await fs.access(userFile.file_path);
     } catch {
-      throw new NotFoundException('Archivo físico no encontrado');
+      throw new NotFoundException('File not found in the folder');
     }
 
-    const fs = require('fs');
-    return fs.createReadStream(userFile.file_path);
+    return createReadStream(userFile.file_path);
   }
 
-  async getUserFilesByType(userId: string, fileType: FileType) {
+  async getUserFileMetadata(fileId: string, userId: string) {
+    return this.userFileRepository.findOne({
+      where: { user: { id: userId }, id: fileId },
+    });
+  }
+
+  async getAllUserFilesMetadata(userId: string) {
     return this.userFileRepository.find({
-      where: { user: { id: userId }, file_type: fileType },
-      order: { created_at: 'DESC' },
+      where: { user: { id: userId } },
     });
   }
 
@@ -117,7 +115,7 @@ export class FileStorageService {
     });
 
     if (!userFile) {
-      throw new NotFoundException('Archivo no encontrado');
+      throw new NotFoundException('File not found');
     }
 
     await this.userFileRepository.manager.transaction(
@@ -127,7 +125,7 @@ export class FileStorageService {
           await fs.unlink(userFile.file_path);
         } catch (error) {
           console.warn(
-            `No se pudo eliminar el archivo físico: ${userFile.file_path}`,
+            `Physical file could not be deleted: ${userFile.file_path}`,
           );
         }
 
@@ -141,14 +139,12 @@ export class FileStorageService {
     switch (fileType) {
       case FileType.RESUME:
         if (file.mimetype !== 'application/pdf') {
-          throw new BadRequestException('El CV debe ser un archivo PDF');
+          throw new BadRequestException('Resume must be a PDF');
         }
         break;
       case FileType.PROFILE_PICTURE:
         if (!file.mimetype.startsWith('image/')) {
-          throw new BadRequestException(
-            'La foto de perfil debe ser una imagen',
-          );
+          throw new BadRequestException('Profile picture must be an image');
         }
         break;
     }
@@ -159,7 +155,7 @@ export class FileStorageService {
     fileType: FileType,
   ): Promise<Express.Multer.File> {
     if (fileType === FileType.PROFILE_PICTURE) {
-      // Procesar imagen (redimensionar, comprimir, etc.)
+      // Process image (redimension, compress, etc.)
       return await this.processImage(file);
     }
     return file;
@@ -168,12 +164,10 @@ export class FileStorageService {
   private async processImage(
     file: Express.Multer.File,
   ): Promise<Express.Multer.File> {
-    const sharp = require('sharp');
-
     try {
       const processedBuffer = await sharp(file.buffer)
-        .resize(500, 500) // Tamaño máximo
-        .jpeg({ quality: 80 }) // Convertir a JPEG para consistencia
+        .resize(500, 500)
+        .jpeg({ quality: 80 }) // Quality to 80%
         .toBuffer();
 
       return {
@@ -184,7 +178,7 @@ export class FileStorageService {
         originalname: path.parse(file.originalname).name + '.jpg',
       };
     } catch (error) {
-      throw new BadRequestException('No se pudo procesar la imagen');
+      throw new BadRequestException('Image could not be processed');
     }
   }
 
@@ -194,17 +188,17 @@ export class FileStorageService {
     fileType: FileType,
   ) {
     const extension = path.extname(file.originalname);
-    const randomName = crypto.randomBytes(16).toString('hex');
-    const fileName = `${randomName}${extension}`;
+    const fileName = `${userId}${extension}`;
 
-    const filePath = path.join(
-      this.uploadBasePath,
-      userId,
-      fileType.toLowerCase(),
-      fileName,
-    );
+    const filePath = this.getFilePath(userId, fileType, fileName);
 
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
+    // Create folders and sub folders recursively if they do not exist.
+    // Otherwise do nothing
+    await fs.mkdir(path.dirname(filePath), {
+      recursive: true,
+    });
+
+    // Write the file
     await fs.writeFile(filePath, file.buffer);
 
     return {
@@ -216,58 +210,69 @@ export class FileStorageService {
     };
   }
 
-  private async deactivatePreviousFiles(
+  private async deletePreviousFiles(
     userId: string,
     fileType: FileType,
     transactionalEntityManager: EntityManager,
   ) {
-    // Para CV y Profile Picture, mantener solo el último activo
-    // Podrías implementar lógica de "soft delete" o marcar como inactivo
-    // Por ahora simplemente eliminamos los anteriores (depende de tu negocio)
-    // await transactionalEntityManager.delete(UserFile, {
-    //   user: { id: userId },
-    //   file_type: fileType,
-    // });
-    // O mantener historial pero marcar cuál es el activo
+    try {
+      const existingFiles = await transactionalEntityManager.find(UserFile, {
+        where: {
+          user: { id: userId },
+          file_type: fileType,
+        },
+      });
+
+      await transactionalEntityManager.delete(UserFile, {
+        user: { id: userId },
+        file_type: fileType,
+      });
+
+      await this.deletePhysicalFiles(existingFiles);
+    } catch (error) {
+      console.warn(`Error deleting previous files for user ${userId}:`, error);
+    }
   }
 
-  private async updateProfileTimestamp(
-    user: JwtUser,
-    transactionalEntityManager: EntityManager,
-  ) {
-    const currentTimestamp = new Date();
+  private async deletePhysicalFiles(files: UserFile[]) {
+    for (const file of files) {
+      try {
+        await fs.unlink(file.file_path);
+      } catch (error) {
+        console.warn(
+          `Could not delete physical file ${file.file_path}:`,
+          error,
+        );
+      }
+    }
 
-    if (user.user_type === 'candidate') {
-      await transactionalEntityManager.update(
-        Candidate,
-        { user: { id: user.id } },
-        { profile_updated_at: currentTimestamp },
-      );
-    } else if (user.user_type === 'employee') {
-      await transactionalEntityManager.update(
-        Employee,
-        { user: { id: user.id } },
-        { profile_updated_at: currentTimestamp },
-      );
+    if (files.length > 0) {
+      const firstFile = files[0];
+      const dirPath = path.dirname(firstFile.file_path);
+
+      try {
+        const filesInDir = await fs.readdir(dirPath);
+        if (filesInDir.length === 0) {
+          await fs.rmdir(dirPath);
+        }
+      } catch (error) {
+        console.warn(`Could not delete directory ${dirPath}:`, error);
+      }
     }
   }
 
   private async cleanupFailedUpload(filePath: string) {
     try {
       await fs.unlink(filePath);
-    } catch (error) {
-      // Silent fail - el archivo podría no existir
-    }
+    } catch (error) {}
   }
 
-  // Método auxiliar para obtener el archivo activo de un tipo
-  async getActiveUserFile(
-    userId: string,
-    fileType: FileType,
-  ): Promise<UserFile | null> {
-    return this.userFileRepository.findOne({
-      where: { user: { id: userId }, file_type: fileType },
-      order: { created_at: 'DESC' },
-    });
+  private getFilePath(userId: string, fileType: FileType, fileName: string) {
+    return path.join(
+      this.uploadBasePath,
+      userId,
+      fileType.toLowerCase(),
+      fileName,
+    );
   }
 }
