@@ -29,5 +29,6 @@ import { WorkExperience } from '../entities/work-experience.entity';
     EducationService,
     WorkExperienceService,
   ],
+  exports: [UsersService],
 })
 export class UsersModule {}

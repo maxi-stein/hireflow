@@ -21,7 +21,7 @@ import {
   ConditionalValidationPipe,
 } from '../../../shared/pipes';
 import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
-import { CanAccessUser } from '../../auth/guards/can-edit.guard';
+import { CanAccessUser } from '../../auth/guards/can-access.guard';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)

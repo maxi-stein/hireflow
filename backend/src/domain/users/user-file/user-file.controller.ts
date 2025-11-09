@@ -23,7 +23,7 @@ import { FILE } from '../../../shared/constants/file.constants';
 import { FileStorageService } from './user-file.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { UuidValidationPipe } from '../../../shared/pipes';
-import { CanAccessUser } from '../../auth/guards/can-edit.guard';
+import { CanAccessUser } from '../../auth/guards/can-access.guard';
 
 @Controller('files')
 @UseGuards(JwtAuthGuard)
