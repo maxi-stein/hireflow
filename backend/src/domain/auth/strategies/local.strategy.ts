@@ -12,6 +12,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  // Used when logging in with email and pwd (called by @UseGuards(LocalAuthGuard))
   async validate(email: string, password: string): Promise<JwtUser> {
     const user = await this.authService.validateUser(email, password);
     if (!user) {

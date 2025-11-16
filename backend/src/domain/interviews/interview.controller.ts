@@ -39,8 +39,8 @@ export class InterviewController {
     return this.interviewService.findOne(id);
   }
 
-  @UseGuards(UserTypeGuard)
-  @RequireUserType(UserType.EMPLOYEE)
+  @RequireUserType(UserType.EMPLOYEE) //Sets the required user types
+  @UseGuards(UserTypeGuard) //Checks if the user is that same user_type
   @Patch(':id')
   update(
     @Param('id', UuidValidationPipe) id: string,

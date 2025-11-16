@@ -23,12 +23,14 @@ export class AuthController {
     return this.authService.register(registerCandidateDto);
   }
 
-  @UseGuards(LocalAuthGuard)
+  // Login for candidates and employees
+  @UseGuards(LocalAuthGuard) // Sets Request.user (if credentials are valid) or throws unauthorized exception
   @Post('login')
   async login(@Request() req: Request & { user: JwtUser }) {
     return this.authService.login(req.user);
   }
 
+  // Get all profile information for the user
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: Request & { user: JwtUser }) {

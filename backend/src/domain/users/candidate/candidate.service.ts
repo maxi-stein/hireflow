@@ -107,6 +107,7 @@ export class CandidateService {
     });
   }
 
+  // Called internally by the UserService aftear creating the user, in order to create the candidate
   async registerCandidate(userId: string, manager: EntityManager) {
     const candidate = manager.create(Candidate, {
       age: null,
