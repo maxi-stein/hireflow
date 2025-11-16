@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialMigration1761412015657 implements MigrationInterface {
-    name = 'InitialMigration1761412015657'
+export class InitialMigration1763314787104 implements MigrationInterface {
+    name = 'InitialMigration1763314787104'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."educations_degree_type_enum" AS ENUM('Licenciatura', 'Maestría', 'Doctorado', 'Técnico Superior', 'Diploma', 'Certificación', 'Otro')`);
@@ -11,8 +11,7 @@ export class InitialMigration1761412015657 implements MigrationInterface {
         await queryRunner.query(`CREATE TYPE "public"."interviews_type_enum" AS ENUM('individual', 'group')`);
         await queryRunner.query(`CREATE TYPE "public"."interviews_status_enum" AS ENUM('scheduled', 'completed', 'cancelled', 'rescheduled')`);
         await queryRunner.query(`CREATE TABLE "interviews" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "type" "public"."interviews_type_enum" NOT NULL, "scheduled_time" TIMESTAMP NOT NULL, "meeting_link" character varying(500), "status" "public"."interviews_status_enum" NOT NULL DEFAULT 'scheduled', "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_fd41af1f96d698fa33c2f070f47" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TYPE "public"."employees_role_enum" AS ENUM('hr', 'manager')`);
-        await queryRunner.query(`CREATE TABLE "employees" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "role" "public"."employees_role_enum" NOT NULL, "position" character varying(100) NOT NULL, "profile_created_at" TIMESTAMP NOT NULL DEFAULT now(), "profile_updated_at" TIMESTAMP NOT NULL DEFAULT now(), "user_id" uuid, CONSTRAINT "REL_2d83c53c3e553a48dadb9722e3" UNIQUE ("user_id"), CONSTRAINT "PK_b9535a98350d5b26e7eb0c26af4" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "employees" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "roles" character varying(32) array NOT NULL, "position" character varying(100) NOT NULL, "profile_created_at" TIMESTAMP NOT NULL DEFAULT now(), "profile_updated_at" TIMESTAMP NOT NULL DEFAULT now(), "user_id" uuid, CONSTRAINT "REL_2d83c53c3e553a48dadb9722e3" UNIQUE ("user_id"), CONSTRAINT "PK_b9535a98350d5b26e7eb0c26af4" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."job_offers_work_mode_enum" AS ENUM('hybrid', 'full-remote', 'office')`);
         await queryRunner.query(`CREATE TYPE "public"."job_offers_status_enum" AS ENUM('OPEN', 'CLOSED')`);
         await queryRunner.query(`CREATE TABLE "job_offers" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "position" character varying NOT NULL, "location" character varying NOT NULL, "work_mode" "public"."job_offers_work_mode_enum" NOT NULL, "description" text NOT NULL, "salary" character varying, "benefits" text, "status" "public"."job_offers_status_enum" NOT NULL DEFAULT 'OPEN', "deleted" boolean NOT NULL DEFAULT false, "deleted_at" TIMESTAMP, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_9a54d36bd6829979f945defdeb5" PRIMARY KEY ("id"))`);
@@ -87,7 +86,6 @@ export class InitialMigration1761412015657 implements MigrationInterface {
         await queryRunner.query(`DROP TYPE "public"."job_offers_status_enum"`);
         await queryRunner.query(`DROP TYPE "public"."job_offers_work_mode_enum"`);
         await queryRunner.query(`DROP TABLE "employees"`);
-        await queryRunner.query(`DROP TYPE "public"."employees_role_enum"`);
         await queryRunner.query(`DROP TABLE "interviews"`);
         await queryRunner.query(`DROP TYPE "public"."interviews_status_enum"`);
         await queryRunner.query(`DROP TYPE "public"."interviews_type_enum"`);

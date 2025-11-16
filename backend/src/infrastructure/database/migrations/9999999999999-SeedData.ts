@@ -15,9 +15,9 @@ export class SeedData9999999999999 implements MigrationInterface {
 
     await queryRunner.query(`
       INSERT INTO "employees" 
-        ("id", "role", "position", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "roles", "position", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440001', 'hr', 'System Administrator', 
+        ('550e8400-e29b-41d4-a716-446655440001', ARRAY['admin'], 'System Administrator', 
          '550e8400-e29b-41d4-a716-446655440000', NOW(), NOW())
     `);
 

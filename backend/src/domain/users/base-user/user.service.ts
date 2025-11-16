@@ -49,11 +49,13 @@ export class UsersService {
         const user = transactionalEntityManager.create(User, createUserDto);
         const userSaved = await transactionalEntityManager.save(User, user);
 
+        let finalUser;
+
         // Create related employee or candidate profile if data is provided
         switch (createUserDto.user_type) {
           case UserType.EMPLOYEE:
             if (createUserDto.employeeData) {
-              await this.employeesService.create(
+              finalUser = await this.employeesService.create(
                 userSaved.id,
                 createUserDto.employeeData,
                 transactionalEntityManager,
@@ -62,7 +64,7 @@ export class UsersService {
             break;
           case UserType.CANDIDATE:
             if (createUserDto.candidateData) {
-              await this.candidatesService.create(
+              finalUser = await this.candidatesService.create(
                 userSaved.id,
                 createUserDto.candidateData,
                 transactionalEntityManager,
@@ -74,7 +76,7 @@ export class UsersService {
               `Unknown user type: ${createUserDto.user_type}`,
             );
         }
-        return userSaved;
+        return finalUser;
       },
     );
   }
@@ -84,17 +86,20 @@ export class UsersService {
   ): Promise<User> {
     return this.userRepository.manager.transaction(
       async (transactionalEntityManager) => {
-        const candidate = transactionalEntityManager.create(User, {
+        // Creating the candidate in the user table
+        const user = transactionalEntityManager.create(User, {
           ...registerCandidateDto,
           user_type: UserType.CANDIDATE,
         });
-        const candidateSaved = await transactionalEntityManager.save(candidate);
+        const userSaved = await transactionalEntityManager.save(user);
+
+        // Calling the candidate service to create the entity in the candidate table
         await this.candidatesService.registerCandidate(
-          candidateSaved.id,
+          userSaved.id,
           transactionalEntityManager,
         );
         return transactionalEntityManager.findOne(User, {
-          where: { id: candidateSaved.id },
+          where: { id: userSaved.id },
           relations: ['candidate'],
         });
       },
@@ -142,32 +147,61 @@ export class UsersService {
     });
   }
 
-  async findUserWithEntity(userId: string): Promise<JwtUser> {
+  /**
+   * Finds a user by email with their related entity (candidate or employee) and returns a JwtUser with password.
+   * Used for authentication to get all necessary data in a single query.
+   * The password is included temporarily for validation purposes.
+   */
+  async findByEmailWithEntity(
+    email: string,
+  ): Promise<(JwtUser & { password: string }) | null> {
     const user = await this.userRepository.findOne({
-      where: { id: userId },
+      where: { email },
       relations: ['candidate', 'employee'],
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        user_type: true,
+        candidate: {
+          id: true,
+        },
+        employee: {
+          id: true,
+          roles: true,
+        },
+      },
     });
 
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+    if (!user || !user.password) {
+      return null;
     }
 
     let entity_id: string;
+    let employee_roles: string[] | undefined;
 
     if (user.user_type === UserType.CANDIDATE && user.candidate) {
       entity_id = user.candidate.id;
     } else if (user.user_type === UserType.EMPLOYEE && user.employee) {
       entity_id = user.employee.id;
+      employee_roles = user.employee.roles;
     } else {
-      throw new NotFoundException(`Entity not found for user ${userId}`);
+      return null; // Entity not found
     }
 
-    return {
+    const jwtUser: JwtUser & { password: string } = {
       user_id: user.id,
       email: user.email,
       user_type: user.user_type,
       entity_id,
+      password: user.password,
     };
+
+    if (employee_roles) {
+      jwtUser.employee_roles = employee_roles;
+    }
+
+    return jwtUser;
   }
 
   async update(

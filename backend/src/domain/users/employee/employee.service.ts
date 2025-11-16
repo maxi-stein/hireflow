@@ -36,19 +36,17 @@ export class EmployeesService {
 
       // Create employee
       const employee = manager.create(Employee, {
-        role: createEmployeeDto.role,
+        roles: createEmployeeDto.roles,
         position: createEmployeeDto.position,
         user: { id: userId } as User,
       });
       const savedEmployee = await manager.save(employee);
-
       // Get the saved employee with relations for mapping
       const employeeWithRelations = await manager.findOne(Employee, {
         where: { id: savedEmployee.id },
         relations: { user: true },
         select: this.getEmployeeSelectFields(),
       });
-
       return employeeWithRelations;
     });
   }
@@ -135,7 +133,7 @@ export class EmployeesService {
   private getEmployeeSelectFields(): FindOptionsSelect<Employee> {
     return {
       id: true,
-      role: true,
+      roles: true,
       position: true,
       user: {
         id: true,
