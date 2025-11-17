@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { FileType } from '../interfaces/file-type.enum';
+import { Candidate } from './candidate.entity';
 
 @Entity('user_files')
 export class UserFile {
@@ -35,8 +36,8 @@ export class UserFile {
   })
   file_type: FileType;
 
-  @ManyToOne(() => User, (user) => user.files)
-  user: User;
+  @ManyToOne(() => Candidate, (candidate) => candidate.files)
+  candidate: Candidate;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

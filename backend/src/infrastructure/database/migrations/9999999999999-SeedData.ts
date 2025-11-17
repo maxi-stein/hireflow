@@ -4,7 +4,7 @@ export class SeedData9999999999999 implements MigrationInterface {
   name = 'SeedData9999999999999';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // Admin user
+    // Admin user (pass = Password1)
     await queryRunner.query(`
       INSERT INTO "users" 
         ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
@@ -21,30 +21,30 @@ export class SeedData9999999999999 implements MigrationInterface {
          '550e8400-e29b-41d4-a716-446655440000', NOW(), NOW())
     `);
 
-    // Candidate 1 user
+    // Candidate 1 user (pass = Password1)
     await queryRunner.query(`
       INSERT INTO "users" 
         ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
       VALUES 
         ('550e8400-e29b-41d4-a716-446655440002', 'Alice', 'Dev', 'alice.dev@example.com', 
-         '$2a$10$N9qo8uLOickgx2ZMRZoMye', 'candidate', NOW(), NOW())
+         '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'candidate', NOW(), NOW())
     `);
 
-    // Candidate 2 user
+    // Candidate 2 user (pass = Password1)
     await queryRunner.query(`
       INSERT INTO "users" 
         ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
       VALUES 
         ('550e8400-e29b-41d4-a716-446655440003', 'Bob', 'Dev', 'bob.dev@example.com', 
-         '$2a$10$N9qo8uLOickgx2ZMRZoMye', 'candidate', NOW(), NOW())
+         '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'candidate', NOW(), NOW())
     `);
 
     // Candidate 1
     await queryRunner.query(`
       INSERT INTO "candidates" 
-        ("id", "age", "phone", "resume_url", "portfolio_url", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "age", "phone", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440004', 28, '123456789', NULL, NULL, 'https://github.com/alice', 'https://linkedin.com/in/alice', 
+        ('550e8400-e29b-41d4-a716-446655440004', 28, '123456789', 'https://github.com/alice', 'https://linkedin.com/in/alice', 
          '550e8400-e29b-41d4-a716-446655440002', NOW(), NOW())
     `);
 
@@ -60,9 +60,9 @@ export class SeedData9999999999999 implements MigrationInterface {
     // Candidate 2
     await queryRunner.query(`
       INSERT INTO "candidates" 
-        ("id", "age", "phone", "resume_url", "portfolio_url", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "age", "phone", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440005', 30, '987654321', NULL, NULL, 'https://github.com/bob', 'https://linkedin.com/in/bob', 
+        ('550e8400-e29b-41d4-a716-446655440005', 30, '987654321', 'https://github.com/bob', 'https://linkedin.com/in/bob', 
          '550e8400-e29b-41d4-a716-446655440003', NOW(), NOW())
     `);
 

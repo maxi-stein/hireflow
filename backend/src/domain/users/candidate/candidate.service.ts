@@ -126,7 +126,7 @@ export class CandidateService {
     paginationDto: PaginationDto = { page: 1, limit: 10 },
   ): Promise<PaginatedResponse<CandidateResponseDto>> {
     const [candidates, total] = await this.candidateRepository.findAndCount({
-      relations: ['user', 'education', 'work_experiences'],
+      relations: ['user', 'educations', 'work_experiences'],
       select: this.getCandidateSelectFields(),
       skip: (paginationDto.page - 1) * paginationDto.limit,
       take: paginationDto.limit,
@@ -145,7 +145,7 @@ export class CandidateService {
   async findOne(id: string): Promise<CandidateResponseDto> {
     const candidate = await this.candidateRepository.findOne({
       where: { id },
-      relations: ['user', 'education', 'work_experiences'],
+      relations: ['user', 'educations', 'work_experiences'],
       select: this.getCandidateSelectFields(),
     });
 
@@ -164,7 +164,7 @@ export class CandidateService {
       async (transactionalEntityManager) => {
         const candidate = await transactionalEntityManager.findOne(Candidate, {
           where: { id },
-          relations: ['education', 'work_experiences'],
+          relations: ['educations', 'work_experiences'],
         });
 
         if (!candidate) {
@@ -205,7 +205,7 @@ export class CandidateService {
           Candidate,
           {
             where: { id },
-            relations: ['user', 'education', 'work_experiences'],
+            relations: ['user', 'educations', 'work_experiences'],
           },
         );
 
@@ -236,7 +236,7 @@ export class CandidateService {
   ): Promise<Candidate> {
     return entityManager.findOne(Candidate, {
       where: { id },
-      relations: ['user', 'education', 'work_experiences'],
+      relations: ['user', 'educations', 'work_experiences'],
       select: this.getCandidateSelectFields(),
     });
   }
@@ -250,8 +250,6 @@ export class CandidateService {
       id: true,
       age: true,
       phone: true,
-      resume_url: true,
-      portfolio_url: true,
       github: true,
       linkedin: true,
       profile_created_at: true,
@@ -264,7 +262,7 @@ export class CandidateService {
         created_at: true,
         updated_at: true,
       },
-      education: {
+      educations: {
         id: true,
         institution: true,
         degree_type: true,
@@ -293,8 +291,6 @@ export class CandidateService {
       id: candidate.id,
       age: candidate.age,
       phone: candidate.phone,
-      resume_url: candidate.resume_url,
-      portfolio_url: candidate.portfolio_url,
       github: candidate.github,
       linkedin: candidate.linkedin,
       user: {

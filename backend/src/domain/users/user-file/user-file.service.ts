@@ -46,7 +46,7 @@ export class FileStorageService {
           fileType === FileType.PROFILE_PICTURE
         ) {
           await this.deletePreviousFile(
-            user.user_id,
+            user.entity_id,
             fileType,
             transactionalEntityManager,
           );
@@ -54,7 +54,7 @@ export class FileStorageService {
 
         // Save in filesystem
         fileMeta = await this.saveToFilesystem(
-          user.user_id,
+          user.entity_id,
           processedFile,
           fileType,
         );
@@ -63,7 +63,7 @@ export class FileStorageService {
         const userFile = transactionalEntityManager.create(UserFile, {
           ...fileMeta,
           file_type: fileType,
-          user: { id: user.user_id },
+          candidate: { id: user.entity_id },
         });
 
         const savedFile = await transactionalEntityManager.save(userFile);
@@ -79,9 +79,9 @@ export class FileStorageService {
     });
   }
 
-  async getFileStream(fileId: string, userId: string) {
+  async getFileStream(fileId: string, candidateId: string) {
     const userFile = await this.userFileRepository.findOne({
-      where: { id: fileId, user: { id: userId } },
+      where: { id: fileId, candidate: { id: candidateId } },
     });
 
     if (!userFile) {
@@ -97,21 +97,21 @@ export class FileStorageService {
     return createReadStream(userFile.file_path);
   }
 
-  async getUserFileMetadata(fileId: string, userId: string) {
+  async getUserFileMetadata(fileId: string, candidateId: string) {
     return this.userFileRepository.findOne({
-      where: { user: { id: userId }, id: fileId },
+      where: { candidate: { id: candidateId }, id: fileId },
     });
   }
 
-  async getAllUserFilesMetadata(userId: string) {
+  async getAllUserFilesMetadata(candidateId: string) {
     return this.userFileRepository.find({
-      where: { user: { id: userId } },
+      where: { candidate: { id: candidateId } },
     });
   }
 
-  async deleteFile(fileId: string, userId: string): Promise<void> {
+  async deleteFile(fileId: string, candidateId: string): Promise<void> {
     const userFile = await this.userFileRepository.findOne({
-      where: { id: fileId, user: { id: userId } },
+      where: { id: fileId, candidate: { id: candidateId } },
     });
 
     if (!userFile) {
@@ -183,12 +183,12 @@ export class FileStorageService {
   }
 
   private async saveToFilesystem(
-    userId: string,
+    candidateId: string,
     file: Express.Multer.File,
     fileType: FileType,
   ) {
     const extension = path.extname(file.originalname);
-    const fileName = `${userId}${extension}`;
+    const fileName = `${candidateId}${extension}`;
 
     const filePath = path.join(
       this.uploadBasePath,
@@ -215,14 +215,14 @@ export class FileStorageService {
   }
 
   private async deletePreviousFile(
-    userId: string,
+    candidateId: string,
     fileType: FileType,
     transactionalEntityManager: EntityManager,
   ) {
     try {
       const existingFile = await transactionalEntityManager.findOne(UserFile, {
         where: {
-          user: { id: userId },
+          candidate: { id: candidateId },
           file_type: fileType,
         },
       });
@@ -230,7 +230,7 @@ export class FileStorageService {
       if (!existingFile) return;
 
       await transactionalEntityManager.delete(UserFile, {
-        user: { id: userId },
+        candidate: { id: candidateId },
         file_type: fileType,
       });
 
@@ -253,7 +253,10 @@ export class FileStorageService {
         console.warn(`Could not delete directory:`, error);
       }
     } catch (error) {
-      console.warn(`Error deleting previous files for user ${userId}:`, error);
+      console.warn(
+        `Error deleting previous files for candidate ${candidateId}:`,
+        error,
+      );
     }
   }
 

@@ -5,8 +5,6 @@ export class CandidateResponseDto {
   id: string;
   age: number;
   phone: string;
-  resume_url: string;
-  portfolio_url: string;
   github: string | null;
   linkedin: string | null;
   user: {

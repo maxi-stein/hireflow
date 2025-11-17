@@ -10,19 +10,15 @@ export class CanAccessUser implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const user: JwtUser = request.user;
-    const userId = request.params.userId;
-
-    const userFound = await this.userService.findOne(userId);
-
-    if (!userFound) return false;
+    const candidateId = request.params.candidateId;
 
     // EMPLOYEES can always access
     if (user.user_type === UserType.EMPLOYEE) return true;
 
-    // CANDIDATES can only access their own user
+    // CANDIDATES can only access their own data
     if (
       user.user_type === UserType.CANDIDATE &&
-      user.user_id === userFound.id
+      user.entity_id === candidateId
     ) {
       return true;
     }

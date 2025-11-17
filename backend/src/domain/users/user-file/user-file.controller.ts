@@ -81,7 +81,7 @@ export class FileController {
     // Set up headers
     const userFile = await this.fileStorageService.getUserFileMetadata(
       fileId,
-      req.user.user_id,
+      req.user.entity_id,
     );
 
     if (!userFile) {
@@ -110,16 +110,18 @@ export class FileController {
     // Send file
     const fileStream = await this.fileStorageService.getFileStream(
       fileId,
-      req.user.user_id,
+      req.user.entity_id,
     );
 
     fileStream.pipe(res);
   }
 
-  @Get('/user/:userId')
+  @Get('/user/:candidateId')
   @UseGuards(CanAccessUser) //Employees and self-user only can access this data
   @UsePipes(new UuidValidationPipe())
-  async getAllFiles(@Param('userId', UuidValidationPipe) userId: string) {
-    return await this.fileStorageService.getAllUserFilesMetadata(userId);
+  async getAllFiles(
+    @Param('candidateId', UuidValidationPipe) candidateId: string,
+  ) {
+    return await this.fileStorageService.getAllUserFilesMetadata(candidateId);
   }
 }
