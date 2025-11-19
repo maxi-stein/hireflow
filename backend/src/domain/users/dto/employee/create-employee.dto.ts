@@ -1,5 +1,8 @@
 import { IsArray, IsIn, IsString, MaxLength } from 'class-validator';
-import { EMPLOYEE, EMPLOYEE_ROLES } from 'src/shared/constants/user.constants';
+import {
+  EMPLOYEE_ROLES,
+  EMPLOYEE,
+} from '../../../../shared/constants/user.constants';
 
 export class CreateEmployeeDto {
   @IsArray()
