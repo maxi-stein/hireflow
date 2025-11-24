@@ -1,25 +1,17 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
   UseGuards,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { UpdateUserDto } from '../dto/user/update-user.dto';
-import { CreateUserDto } from '../dto/user/create-user.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import {
-  UuidValidationPipe,
-  NotEmptyDtoPipe,
-  ConditionalValidationPipe,
-} from '../../../shared/pipes';
+import { UuidValidationPipe, NotEmptyDtoPipe } from '../../../shared/pipes';
 import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
 import { CanAccessUser } from '../../auth/guards/can-access.guard';
 
@@ -27,15 +19,6 @@ import { CanAccessUser } from '../../auth/guards/can-access.guard';
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  @UsePipes(
-    new ValidationPipe({ transform: true }),
-    new ConditionalValidationPipe(),
-  )
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {

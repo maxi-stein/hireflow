@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GuardsModule } from 'src/domain/auth/guards/guards.module';
-import { CandidateService } from '../candidate/candidate.service';
 import { EmployeesService } from '../employee/employee.service';
 import { User, Employee, Candidate, Education } from '../entities';
 import { UsersController } from './user.controller';
@@ -25,7 +24,6 @@ import { WorkExperience } from '../entities/work-experience.entity';
   providers: [
     UsersService,
     EmployeesService,
-    CandidateService,
     EducationService,
     WorkExperienceService,
   ],

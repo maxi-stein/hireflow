@@ -1,11 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/base-user/user.service';
-import * as bcrypt from 'bcrypt';
 import { JwtUser } from '../users/interfaces/jwt.user';
-import { RegisterCandidateDto } from '../users/dto/user/create-user.dto';
-import { AUTH } from '../../shared/constants/auth.constants';
 import { UserType } from '../users/interfaces/user.enum';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +14,7 @@ export class AuthService {
 
   // Used in local strategy. Checks if password is correct and returns the entire user
   async validateUser(email: string, password: string): Promise<JwtUser> {
-    const user = await this.usersService.findByEmailWithEntity(email);
+    const user = await this.usersService.findByEmailForAuthentication(email);
 
     if (
       user &&
@@ -54,34 +52,6 @@ export class AuthService {
         employee_roles: payload.employee_roles,
       },
     };
-  }
-
-  // Used for registering candidates
-  async register(registerCandidate: RegisterCandidateDto) {
-    // Check if user already exists by email
-    const existingUser = await this.usersService.findByEmail(
-      registerCandidate.email,
-    );
-
-    if (existingUser) {
-      throw new UnauthorizedException('User with this email already exists');
-    }
-
-    // Hashing password
-    const hashedPassword = await bcrypt.hash(
-      registerCandidate.password,
-      AUTH.BCRYPT_SALT_ROUNDS,
-    );
-
-    // Creating the user entity
-    const user = await this.usersService.registerCandidate({
-      ...registerCandidate,
-      password: hashedPassword,
-    });
-
-    const { password, ...result } = user;
-
-    return result;
   }
 
   async getProfileByEntity(entityId: string, userType: JwtUser['user_type']) {

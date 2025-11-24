@@ -1,16 +1,11 @@
 import {
   Injectable,
   NotFoundException,
-  ConflictException,
-  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Candidate } from '../entities/candidate.entity';
 import { User } from '../entities/user.entity';
-import { Education } from '../entities/education.entity';
-import { WorkExperience } from '../entities/work-experience.entity';
-import { CreateCandidateDto } from '../dto/candidate/create-candidate.dto';
 import { UpdateCandidateDto } from '../dto/candidate/update-candidate.dto';
 import { CandidateResponseDto } from '../dto/candidate/candidate-response.dto';
 import {
@@ -20,106 +15,58 @@ import {
 import { EducationService } from '../education/education.service';
 import { WorkExperienceService } from '../work-experience/work-experience.service';
 import { UserType } from '../interfaces/user.enum';
+import { RegisterCandidateDto } from '../dto/user/create-user.dto';
+import { UsersService } from '../base-user/user.service';
 
 @Injectable()
 export class CandidateService {
   constructor(
     @InjectRepository(Candidate)
     private readonly candidateRepository: Repository<Candidate>,
+    private readonly usersService: UsersService,
     private readonly educationService: EducationService,
     private readonly workExperienceService: WorkExperienceService,
   ) {}
 
-  async create(
-    userId: string,
-    createCandidateDto: CreateCandidateDto,
-    entityManager?: EntityManager,
-  ): Promise<CandidateResponseDto> {
-    return this.candidateRepository.manager.transaction(async () => {
-      const manager = entityManager || this.candidateRepository.manager;
-
-      // Validate user exists and is candidate type
-      const user = await manager.findOne(User, {
-        where: { id: userId },
-        select: ['id', 'user_type'],
-      });
-
-      if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
-      }
-
-      if (user.user_type !== UserType.CANDIDATE) {
-        throw new BadRequestException(
-          `User with ID ${userId} is not a candidate`,
+  // Public method for candidate creation/registration
+  async create(registerCandidateDto: RegisterCandidateDto): Promise<User> {
+    return this.candidateRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        // Create user using UserService (handles validation and password hashing)
+        const userSaved = await this.usersService.createUserInTransaction(
+          {
+            email: registerCandidateDto.email,
+            password: registerCandidateDto.password,
+            first_name: registerCandidateDto.first_name,
+            last_name: registerCandidateDto.last_name,
+          },
+          UserType.CANDIDATE,
+          transactionalEntityManager,
         );
-      }
 
-      // Check if candidate profile already exists
-      const existingCandidate = await manager.exists(Candidate, {
-        where: { user: { id: userId } },
-      });
+        // Create the candidate profile with default empty fields
+        const candidate = transactionalEntityManager.create(Candidate, {
+          age: null,
+          phone: null,
+          resume_url: null,
+          portfolio_url: null,
+          github: null,
+          linkedin: null,
+          user: { id: userSaved.id },
+        });
+        await transactionalEntityManager.save(candidate);
 
-      if (existingCandidate) {
-        throw new ConflictException(
-          `Candidate profile already exists for user ${userId}`,
+        // Return user with candidate relation (excluding password)
+        const userWithCandidate = await this.usersService.findOne(
+          userSaved.id,
+          transactionalEntityManager,
+          ['candidate', 'employee'],
         );
-      }
 
-      // Create candidate entity
-      const candidate = manager.create(Candidate, {
-        age: createCandidateDto.age,
-        phone: createCandidateDto.phone,
-        resume_url: createCandidateDto.resume_url,
-        portfolio_url: createCandidateDto.portfolio_url,
-        github: createCandidateDto.github,
-        linkedin: createCandidateDto.linkedin,
-        user: { id: userId },
-      });
-
-      const savedCandidate = await manager.save(candidate);
-
-      // Create education records if provided
-      if (createCandidateDto.educations?.length > 0) {
-        const educations = createCandidateDto.educations.map((edu) =>
-          manager.create(Education, {
-            ...edu,
-            candidate: savedCandidate,
-          }),
-        );
-        await manager.save(educations);
-      }
-
-      // Create work experience records if provided
-      if (createCandidateDto.work_experiences?.length > 0) {
-        const workExperiences = createCandidateDto.work_experiences.map((exp) =>
-          manager.create(WorkExperience, {
-            ...exp,
-            candidate: savedCandidate,
-          }),
-        );
-        await manager.save(workExperiences);
-      }
-
-      // Return full candidate with relations
-      return this.mapToResponseDto(
-        await this.findCandidateWithRelations(savedCandidate.id, manager),
-      );
-    });
-  }
-
-  // Called internally by the UserService aftear creating the user, in order to create the candidate
-  async registerCandidate(userId: string, manager: EntityManager) {
-    const candidate = manager.create(Candidate, {
-      age: null,
-      phone: null,
-      resume_url: null,
-      portfolio_url: null,
-      github: null,
-      linkedin: null,
-      user: { id: userId },
-    });
-
-    await manager.save(candidate);
+        const { password, ...result } = userWithCandidate;
+        return result as User;
+      },
+    );
   }
 
   async findAll(
@@ -127,7 +74,6 @@ export class CandidateService {
   ): Promise<PaginatedResponse<CandidateResponseDto>> {
     const [candidates, total] = await this.candidateRepository.findAndCount({
       relations: ['user', 'educations', 'work_experiences'],
-      select: this.getCandidateSelectFields(),
       skip: (paginationDto.page - 1) * paginationDto.limit,
       take: paginationDto.limit,
     });
@@ -146,7 +92,6 @@ export class CandidateService {
     const candidate = await this.candidateRepository.findOne({
       where: { id },
       relations: ['user', 'educations', 'work_experiences'],
-      select: this.getCandidateSelectFields(),
     });
 
     if (!candidate) {
@@ -220,70 +165,6 @@ export class CandidateService {
     if (result.affected === 0) {
       throw new NotFoundException(`Candidate with ID ${id} not found`);
     }
-  }
-
-  // ===== Helper Methods =====
-
-  /**
-   * Finds candidate with relations using EntityManager
-   * @param id - Candidate ID
-   * @param entityManager - Transactional entity manager
-   * @returns Candidate with relations
-   */
-  private async findCandidateWithRelations(
-    id: string,
-    entityManager = this.candidateRepository.manager,
-  ): Promise<Candidate> {
-    return entityManager.findOne(Candidate, {
-      where: { id },
-      relations: ['user', 'educations', 'work_experiences'],
-      select: this.getCandidateSelectFields(),
-    });
-  }
-
-  /**
-   * Defines fields to select for candidate queries
-   * @returns Selection fields configuration
-   */
-  private getCandidateSelectFields(): Record<string, any> {
-    return {
-      id: true,
-      age: true,
-      phone: true,
-      github: true,
-      linkedin: true,
-      profile_created_at: true,
-      profile_updated_at: true,
-      user: {
-        id: true,
-        first_name: true,
-        last_name: true,
-        email: true,
-        created_at: true,
-        updated_at: true,
-      },
-      educations: {
-        id: true,
-        institution: true,
-        degree_type: true,
-        field_of_study: true,
-        start_date: true,
-        end_date: true,
-        description: true,
-        created_at: true,
-        updated_at: true,
-      },
-      work_experiences: {
-        id: true,
-        company_name: true,
-        position: true,
-        start_date: true,
-        end_date: true,
-        description: true,
-        created_at: true,
-        updated_at: true,
-      },
-    };
   }
 
   private mapToResponseDto(candidate: Candidate): CandidateResponseDto {
