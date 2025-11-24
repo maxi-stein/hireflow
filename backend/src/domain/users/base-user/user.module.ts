@@ -11,22 +11,11 @@ import { WorkExperience } from '../entities/work-experience.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      User,
-      Employee,
-      Candidate,
-      Education,
-      WorkExperience,
-    ]),
+    TypeOrmModule.forFeature([User]),
     GuardsModule,
   ],
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    EmployeesService,
-    EducationService,
-    WorkExperienceService,
-  ],
+  providers: [UsersService],
   exports: [UsersService],
 })
 export class UsersModule {}
