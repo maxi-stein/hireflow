@@ -59,3 +59,24 @@ export class RegisterCandidateDto {
   @IsString()
   password: string;
 }
+
+// Dto used for creating employees administratively (by other employees)
+export class CreateEmployeeUserDto {
+  @IsString()
+  first_name: string;
+
+  @IsString()
+  last_name: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(MIN_PASSWORD_LENGTH)
+  @MaxLength(MAX_PASSWORD_LENGTH)
+  password: string;
+
+  @ValidateNested()
+  @Type(() => CreateEmployeeDto)
+  employeeData: CreateEmployeeDto;
+}
