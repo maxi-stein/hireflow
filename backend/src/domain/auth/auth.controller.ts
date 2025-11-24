@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Get, Request } from '@nestjs/common';
+import { Controller, Post, UseGuards, Get, Request, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -11,6 +11,7 @@ export class AuthController {
   // Login for candidates and employees
   @UseGuards(LocalAuthGuard) // Sets Request.user (if credentials are valid) or throws unauthorized exception
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(@Request() req: Request & { user: JwtUser }) {
     return this.authService.login(req.user);
   }
