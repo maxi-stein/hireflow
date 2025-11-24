@@ -23,18 +23,7 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  /**
-   * Creates a user within an existing transaction.
-   * This method should be called by services that need to create users as part of a larger transaction
-   * (e.g., CandidateService, EmployeeService).
-   * 
-   * @param userData - Basic user data (email, password, first_name, last_name)
-   * @param userType - Type of user (CANDIDATE or EMPLOYEE)
-   * @param entityManager - Transaction entity manager
-   * @returns Created user entity
-   * @throws UnauthorizedException if email already exists
-   */
-  async createUserInTransaction(
+  async create(
     userData: {
       email: string;
       password: string;

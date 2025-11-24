@@ -18,6 +18,7 @@ import { UserType } from '../interfaces/user.enum';
 import { RegisterCandidateDto } from '../dto/user/create-user.dto';
 import { UsersService } from '../base-user/user.service';
 
+
 @Injectable()
 export class CandidateService {
   constructor(
@@ -33,12 +34,12 @@ export class CandidateService {
     return this.candidateRepository.manager.transaction(
       async (transactionalEntityManager) => {
         // Create user using UserService (handles validation and password hashing)
-        const userSaved = await this.usersService.createUserInTransaction(
+        const userSaved = await this.usersService.create(
           {
-            email: registerCandidateDto.email,
-            password: registerCandidateDto.password,
             first_name: registerCandidateDto.first_name,
             last_name: registerCandidateDto.last_name,
+            email: registerCandidateDto.email,
+            password: registerCandidateDto.password,
           },
           UserType.CANDIDATE,
           transactionalEntityManager,
@@ -58,7 +59,7 @@ export class CandidateService {
 
         // Return user with candidate relation (excluding password)
         const userWithCandidate = await this.usersService.findOne(
-          userSaved.id,
+          {id: userSaved.id},
           transactionalEntityManager,
           ['candidate', 'employee'],
         );
