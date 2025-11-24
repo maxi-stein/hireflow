@@ -2,11 +2,11 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   EntityManager,
-  FindOptionsSelect,
   Repository,
   UpdateResult,
 } from 'typeorm';
@@ -18,14 +18,19 @@ import {
   PaginationDto,
   PaginatedResponse,
 } from '../../../shared/dto/pagination/pagination.dto';
+import { CreateEmployeeUserDto } from '../dto/user/create-user.dto';
+import { UserType } from '../interfaces/user.enum';
+import { UsersService } from '../base-user/user.service';
 
 @Injectable()
 export class EmployeesService {
   constructor(
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
+    private readonly usersService: UsersService,
   ) {}
 
+  // Internal method: creates employee profile for existing user
   async create(
     userId: string,
     createEmployeeDto: CreateEmployeeDto,
@@ -40,22 +45,69 @@ export class EmployeesService {
         position: createEmployeeDto.position,
         user: { id: userId } as User,
       });
+
       const savedEmployee = await manager.save(employee);
+
       // Get the saved employee with relations for mapping
       const employeeWithRelations = await manager.findOne(Employee, {
         where: { id: savedEmployee.id },
         relations: { user: true },
-        select: this.getEmployeeSelectFields(),
       });
+
       return employeeWithRelations;
     });
   }
+
+  // Public method for creating employees administratively (by other employees)
+  async createEmployee(
+    createEmployeeUserDto: CreateEmployeeUserDto,
+  ): Promise<User> {
+
+    // Check for duplicate email
+    const existingUser = await this.usersService.findOne({
+      email: createEmployeeUserDto.email,
+    });
+
+    if (existingUser) {
+      throw new ConflictException(
+        `Email ${createEmployeeUserDto.email} is already in use`,
+      );
+    }
+
+    return this.employeeRepository.manager.transaction(
+      async (transactionalEntityManager) => {        
+        const user = await this.usersService.create(
+          {
+            first_name: createEmployeeUserDto.first_name,
+            last_name: createEmployeeUserDto.last_name,
+            email: createEmployeeUserDto.email,
+            password: createEmployeeUserDto.password,
+          },
+          UserType.EMPLOYEE,
+          transactionalEntityManager,
+        );
+
+        // Create the employee profile
+        await this.create(
+          user.id,
+          createEmployeeUserDto.employeeData,
+          transactionalEntityManager,
+        );
+
+        // Return the user with employee relation
+        return transactionalEntityManager.findOne(User, {
+          where: { id: user.id },
+          relations: ['employee'],
+        });
+      },
+    );
+  }
+
   async findAll(
     paginationDto: PaginationDto = { page: 1, limit: 10 },
   ): Promise<PaginatedResponse<Employee>> {
     const [employees, total] = await this.employeeRepository.findAndCount({
       relations: { user: true },
-      select: this.getEmployeeSelectFields(),
       skip: (paginationDto.page - 1) * paginationDto.limit,
       take: paginationDto.limit,
     });
@@ -74,8 +126,7 @@ export class EmployeesService {
   async findOne(id: string): Promise<Employee> {
     const employee = await this.employeeRepository.findOne({
       where: { id },
-      relations: { user: true },
-      select: this.getEmployeeSelectFields(),
+      relations: { user: true }
     });
 
     if (!employee) {
@@ -112,7 +163,6 @@ export class EmployeesService {
     const employee = await this.employeeRepository.findOne({
       where: { id },
       relations: { user: true },
-      select: this.getEmployeeSelectFields(),
     });
 
     if (!employee) {
@@ -130,17 +180,4 @@ export class EmployeesService {
     return employee;
   }
 
-  private getEmployeeSelectFields(): FindOptionsSelect<Employee> {
-    return {
-      id: true,
-      roles: true,
-      position: true,
-      user: {
-        id: true,
-        first_name: true,
-        last_name: true,
-        email: true,
-      },
-    };
-  }
 }
