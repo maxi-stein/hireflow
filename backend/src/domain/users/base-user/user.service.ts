@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { UpdateUserDto } from '../dto/user/update-user.dto';
-import { Repository, UpdateResult, EntityManager } from 'typeorm';
+import { Repository, UpdateResult, EntityManager, FindOptionsWhere } from 'typeorm';
 import { User } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -101,35 +101,21 @@ export class UsersService {
    * @throws NotFoundException if user is not found
    */
   async findOne(
-    id: string,
+    where: FindOptionsWhere<User>,
     entityManager?: EntityManager,
     relations?: string[],
   ): Promise<User> {
     const manager = entityManager || this.userRepository.manager;
     
     const user = await manager.findOne(User, {
-      where: { id },
+      where,
       relations,
     });
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User not found`);
     }
     return user;
-  }
-
-  findByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({
-      where: { email },
-      select: [
-        'id',
-        'email',
-        'password',
-        'user_type',
-        'first_name',
-        'last_name',
-      ],
-    });
   }
 
   /**
@@ -213,7 +199,7 @@ export class UsersService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    const updatedUser = await this.findOne(id);
+    const updatedUser = await this.findOne({ id });
 
     return {
       user: updatedUser,
