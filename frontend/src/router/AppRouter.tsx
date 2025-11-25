@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { authEvents } from "../services/auth-events";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { LoginPage } from "../pages/LoginPage";
 import { JobListPage } from "../pages/jobs/JobListPage";
 import { JobDetailPage } from "../pages/jobs/JobDetailPage";
@@ -17,75 +15,92 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { MainLayout } from "../layouts/MainLayout";
 import { PublicLayout } from "../layouts/PublicLayout";
 import { LandingPage } from "../pages/LandingPage";
+import { ErrorPage } from "../pages/ErrorPage";
 
-export const AppRouter: React.FC = () => {
-
-  const navigate = useNavigate();
-
-  // Every time onUnauthorized callback is called, now will navigate to login
-  useEffect(() => {
-    authEvents.onUnauthorized = () => {
-      navigate("/login");
-    };
-  }, []);
-  
-  return (
-    <Routes>
-      {/* Public routes wrapped in PublicLayout */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/jobs" element={<JobListPage />} />
-        <Route path="/jobs/:id" element={<JobDetailPage />} />
-      </Route>
-
-      {/* Protected routes */}
-      <Route
-        element={<ProtectedRoute allowedRoles={["candidate", "employee"]} />}
-      >
-        <Route element={<MainLayout />}>
-          {/* <Route path="/" element={<RoleBasedRedirect />} /> */}
-          <Route path="/profile" element={<ProfilePage />} />
-
-          {/* Candidate routes */}
-          <Route element={<ProtectedRoute allowedRoles={["candidate"]} />}>
-            <Route
-              path="/candidate/applications"
-              element={<ApplicationsPage />}
-            />
-          </Route>
-
-          {/* Employe routes */}
-          <Route element={<ProtectedRoute allowedRoles={["employee"]} />}>
-            <Route path="/manage/dashboard" element={<EmployeeDashboard />} />
-            <Route
-              path="/manage/job-postings"
-              element={<JobPostingsPage />}
-            />
-            <Route
-              path="/manage/job-postings/new"
-              element={<CreateJobPage />}
-            />
-            <Route
-              path="/manage/candidates"
-              element={<CandidatesPage />}
-            />
-            <Route
-              path="/manage/compare-candidates"
-              element={<CompareCandidatesPage />}
-            />
-            <Route
-              path="/manage/interviews"
-              element={<InterviewsPage />}
-            />
-          </Route>
-
-          <Route path="/settings" element={<SettingsPage />} />
-        </Route>
-      </Route>
-
-      {/* Catch all */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
-};
+export const router = createBrowserRouter([
+  {
+    element: <PublicLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/",
+        element: <LandingPage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/jobs",
+        element: <JobListPage />,
+      },
+      {
+        path: "/jobs/:id",
+        element: <JobDetailPage />,
+      },
+    ],
+  },
+  {
+    element: <ProtectedRoute allowedRoles={["candidate", "employee"]} />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            path: "/profile",
+            element: <ProfilePage />,
+          },
+          {
+            path: "/settings",
+            element: <SettingsPage />,
+          },
+          // Candidate Routes
+          {
+            element: <ProtectedRoute allowedRoles={["candidate"]} />,
+            children: [
+              {
+                path: "/candidate/applications",
+                element: <ApplicationsPage />,
+              },
+            ],
+          },
+          // Employee Routes
+          {
+            element: <ProtectedRoute allowedRoles={["employee"]} />,
+            children: [
+              {
+                path: "/manage/dashboard",
+                element: <EmployeeDashboard />,
+              },
+              {
+                path: "/manage/job-postings",
+                element: <JobPostingsPage />,
+              },
+              {
+                path: "/manage/job-postings/new",
+                element: <CreateJobPage />,
+              },
+              {
+                path: "/manage/candidates",
+                element: <CandidatesPage />,
+              },
+              {
+                path: "/manage/compare-candidates",
+                element: <CompareCandidatesPage />,
+              },
+              {
+                path: "/manage/interviews",
+                element: <InterviewsPage />,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
+  },
+]);
