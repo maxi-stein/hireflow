@@ -7,6 +7,8 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Retrieve the page the user was trying to access before being redirected to login.
+  // If they came directly to /login, default to "/" (home).
   const from = (location.state as any)?.from?.pathname || "/";
 
   return (
