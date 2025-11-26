@@ -71,20 +71,21 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+        <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
           <Stack>
             <TextInput
               label="Email"
-              placeholder="you@mantine.dev"
+              placeholder="you@example.com"
               required
-              {...form.getInputProps("email")}
+              type="email"
+              {...form.getInputProps("email")} // Binds value, onChange, and error props automatically
             />
             <PasswordInput
               label="Password"
               placeholder="Your password"
               required
               mt="md"
-              {...form.getInputProps("password")}
+              {...form.getInputProps("password")} // Binds value, onChange, and error props automatically
             />
           </Stack>
           
