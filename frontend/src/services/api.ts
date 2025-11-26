@@ -1,5 +1,6 @@
 import axios from "axios";
 import { authEvents } from "./auth-events";
+import { useAppStore } from "../store/useAppStore";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -13,7 +14,7 @@ export const apiClient = axios.create({
 //Adding the access token auth to every request, if exists in localStorage.
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
+    const token = useAppStore.getState().token;
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -31,7 +32,7 @@ apiClient.interceptors.response.use(
     const status = error.response?.status;
 
     if (status === 401) {
-      localStorage.removeItem("access_token");
+      useAppStore.getState().logout();
       authEvents.onUnauthorized(); // this global callback will dispatch a navigate(/login) from react-router
     }
 

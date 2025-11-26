@@ -15,16 +15,18 @@ import { loginSchema } from "../../schemas/auth.schema";
 import { useLoginMutation } from "../../hooks/api/useAuth";
 import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
-import type { User } from "../../types/models/user.types";
 import { validateWithJoi } from "../../utils/form-validation";
+import type { JwtUser } from "../../types/api/auth.types";
+import { useAppStore } from "../../store/useAppStore";
 
 interface LoginFormProps {
-  onSuccess?: (user: User) => void;
+  onSuccess?: (user: JwtUser ) => void;
 }
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const navigate = useNavigate();
   const loginMutation = useLoginMutation();
+  const setAuth = useAppStore((state) => state.setAuth);
 
   const form = useForm({
     initialValues: {
@@ -37,6 +39,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const handleSubmit = (values: typeof form.values) => {
     loginMutation.mutate(values, {
       onSuccess: (data) => {
+        setAuth(data.user, data.access_token);
+        
         notifications.show({
           title: "Welcome back!",
           message: "You have successfully logged in",

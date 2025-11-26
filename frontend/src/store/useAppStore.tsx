@@ -1,17 +1,21 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { User } from "../types/models/user.types";
+import type { JwtUser } from "../types/api/auth.types";
 
 type AppStore = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: JwtUser | null;
+  token: string | null;
+  setAuth: (user: JwtUser, token: string) => void;
+  logout: () => void;
 };
 
 export const useAppStore = create<AppStore>()(
   persist(
     (set) => ({
       user: null,
-      setUser: (user) => set({ user }),
+      token: null,
+      setAuth: (user, token) => set({ user, token }),
+      logout: () => set({ user: null, token: null }),
     }),
     { name: "app-store" }
   )

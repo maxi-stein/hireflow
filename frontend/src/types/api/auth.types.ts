@@ -1,4 +1,9 @@
-import type { User } from '../models/user.types';
+export interface JwtUser {
+  id: string;
+  type: "employee" | "candidate";
+  employee_roles?: string[];
+  email: string;
+}
 
 export interface LoginDto {
   email: string;
@@ -14,5 +19,5 @@ export interface RegisterDto {
 
 export interface AuthResponse {
   access_token: string;
-  user: User;
+  user: JwtUser;
 }
