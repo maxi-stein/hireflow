@@ -4,6 +4,8 @@ import { Outlet } from 'react-router-dom';
 import { FullHeader } from './FullHeader';
 import { SideNav } from './SideNav';
 
+import { HeaderContainer } from '../../components/shared/HeaderContainer';
+
 export function MainLayout() {
   const [opened, { toggle }] = useDisclosure();
 
@@ -17,9 +19,9 @@ export function MainLayout() {
       }}
       padding="md"
     >
-      <AppShell.Header>
+      <HeaderContainer>
         <FullHeader opened={opened} toggle={toggle} />
-      </AppShell.Header>
+      </HeaderContainer>
 
       <AppShell.Navbar p="md">
         <SideNav />

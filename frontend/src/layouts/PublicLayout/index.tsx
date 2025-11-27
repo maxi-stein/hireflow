@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 import { MinimalHeader } from './MinimalHeader';
 import { Footer } from './Footer';
 
+import { HeaderContainer } from '../../components/shared/HeaderContainer';
+
 export function PublicLayout() {
   console.log('PublicLayout!');
   return (
@@ -10,9 +12,9 @@ export function PublicLayout() {
       header={{ height: 60 }}
       padding="md"
     >
-      <AppShell.Header>
+      <HeaderContainer>
         <MinimalHeader />
-      </AppShell.Header>
+      </HeaderContainer>
 
       <AppShell.Main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <div style={{ flex: 1 }}>

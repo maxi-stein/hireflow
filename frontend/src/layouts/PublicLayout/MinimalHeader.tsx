@@ -1,11 +1,14 @@
-import { Group, Button, TextInput, useMantineColorScheme, Title } from '@mantine/core';
+import { Group, Button, TextInput, useMantineColorScheme, Title, Text } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../../store/useAppStore';
+import { UserMenu } from '../../components/shared/UserMenu';
 
 export function MinimalHeader() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
-
   const navigate = useNavigate();
+  const user = useAppStore((state) => state.user);
 
   const handleLogin = () => {
     navigate('/login');
@@ -16,8 +19,8 @@ export function MinimalHeader() {
   };
 
   return (
-    <Group justify="space-between" h="100%" px="md" py="xs" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
-      <Group>
+    <Group justify="space-between" h="100%" px="md" py="xs">
+      <Group gap="lg">
         <Title 
           order={3} 
           onClick={() => navigate('/')} 
@@ -25,13 +28,15 @@ export function MinimalHeader() {
         >
           HireFlow
         </Title>
-      </Group>
-
-      <Group>
-        <TextInput 
-          placeholder="Find Job Postings..." 
-          rightSectionWidth={42}
-        />
+        
+        <Group gap="xs">
+          <TextInput 
+            placeholder="Find Job Postings..." 
+            leftSection={<IconSearch size={16} />}
+            style={{ width: '1000px' }}
+            radius="xl"
+          />
+        </Group>
       </Group>
 
       <Group>
@@ -43,8 +48,15 @@ export function MinimalHeader() {
         >
           {dark ? '🌙 Dark' : '☀️ Light'}
         </Button>
-        <Button variant="subtle" onClick={handleLogin}>Login</Button>
-        <Button onClick={handleRegister}>Register</Button>
+        
+        {user ? (
+          <UserMenu />
+        ) : (
+          <>
+            <Button variant="subtle" onClick={handleLogin}>Login</Button>
+            <Button onClick={handleRegister}>Register</Button>
+          </>
+        )}
       </Group>
     </Group>
   );

@@ -1,45 +1,39 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { LoginPage } from "../pages/LoginPage";
-import { JobListPage } from "../pages/jobs/JobListPage";
-import { JobDetailPage } from "../pages/jobs/JobDetailPage";
-import { ProfilePage } from "../pages/profile/ProfilePage";
-import { ApplicationsPage } from "../pages/candidate/ApplicationsPage";
-import { EmployeeDashboard } from "../pages/employee/EmployeeDashboard";
-import { JobPostingsPage } from "../pages/employee/JobPostingsPage";
-import { CreateJobPage } from "../pages/employee/CreateJobPage";
-import { CandidatesPage } from "../pages/employee/CandidatesPage";
-import { CompareCandidatesPage } from "../pages/employee/CompareCandidatesPage";
-import { InterviewsPage } from "../pages/employee/InterviewsPage";
-import { SettingsPage } from "../pages/settings/SettingsPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { MainLayout } from "../layouts/MainLayout";
-import { PublicLayout } from "../layouts/PublicLayout";
-import { LandingPage } from "../pages/LandingPage";
+import { DynamicLayout } from "../layouts/DynamicLayout";
 import { ErrorPage } from "../pages/ErrorPage";
+import { ROUTES } from "./routes.config";
 
 export const router = createBrowserRouter([
+  // Login page - standalone without layout
   {
-    element: <PublicLayout />,
+    path: ROUTES.PUBLIC.LOGIN.path,
+    element: ROUTES.PUBLIC.LOGIN.element,
+    errorElement: <ErrorPage />,
+  },
+  
+  // Public routes with DynamicLayout (shows MainLayout if logged in, PublicLayout if not)
+  {
+    element: <DynamicLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/",
-        element: <LandingPage />,
+        path: ROUTES.PUBLIC.HOME.path,
+        element: ROUTES.PUBLIC.HOME.element,
       },
       {
-        path: "/login",
-        element: <LoginPage />,
+        path: ROUTES.PUBLIC.JOBS.path,
+        element: ROUTES.PUBLIC.JOBS.element,
       },
       {
-        path: "/jobs",
-        element: <JobListPage />,
-      },
-      {
-        path: "/jobs/:id",
-        element: <JobDetailPage />,
+        path: ROUTES.PUBLIC.JOB_DETAIL.path,
+        element: ROUTES.PUBLIC.JOB_DETAIL.element,
       },
     ],
   },
+  
+  // Protected routes for authenticated users
   {
     element: <ProtectedRoute allowedRoles={["candidate", "employee"]} />,
     errorElement: <ErrorPage />,
@@ -47,51 +41,54 @@ export const router = createBrowserRouter([
       {
         element: <MainLayout />,
         children: [
+          // Common routes (both candidate and employee)
           {
-            path: "/profile",
-            element: <ProfilePage />,
+            path: ROUTES.COMMON.PROFILE.path,
+            element: ROUTES.COMMON.PROFILE.element,
           },
           {
-            path: "/settings",
-            element: <SettingsPage />,
+            path: ROUTES.COMMON.SETTINGS.path,
+            element: ROUTES.COMMON.SETTINGS.element,
           },
-          // Candidate Routes
+          
+          // Candidate-only routes
           {
             element: <ProtectedRoute allowedRoles={["candidate"]} />,
             children: [
               {
-                path: "/candidate/applications",
-                element: <ApplicationsPage />,
+                path: ROUTES.CANDIDATE.APPLICATIONS.path,
+                element: ROUTES.CANDIDATE.APPLICATIONS.element,
               },
             ],
           },
-          // Employee Routes
+          
+          // Employee-only routes
           {
             element: <ProtectedRoute allowedRoles={["employee"]} />,
             children: [
               {
-                path: "/manage/dashboard",
-                element: <EmployeeDashboard />,
+                path: ROUTES.EMPLOYEE.DASHBOARD.path,
+                element: ROUTES.EMPLOYEE.DASHBOARD.element,
               },
               {
-                path: "/manage/job-postings",
-                element: <JobPostingsPage />,
+                path: ROUTES.EMPLOYEE.JOB_POSTINGS.path,
+                element: ROUTES.EMPLOYEE.JOB_POSTINGS.element,
               },
               {
-                path: "/manage/job-postings/new",
-                element: <CreateJobPage />,
+                path: ROUTES.EMPLOYEE.CREATE_JOB.path,
+                element: ROUTES.EMPLOYEE.CREATE_JOB.element,
               },
               {
-                path: "/manage/candidates",
-                element: <CandidatesPage />,
+                path: ROUTES.EMPLOYEE.CANDIDATES.path,
+                element: ROUTES.EMPLOYEE.CANDIDATES.element,
               },
               {
-                path: "/manage/compare-candidates",
-                element: <CompareCandidatesPage />,
+                path: ROUTES.EMPLOYEE.COMPARE_CANDIDATES.path,
+                element: ROUTES.EMPLOYEE.COMPARE_CANDIDATES.element,
               },
               {
-                path: "/manage/interviews",
-                element: <InterviewsPage />,
+                path: ROUTES.EMPLOYEE.INTERVIEWS.path,
+                element: ROUTES.EMPLOYEE.INTERVIEWS.element,
               },
             ],
           },
@@ -99,8 +96,10 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  
+  // Catch-all redirect
   {
     path: "*",
-    element: <Navigate to="/" replace />,
+    element: <Navigate to={ROUTES.PUBLIC.HOME.path} replace />,
   },
 ]);
