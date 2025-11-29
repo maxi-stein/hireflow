@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -55,7 +57,12 @@ export class JobOffer {
   @DeleteDateColumn({ nullable: true })
   deleted_at: Date | null;
 
-  @OneToMany(() => JobOfferSkill, (skill) => skill.job_offer)
+  @ManyToMany(() => JobOfferSkill, (skill) => skill.job_offers)
+  @JoinTable({
+    name: 'job_offer_skills_relation',
+    joinColumn: { name: 'job_offer_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'job_offer_skill_id', referencedColumnName: 'id' },
+  })
   skills: JobOfferSkill[];
 
   @CreateDateColumn({ name: 'created_at' })

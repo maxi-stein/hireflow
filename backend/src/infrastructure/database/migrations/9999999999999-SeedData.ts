@@ -91,28 +91,42 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440007', 'Desarrollador Backend', 'Remoto', 'full-remote', 'Se requiere Backend Developer con Node.js y PostgreSQL.', '45000-65000', 'Seguro dental, capacitaciones', 'OPEN', false, NOW(), NOW())
     `);
 
-    // Job Offer Skills for Job Offer 1 (Full Stack)
+    // Create unique skills
     await queryRunner.query(`
       INSERT INTO "job_offer_skills" 
-        ("id", "job_offer_id", "skill_name", "created_at", "updated_at")
+        ("id", "skill_name", "created_at", "updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440010', '550e8400-e29b-41d4-a716-446655440006', 'TypeScript', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440011', '550e8400-e29b-41d4-a716-446655440006', 'React', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440012', '550e8400-e29b-41d4-a716-446655440006', 'Node.js', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440013', '550e8400-e29b-41d4-a716-446655440006', 'PostgreSQL', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440014', '550e8400-e29b-41d4-a716-446655440006', 'Docker', NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-446655440010', 'typescript', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440011', 'react', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440012', 'node.js', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440013', 'postgresql', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440014', 'docker', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440015', 'express.js', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440016', 'rest apis', NOW(), NOW())
     `);
 
-    // Job Offer Skills for Job Offer 2 (Backend)
+    // Create relations between Job Offer 1 and its skills
     await queryRunner.query(`
-      INSERT INTO "job_offer_skills" 
-        ("id", "job_offer_id", "skill_name", "created_at", "updated_at")
+      INSERT INTO "job_offer_skills_relation" 
+        ("job_offer_id", "job_offer_skill_id")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440015', '550e8400-e29b-41d4-a716-446655440007', 'Node.js', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440016', '550e8400-e29b-41d4-a716-446655440007', 'PostgreSQL', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440017', '550e8400-e29b-41d4-a716-446655440007', 'Express.js', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440018', '550e8400-e29b-41d4-a716-446655440007', 'TypeScript', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440019', '550e8400-e29b-41d4-a716-446655440007', 'REST APIs', NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440010'),
+        ('550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440011'),
+        ('550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440012'),
+        ('550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440013'),
+        ('550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440014')
+    `);
+
+    // Create relations between Job Offer 2 and its skills
+    await queryRunner.query(`
+      INSERT INTO "job_offer_skills_relation" 
+        ("job_offer_id", "job_offer_skill_id")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440012'),
+        ('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440013'),
+        ('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440015'),
+        ('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440010'),
+        ('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440016')
     `);
 
     // Candidate applications
@@ -127,7 +141,7 @@ export class SeedData9999999999999 implements MigrationInterface {
     `);
 
     // Candidate Skill Answers for Alice's applications
-    // Alice's answers for Full Stack position (Job Offer 1)
+    // Alice's answers for Job Offer 1
     await queryRunner.query(`
       INSERT INTO "candidate_skill_answers" 
         ("id", "candidate_application_id", "job_offer_skill_id", "years_of_experience", "created_at")
@@ -139,19 +153,19 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440024', '550e8400-e29b-41d4-a716-446655440008', '550e8400-e29b-41d4-a716-446655440014', 1, NOW())
     `);
 
-    // Alice's answers for Backend position (Job Offer 2)
+    // Alice's answers for Job Offer 2
     await queryRunner.query(`
       INSERT INTO "candidate_skill_answers" 
         ("id", "candidate_application_id", "job_offer_skill_id", "years_of_experience", "created_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440025', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440015', 2, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440026', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440016', 3, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440027', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440017', 2, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440028', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440018', 3, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440029', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440019', 4, NOW())
+        ('550e8400-e29b-41d4-a716-446655440025', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440012', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440026', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440013', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440027', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440015', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440028', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440010', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440029', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440016', 4, NOW())
     `);
 
-    // Bob's answers for Full Stack position (Job Offer 1)
+    // Bob's answers for Job Offer 1
     await queryRunner.query(`
       INSERT INTO "candidate_skill_answers" 
         ("id", "candidate_application_id", "job_offer_skill_id", "years_of_experience", "created_at")
@@ -163,16 +177,16 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440034', '550e8400-e29b-41d4-a716-44665544000a', '550e8400-e29b-41d4-a716-446655440014', 2, NOW())
     `);
 
-    // Bob's answers for Backend position (Job Offer 2)
+    // Bob's answers for Job Offer 2
     await queryRunner.query(`
       INSERT INTO "candidate_skill_answers" 
         ("id", "candidate_application_id", "job_offer_skill_id", "years_of_experience", "created_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440035', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440015', 4, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440036', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440016', 3, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440037', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440017', 3, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440038', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440018', 2, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440039', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440019', 3, NOW())
+        ('550e8400-e29b-41d4-a716-446655440035', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440012', 4, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440036', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440013', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440037', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440015', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440038', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440010', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440039', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440016', 3, NOW())
     `);
   }
 
@@ -182,6 +196,7 @@ export class SeedData9999999999999 implements MigrationInterface {
     await queryRunner.query(`DELETE FROM "interviews"`);
     await queryRunner.query(`DELETE FROM "candidate_skill_answers"`);
     await queryRunner.query(`DELETE FROM "candidate_applications"`);
+    await queryRunner.query(`DELETE FROM "job_offer_skills_relation"`);
     await queryRunner.query(`DELETE FROM "job_offer_skills"`);
     await queryRunner.query(`DELETE FROM "job_offers"`);
     await queryRunner.query(`DELETE FROM "user_files"`);

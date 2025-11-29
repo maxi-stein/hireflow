@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { JobOffer } from './entities/job-offer.entity';
 import {
   CreateJobOfferDto,
@@ -24,37 +24,26 @@ export class JobOfferService {
   async create(
     createJobOfferDto: CreateJobOfferDto,
   ): Promise<JobOfferResponseDto> {
-    return this.jobOfferRepository.manager.transaction(
-      async (transactionalEntityManager: EntityManager) => {
-        // 1. Create the JobOffer
-        const jobOffer = transactionalEntityManager.create(JobOffer, {
-          ...createJobOfferDto,
-          status: JobOfferStatus.OPEN,
-          deleted: false,
-        });
+    const { skills, ...jobOfferData } = createJobOfferDto;
 
-        const savedJobOffer = await transactionalEntityManager.save(jobOffer);
+    // Create job offer instance
+    const newJobOffer = this.jobOfferRepository.create({
+      ...jobOfferData,
+      status: JobOfferStatus.OPEN,
+    });
 
-        // 2. Create skills if provided
-        if (createJobOfferDto.skills && createJobOfferDto.skills.length > 0) {
-          await this.jobOfferSkillService.createForJobOffer(
-            savedJobOffer.id,
-            createJobOfferDto.skills,
-            transactionalEntityManager,
-          );
-        }
+    // Handle skills if provided
+    if (skills && skills.length > 0) {
+      const skillEntities = await this.jobOfferSkillService.findOrCreateByName(
+        skills.map((s) => s.skill_name),
+      );
+      newJobOffer.skills = skillEntities;
+    }
 
-        const fullJobOffer = await transactionalEntityManager.findOne(
-          JobOffer,
-          {
-            where: { id: savedJobOffer.id },
-            relations: ['skills'],
-          },
-        );
+    // Save job offer
+    const savedJobOffer = await this.jobOfferRepository.save(newJobOffer);
 
-        return { ...fullJobOffer, applicants_count: 0 };
-      },
-    );
+    return { ...savedJobOffer, applicants_count: 0 } as any;
   }
 
   async findAll(
@@ -104,6 +93,7 @@ export class JobOfferService {
     const jobOffer = await this.jobOfferRepository.createQueryBuilder('jobOffer')
       .where('jobOffer.id = :id', { id })
       .loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications')
+      .leftJoinAndSelect('jobOffer.skills', 'jobOfferSkill')
       .getOne();
 
     if (!jobOffer) {
@@ -119,20 +109,28 @@ export class JobOfferService {
   ): Promise<JobOfferResponseDto> {
     const jobOffer = await this.jobOfferRepository.findOne({
       where: { id },
+      relations: ['skills'],
     });
 
     if (!jobOffer) {
       throw new NotFoundException(`Job offer with ID ${id} not found`);
     }
 
-    await this.jobOfferRepository.update(id, updateJobOfferDto);
+    const { skills, ...jobOfferData } = updateJobOfferDto;
 
-    const updatedJobOffer = await this.jobOfferRepository.createQueryBuilder('jobOffer')
-      .where('jobOffer.id = :id', { id })
-      .loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications')
-      .getOne();
+    Object.assign(jobOffer, jobOfferData);
 
-    return updatedJobOffer as any;
+    // Handle skills update if provided
+    if (skills !== undefined) {
+      const skillEntities = await this.jobOfferSkillService.findOrCreateByName(
+        skills.map((s) => s.skill_name),
+      );
+      jobOffer.skills = skillEntities;
+    }
+
+    await this.jobOfferRepository.save(jobOffer);
+
+    return this.findOne(id);
   }
 
   async softDelete(id: string): Promise<void> {
