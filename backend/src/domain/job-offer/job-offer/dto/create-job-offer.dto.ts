@@ -4,6 +4,8 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  MinLength,
+  ArrayMaxSize,
 } from 'class-validator';
 import { WorkMode } from '../interfaces/work-mode.enum';
 import { Type } from 'class-transformer';
@@ -11,15 +13,18 @@ import { CreateJobOfferSkillDto } from '../../job-offer-skills/dto/create-job-of
 
 export class CreateJobOfferDto {
   @IsString()
+  @MinLength(2)
   position: string;
 
   @IsString()
+  @MinLength(2)
   location: string;
 
   @IsEnum(WorkMode)
   work_mode: WorkMode;
 
   @IsString()
+  @MinLength(10)
   description: string;
 
   @IsOptional()
@@ -32,6 +37,7 @@ export class CreateJobOfferDto {
 
   @IsOptional()
   @IsArray()
+  @ArrayMaxSize(10)
   @ValidateNested({ each: true })
   @Type(() => CreateJobOfferSkillDto)
   skills?: CreateJobOfferSkillDto[];
