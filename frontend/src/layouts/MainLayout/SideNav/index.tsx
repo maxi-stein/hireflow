@@ -19,10 +19,21 @@ export function SideNav() {
           key={item.path}
           label={item.label}
           leftSection={item.icon}
-          onClick={() => navigate(item.path)}
-          active={active === item.path}
+          onClick={() => !item.children && navigate(item.path)}
+          active={item.children ? undefined : active === item.path}
+          defaultOpened={item.children ? item.children.some(child => child.path === active) : undefined}
           variant="light"
-        />
+        >
+          {item.children?.map((child) => (
+            <NavLink
+              key={child.path}
+              label={child.label}
+              onClick={() => navigate(child.path)}
+              active={active === child.path}
+              variant="light"
+            />
+          ))}
+        </NavLink>
       ))}
     </Stack>
   );

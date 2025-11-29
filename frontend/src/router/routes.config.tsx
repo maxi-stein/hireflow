@@ -29,12 +29,13 @@ import { InterviewsPage } from '../pages/employee/InterviewsPage';
  */
 export interface RouteConfig {
   path: string;
-  element: ReactNode;
+  element?: ReactNode;
   label?: string;
   icon?: ReactNode;
   showInNav?: boolean;
   requiresAuth?: boolean;
   allowedRoles?: readonly ('candidate' | 'employee')[];
+  children?: RouteConfig[];
 }
 
 /**
@@ -115,22 +116,31 @@ export const ROUTES = {
       requiresAuth: true,
       allowedRoles: ['employee'],
     },
-    JOB_POSTINGS: {
-      path: '/manage/job-postings',
-      element: <JobPostingsPage />,
+    JOB_POSTINGS_GROUP: {
+      path: '#job-postings',
       label: 'Job Postings',
       icon: <IconFileDescription size={20} />,
       showInNav: true,
       requiresAuth: true,
       allowedRoles: ['employee'],
-    },
-    CREATE_JOB: {
-      path: '/manage/job-postings/new',
-      element: <CreateJobPage />,
-      label: 'Create Job',
-      showInNav: false,
-      requiresAuth: true,
-      allowedRoles: ['employee'],
+      children: [
+        {
+          path: '/manage/job-postings',
+          element: <JobPostingsPage />,
+          label: 'Manage',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+        },
+        {
+          path: '/manage/job-postings/new',
+          element: <CreateJobPage />,
+          label: 'Create New',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+        },
+      ],
     },
     CANDIDATES: {
       path: '/manage/candidates',
@@ -163,21 +173,40 @@ export const ROUTES = {
 } as const;
 
 
-// Get all routes as a flat array
+// Helper to flatten routes for the router
+const flattenRoutes = (routes: RouteConfig[]): RouteConfig[] => {
+  return routes.reduce((acc, route) => {
+    if (route.children) {
+      acc.push(...flattenRoutes(route.children));
+    }
+    if (route.element) {
+      acc.push(route);
+    }
+    return acc;
+  }, [] as RouteConfig[]);
+};
+
+// Get all routes as a flat array for Router
 export const getAllRoutes = (): RouteConfig[] => {
-  return [
+  const allGroups = [
     ...Object.values(ROUTES.EMPLOYEE),
     ...Object.values(ROUTES.PUBLIC),
     ...Object.values(ROUTES.CANDIDATE),
     ...Object.values(ROUTES.COMMON),
-  ];
+  ] as RouteConfig[];
+  return flattenRoutes(allGroups);
 };
 
-// Get nav items for a specific user type
+// Get nav items for a specific user type (hierarchical)
 export const getNavItemsForUser = (userType: 'candidate' | 'employee' | null): RouteConfig[] => {
-  const allRoutes = getAllRoutes();
+  const allGroups = [
+    ...Object.values(ROUTES.EMPLOYEE),
+    ...Object.values(ROUTES.PUBLIC),
+    ...Object.values(ROUTES.CANDIDATE),
+    ...Object.values(ROUTES.COMMON),
+  ] as RouteConfig[];
   
-  return allRoutes.filter(route => {
+  return allGroups.filter(route => {
     // Must have showInNav = true
     if (!route.showInNav) return false;
     
