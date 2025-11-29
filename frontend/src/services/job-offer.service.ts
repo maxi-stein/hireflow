@@ -91,4 +91,11 @@ export const jobOfferService = {
   delete: async (id: string): Promise<void> => {
     await apiClient.delete(`/job-offers/${id}`);
   },
+
+  searchSkills: async (query: string): Promise<JobOfferSkill[]> => {
+    if (!query) return [];
+    // encodeURIComponent() transforms special characters into their URL-encoded equivalents (space -> %20, etc.)
+    const response = await apiClient.get<JobOfferSkill[]>(`/job-offer-skills/search?query=${encodeURIComponent(query)}`);
+    return response.data;
+  },
 };

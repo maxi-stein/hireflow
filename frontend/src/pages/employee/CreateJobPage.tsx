@@ -14,24 +14,30 @@ import {
   Box
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useDebouncedValue } from '@mantine/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IconDeviceFloppy } from '@tabler/icons-react';
-import { useCreateJobOfferMutation, useUpdateJobOfferMutation, useJobOfferQuery } from '../../hooks/api/useJobOffers';
+import { useCreateJobOfferMutation, useUpdateJobOfferMutation, useJobOfferQuery, useSearchSkillsQuery } from '../../hooks/api/useJobOffers';
 import { WorkMode } from '../../services/job-offer.service';
 import { ROUTES } from '../../router/routes.config';
 import { notifications } from '@mantine/notifications';
 import { createJobOfferSchema } from '../../schemas/job-offer.schema';
 import { validateWithJoi } from '../../utils/form-validation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function CreateJobPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
+  const [searchValue, setSearchValue] = useState('');
+  const [debouncedSearch] = useDebouncedValue(searchValue, 300);
 
   const createMutation = useCreateJobOfferMutation();
   const updateMutation = useUpdateJobOfferMutation();
   const { data: jobOffer, isLoading: isLoadingJobOffer } = useJobOfferQuery(id || '');
+
+  // Query for skill autocomplete
+  const { data: skillSuggestions = [] } = useSearchSkillsQuery(debouncedSearch);
 
   const form = useForm({
     initialValues: {
@@ -91,6 +97,7 @@ export function CreateJobPage() {
         title: 'Error',
         message: `Failed to ${isEditMode ? 'update' : 'create'} job posting. Please try again.`,
         color: 'red',
+        autoClose: 5000,
       });
       console.error(error);
     }
@@ -110,7 +117,7 @@ export function CreateJobPage() {
       <Paper p="xl" radius="md" withBorder pos="relative">
         <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+        <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
           <Stack gap="lg">
             <Group grow align="flex-start">
               <TextInput
@@ -150,10 +157,13 @@ export function CreateJobPage() {
 
             <TagsInput
               label="Required Skills"
-              placeholder="Type and press Enter to add skills (e.g. React, TypeScript)"
+              placeholder="Type to search skills (e.g. React, TypeScript)"
               description="Add up to 10 key skills for this position"
               maxTags={10}
               clearable
+              data={skillSuggestions.map(s => s.skill_name)}
+              searchValue={searchValue}
+              onSearchChange={setSearchValue}
               {...form.getInputProps('skills')}
             />
 

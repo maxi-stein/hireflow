@@ -56,3 +56,12 @@ export function useDeleteJobOfferMutation() {
     },
   });
 }
+
+export function useSearchSkillsQuery(query: string) {
+  return useQuery({
+    queryKey: ['skills', query],
+    queryFn: () => jobOfferService.searchSkills(query),
+    enabled: query.length > 0,
+    staleTime: 60 * 1000, // Cache results for 1 minute
+  });
+}
