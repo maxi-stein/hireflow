@@ -32,3 +32,27 @@ export function useCreateJobOfferMutation() {
     },
   });
 }
+
+export function useUpdateJobOfferMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<CreateJobOfferDto> }) => 
+      jobOfferService.update(id, data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: JOB_OFFERS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: [...JOB_OFFERS_QUERY_KEY, data.id] });
+    },
+  });
+}
+
+export function useDeleteJobOfferMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => jobOfferService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: JOB_OFFERS_QUERY_KEY });
+    },
+  });
+}

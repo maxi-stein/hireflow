@@ -140,6 +140,14 @@ export const ROUTES = {
           requiresAuth: true,
           allowedRoles: ['employee'],
         },
+        {
+          path: '/manage/job-postings/edit/:id',
+          element: <CreateJobPage />,
+          label: 'Edit Job',
+          showInNav: false,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+        },
       ],
     },
     CANDIDATES: {

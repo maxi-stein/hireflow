@@ -18,7 +18,7 @@ export type WorkMode = (typeof WorkMode)[keyof typeof WorkMode];
 
 export interface JobOfferSkill {
   id: string;
-  name: string;
+  skill_name: string;
 }
 
 export interface JobOffer {
@@ -55,6 +55,8 @@ export interface JobOfferFilters {
   end_date?: string;
 }
 
+export type UpdateJobOfferDto = Partial<CreateJobOfferDto>;
+
 export const jobOfferService = {
   getAll: async (filters?: JobOfferFilters): Promise<PaginatedResponse<JobOffer>> => {
     const params = new URLSearchParams();
@@ -79,5 +81,14 @@ export const jobOfferService = {
   create: async (data: CreateJobOfferDto): Promise<JobOffer> => {
     const response = await apiClient.post<JobOffer>('/job-offers', data);
     return response.data;
+  },
+
+  update: async (id: string, data: UpdateJobOfferDto): Promise<JobOffer> => {
+    const response = await apiClient.patch<JobOffer>(`/job-offers/${id}`, data);
+    return response.data;
+  },
+
+  delete: async (id: string): Promise<void> => {
+    await apiClient.delete(`/job-offers/${id}`);
   },
 };

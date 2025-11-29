@@ -24,16 +24,25 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
-import { JobOfferStatus } from '../../services/job-offer.service';
+import { useJobOffersQuery, useDeleteJobOfferMutation } from '../../hooks/api/useJobOffers';
+import { JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
 import { ROUTES } from '../../router/routes.config';
+import { notifications } from '@mantine/notifications';
+import { ViewJobOfferModal } from '../../components/employee/ViewJobOfferModal';
+import { DeleteJobOfferModal } from '../../components/employee/DeleteJobOfferModal';
 
 export function JobPostingsPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 650); // 650ms delay before sending request
+  const [debouncedSearch] = useDebouncedValue(search, 1000);
   const [filter, setFilter] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  
+  // Modals
+  const [viewModalOpened, setViewModalOpened] = useState(false);
+  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+  const [viewJobOfferId, setViewJobOfferId] = useState<string | null>(null);
+  const [deleteJobOffer, setDeleteJobOffer] = useState<JobOffer | null>(null);
 
   const { data, isLoading } = useJobOffersQuery({
     page,
@@ -42,8 +51,53 @@ export function JobPostingsPage() {
     position: debouncedSearch || undefined,
   });
 
+  const deleteMutation = useDeleteJobOfferMutation();
+
   const handleCreateClick = () => {
-    navigate(ROUTES.EMPLOYEE.CREATE_JOB.path);
+    navigate(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[1].path);
+  };
+
+  const handleViewClick = (offer: JobOffer) => {
+    setViewJobOfferId(offer.id);
+    setViewModalOpened(true);
+  };
+
+  const handleEditClick = (offerId: string) => {
+    navigate(`/manage/job-postings/edit/${offerId}`);
+  };
+
+  const handleEditFromModal = () => {
+    if (viewJobOfferId) {
+      setViewModalOpened(false);
+      handleEditClick(viewJobOfferId);
+    }
+  };
+
+  const handleDeleteClick = (offer: JobOffer) => {
+    setDeleteJobOffer(offer);
+    setDeleteModalOpened(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteJobOffer) return;
+
+    try {
+      await deleteMutation.mutateAsync(deleteJobOffer.id);
+      notifications.show({
+        title: 'Success',
+        message: 'Job posting deleted successfully',
+        color: 'green',
+      });
+      setDeleteModalOpened(false);
+      setDeleteJobOffer(null);
+    } catch (error) {
+      notifications.show({
+        title: 'Error',
+        message: 'Failed to delete job posting. Please try again.',
+        color: 'red',
+      });
+      console.error(error);
+    }
   };
 
   return (
@@ -128,13 +182,25 @@ export function JobPostingsPage() {
                 </Table.Td>
                 <Table.Td>
                   <Group gap={4} wrap="nowrap">
-                    <ActionIcon variant="subtle" color="gray">
+                    <ActionIcon 
+                      variant="subtle" 
+                      color="gray"
+                      onClick={() => handleViewClick(offer)}
+                    >
                       <IconEye size={16} />
                     </ActionIcon>
-                    <ActionIcon variant="subtle" color="blue">
+                    <ActionIcon 
+                      variant="subtle" 
+                      color="blue"
+                      onClick={() => handleEditClick(offer.id)}
+                    >
                       <IconEdit size={16} />
                     </ActionIcon>
-                    <ActionIcon variant="subtle" color="red">
+                    <ActionIcon 
+                      variant="subtle" 
+                      color="red"
+                      onClick={() => handleDeleteClick(offer)}
+                    >
                       <IconTrash size={16} />
                     </ActionIcon>
                   </Group>
@@ -143,7 +209,7 @@ export function JobPostingsPage() {
             ))}
             {!isLoading && (!data?.data || data.data.length === 0) && (
               <Table.Tr>
-                <Table.Td colSpan={6} align="center" py="xl">
+                <Table.Td colSpan={7} style={{ textAlign: 'center' }} py="xl">
                   <Text c="dimmed">No job postings found</Text>
                 </Table.Td>
               </Table.Tr>
@@ -151,7 +217,7 @@ export function JobPostingsPage() {
           </Table.Tbody>
         </Table>
 
-        {data?.pagination && (
+        {data?.pagination && data.pagination.totalPages > 1 && (
           <Group justify="center" p="md" style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
             <Pagination 
               total={data.pagination.totalPages} 
@@ -161,6 +227,21 @@ export function JobPostingsPage() {
           </Group>
         )}
       </Paper>
+
+      <ViewJobOfferModal
+        opened={viewModalOpened}
+        onClose={() => setViewModalOpened(false)}
+        jobOfferId={viewJobOfferId}
+        onEdit={handleEditFromModal}
+      />
+
+      <DeleteJobOfferModal
+        opened={deleteModalOpened}
+        onClose={() => setDeleteModalOpened(false)}
+        jobOffer={deleteJobOffer}
+        onConfirm={handleConfirmDelete}
+        isLoading={deleteMutation.isPending}
+      />
     </Container>
   );
 }
