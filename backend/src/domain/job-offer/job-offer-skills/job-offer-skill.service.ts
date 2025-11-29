@@ -62,4 +62,15 @@ export class JobOfferSkillService {
       );
     }
   }
+
+  async search(query: string): Promise<JobOfferSkill[]> {
+    if (!query) return [];
+    
+    return await this.skillRepository
+      .createQueryBuilder('skill')
+      .where('LOWER(skill.skill_name) LIKE :query', { query: `%${query.toLowerCase()}%` })
+      .take(10)
+      .orderBy('skill.skill_name', 'ASC')
+      .getMany();
+  }
 }
