@@ -13,6 +13,7 @@ import {
   LoadingOverlay,
   Pagination
 } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
 import { 
   IconSearch, 
   IconPlus, 
@@ -30,14 +31,15 @@ import { ROUTES } from '../../router/routes.config';
 export function JobPostingsPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [debouncedSearch] = useDebouncedValue(search, 650); // 650ms delay before sending request
+  const [filter, setFilter] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
   const { data, isLoading } = useJobOffersQuery({
     page,
     limit: 10,
-    status: statusFilter as JobOfferStatus || undefined,
-    // positions: search ? [search] : undefined, // Backend filter expects exact match array, implementing client-side search or improving backend later might be better. For now keeping it simple.
+    status: filter as JobOfferStatus || undefined,
+    position: debouncedSearch || undefined,
   });
 
   const handleCreateClick = () => {
@@ -65,7 +67,7 @@ export function JobPostingsPage() {
             placeholder="Search by position..."
             leftSection={<IconSearch size={16} />}
             value={search}
-            onChange={(event) => setSearch(event.currentTarget.value)}
+            onChange={(e) => setSearch(e.currentTarget.value)}
             style={{ flex: 1 }}
           />
           <Select
@@ -75,8 +77,8 @@ export function JobPostingsPage() {
               { value: JobOfferStatus.OPEN, label: 'Open' },
               { value: JobOfferStatus.CLOSED, label: 'Closed' },
             ]}
-            value={statusFilter}
-            onChange={setStatusFilter}
+            value={filter}
+            onChange={setFilter}
             clearable
             style={{ width: 200 }}
           />
@@ -92,6 +94,7 @@ export function JobPostingsPage() {
               <Table.Th>Position</Table.Th>
               <Table.Th>Location</Table.Th>
               <Table.Th>Work Mode</Table.Th>
+              <Table.Th>Applicants</Table.Th>
               <Table.Th>Status</Table.Th>
               <Table.Th>Posted Date</Table.Th>
               <Table.Th style={{ width: 100 }}>Actions</Table.Th>
@@ -108,6 +111,9 @@ export function JobPostingsPage() {
                   <Badge variant="light" color="gray">
                     {offer.work_mode}
                   </Badge>
+                </Table.Td>
+                <Table.Td>
+                  <Text size="sm">{offer.applicants_count}</Text>
                 </Table.Td>
                 <Table.Td>
                   <Badge 
@@ -145,10 +151,10 @@ export function JobPostingsPage() {
           </Table.Tbody>
         </Table>
 
-        {data?.meta && (
+        {data?.pagination && (
           <Group justify="center" p="md" style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
             <Pagination 
-              total={data.meta.last_page} 
+              total={data.pagination.totalPages} 
               value={page} 
               onChange={setPage} 
             />

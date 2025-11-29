@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import type { PaginatedResponse } from '../types/common';
 
 export const JobOfferStatus = {
   OPEN: 'OPEN',
@@ -32,6 +33,7 @@ export interface JobOffer {
   created_at: string;
   updated_at: string;
   skills: JobOfferSkill[];
+  applicants_count: number;
 }
 
 export interface CreateJobOfferDto {
@@ -48,19 +50,9 @@ export interface JobOfferFilters {
   page?: number;
   limit?: number;
   status?: JobOfferStatus;
-  positions?: string[];
+  position?: string;
   start_date?: string;
   end_date?: string;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  meta: {
-    total: number;
-    page: number;
-    last_page: number;
-    limit: number;
-  };
 }
 
 export const jobOfferService = {
@@ -70,9 +62,7 @@ export const jobOfferService = {
       if (filters.page) params.append('page', filters.page.toString());
       if (filters.limit) params.append('limit', filters.limit.toString());
       if (filters.status) params.append('status', filters.status);
-      if (filters.positions) {
-        filters.positions.forEach(pos => params.append('positions[]', pos));
-      }
+      if (filters.position) params.append('position', filters.position);
       if (filters.start_date) params.append('start_date', filters.start_date);
       if (filters.end_date) params.append('end_date', filters.end_date);
     }
