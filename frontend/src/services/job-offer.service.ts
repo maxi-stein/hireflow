@@ -43,7 +43,7 @@ export interface CreateJobOfferDto {
   description: string;
   salary?: string;
   benefits?: string;
-  skills?: { name: string }[];
+  skills?: { skill_name: string }[];
 }
 
 export interface JobOfferFilters {
