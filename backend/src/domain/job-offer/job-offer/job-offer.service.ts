@@ -52,7 +52,7 @@ export class JobOfferService {
           },
         );
 
-        return fullJobOffer;
+        return { ...fullJobOffer, applicants_count: 0 };
       },
     );
   }
@@ -60,7 +60,7 @@ export class JobOfferService {
   async findAll(
     filterDto: FilterJobOfferDto,
   ): Promise<PaginatedResponse<JobOfferResponseDto>> {
-    const { page, limit, status, positions, start_date, end_date } = filterDto;
+    const { page, limit, status, position, start_date, end_date } = filterDto;
 
     const query = this.jobOfferRepository.createQueryBuilder('jobOffer');
 
@@ -68,8 +68,11 @@ export class JobOfferService {
       query.andWhere('jobOffer.status = :status', { status });
     }
 
-    if (positions && positions.length > 0) {
-      query.andWhere('jobOffer.position IN (:...positions)', { positions });
+    if (position) {
+      const normalizedPosition = position.toLowerCase();
+      query.andWhere('LOWER(jobOffer.position) LIKE :position', {
+        position: `%${normalizedPosition}%`,
+      });
     }
 
     if (start_date) {
@@ -80,12 +83,14 @@ export class JobOfferService {
       query.andWhere('jobOffer.created_at <= :end_date', { end_date });
     }
 
+    query.loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications'); // Count applicants for each job offer
+
     query.skip((page - 1) * limit).take(limit);
 
     const [data, total] = await query.getManyAndCount();
 
     return {
-      data,
+      data: data as any,
       pagination: {
         page,
         limit,
@@ -96,15 +101,16 @@ export class JobOfferService {
   }
 
   async findOne(id: string): Promise<JobOfferResponseDto> {
-    const jobOffer = await this.jobOfferRepository.findOne({
-      where: { id },
-    });
+    const jobOffer = await this.jobOfferRepository.createQueryBuilder('jobOffer')
+      .where('jobOffer.id = :id', { id })
+      .loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications')
+      .getOne();
 
     if (!jobOffer) {
       throw new NotFoundException(`Job offer with ID ${id} not found`);
     }
 
-    return jobOffer;
+    return jobOffer as any;
   }
 
   async update(
@@ -121,11 +127,12 @@ export class JobOfferService {
 
     await this.jobOfferRepository.update(id, updateJobOfferDto);
 
-    const updatedJobOffer = await this.jobOfferRepository.findOne({
-      where: { id },
-    });
+    const updatedJobOffer = await this.jobOfferRepository.createQueryBuilder('jobOffer')
+      .where('jobOffer.id = :id', { id })
+      .loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications')
+      .getOne();
 
-    return updatedJobOffer;
+    return updatedJobOffer as any;
   }
 
   async softDelete(id: string): Promise<void> {
