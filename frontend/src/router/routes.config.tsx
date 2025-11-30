@@ -7,7 +7,6 @@ import {
   IconChartBar,
   IconFileDescription,
   IconUsers,
-  IconScale,
   IconCalendar,
 } from '@tabler/icons-react';
 import { LandingPage } from '../pages/LandingPage';
@@ -20,9 +19,10 @@ import { ApplicationsPage } from '../pages/candidate/ApplicationsPage';
 import { EmployeeDashboard } from '../pages/employee/EmployeeDashboard';
 import { JobPostingsPage } from '../pages/employee/JobPostingsPage';
 import { CreateJobPage } from '../pages/employee/CreateJobPage';
-import { CandidatesPage } from '../pages/employee/CandidatesPage';
+import { CandidateApplicationsPage } from '../pages/employee/CandidateApplicationsPage';
 import { CompareCandidatesPage } from '../pages/employee/CompareCandidatesPage';
 import { InterviewsPage } from '../pages/employee/InterviewsPage';
+import { CandidatesPage } from '../pages/employee/CandidatesPage';
 
 /**
  * Route configuration type
@@ -40,7 +40,6 @@ export interface RouteConfig {
 
 /**
  * Centralized route configuration
- * Single source of truth for all application routes
  */
 export const ROUTES = {
   // Public routes (no auth required)
@@ -150,24 +149,41 @@ export const ROUTES = {
         },
       ],
     },
-    CANDIDATES: {
-      path: '/manage/candidates',
-      element: <CandidatesPage />,
+    CANDIDATES_GROUP: {
+      path: '#candidates',
       label: 'Candidates',
       icon: <IconUsers size={20} />,
       showInNav: true,
       requiresAuth: true,
       allowedRoles: ['employee'],
+      children: [
+        {
+          path: '/manage/candidates/applications',
+          element: <CandidateApplicationsPage />,
+          label: 'Applications',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+        },
+        {
+          path: '/manage/candidates/compare',
+          element: <CompareCandidatesPage />,
+          label: 'Compare Candidates',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+        },
+        {
+          path: '/manage/candidates/:id',
+          element: <CandidatesPage />, // Assuming this is the details/directory page
+          label: 'Candidate Details',
+          showInNav: false, // Hidden because it needs an ID usually, or we can make a directory page
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+        },
+      ],
     },
-    COMPARE_CANDIDATES: {
-      path: '/manage/compare-candidates',
-      element: <CompareCandidatesPage />,
-      label: 'Compare Candidates',
-      icon: <IconScale size={20} />,
-      showInNav: true,
-      requiresAuth: true,
-      allowedRoles: ['employee'],
-    },
+
     INTERVIEWS: {
       path: '/manage/interviews',
       element: <InterviewsPage />,

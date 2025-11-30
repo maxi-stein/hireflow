@@ -83,12 +83,16 @@ export const router = createBrowserRouter([
                 element: ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[2].element,
               },
               {
-                path: ROUTES.EMPLOYEE.CANDIDATES.path,
-                element: ROUTES.EMPLOYEE.CANDIDATES.element,
+                path: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[0].path,
+                element: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[0].element,
               },
               {
-                path: ROUTES.EMPLOYEE.COMPARE_CANDIDATES.path,
-                element: ROUTES.EMPLOYEE.COMPARE_CANDIDATES.element,
+                path: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[1].path,
+                element: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[1].element,
+              },
+              {
+                path: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[2].path,
+                element: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[2].element,
               },
               {
                 path: ROUTES.EMPLOYEE.INTERVIEWS.path,

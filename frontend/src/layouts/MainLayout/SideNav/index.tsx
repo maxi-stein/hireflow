@@ -20,7 +20,7 @@ export function SideNav() {
           label={item.label}
           leftSection={item.icon}
           onClick={() => !item.children && navigate(item.path)}
-          active={item.children ? undefined : active === item.path}
+          active={item.children ? item.children.some(child => child.path === active) : active === item.path}
           defaultOpened={item.children ? item.children.some(child => child.path === active) : undefined}
           variant="subtle"
         >
