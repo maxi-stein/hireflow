@@ -18,6 +18,7 @@ import { UserTypeGuard } from '../auth/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserType } from '../users/interfaces/user.enum';
 import { UuidValidationPipe } from '../../shared/pipes';
+import { CanAccessUser } from '../auth/guards/can-access.guard';
 
 @Controller('interviews')
 @UseGuards(JwtAuthGuard)
@@ -25,11 +26,15 @@ export class InterviewController {
   constructor(private readonly interviewService: InterviewService) {}
 
   @Post()
+  @RequireUserType(UserType.EMPLOYEE)
+  @UseGuards(UserTypeGuard) 
   create(@Body() createDto: CreateInterviewDto) {
     return this.interviewService.create(createDto);
   }
 
   @Get()
+  @RequireUserType(UserType.EMPLOYEE)
+  @UseGuards(UserTypeGuard) 
   findAll(@Query() filterInterviewDto: FilterInterviewsDto) {
     return this.interviewService.findAll(filterInterviewDto);
   }
@@ -39,8 +44,14 @@ export class InterviewController {
     return this.interviewService.findOne(id);
   }
 
-  @RequireUserType(UserType.EMPLOYEE) //Sets the required user types
-  @UseGuards(UserTypeGuard) //Checks if the user is that same user_type
+  @Get('candidate/:candidateId')
+  @UseGuards(CanAccessUser)
+  findByCandidate(@Param('candidateId', UuidValidationPipe) candidateId: string) {
+    return this.interviewService.findByCandidate(candidateId);
+  }
+
+  @RequireUserType(UserType.EMPLOYEE)
+  @UseGuards(UserTypeGuard)
   @Patch(':id')
   update(
     @Param('id', UuidValidationPipe) id: string,

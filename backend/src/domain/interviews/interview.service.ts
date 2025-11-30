@@ -244,8 +244,39 @@ export class InterviewService {
     const [data, total] = await this.interviewRepository
       .createQueryBuilder('interview')
       .innerJoinAndSelect('interview.interviewers', 'interviewer')
-      .innerJoinAndSelect('interview.candidate_application', 'application')
+      .innerJoinAndSelect('interview.applications', 'application')
       .where('interviewer.id = :employeeId', { employeeId })
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findByCandidate(
+    candidateId: string,
+    paginationDto: PaginationDto = { page: 1, limit: 10 },
+  ): Promise<PaginatedResponse<Interview>> {
+    const { page, limit } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.interviewRepository
+      .createQueryBuilder('interview')
+      .innerJoinAndSelect('interview.applications', 'application')
+      .innerJoinAndSelect('application.candidate', 'candidate')
+      .innerJoinAndSelect('application.job_offer', 'job_offer')
+      .innerJoinAndSelect('interview.interviewers', 'interviewer')
+      .innerJoinAndSelect('interviewer.user', 'user')
+      .where('candidate.id = :candidateId', { candidateId })
+      .orderBy('interview.scheduled_time', 'DESC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();
