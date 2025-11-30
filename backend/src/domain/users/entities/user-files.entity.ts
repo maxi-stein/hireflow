@@ -3,10 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
 import { FileType } from '../interfaces/file-type.enum';
 import { Candidate } from './candidate.entity';
 
@@ -37,6 +37,7 @@ export class UserFile {
   file_type: FileType;
 
   @ManyToOne(() => Candidate, (candidate) => candidate.files)
+  @JoinColumn({ name: 'candidate_id' })
   candidate: Candidate;
 
   @CreateDateColumn({ name: 'created_at' })

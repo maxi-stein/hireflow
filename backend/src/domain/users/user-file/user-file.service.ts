@@ -22,6 +22,8 @@ export class FileStorageService {
     private readonly userFileRepository: Repository<UserFile>,
   ) {}
 
+  // Called by controller for uploading PDF or image
+  // Store user file in filesystem and metadata in database
   async storeUserFile(
     user: JwtUser,
     file: Express.Multer.File,
@@ -97,18 +99,39 @@ export class FileStorageService {
     return createReadStream(userFile.file_path);
   }
 
+  // Used by controller for getting file stream by path
+  async getFileStreamByPath(filePath: string) {
+    try {
+      await fs.access(filePath);
+    } catch {
+      throw new NotFoundException('File not found in the folder');
+    }
+
+    return createReadStream(filePath);
+  }
+
   async getUserFileMetadata(fileId: string, candidateId: string) {
     return this.userFileRepository.findOne({
       where: { candidate: { id: candidateId }, id: fileId },
     });
   }
 
+  // Used by controller for getting file metadata
+  async getFileMetadataById(fileId: string) {
+    return this.userFileRepository.findOne({
+      where: { id: fileId },
+      relations: ['candidate'],
+    });
+  }
+
+  // Used by controller for getting all files metadata for a candidate
   async getAllUserFilesMetadata(candidateId: string) {
     return this.userFileRepository.find({
       where: { candidate: { id: candidateId } },
     });
   }
 
+  // TODO: evaluar si este metodo es necesario
   async deleteFile(fileId: string, candidateId: string): Promise<void> {
     const userFile = await this.userFileRepository.findOne({
       where: { id: fileId, candidate: { id: candidateId } },
@@ -260,6 +283,7 @@ export class FileStorageService {
     }
   }
 
+  // Used if upload transaction fails
   private async cleanupFailedUpload(filePath: string) {
     try {
       await fs.unlink(filePath);

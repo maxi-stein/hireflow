@@ -12,16 +12,19 @@ import {
   FileTypeValidator,
   UseGuards,
   UsePipes,
-  BadRequestException,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { FileType } from '../interfaces/file-type.enum';
+import { UserType } from '../interfaces/user.enum';
 import { JwtUser } from '../interfaces/jwt.user';
 import { FILE } from '../../../shared/constants/file.constants';
 import { FileStorageService } from './user-file.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { UserTypeGuard } from '../../auth/guards/roles.guard';
+import { RequireUserType } from '../../auth/decorators/roles.decorator';
 import { UuidValidationPipe } from '../../../shared/pipes';
 import { CanAccessUser } from '../../auth/guards/can-access.guard';
 
@@ -31,6 +34,8 @@ export class FileController {
   constructor(private readonly fileStorageService: FileStorageService) {}
 
   @Post('cv')
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.CANDIDATE)
   @UseInterceptors(FileInterceptor('resume'))
   async uploadCV(
     @UploadedFile(
@@ -52,6 +57,8 @@ export class FileController {
   }
 
   @Post('profile-picture')
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.CANDIDATE)
   @UseInterceptors(FileInterceptor('profile-picture'))
   async uploadProfilePicture(
     @UploadedFile(
@@ -78,19 +85,23 @@ export class FileController {
     @Req() req: Request & { user: JwtUser },
     @Res() res: Response,
   ) {
-    // Set up headers
-    const userFile = await this.fileStorageService.getUserFileMetadata(
-      fileId,
-      req.user.entity_id,
-    );
+    // Get file metadata
+    const userFile = await this.fileStorageService.getFileMetadataById(fileId);
 
     if (!userFile) {
       throw new NotFoundException('File not found.');
     }
 
+    // Authorization Check - Employees can access all files, candidates only their own
+    if (req.user.user_type === UserType.CANDIDATE && 
+        userFile.candidate.id !== req.user.entity_id) {
+      throw new ForbiddenException('You do not have access to this file');
+    }
+
     res.setHeader('Content-Type', userFile.mime_type);
     res.setHeader('Content-Length', userFile.size.toString());
 
+    // Set Content-Disposition header based on file type
     if (userFile.mime_type.startsWith('image/')) {
       res.setHeader(
         'Content-Disposition',
@@ -102,15 +113,11 @@ export class FileController {
         'Content-Disposition',
         `inline; filename="${userFile.file_name}"`,
       );
-
-      // Force download
-      // res.setHeader('Content-Disposition', `attachment; filename="${userFile.file_name}"`);
     }
 
     // Send file
-    const fileStream = await this.fileStorageService.getFileStream(
-      fileId,
-      req.user.entity_id,
+    const fileStream = await this.fileStorageService.getFileStreamByPath(
+      userFile.file_path,
     );
 
     fileStream.pipe(res);
