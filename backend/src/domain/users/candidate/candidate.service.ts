@@ -53,6 +53,8 @@ export class CandidateService {
           portfolio_url: null,
           github: null,
           linkedin: null,
+          city: null,
+          country: null,
           user: { id: userSaved.id },
         });
         await transactionalEntityManager.save(candidate);
@@ -173,6 +175,8 @@ export class CandidateService {
       id: candidate.id,
       age: candidate.age,
       phone: candidate.phone,
+      city: candidate.city,
+      country: candidate.country,
       github: candidate.github,
       linkedin: candidate.linkedin,
       user: {

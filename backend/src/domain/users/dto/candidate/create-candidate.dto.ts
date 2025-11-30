@@ -16,6 +16,12 @@ export class CreateCandidateDto {
   @IsString()
   phone: string;
 
+  @IsString()
+  city: string;
+
+  @IsString()
+  country: string;
+
   @IsUrl()
   resume_url: string;
 

@@ -42,9 +42,9 @@ export class SeedData9999999999999 implements MigrationInterface {
     // Candidate 1
     await queryRunner.query(`
       INSERT INTO "candidates" 
-        ("id", "age", "phone", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "age", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440004', 28, '123456789', 'https://github.com/alice', 'https://linkedin.com/in/alice', 
+        ('550e8400-e29b-41d4-a716-446655440004', 28, '123456789', 'Buenos Aires', 'Argentina', 'https://github.com/alice', 'https://linkedin.com/in/alice', 
          '550e8400-e29b-41d4-a716-446655440002', NOW(), NOW())
     `);
 
@@ -60,9 +60,9 @@ export class SeedData9999999999999 implements MigrationInterface {
     // Candidate 2
     await queryRunner.query(`
       INSERT INTO "candidates" 
-        ("id", "age", "phone", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "age", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440005', 30, '987654321', 'https://github.com/bob', 'https://linkedin.com/in/bob', 
+        ('550e8400-e29b-41d4-a716-446655440005', 30, '987654321', 'Montevideo', 'Uruguay', 'https://github.com/bob', 'https://linkedin.com/in/bob', 
          '550e8400-e29b-41d4-a716-446655440003', NOW(), NOW())
     `);
 

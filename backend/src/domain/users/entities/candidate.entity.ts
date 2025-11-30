@@ -26,6 +26,12 @@ export class Candidate {
   @Column({ type: 'varchar', length: USER.PHONE_LENGTH, nullable: true })
   phone: string | null;
 
+  @Column({ type: 'varchar', length: 100 })
+  city: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  country: string;
+
   @OneToMany(() => UserFile, (file) => file.candidate)
   files: UserFile[];
 
