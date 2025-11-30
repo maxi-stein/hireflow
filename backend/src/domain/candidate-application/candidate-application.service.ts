@@ -70,7 +70,7 @@ export class CandidateApplicationService {
           {
             candidate_id,
             job_offer_id,
-            status: ApplicationStatus.IN_PROGRESS,
+            status: ApplicationStatus.APPLIED,
           },
         );
 

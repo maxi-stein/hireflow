@@ -18,6 +18,7 @@ import { InterviewStatus } from './interfaces/interview-status.enum';
 import { EmployeesService } from '../users/employee/employee.service';
 import { FilterInterviewsDto } from './dto/filter-interviews.dto';
 import { InterviewType } from './interfaces/interview-type.enum';
+import { ApplicationStatus } from '../candidate-application/interfaces/application-status';
 
 @Injectable()
 export class InterviewService {
@@ -71,6 +72,13 @@ export class InterviewService {
         `Interviewers with IDs ${notFoundInterviewers.join(', ')} not found`,
       );
     }
+    // Update application status to IN_PROGRESS if currently APPLIED
+    for (const app of applications) {
+      if (app.status === 'APPLIED') {
+        await this.candidateApplicationService.update(app.id, { status: ApplicationStatus.IN_PROGRESS });
+      }
+    }
+
     // Creating the interview
     const interview = this.interviewRepository.create({
       type: createDto.type,
