@@ -137,6 +137,7 @@ export class CandidateApplicationService {
       end_date,
       candidate_id,
       job_offer_id,
+      search,
       page = 1,
       limit = 10,
     } = filterDto;
@@ -146,10 +147,18 @@ export class CandidateApplicationService {
     const query = this.applicationRepository
       .createQueryBuilder('application')
       .leftJoinAndSelect('application.candidate', 'candidate')
+      .leftJoinAndSelect('candidate.user', 'user')
       .leftJoinAndSelect('application.job_offer', 'job_offer')
       .orderBy('application.created_at', 'DESC')
       .skip(skip)
       .take(limit);
+
+    if (search) {
+      query.andWhere(
+        '(user.first_name ILIKE :search OR user.last_name ILIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
 
     if (status) {
       query.andWhere('application.status = :status', { status });
