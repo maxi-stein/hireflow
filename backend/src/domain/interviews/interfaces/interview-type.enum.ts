@@ -1,4 +1,4 @@
 export enum InterviewType {
-  INDIVIDUAL = 'individual',
-  GROUP = 'group',
+  INDIVIDUAL = 'INDIVIDUAL',
+  GROUP = 'GROUP',
 }
