@@ -1,6 +1,6 @@
 import { Paper, Group, Title, Timeline, Text } from '@mantine/core';
 import { IconBriefcase } from '@tabler/icons-react';
-import { type WorkExperience } from '../../services/candidate.service';
+import { type WorkExperience } from '../../../services/candidate.service';
 
 interface WorkExperienceSectionProps {
   experiences: WorkExperience[];

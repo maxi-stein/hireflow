@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Grid, Stack, LoadingOverlay, Text } from '@mantine/core';
 import { IconChevronLeft, IconX, IconCalendarEvent } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
-import { useCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
+import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { useCandidateFilesQuery } from '../../hooks/api/useUserFiles';
 import { ApplicationStatus } from '../../services/candidate-application.service';
@@ -12,18 +12,18 @@ import { FileType, userFileService } from '../../services/user-file.service';
 import { notifications } from '@mantine/notifications';
 import { ROUTES } from '../../router/routes.config';
 import { ConfirmActionModal } from '../../components/common/ConfirmActionModal';
-import { InterviewHistorySection } from '../../components/employee/InterviewHistorySection';
-import { WorkExperienceSection } from '../../components/employee/WorkExperienceSection';
-import { EducationSection } from '../../components/employee/EducationSection';
-import { ApplicationsSection } from '../../components/employee/ApplicationsSection';
-import { CandidateProfileCard } from '../../components/employee/CandidateProfileCard';
+import { InterviewHistorySection } from '../../components/employee/candidate-details/InterviewHistorySection';
+import { WorkExperienceSection } from '../../components/employee/candidate-details/WorkExperienceSection';
+import { EducationSection } from '../../components/employee/candidate-details/EducationSection';
+import { ApplicationsSection } from '../../components/employee/candidate-details/ApplicationsSection';
+import { CandidateProfileCard } from '../../components/employee/candidate-details/CandidateProfileCard';
 
 export function CandidatesPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
   const { data: candidate, isLoading: isLoadingCandidate } = useCandidateQuery(id || '');
-  const { data: applications, isLoading: isLoadingApplications } = useCandidateApplicationsQuery({
+  const { data: applications, isLoading: isLoadingApplications } = useAllCandidateApplicationsQuery({
     candidate_id: id,
     limit: 50
   });
@@ -126,6 +126,7 @@ export function CandidatesPage() {
     switch (status) {
       case ApplicationStatus.HIRED: return 'green';
       case ApplicationStatus.REJECTED: return 'red';
+      case ApplicationStatus.APPLIED: return 'gray';
       case ApplicationStatus.IN_PROGRESS: return 'blue';
       default: return 'gray';
     }

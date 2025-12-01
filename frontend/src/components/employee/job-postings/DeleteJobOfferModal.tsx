@@ -1,6 +1,6 @@
 import { Modal, Title, Stack, Text, Group, Button } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import { type JobOffer } from '../../services/job-offer.service';
+import { type JobOffer } from '../../../services/job-offer.service';
 
 interface DeleteJobOfferModalProps {
   opened: boolean;

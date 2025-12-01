@@ -1,6 +1,6 @@
 import { Paper, Title, Stack, Card, Group, Box, Text, Badge, Divider, Button } from '@mantine/core';
 import { IconX, IconCalendarEvent } from '@tabler/icons-react';
-import { ApplicationStatus, type CandidateApplication } from '../../services/candidate-application.service';
+import { ApplicationStatus, type CandidateApplication } from '../../../services/candidate-application.service';
 
 interface ApplicationsSectionProps {
   applications: CandidateApplication[];

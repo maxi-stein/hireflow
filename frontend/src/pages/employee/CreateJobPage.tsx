@@ -18,7 +18,7 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useCreateJobOfferMutation, useUpdateJobOfferMutation, useJobOfferQuery, useSearchSkillsQuery } from '../../hooks/api/useJobOffers';
-import { WorkMode } from '../../services/job-offer.service';
+import { WorkMode, JobOfferStatus } from '../../services/job-offer.service';
 import { ROUTES } from '../../router/routes.config';
 import { notifications } from '@mantine/notifications';
 import { createJobOfferSchema } from '../../schemas/job-offer.schema';
@@ -48,6 +48,7 @@ export function CreateJobPage() {
       salary: '',
       benefits: '',
       skills: [] as string[],
+      status: JobOfferStatus.OPEN as JobOfferStatus,
     },
     validate: validateWithJoi(createJobOfferSchema),
   });
@@ -64,6 +65,7 @@ export function CreateJobPage() {
         salary: jobOffer.salary || '',
         benefits: jobOffer.benefits || '',
         skills: jobOffer.skills.map(s => s.skill_name),
+        status: jobOffer.status,
       });
     }
   }, [jobOffer, isEditMode]);
@@ -139,12 +141,26 @@ export function CreateJobPage() {
               />
             </Group>
 
-            <TextInput
-              label="Location"
-              placeholder="e.g. Buenos Aires, Argentina"
-              required
-              {...form.getInputProps('location')}
-            />
+            <Group grow align="flex-start">
+              <TextInput
+                label="Location"
+                placeholder="e.g. Buenos Aires, Argentina"
+                required
+                {...form.getInputProps('location')}
+              />
+              {isEditMode && (
+                <Select
+                  label="Status"
+                  placeholder="Select status"
+                  required
+                  data={[
+                    { value: JobOfferStatus.OPEN, label: 'Open' },
+                    { value: JobOfferStatus.CLOSED, label: 'Closed' },
+                  ]}
+                  {...form.getInputProps('status')}
+                />
+              )}
+            </Group>
 
             <Textarea
               label="Job Description"

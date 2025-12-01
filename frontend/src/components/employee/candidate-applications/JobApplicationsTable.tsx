@@ -13,8 +13,8 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
-import { ApplicationStatus } from '../../services/candidate-application.service';
+import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../../hooks/api/useCandidateApplications';
+import { ApplicationStatus } from '../../../services/candidate-application.service';
 import { IconEye, IconScale, IconX, IconCheck, IconDotsVertical, IconSearch } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
@@ -26,7 +26,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
   const [debouncedSearch] = useDebouncedValue(search, 500);
   const updateStatusMutation = useUpdateApplicationStatusMutation();
 
-  const { data, isLoading } = useCandidateApplicationsQuery({
+  const { data, isLoading } = useAllCandidateApplicationsQuery({
     page,
     limit: 5, // Show 5 per job posting to save space
     job_offer_id: jobOfferId,
@@ -56,6 +56,8 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
         return 'green';
       case ApplicationStatus.REJECTED:
         return 'red';
+      case ApplicationStatus.APPLIED:
+        return 'gray';
       case ApplicationStatus.IN_PROGRESS:
         return 'blue';
       default:
@@ -67,7 +69,29 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
     return null; // Don't show table if no applications and no search active
   }
 
-  const rows = data?.data.map((application) => (
+  // Filter out HIRED applications and sort by status priority and date
+  const sortedApplications = data?.data
+    .filter(app => app.status !== ApplicationStatus.HIRED) // Exclude HIRED
+    .sort((a, b) => {
+      // Define status priority: IN_PROGRESS > APPLIED > REJECTED
+      const statusPriority: Record<ApplicationStatus, number> = {
+        [ApplicationStatus.IN_PROGRESS]: 1,
+        [ApplicationStatus.APPLIED]: 2,
+        [ApplicationStatus.REJECTED]: 3,
+        [ApplicationStatus.HIRED]: 4, // Won't appear due to filter
+      };
+
+      const priorityDiff = statusPriority[a.status] - statusPriority[b.status];
+      
+      // If same priority, sort by date (newest first)
+      if (priorityDiff === 0) {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+      
+      return priorityDiff;
+    }) || [];
+
+  const rows = sortedApplications.map((application) => (
     <Table.Tr key={application.id}>
       <Table.Td>
         <Text fw={500}>
@@ -113,7 +137,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
               <Menu.Item 
                 color="green" 
                 leftSection={<IconCheck size={14} />}
-                onClick={() => {}}
+                onClick={() => navigate(`/manage/interviews?applicationId=${application.id}`)}
               >
                 Schedule Interview
               </Menu.Item>
@@ -145,7 +169,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
             value={search}
             onChange={(event) => setSearch(event.currentTarget.value)}
           />
-          <Badge variant="outline">{data?.pagination.total} Applications</Badge>
+          <Badge variant="outline">{sortedApplications.length} Applications</Badge>
         </Group>
       </Group>
 

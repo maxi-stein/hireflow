@@ -28,8 +28,8 @@ import { useJobOffersQuery, useDeleteJobOfferMutation } from '../../hooks/api/us
 import { JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
 import { ROUTES } from '../../router/routes.config';
 import { notifications } from '@mantine/notifications';
-import { ViewJobOfferModal } from '../../components/employee/ViewJobOfferModal';
-import { DeleteJobOfferModal } from '../../components/employee/DeleteJobOfferModal';
+import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
+import { DeleteJobOfferModal } from '../../components/employee/job-postings/DeleteJobOfferModal';
 
 export function JobPostingsPage() {
   const navigate = useNavigate();

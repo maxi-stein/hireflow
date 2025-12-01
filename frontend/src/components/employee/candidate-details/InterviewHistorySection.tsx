@@ -1,6 +1,6 @@
 import { Paper, Group, Title, Stack, Card, Text, Badge, Box } from '@mantine/core';
 import { IconClock } from '@tabler/icons-react';
-import { type InterviewStatus } from '../../services/interview.service';
+import { type InterviewStatus } from '../../../services/interview.service';
 
 interface Interview {
   id: string;

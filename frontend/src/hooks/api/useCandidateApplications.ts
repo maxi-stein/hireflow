@@ -7,10 +7,18 @@ import {
 
 export const APPLICATIONS_QUERY_KEY = ['candidateApplications'];
 
-export function useCandidateApplicationsQuery(filters?: ApplicationFilters) {
+export function useAllCandidateApplicationsQuery(filters?: ApplicationFilters) {
   return useQuery({
     queryKey: [...APPLICATIONS_QUERY_KEY, filters],
     queryFn: () => candidateApplicationService.getAll(filters),
+  });
+}
+
+export function useCandidateApplicationQuery(id: string | null) {
+  return useQuery({
+    queryKey: [...APPLICATIONS_QUERY_KEY, 'detail', id],
+    queryFn: () => candidateApplicationService.getById(id!),
+    enabled: !!id,
   });
 }
 

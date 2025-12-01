@@ -37,7 +37,48 @@ export interface Interview {
   interviewers: Interviewer[];
 }
 
+export interface CreateInterviewDto {
+  type: InterviewType;
+  scheduled_time: string;
+  meeting_link?: string;
+  status?: InterviewStatus;
+  application_ids: string[];
+  interviewer_ids: string[];
+}
+
+export interface InterviewFilters {
+  page?: number;
+  limit?: number;
+  applicationId?: string;
+  employeeId?: string;
+  candidate_application_id?: string;
+  start_date?: string;
+  end_date?: string;
+  status?: InterviewStatus;
+}
+
 export const interviewService = {
+  getAll: async (filters?: InterviewFilters): Promise<PaginatedResponse<Interview>> => {
+    const params = new URLSearchParams();
+    if (filters) {
+      if (filters.page) params.append('page', filters.page.toString());
+      if (filters.limit) params.append('limit', filters.limit.toString());
+      if (filters.applicationId) params.append('applicationId', filters.applicationId);
+      if (filters.employeeId) params.append('employeeId', filters.employeeId);
+      if (filters.candidate_application_id) params.append('candidate_application_id', filters.candidate_application_id);
+      if (filters.start_date) params.append('start_date', filters.start_date);
+      if (filters.end_date) params.append('end_date', filters.end_date);
+      if (filters.status) params.append('status', filters.status);
+    }
+    const response = await apiClient.get<PaginatedResponse<Interview>>(`/interviews?${params.toString()}`);
+    return response.data;
+  },
+
+  create: async (data: CreateInterviewDto): Promise<Interview> => {
+    const response = await apiClient.post<Interview>('/interviews', data);
+    return response.data;
+  },
+
   getByCandidate: async (candidateId: string): Promise<PaginatedResponse<Interview>> => {
     const response = await apiClient.get<PaginatedResponse<Interview>>(`/interviews/candidate/${candidateId}`);
     return response.data;

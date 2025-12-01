@@ -1,7 +1,7 @@
 import { Modal, Title, Stack, Text, Group, Badge, Button, LoadingOverlay, Alert } from '@mantine/core';
 import { IconEdit, IconAlertCircle } from '@tabler/icons-react';
-import { JobOfferStatus } from '../../services/job-offer.service';
-import { useJobOfferQuery } from '../../hooks/api/useJobOffers';
+import { JobOfferStatus } from '../../../services/job-offer.service';
+import { useJobOfferQuery } from '../../../hooks/api/useJobOffers';
 
 interface ViewJobOfferModalProps {
   opened: boolean;

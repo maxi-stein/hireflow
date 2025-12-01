@@ -1,0 +1,80 @@
+import { Modal, Text, Group, Badge, Stack, Button, Anchor, Avatar } from '@mantine/core';
+import { InterviewStatus } from '../../../services/interview.service';
+import type { Interview } from '../../../services/interview.service';
+import { IconCalendar, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
+
+interface InterviewDetailsModalProps {
+  interview: Interview | null;
+  onClose: () => void;
+}
+
+export function InterviewDetailsModal({ interview, onClose }: InterviewDetailsModalProps) {
+  if (!interview) return null;
+
+  const candidate = interview.applications[0]?.candidate.user;
+  const jobOffer = interview.applications[0]?.job_offer;
+
+  const getStatusColor = (status: InterviewStatus) => {
+    switch (status) {
+      case InterviewStatus.COMPLETED: return 'green';
+      case InterviewStatus.CANCELLED: return 'red';
+      case InterviewStatus.SCHEDULED: return 'blue';
+      case InterviewStatus.NO_SHOW: return 'orange';
+      default: return 'gray';
+    }
+  };
+
+  return (
+    <Modal opened={!!interview} onClose={onClose} title="Interview Details">
+      <Stack gap="md">
+        <Group justify="space-between">
+          <Text size="lg" fw={700}>
+            {candidate?.first_name} {candidate?.last_name}
+          </Text>
+          <Badge color={getStatusColor(interview.status)}>{interview.status}</Badge>
+        </Group>
+
+        <Text c="dimmed" size="sm">
+          Position: <Text span fw={500} c="bright">{jobOffer?.position}</Text>
+        </Text>
+
+        <Group>
+          <IconCalendar size={18} />
+          <Text>{new Date(interview.scheduled_time).toLocaleDateString()}</Text>
+        </Group>
+
+        <Group>
+          <IconClock size={18} />
+          <Text>{new Date(interview.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</Text>
+        </Group>
+
+        {interview.meeting_link && (
+          <Group>
+            <IconVideo size={18} />
+            <Anchor href={interview.meeting_link} target="_blank" rel="noopener noreferrer">
+              Join Meeting
+            </Anchor>
+          </Group>
+        )}
+
+        <Stack gap="xs">
+          <Group gap="xs">
+            <IconUsers size={18} />
+            <Text fw={500}>Interviewers:</Text>
+          </Group>
+          {interview.interviewers.map(interviewer => (
+            <Group key={interviewer.id} gap="sm" ml="lg">
+              <Avatar size="sm" radius="xl" />
+              <Text size="sm">{interviewer.user?.first_name || 'N/A'} {interviewer.user?.last_name || ''}</Text>
+            </Group>
+          ))}
+        </Stack>
+
+        <Group justify="flex-end" mt="md">
+          <Button variant="default" onClick={onClose}>Close</Button>
+          {/* Add actions like Cancel or Complete here later */}
+        </Group>
+      </Stack>
+    </Modal>
+  );
+}

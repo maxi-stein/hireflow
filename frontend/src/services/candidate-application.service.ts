@@ -3,6 +3,7 @@ import type { PaginatedResponse } from '../types/common';
 import type { JobOffer } from './job-offer.service';
 
 export const ApplicationStatus = {
+  APPLIED: 'APPLIED',
   IN_PROGRESS: 'IN_PROGRESS',
   HIRED: 'HIRED',
   REJECTED: 'REJECTED',

@@ -1,6 +1,6 @@
 import { Paper, Group, Title, Timeline, Text } from '@mantine/core';
 import { IconSchool } from '@tabler/icons-react';
-import { type Education } from '../../services/candidate.service';
+import { type Education } from '../../../services/candidate.service';
 
 interface EducationSectionProps {
   educations: Education[];

@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { JobOfferStatus } from '../../services/job-offer.service';
-import { JobApplicationsTable } from '../../components/employee/JobApplicationsTable';
+import { JobApplicationsTable } from '../../components/employee/candidate-applications/JobApplicationsTable';
 
 
 export function CandidateApplicationsPage() {

@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { WorkMode } from '../services/job-offer.service';
+import { WorkMode, JobOfferStatus } from '../services/job-offer.service';
 
 export const createJobOfferSchema = Joi.object({
   position: Joi.string().min(2).required().messages({
@@ -21,4 +21,7 @@ export const createJobOfferSchema = Joi.object({
   salary: Joi.string().allow('').optional(),
   benefits: Joi.string().allow('').optional(),
   skills: Joi.array().items(Joi.string()).optional(),
+  status: Joi.string().valid(...Object.values(JobOfferStatus)).optional().messages({
+    'any.only': 'Invalid status selected',
+  }),
 });

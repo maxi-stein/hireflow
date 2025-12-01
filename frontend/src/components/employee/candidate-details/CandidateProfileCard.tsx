@@ -8,8 +8,8 @@ import {
   IconPhone, 
   IconCalendar 
 } from '@tabler/icons-react';
-import { type CandidateProfile } from '../../services/candidate.service';
-import { type UserFile } from '../../services/user-file.service';
+import { type CandidateProfile } from '../../../services/candidate.service';
+import { type UserFile } from '../../../services/user-file.service';
 
 interface CandidateProfileCardProps {
   candidate: CandidateProfile;
