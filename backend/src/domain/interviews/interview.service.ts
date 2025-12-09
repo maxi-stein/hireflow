@@ -104,13 +104,16 @@ export class InterviewService {
       start_date,
       end_date,
       status,
+      order,
     } = filterInterviewDto;
     const skip = (page - 1) * limit;
 
     const queryBuilder = this.interviewRepository
       .createQueryBuilder('interview')
       .leftJoinAndSelect('interview.applications', 'application')
+      .leftJoinAndSelect('application.job_offer', 'job_offer')
       .leftJoinAndSelect('interview.interviewers', 'interviewer')
+      .leftJoinAndSelect('interviewer.user', 'interviewer_user')
       .leftJoinAndSelect('application.candidate', 'candidate')
       .leftJoinAndSelect('candidate.user', 'user');
 
@@ -150,7 +153,7 @@ export class InterviewService {
     const [data, total] = await queryBuilder
       .skip(skip)
       .take(limit)
-      .orderBy('interview.scheduled_time', 'ASC')
+      .orderBy('interview.scheduled_time', order || 'ASC')
       .getManyAndCount();
 
     return {
@@ -167,7 +170,13 @@ export class InterviewService {
   async findOne(id: string): Promise<Interview> {
     const interview = await this.interviewRepository.findOne({
       where: { id },
-      relations: ['applications', 'applications.candidate', 'interviewers'],
+      relations: [
+        'applications', 
+        'applications.candidate', 
+        'applications.candidate.user',
+        'interviewers',
+        'interviewers.user'
+      ],
     });
 
     if (!interview) {
@@ -179,6 +188,10 @@ export class InterviewService {
 
   async update(id: string, updateDto: UpdateInterviewDto): Promise<Interview> {
     const interview = await this.findOne(id);
+
+    if (interview.status === InterviewStatus.COMPLETED) {
+      throw new BadRequestException('Cannot update a completed interview');
+    }
 
     if (updateDto.application_ids) {
       const applications = await Promise.all(
@@ -219,8 +232,10 @@ export class InterviewService {
     }
 
     if (updateDto.type) interview.type = updateDto.type;
-    if (updateDto.scheduled_time)
+    if (updateDto.scheduled_time) {
       interview.scheduled_time = updateDto.scheduled_time;
+      updateDto.status = InterviewStatus.RESCHEDULED;
+    }
     if (updateDto.meeting_link) interview.meeting_link = updateDto.meeting_link;
     if (updateDto.status) interview.status = updateDto.status;
 
