@@ -1,5 +1,6 @@
 export interface JwtUser {
   id: string;
+  entity_id?: string;
   type: "employee" | "candidate";
   employee_roles?: string[];
   email: string;
