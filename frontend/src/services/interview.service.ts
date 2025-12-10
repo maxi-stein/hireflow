@@ -55,7 +55,10 @@ export interface InterviewFilters {
   start_date?: string;
   end_date?: string;
   status?: InterviewStatus;
+  order?: 'ASC' | 'DESC';
 }
+
+export interface UpdateInterviewDto extends Partial<CreateInterviewDto> {}
 
 export const interviewService = {
   getAll: async (filters?: InterviewFilters): Promise<PaginatedResponse<Interview>> => {
@@ -69,6 +72,7 @@ export const interviewService = {
       if (filters.start_date) params.append('start_date', filters.start_date);
       if (filters.end_date) params.append('end_date', filters.end_date);
       if (filters.status) params.append('status', filters.status);
+      if (filters.order) params.append('order', filters.order);
     }
     const response = await apiClient.get<PaginatedResponse<Interview>>(`/interviews?${params.toString()}`);
     return response.data;
@@ -79,8 +83,18 @@ export const interviewService = {
     return response.data;
   },
 
+  update: async (id: string, data: UpdateInterviewDto): Promise<Interview> => {
+    const response = await apiClient.patch<Interview>(`/interviews/${id}`, data);
+    return response.data;
+  },
+
   getByCandidate: async (candidateId: string): Promise<PaginatedResponse<Interview>> => {
     const response = await apiClient.get<PaginatedResponse<Interview>>(`/interviews/candidate/${candidateId}`);
+    return response.data;
+  },
+
+  getById: async (id: string): Promise<Interview> => {
+    const response = await apiClient.get<Interview>(`/interviews/${id}`);
     return response.data;
   },
 };
