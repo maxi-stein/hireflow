@@ -19,10 +19,29 @@ export function useInterviewsQuery(filters?: InterviewFilters) {
   });
 }
 
+export function useInterviewQuery(id: string) {
+  return useQuery({
+    queryKey: [...INTERVIEWS_QUERY_KEY, 'detail', id],
+    queryFn: () => interviewService.getById(id),
+    enabled: !!id,
+  });
+}
+
 export function useCreateInterviewMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateInterviewDto) => interviewService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: INTERVIEWS_QUERY_KEY });
+    },
+  });
+}
+
+export function useUpdateInterviewMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<CreateInterviewDto> }) => 
+      interviewService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: INTERVIEWS_QUERY_KEY });
     },
