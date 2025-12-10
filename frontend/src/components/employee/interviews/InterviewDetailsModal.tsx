@@ -6,13 +6,14 @@ import { IconCalendar, IconClock, IconVideo, IconUsers } from '@tabler/icons-rea
 interface InterviewDetailsModalProps {
   interview: Interview | null;
   onClose: () => void;
+  onReschedule?: (interview: Interview) => void;
+  onCancel?: (interview: Interview) => void;
 }
 
-export function InterviewDetailsModal({ interview, onClose }: InterviewDetailsModalProps) {
+export function InterviewDetailsModal({ interview, onClose, onReschedule, onCancel }: InterviewDetailsModalProps) {
   if (!interview) return null;
 
-  const candidate = interview.applications[0]?.candidate.user;
-  const jobOffer = interview.applications[0]?.job_offer;
+  const jobOffer = interview.applications?.[0]?.job_offer;
 
   const getStatusColor = (status: InterviewStatus) => {
     switch (status) {
@@ -27,15 +28,22 @@ export function InterviewDetailsModal({ interview, onClose }: InterviewDetailsMo
   return (
     <Modal opened={!!interview} onClose={onClose} title="Interview Details">
       <Stack gap="md">
-        <Group justify="space-between">
-          <Text size="lg" fw={700}>
-            {candidate?.first_name} {candidate?.last_name}
-          </Text>
+        <Group justify="space-between" align="flex-start">
+          <Stack gap={4}>
+            {interview.applications?.map(app => (
+              <Text key={app.id} size="lg" fw={700}>
+                {app.candidate?.user?.first_name || 'Unknown'} {app.candidate?.user?.last_name || ''}
+              </Text>
+            ))}
+            {(!interview.applications || interview.applications.length === 0) && (
+               <Text size="lg" fw={700} c="dimmed">No candidates</Text>
+            )}
+          </Stack>
           <Badge color={getStatusColor(interview.status)}>{interview.status}</Badge>
         </Group>
 
         <Text c="dimmed" size="sm">
-          Position: <Text span fw={500} c="bright">{jobOffer?.position}</Text>
+          Position: <Text span fw={500} c="bright">{jobOffer?.position || 'N/A'}</Text>
         </Text>
 
         <Group>
@@ -62,17 +70,26 @@ export function InterviewDetailsModal({ interview, onClose }: InterviewDetailsMo
             <IconUsers size={18} />
             <Text fw={500}>Interviewers:</Text>
           </Group>
-          {interview.interviewers.map(interviewer => (
+          {interview.interviewers?.map(interviewer => (
             <Group key={interviewer.id} gap="sm" ml="lg">
               <Avatar size="sm" radius="xl" />
               <Text size="sm">{interviewer.user?.first_name || 'N/A'} {interviewer.user?.last_name || ''}</Text>
             </Group>
           ))}
         </Stack>
-
+        
         <Group justify="flex-end" mt="md">
           <Button variant="default" onClick={onClose}>Close</Button>
-          {/* Add actions like Cancel or Complete here later */}
+          {onCancel && interview.status !== InterviewStatus.CANCELLED && interview.status !== InterviewStatus.COMPLETED && (
+            <Button variant="outline" color="red" onClick={() => onCancel(interview)}>
+              Cancel Interview
+            </Button>
+          )}
+          {onReschedule && (
+            <Button variant="light" onClick={() => onReschedule(interview)}>
+              Reschedule
+            </Button>
+          )}
         </Group>
       </Stack>
     </Modal>
