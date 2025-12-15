@@ -13,15 +13,17 @@ import { ApplicationStatus } from '../../../services/candidate-application.servi
 import type { Employee } from '../../../services/employee.service';
 import { validateWithJoi } from '../../../utils/form-validation';
 import { scheduleInterviewSchema } from '../../../schemas/interview.schema';
+import { StyledSelect } from './styled';
 
 interface ScheduleInterviewModalProps {
   opened: boolean;
   onClose: () => void;
   initialApplicationId?: string;
   interviewToEdit?: Interview | null;
+  onSuccess?: () => void;
 }
 
-export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, interviewToEdit }: ScheduleInterviewModalProps) {
+export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, interviewToEdit, onSuccess }: ScheduleInterviewModalProps) {
   const createMutation = useCreateInterviewMutation();
   const updateMutation = useUpdateInterviewMutation();
   const [selectedJobOfferId, setSelectedJobOfferId] = useState<string | null>(null);
@@ -120,6 +122,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
         notifications.show({ title: 'Success', message: 'Interview scheduled successfully', color: 'green' });
       }
       
+      if (onSuccess) onSuccess();
       onClose();
       form.reset();
       setSelectedJobOfferId(null);
@@ -140,7 +143,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
     <Modal opened={opened} onClose={onClose} title={interviewToEdit ? "Reschedule Interview" : "Schedule Interview"}>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
-          <Select
+          <StyledSelect
             label="Job Offer"
             placeholder="Select a job offer to filter candidates"
             data={jobOffersData?.data.map(offer => ({
@@ -208,6 +211,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
           <DateTimePicker
             label="Date and Time"
             placeholder="Pick date and time"
+            minDate={new Date()}
             {...form.getInputProps('scheduledTime')}
           />
 

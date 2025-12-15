@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme, Box, Stack, Modal } from '@mantine/core';
+import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme, Modal } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight, IconPlus, IconCalendarEvent } from '@tabler/icons-react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
 import { useCandidateApplicationQuery } from '../../hooks/api/useCandidateApplications';
 import { notifications } from '@mantine/notifications';
@@ -16,8 +16,7 @@ const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export function InterviewsPage() {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const applicationId = searchParams.get('applicationId');
   
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -25,9 +24,6 @@ export function InterviewsPage() {
   const [interviewToEdit, setInterviewToEdit] = useState<Interview | null>(null);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [interviewToCancel, setInterviewToCancel] = useState<Interview | null>(null);
-
-  // Stable date for history query to avoid infinite loops
-  const [now] = useState(new Date());
 
   const { data: application } = useCandidateApplicationQuery(applicationId);
 
@@ -41,14 +37,7 @@ export function InterviewsPage() {
     limit: 100, // Fetch enough for the month
   });
 
-  const { data: historyData } = useInterviewsQuery({
-    end_date: now.toISOString(),
-    order: 'DESC',
-    limit: 10,
-  });
-
   const interviews = interviewsData?.data || [];
-  const pastInterviews = historyData?.data || [];
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -178,51 +167,6 @@ export function InterviewsPage() {
         </Grid>
       </Paper>
 
-      <Title order={3} mb="md">Past Interviews</Title>
-      <Paper withBorder p="md" radius="md">
-        <Stack>
-          {pastInterviews.map(interview => (
-              <Group key={interview.id} justify="space-between" p="sm" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
-                <Group>
-                  <Box>
-                    <Text fw={500}>
-                      {interview.applications[0]?.candidate.user.first_name} {interview.applications[0]?.candidate.user.last_name}
-                    </Text>
-                    <Text size="sm" c="dimmed">
-                      {interview.applications[0]?.job_offer.position}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Text size="sm">
-                      {new Date(interview.scheduled_time).toLocaleDateString()}
-                    </Text>
-                    <Text size="sm" c="dimmed">
-                      {new Date(interview.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-                    </Text>
-                  </Box>
-                </Group>
-                <Button 
-                  variant="light" 
-                  size="xs"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (interview.id) {
-                      navigate(`/manage/interviews/${interview.id}/review`);
-                    } else {
-                      console.error('Interview ID is missing');
-                    }
-                  }}
-                >
-                  Review
-                </Button>
-              </Group>
-            ))}
-            {pastInterviews.length === 0 && (
-              <Text c="dimmed" ta="center">No past interviews found.</Text>
-            )}
-        </Stack>
-      </Paper>
-
       {/* Modals */}
       <ScheduleInterviewModal 
         opened={isScheduleModalOpen} 
@@ -232,6 +176,11 @@ export function InterviewsPage() {
         }} 
         initialApplicationId={applicationId || undefined}
         interviewToEdit={interviewToEdit}
+        onSuccess={() => {
+          if (applicationId) {
+            setSearchParams({});
+          }
+        }}
       />
       <InterviewDetailsModal 
         interview={selectedInterview} 

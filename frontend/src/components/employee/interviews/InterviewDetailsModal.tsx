@@ -86,7 +86,7 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
             </Button>
           )}
           {onReschedule && (
-            <Button variant="light" onClick={() => onReschedule(interview)}>
+            <Button variant="light" onClick={() => onReschedule(interview)} disabled={interview.status !== InterviewStatus.SCHEDULED}>
               Reschedule
             </Button>
           )}

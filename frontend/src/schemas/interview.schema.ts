@@ -13,8 +13,9 @@ export const scheduleInterviewSchema = Joi.object({
     "any.only": "Interview type must be INDIVIDUAL or GROUP",
     "string.empty": "Interview type is required",
   }),
-  scheduledTime: Joi.date().required().messages({
+  scheduledTime: Joi.date().min('now').required().messages({
     "date.base": "Valid date and time is required",
+    "date.min": "Interview date cannot be in the past",
     "any.required": "Date and time is required",
   }),
   meetingLink: Joi.string().uri().allow("").optional().messages({
