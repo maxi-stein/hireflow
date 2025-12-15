@@ -41,6 +41,10 @@ export class InterviewService {
         'Cannot create an individual interview with more than one candidate_application_id',
       );
     }
+
+    if (new Date(createDto.scheduled_time) < new Date()) {
+      throw new BadRequestException('Cannot schedule an interview in the past');
+    }
     // Verify all applications for this interviw exists
     const applications = await Promise.all(
       createDto.application_ids.map((id) =>
@@ -174,6 +178,7 @@ export class InterviewService {
         'applications', 
         'applications.candidate', 
         'applications.candidate.user',
+        'applications.job_offer',
         'interviewers',
         'interviewers.user'
       ],
@@ -191,6 +196,10 @@ export class InterviewService {
 
     if (interview.status === InterviewStatus.COMPLETED) {
       throw new BadRequestException('Cannot update a completed interview');
+    }
+
+    if (updateDto.scheduled_time && new Date(updateDto.scheduled_time) < new Date()) {
+      throw new BadRequestException('Cannot schedule an interview in the past');
     }
 
     if (updateDto.application_ids) {
