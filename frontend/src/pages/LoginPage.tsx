@@ -32,7 +32,6 @@ export const LoginPage: React.FC = () => {
               from !== ROUTES.PUBLIC.HOME.path ? from :
                 loggedInUser.type === "candidate"
                   ? ROUTES.PUBLIC.JOBS.path : ROUTES.EMPLOYEE.DASHBOARD.path;
-            console.log("redirijo a: ", pathToRedirect);
             navigate(pathToRedirect, { replace: true });
           }}
         />
