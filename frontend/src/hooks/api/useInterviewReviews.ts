@@ -12,6 +12,20 @@ export function useInterviewReviewsQuery(interviewId: string) {
   });
 }
 
+export function useMyPendingReviewsQuery(page = 1, limit = 10) {
+  return useQuery({
+    queryKey: [...REVIEWS_QUERY_KEY, 'my-pending', { page, limit }],
+    queryFn: () => interviewReviewService.findMyPendingReviews(page, limit),
+  });
+}
+
+export function useMyCompletedReviewsQuery(page = 1, limit = 10) {
+  return useQuery({
+    queryKey: [...REVIEWS_QUERY_KEY, 'my-completed', { page, limit }],
+    queryFn: () => interviewReviewService.findMyCompletedReviews(page, limit),
+  });
+}
+
 export function useCreateReviewMutation() {
   const queryClient = useQueryClient();
   return useMutation({

@@ -8,6 +8,7 @@ import {
   IconFileDescription,
   IconUsers,
   IconCalendar,
+  IconClipboardCheck,
 } from '@tabler/icons-react';
 import { LandingPage } from '../pages/LandingPage';
 import { LoginPage } from '../pages/LoginPage';
@@ -23,6 +24,8 @@ import { CandidateApplicationsPage } from '../pages/employee/CandidateApplicatio
 import { CompareCandidatesPage } from '../pages/employee/CompareCandidatesPage';
 import { InterviewsPage } from '../pages/employee/InterviewsPage';
 import { CandidatesPage } from '../pages/employee/CandidatesPage';
+
+import { ReviewsPage } from '../pages/employee/ReviewsPage';
 
 /**
  * Route configuration type
@@ -184,15 +187,34 @@ export const ROUTES = {
       ],
     },
 
-    INTERVIEWS: {
-      path: '/manage/interviews',
-      element: <InterviewsPage />,
+    INTERVIEWS_GROUP: {
+      path: '#interviews',
       label: 'Interviews',
       icon: <IconCalendar size={20} />,
       showInNav: true,
       requiresAuth: true,
       allowedRoles: ['employee'],
+      children: [
+        {
+          path: '/manage/interviews',
+          element: <InterviewsPage />,
+          label: 'Calendar',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+        },
+        {
+          path: '/manage/reviews',
+          element: <ReviewsPage />,
+          label: 'Reviews',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+          icon: <IconClipboardCheck size={20} />,
+        },
+      ],
     },
+
   },
 } as const;
 

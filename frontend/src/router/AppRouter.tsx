@@ -95,8 +95,12 @@ export const router = createBrowserRouter([
                 element: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[2].element,
               },
               {
-                path: ROUTES.EMPLOYEE.INTERVIEWS.path,
-                element: ROUTES.EMPLOYEE.INTERVIEWS.element,
+                path: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[0].path,
+                element: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[0].element,
+              },
+              {
+                path: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[1].path,
+                element: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[1].element,
               },
             ],
           },
