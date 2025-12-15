@@ -13,17 +13,19 @@ import { CreateInterviewReviewDto } from './dto/create-interview-review.dto';
 import { InterviewReview } from './entity/interview-review.entity';
 import { EmployeesService } from '../users/employee/employee.service';
 import { UpdateInterviewReviewDto } from './dto/update-interview-review.dto';
+import { Interview } from '../interviews/entities/interview.entity';
 import {
   PaginatedResponse,
   PaginationDto,
 } from '../../shared/dto/pagination/pagination.dto';
-import { ReviewStatus } from './interface/review-status.enum';
 
 @Injectable()
 export class InterviewReviewService {
   constructor(
     @InjectRepository(InterviewReview)
     private readonly reviewRepository: Repository<InterviewReview>,
+    @InjectRepository(Interview)
+    private readonly interviewRepository: Repository<Interview>,
     @Inject(EmployeesService)
     private readonly employeeService: EmployeesService,
     @Inject(InterviewService)
@@ -164,28 +166,60 @@ export class InterviewReviewService {
     });
   }
 
-  async findPendingReviews(
+  async findInterviewsPendingReview(
+    employeeId: string,
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponse<Interview>> {
+    const { page = 1, limit = 10 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.interviewRepository
+      .createQueryBuilder('interview')
+      .innerJoinAndSelect('interview.interviewers', 'interviewer')
+      .innerJoinAndSelect('interview.applications', 'application')
+      .innerJoinAndSelect('application.candidate', 'candidate')
+      .innerJoinAndSelect('candidate.user', 'user')
+      .innerJoinAndSelect('application.job_offer', 'job_offer')
+      .leftJoin('interview.reviews', 'review', 'review.employee_id = :employeeId', { employeeId })
+      .where('interviewer.id = :employeeId', { employeeId })
+      .andWhere('interview.scheduled_time <= :now', { now: new Date() })
+      .andWhere('review.id IS NULL')
+      .orderBy('interview.scheduled_time', 'DESC')
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findMyCompletedReviews(
     employeeId: string,
     paginationDto: PaginationDto,
   ): Promise<PaginatedResponse<InterviewReview>> {
     const { page = 1, limit = 10 } = paginationDto;
     const skip = (page - 1) * limit;
 
-    const [data, total] = await this.reviewRepository
-      .createQueryBuilder('review')
-      .innerJoinAndSelect('review.interview', 'interview')
-      .innerJoinAndSelect('review.employee', 'employee')
-      .innerJoinAndSelect('review.candidate_application', 'application')
-      .innerJoinAndSelect('application.candidate', 'candidate')
-      .innerJoinAndSelect('candidate.user', 'user')
-      .where('review.employee_id = :employeeId', { employeeId })
-      .andWhere('review.status = :status', { status: ReviewStatus.PENDING })
-      // only reviews for past interviews
-      .andWhere('interview.scheduled_time <= :now', { now: new Date() })
-      .orderBy('interview.scheduled_time', 'DESC')
-      .skip(skip)
-      .take(limit)
-      .getManyAndCount();
+    const [data, total] = await this.reviewRepository.findAndCount({
+      where: { employee_id: employeeId },
+      relations: [
+        'interview',
+        'candidate_application',
+        'candidate_application.candidate',
+        'candidate_application.candidate.user',
+        'candidate_application.job_offer',
+      ],
+      order: { created_at: 'DESC' },
+      skip,
+      take: limit,
+    });
 
     return {
       data,

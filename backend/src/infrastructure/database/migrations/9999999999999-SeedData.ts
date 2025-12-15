@@ -134,7 +134,7 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "candidate_applications" 
         ("id", "job_offer_id", "candidate_id", "status", "created_at", "updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440008', '550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440004', 'APPLIED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440008', '550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440004', 'IN_PROGRESS', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440004', 'APPLIED', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-44665544000a', '550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW())
@@ -187,6 +187,30 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440037', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440015', 3, NOW()),
         ('550e8400-e29b-41d4-a716-446655440038', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440010', 2, NOW()),
         ('550e8400-e29b-41d4-a716-446655440039', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440016', 3, NOW())
+    `);
+
+    // Create an interview for Alice (Application 1) with Admin as interviewer
+    await queryRunner.query(`
+      INSERT INTO "interviews"
+        ("id", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440050', 'INDIVIDUAL', '2025-12-05 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW())
+    `);
+
+    // Link interview to application
+    await queryRunner.query(`
+      INSERT INTO "interview_applications"
+        ("interview_id", "candidate_application_id")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440008')
+    `);
+
+    // Link interview to interviewer (Admin)
+    await queryRunner.query(`
+      INSERT INTO "employee_interviews"
+        ("interview_id", "employee_id")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440001')
     `);
   }
 

@@ -1,13 +1,12 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialMigration1764543162820 implements MigrationInterface {
-    name = 'InitialMigration1764543162820'
+export class InitialMigration1765753081825 implements MigrationInterface {
+    name = 'InitialMigration1765753081825'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."educations_degree_type_enum" AS ENUM('Licenciatura', 'Maestría', 'Doctorado', 'Técnico Superior', 'Diploma', 'Certificación', 'Otro')`);
         await queryRunner.query(`CREATE TABLE "educations" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "institution" character varying NOT NULL, "degree_type" "public"."educations_degree_type_enum" NOT NULL, "field_of_study" character varying NOT NULL, "start_date" date NOT NULL, "end_date" date, "description" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "candidateId" uuid, CONSTRAINT "PK_09d2f29e7f6f31f5c01d79d2dbf" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TYPE "public"."interview_reviews_status_enum" AS ENUM('PASS', 'FAIL', 'PENDING')`);
-        await queryRunner.query(`CREATE TABLE "interview_reviews" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "interview_id" uuid NOT NULL, "employee_id" uuid NOT NULL, "candidate_application_id" uuid NOT NULL, "status" "public"."interview_reviews_status_enum" NOT NULL DEFAULT 'PENDING', "notes" text, "score" integer, "strengths" text, "weaknesses" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_6863005a77a547ca0bc3bccac51" UNIQUE ("interview_id", "employee_id", "candidate_application_id"), CONSTRAINT "PK_ee02b5ce68187a87e581e49e795" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "interview_reviews" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "interview_id" uuid NOT NULL, "employee_id" uuid NOT NULL, "candidate_application_id" uuid NOT NULL, "notes" text, "score" integer, "strengths" text, "weaknesses" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_6863005a77a547ca0bc3bccac51" UNIQUE ("interview_id", "employee_id", "candidate_application_id"), CONSTRAINT "PK_ee02b5ce68187a87e581e49e795" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."interviews_type_enum" AS ENUM('INDIVIDUAL', 'GROUP')`);
         await queryRunner.query(`CREATE TYPE "public"."interviews_status_enum" AS ENUM('SCHEDULED', 'COMPLETED', 'CANCELLED', 'RESCHEDULED')`);
         await queryRunner.query(`CREATE TABLE "interviews" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "type" "public"."interviews_type_enum" NOT NULL, "scheduled_time" TIMESTAMP NOT NULL, "meeting_link" character varying(500), "status" "public"."interviews_status_enum" NOT NULL DEFAULT 'SCHEDULED', "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_fd41af1f96d698fa33c2f070f47" PRIMARY KEY ("id"))`);
@@ -98,7 +97,6 @@ export class InitialMigration1764543162820 implements MigrationInterface {
         await queryRunner.query(`DROP TYPE "public"."interviews_status_enum"`);
         await queryRunner.query(`DROP TYPE "public"."interviews_type_enum"`);
         await queryRunner.query(`DROP TABLE "interview_reviews"`);
-        await queryRunner.query(`DROP TYPE "public"."interview_reviews_status_enum"`);
         await queryRunner.query(`DROP TABLE "educations"`);
         await queryRunner.query(`DROP TYPE "public"."educations_degree_type_enum"`);
     }

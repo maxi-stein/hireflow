@@ -55,7 +55,16 @@ export class InterviewReviewController {
     @Query() paginationDto: PaginationDto,
   ) {
     const employeeId = req.user.entity_id;
-    return this.reviewService.findPendingReviews(employeeId, paginationDto);
+    return this.reviewService.findInterviewsPendingReview(employeeId, paginationDto);
+  }
+
+  @Get('my-completed-reviews')
+  findMyCompletedReviews(
+    @Req() req: Request & { user: JwtUser },
+    @Query() paginationDto: PaginationDto,
+  ) {
+    const employeeId = req.user.entity_id;
+    return this.reviewService.findMyCompletedReviews(employeeId, paginationDto);
   }
 
   @Get('application/:applicationId')
