@@ -24,13 +24,13 @@ interface InterviewReviewFormProps {
 export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: InterviewReviewFormProps) {
   const user = useAppStore(state => state.user);
   const navigate = useNavigate();
-  
+
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
   const { data: interview, isLoading: isLoadingInterview } = useInterviewQuery(interviewId);
   const candidateId = interview?.applications?.[0]?.candidate?.id;
   const { data: reviews, isLoading: isLoadingReviews } = useInterviewReviewsQuery(interviewId);
-  
+
   const createReviewMutation = useCreateReviewMutation();
   const updateReviewMutation = useUpdateReviewMutation();
   const updateStatusMutation = useUpdateApplicationStatusMutation();
@@ -65,7 +65,7 @@ export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: Interv
       notifications.show({ title: 'Error', message: 'Missing user or interview data', color: 'red' });
       return;
     }
-    
+
     const applicationId = interview.applications?.[0]?.id;
     if (!applicationId) {
       notifications.show({ title: 'Error', message: 'No application found for this interview', color: 'red' });
@@ -133,16 +133,16 @@ export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: Interv
           {isEditMode ? 'Edit Review' : 'Create Review'}
         </Title>
         <Group>
-          <Button 
-            variant="light" 
+          <Button
+            variant="light"
             size="xs"
             leftSection={<IconCalendarEvent size={16} />}
             onClick={() => setIsScheduleModalOpen(true)}
           >
             Schedule Next
           </Button>
-          <Button 
-            color="green" 
+          <Button
+            color="green"
             size="xs"
             leftSection={<IconCheck size={16} />}
             onClick={handleHire}
@@ -192,13 +192,12 @@ export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: Interv
         <Grid.Col span={{ base: 12, md: 8 }}>
           <Paper withBorder p="xl" radius="md">
             <form onSubmit={form.onSubmit(
-              handleSubmit, 
+              handleSubmit,
               (errors) => {
-                console.log('Validation errors:', errors);
-                notifications.show({ 
-                  title: 'Validation Error', 
-                  message: 'Please check the form for errors', 
-                  color: 'red' 
+                notifications.show({
+                  title: 'Validation Error',
+                  message: 'Please check the form for errors',
+                  color: 'red'
                 });
               }
             )}>

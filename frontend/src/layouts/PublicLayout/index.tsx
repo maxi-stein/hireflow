@@ -6,7 +6,6 @@ import { Footer } from './Footer';
 import { HeaderContainer } from '../../components/shared/HeaderContainer';
 
 export function PublicLayout() {
-  console.log('PublicLayout!');
   return (
     <AppShell
       header={{ height: 60 }}

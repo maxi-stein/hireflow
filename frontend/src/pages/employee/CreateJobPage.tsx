@@ -56,7 +56,6 @@ export function CreateJobPage() {
   // Load job offer data when editing
   useEffect(() => {
     if (isEditMode && jobOffer) {
-      console.log(jobOffer)
       form.setValues({
         position: jobOffer.position,
         location: jobOffer.location,
@@ -92,7 +91,7 @@ export function CreateJobPage() {
           color: 'green',
         });
       }
-      
+
       navigate(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[0].path);
     } catch (error) {
       notifications.show({
@@ -118,7 +117,7 @@ export function CreateJobPage() {
 
       <Paper p="xl" radius="md" withBorder pos="relative">
         <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        
+
         <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
           <Stack gap="lg">
             <Group grow align="flex-start">
@@ -200,14 +199,14 @@ export function CreateJobPage() {
             />
 
             <Group justify="flex-end" mt="md">
-              <Button 
-                variant="default" 
+              <Button
+                variant="default"
                 onClick={() => navigate(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[0].path)}
               >
                 Cancel
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 leftSection={<IconDeviceFloppy size={20} />}
                 loading={isLoading}
               >
