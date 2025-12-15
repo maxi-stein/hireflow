@@ -10,13 +10,13 @@ import { ApplicationStatus } from '../../services/candidate-application.service'
 import { InterviewStatus } from '../../services/interview.service';
 import { FileType, userFileService } from '../../services/user-file.service';
 import { notifications } from '@mantine/notifications';
-import { ROUTES } from '../../router/routes.config';
 import { ConfirmActionModal } from '../../components/common/ConfirmActionModal';
 import { InterviewHistorySection } from '../../components/employee/candidate-details/InterviewHistorySection';
 import { WorkExperienceSection } from '../../components/employee/candidate-details/WorkExperienceSection';
 import { EducationSection } from '../../components/employee/candidate-details/EducationSection';
 import { ApplicationsSection } from '../../components/employee/candidate-details/ApplicationsSection';
 import { CandidateProfileCard } from '../../components/employee/candidate-details/CandidateProfileCard';
+import { useInterviewScheduling } from '../../hooks/useInterviewScheduling';
 
 export function CandidatesPage() {
   const { id } = useParams<{ id: string }>();
@@ -32,9 +32,10 @@ export function CandidatesPage() {
   
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
   const [rejectModalOpened, setRejectModalOpened] = useState(false);
-  const [scheduleModalOpened, setScheduleModalOpened] = useState(false);
   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
   const [selectedJobPosition, setSelectedJobPosition] = useState<string>('');
+
+  const { handleScheduleClick, modalOpened, closeModal, confirmSchedule } = useInterviewScheduling();
 
   const profilePicture = files?.find(f => f.file_type === FileType.PROFILE_PICTURE);
   const resume = files?.find(f => f.file_type === FileType.RESUME);
@@ -110,18 +111,6 @@ export function CandidatesPage() {
     }
   };
 
-  const handleScheduleClick = (applicationId: string, position: string) => {
-    setSelectedApplicationId(applicationId);
-    setSelectedJobPosition(position);
-    setScheduleModalOpened(true);
-  };
-
-  const handleConfirmSchedule = () => {
-    if (!selectedApplicationId) return;
-    setScheduleModalOpened(false);
-    navigate(`${ROUTES.EMPLOYEE.INTERVIEWS.path}?applicationId=${selectedApplicationId}`);
-  };
-
   const getStatusColor = (status: ApplicationStatus) => {
     switch (status) {
       case ApplicationStatus.HIRED: return 'green';
@@ -195,12 +184,12 @@ export function CandidatesPage() {
         <Grid.Col span={{ base: 12, md: 8 }}>
           <Stack gap="lg">
             
-            <ApplicationsSection 
-              applications={applications?.data || []}
-              getStatusColor={getStatusColor}
-              onReject={handleRejectClick}
-              onSchedule={handleScheduleClick}
-            />
+              <ApplicationsSection 
+                applications={applications?.data || []}
+                getStatusColor={getStatusColor}
+                onReject={handleRejectClick}
+                onSchedule={(appId, pos) => handleScheduleClick(appId, id || '')}
+              />
 
             <InterviewHistorySection 
               interviews={interviews?.data || []} 
@@ -232,14 +221,15 @@ export function CandidatesPage() {
       />
 
       <ConfirmActionModal
-        opened={scheduleModalOpened}
-        onClose={() => setScheduleModalOpened(false)}
-        onConfirm={handleConfirmSchedule}
+        opened={modalOpened}
+        onClose={closeModal}
+        onConfirm={confirmSchedule}
         title="Schedule Interview"
         message={
           <Text>
-            You will be redirected to schedule an interview for this candidate's application to{' '}
-            <strong>"{selectedJobPosition}"</strong>. Continue?
+            This candidate already has a future interview scheduled.
+            <br /><br />
+            Are you sure you want to schedule another interview?
           </Text>
         }
         confirmLabel="Continue"

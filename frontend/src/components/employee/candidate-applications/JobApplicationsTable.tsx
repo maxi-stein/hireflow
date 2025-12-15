@@ -15,9 +15,11 @@ import { useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../../hooks/api/useCandidateApplications';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
-import { IconEye, IconScale, IconX, IconCheck, IconDotsVertical, IconSearch } from '@tabler/icons-react';
+import { IconEye, IconScale, IconX, IconCheck, IconDotsVertical, IconSearch, IconCalendarEvent } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
+import { useInterviewScheduling } from '../../../hooks/useInterviewScheduling';
+import { ConfirmActionModal } from '../../common/ConfirmActionModal';
 
 export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: string, jobTitle: string }) {
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebouncedValue(search, 500);
   const updateStatusMutation = useUpdateApplicationStatusMutation();
+  const { handleScheduleClick, modalOpened, closeModal, confirmSchedule } = useInterviewScheduling();
 
   const { data, isLoading } = useAllCandidateApplicationsQuery({
     page,
@@ -137,7 +140,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
               <Menu.Item 
                 color="green" 
                 leftSection={<IconCheck size={14} />}
-                onClick={() => navigate(`/manage/interviews?applicationId=${application.id}`)}
+                onClick={() => handleScheduleClick(application.id, application.candidate.id)}
               >
                 Schedule Interview
               </Menu.Item>
@@ -177,10 +180,10 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
         <Table verticalSpacing="sm">
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Candidate</Table.Th>
-              <Table.Th>Applied Date</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th style={{ textAlign: 'right' }}>Actions</Table.Th>
+              <Table.Th style={{ width: '40%' }}>Candidate</Table.Th>
+              <Table.Th style={{ width: '25%' }}>Applied Date</Table.Th>
+              <Table.Th style={{ width: '20%' }}>Status</Table.Th>
+              <Table.Th style={{ width: '15%', textAlign: 'right' }}>Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -208,6 +211,22 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
           />
         </Group>
       )}
+      <ConfirmActionModal
+        opened={modalOpened}
+        onClose={closeModal}
+        onConfirm={confirmSchedule}
+        title="Schedule Interview"
+        message={
+          <Text>
+            This candidate already has a future interview scheduled.
+            <br /><br />
+            Are you sure you want to schedule another interview?
+          </Text>
+        }
+        confirmLabel="Continue"
+        confirmColor="blue"
+        confirmIcon={<IconCalendarEvent size={16} />}
+      />
     </Paper>
   );
 }
