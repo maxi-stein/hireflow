@@ -23,13 +23,21 @@ import { ConfirmActionModal } from '../../common/ConfirmActionModal';
 
 export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: string, jobTitle: string }) {
   const navigate = useNavigate();
+
+  // Paginate the list of applications
   const [page, setPage] = useState(1);
+
+  // Search applications (with debounce)
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebouncedValue(search, 500);
+
+  // Update application status
   const updateStatusMutation = useUpdateApplicationStatusMutation();
+
+  // Interview scheduling custom hook
   const { handleScheduleClick, modalOpened, closeModal, confirmSchedule } = useInterviewScheduling();
 
-  const { data, isLoading } = useAllCandidateApplicationsQuery({
+  const { data: allApplications, isLoading } = useAllCandidateApplicationsQuery({
     page,
     limit: 5, // Show 5 per job posting to save space
     job_offer_id: jobOfferId,
@@ -68,12 +76,12 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
     }
   };
 
-  if (!isLoading && (!data || data.data.length === 0) && !search && !debouncedSearch) {
+  if (!isLoading && (!allApplications || allApplications.data.length === 0) && !search && !debouncedSearch) {
     return null; // Don't show table if no applications and no search active
   }
 
   // Filter out HIRED applications and sort by status priority and date
-  const sortedApplications = data?.data
+  const sortedApplications = allApplications?.data
     .filter(app => app.status !== ApplicationStatus.HIRED) // Exclude HIRED
     .sort((a, b) => {
       // Define status priority: IN_PROGRESS > APPLIED > REJECTED
@@ -85,12 +93,12 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
       };
 
       const priorityDiff = statusPriority[a.status] - statusPriority[b.status];
-      
+
       // If same priority, sort by date (newest first)
       if (priorityDiff === 0) {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       }
-      
+
       return priorityDiff;
     }) || [];
 
@@ -121,31 +129,31 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
 
             <Menu.Dropdown>
               <Menu.Label>Actions</Menu.Label>
-              <Menu.Item 
+              <Menu.Item
                 leftSection={<IconEye size={14} />}
                 onClick={() => navigate(`/manage/candidates/${application.candidate.id}`)}
               >
                 View Details
               </Menu.Item>
-              <Menu.Item 
+              <Menu.Item
                 leftSection={<IconScale size={14} />}
                 onClick={() => navigate(`/manage/candidates/compare?candidate1=${application.candidate.id}`)}
               >
                 Compare
               </Menu.Item>
-              
+
               <Menu.Divider />
-              
+
               <Menu.Label>Status</Menu.Label>
-              <Menu.Item 
-                color="green" 
+              <Menu.Item
+                color="green"
                 leftSection={<IconCheck size={14} />}
                 onClick={() => handleScheduleClick(application.id, application.candidate.id)}
               >
                 Schedule Interview
               </Menu.Item>
-              <Menu.Item 
-                color="red" 
+              <Menu.Item
+                color="red"
                 leftSection={<IconX size={14} />}
                 onClick={() => handleStatusUpdate(application.id, ApplicationStatus.REJECTED)}
               >
@@ -161,12 +169,12 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
   return (
     <Paper withBorder radius="md" p="md" pos="relative" mb="lg">
       <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-      
+
       <Group justify="space-between" mb="md">
         <Title order={4}>{jobTitle}</Title>
         <Group>
-          <TextInput 
-            placeholder="Search candidate..." 
+          <TextInput
+            placeholder="Search candidate..."
             leftSection={<IconSearch size={14} />}
             size="xs"
             value={search}
@@ -188,7 +196,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
           </Table.Thead>
           <Table.Tbody>
             {rows}
-            {!isLoading && data?.data.length === 0 && (
+            {!isLoading && allApplications?.data.length === 0 && (
               <Table.Tr>
                 <Table.Td colSpan={4}>
                   <Text ta="center" c="dimmed" py="sm">
@@ -201,10 +209,10 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
         </Table>
       </Table.ScrollContainer>
 
-      {data && data.pagination.totalPages > 1 && (
+      {allApplications && allApplications.pagination.totalPages > 1 && (
         <Group justify="center" mt="md">
           <Pagination
-            total={data.pagination.totalPages}
+            total={allApplications.pagination.totalPages}
             value={page}
             onChange={setPage}
             size="sm"

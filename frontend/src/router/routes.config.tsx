@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { 
-  IconBriefcase, 
-  IconUser, 
+import {
+  IconBriefcase,
+  IconUser,
   IconSettings,
   IconFileText,
   IconChartBar,
@@ -246,17 +246,17 @@ export const getNavItemsForUser = (userType: 'candidate' | 'employee' | null): R
     ...Object.values(ROUTES.CANDIDATE),
     ...Object.values(ROUTES.COMMON),
   ] as RouteConfig[];
-  
+
   return allGroups.filter(route => {
     // Must have showInNav = true
     if (!route.showInNav) return false;
-    
+
     // Public routes are always shown
     if (!route.requiresAuth) return true;
-    
+
     // Auth required - check user type
     if (!userType) return false;
-    
+
     return route.allowedRoles?.includes(userType);
   });
 };

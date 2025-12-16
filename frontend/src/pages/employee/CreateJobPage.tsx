@@ -27,13 +27,19 @@ import { useEffect, useState } from 'react';
 
 export function CreateJobPage() {
   const navigate = useNavigate();
+
+  // Get job offer id from url params (only when editing)
   const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
+
+  // Search value for skill autocomplete (with debounce)
   const [searchValue, setSearchValue] = useState('');
   const [debouncedSearch] = useDebouncedValue(searchValue, 300);
 
   const createMutation = useCreateJobOfferMutation();
   const updateMutation = useUpdateJobOfferMutation();
+
+  // Query for job offer data (only when editing)
   const { data: jobOffer, isLoading: isLoadingJobOffer } = useJobOfferQuery(id || '');
 
   // Query for skill autocomplete
@@ -53,7 +59,7 @@ export function CreateJobPage() {
     validate: validateWithJoi(createJobOfferSchema),
   });
 
-  // Load job offer data when editing
+  // Load job offer data if editing
   useEffect(() => {
     if (isEditMode && jobOffer) {
       form.setValues({
@@ -73,7 +79,7 @@ export function CreateJobPage() {
     try {
       const payload = {
         ...values,
-        skills: values.skills.map(skill => ({ skill_name: skill })),
+        skills: values.skills.map(skill => ({ skill_name: skill })), // Map skills to objects with skill_name property
       };
 
       if (isEditMode && id) {

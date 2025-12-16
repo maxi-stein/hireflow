@@ -15,8 +15,10 @@ import { JobApplicationsTable } from '../../components/employee/candidate-applic
 
 
 export function CandidateApplicationsPage() {
+
+  // Paginate the list of job offers
   const [page, setPage] = useState(1);
-  
+
   // Fetch active job offers to group applications
   const { data: jobOffers, isLoading: isLoadingJobs } = useJobOffersQuery({
     page,
@@ -35,23 +37,26 @@ export function CandidateApplicationsPage() {
         </Box>
 
         {isLoadingJobs ? (
-           <Text>Loading job postings...</Text>
+          <Text>Loading job postings...</Text>
         ) : (
           <>
+            {/* List of job offers */}
             {jobOffers?.data.map(job => (
-              <JobApplicationsTable 
-                key={job.id} 
-                jobOfferId={job.id} 
-                jobTitle={job.position} 
+              <JobApplicationsTable
+                key={job.id}
+                jobOfferId={job.id}
+                jobTitle={job.position}
               />
             ))}
 
+            {/* No job offers found */}
             {jobOffers?.data.length === 0 && (
-               <Paper p="xl" withBorder radius="md">
-                 <Text ta="center" c="dimmed">No active job postings found.</Text>
-               </Paper>
+              <Paper p="xl" withBorder radius="md">
+                <Text ta="center" c="dimmed">No active job postings found.</Text>
+              </Paper>
             )}
 
+            {/* Pagination if 6 or more Job Offers found*/}
             {jobOffers && jobOffers.pagination.totalPages > 1 && (
               <Group justify="center" mt="xl">
                 <Pagination
