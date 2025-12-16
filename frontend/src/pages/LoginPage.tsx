@@ -16,7 +16,7 @@ export const LoginPage: React.FC = () => {
   // If the user is already logged in, redirect to the appropriate dashboard.
   if (user) {
     const pathToRedirect =
-      from !== ROUTES.PUBLIC.HOME.path ? from : user.type === "candidate"
+      from && from !== ROUTES.PUBLIC.HOME.path ? from : user.type === "candidate"
         ? ROUTES.PUBLIC.JOBS.path : ROUTES.EMPLOYEE.DASHBOARD.path;
     return <Navigate to={pathToRedirect} replace />;
   }
@@ -29,7 +29,7 @@ export const LoginPage: React.FC = () => {
             // Always redirect to previous page if it's not the home page.
             // Otherwise, redirect to the Jobs page for candidates or the Dashboard for employees.
             const pathToRedirect =
-              from !== ROUTES.PUBLIC.HOME.path ? from :
+              from && from !== ROUTES.PUBLIC.HOME.path ? from :
                 loggedInUser.type === "candidate"
                   ? ROUTES.PUBLIC.JOBS.path : ROUTES.EMPLOYEE.DASHBOARD.path;
             navigate(pathToRedirect, { replace: true });
