@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
     element: ROUTES.PUBLIC.LOGIN.element,
     errorElement: <ErrorPage />,
   },
-  
+
   // Public routes with DynamicLayout (shows MainLayout if logged in, PublicLayout if not)
   {
     element: <DynamicLayout />,
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  
+
   // Protected routes for authenticated users
   {
     element: <ProtectedRoute allowedRoles={["candidate", "employee"]} />,
@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
             path: ROUTES.COMMON.SETTINGS.path,
             element: ROUTES.COMMON.SETTINGS.element,
           },
-          
+
           // Candidate-only routes
           {
             element: <ProtectedRoute allowedRoles={["candidate"]} />,
@@ -61,7 +61,7 @@ export const router = createBrowserRouter([
               },
             ],
           },
-          
+
           // Employee-only routes
           {
             element: <ProtectedRoute allowedRoles={["employee"]} />,
@@ -108,7 +108,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  
+
   // Catch-all redirect
   {
     path: "*",

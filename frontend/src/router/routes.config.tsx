@@ -27,9 +27,7 @@ import { CandidatesPage } from '../pages/employee/CandidatesPage';
 
 import { ReviewsPage } from '../pages/employee/ReviewsPage';
 
-/**
- * Route configuration type
- */
+// Route configuration type
 export interface RouteConfig {
   path: string;
   element?: ReactNode;
@@ -41,16 +39,13 @@ export interface RouteConfig {
   children?: RouteConfig[];
 }
 
-/**
- * Centralized route configuration
- */
+//Centralized route configuration
 export const ROUTES = {
   // Public routes (no auth required)
   PUBLIC: {
     HOME: {
       path: '/',
       element: <LandingPage />,
-      label: 'Home',
       showInNav: false,
     },
     LOGIN: {
