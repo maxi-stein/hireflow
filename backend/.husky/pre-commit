@@ -1,0 +1,11 @@
+#!/bin/sh
+# Check for console.log in staged files within backend/src
+matches=$(git grep --cached -n "console.log" -- "backend/src")
+
+if [ -n "$matches" ]; then
+  echo "❌ Backend Commit failed: 'console.log' found in the following backend files:"
+  echo "$matches"
+  echo ""
+  echo "Please remove console.log statements before committing."
+  exit 1
+fi

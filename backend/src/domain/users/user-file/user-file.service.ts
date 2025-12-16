@@ -22,6 +22,8 @@ export class FileStorageService {
     private readonly userFileRepository: Repository<UserFile>,
   ) {}
 
+  // Called by controller for uploading PDF or image
+  // Store user file in filesystem and metadata in database
   async storeUserFile(
     user: JwtUser,
     file: Express.Multer.File,
@@ -45,8 +47,8 @@ export class FileStorageService {
           fileType === FileType.RESUME ||
           fileType === FileType.PROFILE_PICTURE
         ) {
-          await this.deletePreviousFiles(
-            user.user_id,
+          await this.deletePreviousFile(
+            user.entity_id,
             fileType,
             transactionalEntityManager,
           );
@@ -54,7 +56,7 @@ export class FileStorageService {
 
         // Save in filesystem
         fileMeta = await this.saveToFilesystem(
-          user.user_id,
+          user.entity_id,
           processedFile,
           fileType,
         );
@@ -63,7 +65,7 @@ export class FileStorageService {
         const userFile = transactionalEntityManager.create(UserFile, {
           ...fileMeta,
           file_type: fileType,
-          user: { id: user.user_id },
+          candidate: { id: user.entity_id },
         });
 
         const savedFile = await transactionalEntityManager.save(userFile);
@@ -79,9 +81,9 @@ export class FileStorageService {
     });
   }
 
-  async getFileStream(fileId: string, userId: string) {
+  async getFileStream(fileId: string, candidateId: string) {
     const userFile = await this.userFileRepository.findOne({
-      where: { id: fileId, user: { id: userId } },
+      where: { id: fileId, candidate: { id: candidateId } },
     });
 
     if (!userFile) {
@@ -97,21 +99,42 @@ export class FileStorageService {
     return createReadStream(userFile.file_path);
   }
 
-  async getUserFileMetadata(fileId: string, userId: string) {
+  // Used by controller for getting file stream by path
+  async getFileStreamByPath(filePath: string) {
+    try {
+      await fs.access(filePath);
+    } catch {
+      throw new NotFoundException('File not found in the folder');
+    }
+
+    return createReadStream(filePath);
+  }
+
+  async getUserFileMetadata(fileId: string, candidateId: string) {
     return this.userFileRepository.findOne({
-      where: { user: { id: userId }, id: fileId },
+      where: { candidate: { id: candidateId }, id: fileId },
     });
   }
 
-  async getAllUserFilesMetadata(userId: string) {
+  // Used by controller for getting file metadata
+  async getFileMetadataById(fileId: string) {
+    return this.userFileRepository.findOne({
+      where: { id: fileId },
+      relations: ['candidate'],
+    });
+  }
+
+  // Used by controller for getting all files metadata for a candidate
+  async getAllUserFilesMetadata(candidateId: string) {
     return this.userFileRepository.find({
-      where: { user: { id: userId } },
+      where: { candidate: { id: candidateId } },
     });
   }
 
-  async deleteFile(fileId: string, userId: string): Promise<void> {
+  // TODO: evaluar si este metodo es necesario
+  async deleteFile(fileId: string, candidateId: string): Promise<void> {
     const userFile = await this.userFileRepository.findOne({
-      where: { id: fileId, user: { id: userId } },
+      where: { id: fileId, candidate: { id: candidateId } },
     });
 
     if (!userFile) {
@@ -183,14 +206,18 @@ export class FileStorageService {
   }
 
   private async saveToFilesystem(
-    userId: string,
+    candidateId: string,
     file: Express.Multer.File,
     fileType: FileType,
   ) {
     const extension = path.extname(file.originalname);
-    const fileName = `${userId}${extension}`;
+    const fileName = `${candidateId}${extension}`;
 
-    const filePath = this.getFilePath(userId, fileType, fileName);
+    const filePath = path.join(
+      this.uploadBasePath,
+      fileType.toLowerCase() + 's',
+      fileName,
+    );
 
     // Create folders and sub folders recursively if they do not exist.
     // Otherwise do nothing
@@ -210,69 +237,56 @@ export class FileStorageService {
     };
   }
 
-  private async deletePreviousFiles(
-    userId: string,
+  private async deletePreviousFile(
+    candidateId: string,
     fileType: FileType,
     transactionalEntityManager: EntityManager,
   ) {
     try {
-      const existingFiles = await transactionalEntityManager.find(UserFile, {
+      const existingFile = await transactionalEntityManager.findOne(UserFile, {
         where: {
-          user: { id: userId },
+          candidate: { id: candidateId },
           file_type: fileType,
         },
       });
 
+      if (!existingFile) return;
+
       await transactionalEntityManager.delete(UserFile, {
-        user: { id: userId },
+        candidate: { id: candidateId },
         file_type: fileType,
       });
 
-      await this.deletePhysicalFiles(existingFiles);
-    } catch (error) {
-      console.warn(`Error deleting previous files for user ${userId}:`, error);
-    }
-  }
-
-  private async deletePhysicalFiles(files: UserFile[]) {
-    for (const file of files) {
       try {
-        await fs.unlink(file.file_path);
+        await fs.unlink(existingFile.file_path);
       } catch (error) {
         console.warn(
-          `Could not delete physical file ${file.file_path}:`,
+          `Could not delete physical file ${existingFile.file_path}:`,
           error,
         );
       }
-    }
-
-    if (files.length > 0) {
-      const firstFile = files[0];
-      const dirPath = path.dirname(firstFile.file_path);
 
       try {
+        const dirPath = path.dirname(existingFile.file_path);
         const filesInDir = await fs.readdir(dirPath);
         if (filesInDir.length === 0) {
           await fs.rmdir(dirPath);
         }
       } catch (error) {
-        console.warn(`Could not delete directory ${dirPath}:`, error);
+        console.warn(`Could not delete directory:`, error);
       }
+    } catch (error) {
+      console.warn(
+        `Error deleting previous files for candidate ${candidateId}:`,
+        error,
+      );
     }
   }
 
+  // Used if upload transaction fails
   private async cleanupFailedUpload(filePath: string) {
     try {
       await fs.unlink(filePath);
     } catch (error) {}
-  }
-
-  private getFilePath(userId: string, fileType: FileType, fileName: string) {
-    return path.join(
-      this.uploadBasePath,
-      userId,
-      fileType.toLowerCase(),
-      fileName,
-    );
   }
 }

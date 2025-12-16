@@ -21,6 +21,14 @@ export class UpdateCandidateDto {
   phone?: string;
 
   @IsOptional()
+  @IsString()
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
   @IsUrl()
   resume_url?: string;
 

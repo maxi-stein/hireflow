@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -12,7 +11,6 @@ import { Employee } from './employee.entity';
 import { USER } from '../../../shared/constants/user.constants';
 import { AUTH } from '../../../shared/constants/auth.constants';
 import { UserType } from '../interfaces/user.enum';
-import { UserFile } from './user-files.entity';
 
 @Entity('users')
 export class User {
@@ -33,9 +31,6 @@ export class User {
 
   @Column({ enum: UserType })
   user_type: UserType;
-
-  @OneToMany(() => UserFile, (file) => file.user)
-  files: UserFile[];
 
   @OneToOne(() => Employee, (employee) => employee.user, { nullable: true })
   employee?: Employee;

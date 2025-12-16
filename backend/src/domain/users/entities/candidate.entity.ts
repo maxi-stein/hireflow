@@ -13,6 +13,7 @@ import { Education } from './education.entity';
 import { User } from './user.entity';
 import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
 import { WorkExperience } from './work-experience.entity';
+import { UserFile } from './user-files.entity';
 
 @Entity('candidates')
 export class Candidate {
@@ -25,11 +26,14 @@ export class Candidate {
   @Column({ type: 'varchar', length: USER.PHONE_LENGTH, nullable: true })
   phone: string | null;
 
-  @Column({ type: 'varchar', length: USER.URL_LENGTH, nullable: true })
-  resume_url: string | null;
+  @Column({ type: 'varchar', length: 100 })
+  city: string;
 
-  @Column({ type: 'varchar', length: USER.URL_LENGTH, nullable: true })
-  portfolio_url: string | null;
+  @Column({ type: 'varchar', length: 100 })
+  country: string;
+
+  @OneToMany(() => UserFile, (file) => file.candidate)
+  files: UserFile[];
 
   @Column({ type: 'varchar', length: USER.URL_LENGTH, nullable: true })
   github: string | null;

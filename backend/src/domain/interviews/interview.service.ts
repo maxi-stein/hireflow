@@ -18,6 +18,7 @@ import { InterviewStatus } from './interfaces/interview-status.enum';
 import { EmployeesService } from '../users/employee/employee.service';
 import { FilterInterviewsDto } from './dto/filter-interviews.dto';
 import { InterviewType } from './interfaces/interview-type.enum';
+import { ApplicationStatus } from '../candidate-application/interfaces/application-status';
 
 @Injectable()
 export class InterviewService {
@@ -39,6 +40,10 @@ export class InterviewService {
       throw new BadRequestException(
         'Cannot create an individual interview with more than one candidate_application_id',
       );
+    }
+
+    if (new Date(createDto.scheduled_time) < new Date()) {
+      throw new BadRequestException('Cannot schedule an interview in the past');
     }
     // Verify all applications for this interviw exists
     const applications = await Promise.all(
@@ -71,6 +76,13 @@ export class InterviewService {
         `Interviewers with IDs ${notFoundInterviewers.join(', ')} not found`,
       );
     }
+    // Update application status to IN_PROGRESS if currently APPLIED
+    for (const app of applications) {
+      if (app.status === 'APPLIED') {
+        await this.candidateApplicationService.update(app.id, { status: ApplicationStatus.IN_PROGRESS });
+      }
+    }
+
     // Creating the interview
     const interview = this.interviewRepository.create({
       type: createDto.type,
@@ -96,13 +108,16 @@ export class InterviewService {
       start_date,
       end_date,
       status,
+      order,
     } = filterInterviewDto;
     const skip = (page - 1) * limit;
 
     const queryBuilder = this.interviewRepository
       .createQueryBuilder('interview')
       .leftJoinAndSelect('interview.applications', 'application')
+      .leftJoinAndSelect('application.job_offer', 'job_offer')
       .leftJoinAndSelect('interview.interviewers', 'interviewer')
+      .leftJoinAndSelect('interviewer.user', 'interviewer_user')
       .leftJoinAndSelect('application.candidate', 'candidate')
       .leftJoinAndSelect('candidate.user', 'user');
 
@@ -142,7 +157,7 @@ export class InterviewService {
     const [data, total] = await queryBuilder
       .skip(skip)
       .take(limit)
-      .orderBy('interview.scheduled_time', 'ASC')
+      .orderBy('interview.scheduled_time', order || 'ASC')
       .getManyAndCount();
 
     return {
@@ -159,7 +174,14 @@ export class InterviewService {
   async findOne(id: string): Promise<Interview> {
     const interview = await this.interviewRepository.findOne({
       where: { id },
-      relations: ['applications', 'applications.candidate', 'interviewers'],
+      relations: [
+        'applications', 
+        'applications.candidate', 
+        'applications.candidate.user',
+        'applications.job_offer',
+        'interviewers',
+        'interviewers.user'
+      ],
     });
 
     if (!interview) {
@@ -171,6 +193,14 @@ export class InterviewService {
 
   async update(id: string, updateDto: UpdateInterviewDto): Promise<Interview> {
     const interview = await this.findOne(id);
+
+    if (interview.status === InterviewStatus.COMPLETED) {
+      throw new BadRequestException('Cannot update a completed interview');
+    }
+
+    if (updateDto.scheduled_time && new Date(updateDto.scheduled_time) < new Date()) {
+      throw new BadRequestException('Cannot schedule an interview in the past');
+    }
 
     if (updateDto.application_ids) {
       const applications = await Promise.all(
@@ -211,8 +241,10 @@ export class InterviewService {
     }
 
     if (updateDto.type) interview.type = updateDto.type;
-    if (updateDto.scheduled_time)
+    if (updateDto.scheduled_time) {
       interview.scheduled_time = updateDto.scheduled_time;
+      updateDto.status = InterviewStatus.RESCHEDULED;
+    }
     if (updateDto.meeting_link) interview.meeting_link = updateDto.meeting_link;
     if (updateDto.status) interview.status = updateDto.status;
 
@@ -244,8 +276,39 @@ export class InterviewService {
     const [data, total] = await this.interviewRepository
       .createQueryBuilder('interview')
       .innerJoinAndSelect('interview.interviewers', 'interviewer')
-      .innerJoinAndSelect('interview.candidate_application', 'application')
+      .innerJoinAndSelect('interview.applications', 'application')
       .where('interviewer.id = :employeeId', { employeeId })
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findByCandidate(
+    candidateId: string,
+    paginationDto: PaginationDto = { page: 1, limit: 10 },
+  ): Promise<PaginatedResponse<Interview>> {
+    const { page, limit } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.interviewRepository
+      .createQueryBuilder('interview')
+      .innerJoinAndSelect('interview.applications', 'application')
+      .innerJoinAndSelect('application.candidate', 'candidate')
+      .innerJoinAndSelect('application.job_offer', 'job_offer')
+      .innerJoinAndSelect('interview.interviewers', 'interviewer')
+      .innerJoinAndSelect('interviewer.user', 'user')
+      .where('candidate.id = :candidateId', { candidateId })
+      .orderBy('interview.scheduled_time', 'DESC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();

@@ -12,7 +12,6 @@ import {
 import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
 import { Interview } from '../../interviews/entities/interview.entity';
 import { Employee } from '../../users/entities';
-import { ReviewStatus } from '../interface/review-status.enum';
 
 @Entity('interview_reviews')
 @Unique(['interview_id', 'employee_id', 'candidate_application_id'])
@@ -28,13 +27,6 @@ export class InterviewReview {
 
   @Column({ name: 'candidate_application_id', type: 'uuid' })
   candidate_application_id: string;
-
-  @Column({
-    type: 'enum',
-    enum: ReviewStatus,
-    default: ReviewStatus.PENDING,
-  })
-  status: ReviewStatus;
 
   @Column({ type: 'text', nullable: true })
   notes: string;

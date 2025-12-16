@@ -1,41 +1,24 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
   UseGuards,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { UpdateUserDto } from '../dto/user/update-user.dto';
-import { CreateUserDto } from '../dto/user/create-user.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import {
-  UuidValidationPipe,
-  NotEmptyDtoPipe,
-  ConditionalValidationPipe,
-} from '../../../shared/pipes';
+import { UuidValidationPipe, NotEmptyDtoPipe } from '../../../shared/pipes';
 import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
-import { CanEditUser } from '../../auth/guards/can-edit.guard';
+import { CanAccessUser } from '../../auth/guards/can-access.guard';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  @UsePipes(
-    new ValidationPipe({ transform: true }),
-    new ConditionalValidationPipe(),
-  )
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
@@ -44,11 +27,11 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id', UuidValidationPipe) id: string) {
-    return this.usersService.findOne(id);
+    return this.usersService.findOne({id});
   }
 
   @Patch(':id')
-  @UseGuards(CanEditUser) //Employees and self-user can edit himself
+  @UseGuards(CanAccessUser) //Employees and self-user can edit himself
   update(
     @Param('id', UuidValidationPipe) id: string,
     @Body(NotEmptyDtoPipe) updateUserDto: UpdateUserDto,

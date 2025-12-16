@@ -14,11 +14,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return {
+    const jwtUser: any = {
       user_id: payload.user_id, // The actual user_id from users table
       email: payload.email,
-      user_type: payload.role, // The payload has 'role' not 'user_type'
+      user_type: payload.type,
       entity_id: payload.sub, // The entity_id (candidate_id or employee_id)
     };
+
+    // Add employee_roles if present in payload
+    if (payload.employee_roles) {
+      jwtUser.employee_roles = payload.employee_roles;
+    }
+
+    return jwtUser;
   }
 }

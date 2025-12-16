@@ -22,4 +22,7 @@ export class FilterApplicationsDto extends PaginationDto {
   @IsOptional()
   @IsUUID()
   job_offer_id?: string;
+
+  @IsOptional()
+  search?: string;
 }

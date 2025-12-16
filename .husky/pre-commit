@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Frontend Hook
+if [ -f "frontend/.husky/pre-commit" ]; then
+  sh frontend/.husky/pre-commit
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+fi
+
+# Backend Hook
+if [ -f "backend/.husky/pre-commit" ]; then
+  sh backend/.husky/pre-commit
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+fi

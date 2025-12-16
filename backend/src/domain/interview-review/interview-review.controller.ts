@@ -18,6 +18,7 @@ import { PaginationDto } from '../../shared/dto/pagination/pagination.dto';
 import { UuidValidationPipe } from '../../shared/pipes';
 import { RequireUserType } from '../auth/decorators/roles.decorator';
 import { UserType } from '../users/interfaces/user.enum';
+import { JwtUser } from '../users/interfaces/jwt.user';
 
 @Controller('interview-reviews')
 @RequireUserType(UserType.EMPLOYEE)
@@ -49,9 +50,21 @@ export class InterviewReviewController {
   }
 
   @Get('my-pending-reviews')
-  findMyPendingReviews(@Req() req, @Query() paginationDto: PaginationDto) {
-    const employeeId = req.user.employeeId;
-    return this.reviewService.findPendingReviews(employeeId, paginationDto);
+  findMyPendingReviews(
+    @Req() req: Request & { user: JwtUser },
+    @Query() paginationDto: PaginationDto,
+  ) {
+    const employeeId = req.user.entity_id;
+    return this.reviewService.findInterviewsPendingReview(employeeId, paginationDto);
+  }
+
+  @Get('my-completed-reviews')
+  findMyCompletedReviews(
+    @Req() req: Request & { user: JwtUser },
+    @Query() paginationDto: PaginationDto,
+  ) {
+    const employeeId = req.user.entity_id;
+    return this.reviewService.findMyCompletedReviews(employeeId, paginationDto);
   }
 
   @Get('application/:applicationId')

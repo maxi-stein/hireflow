@@ -9,3 +9,8 @@ export const USER = {
 export const EMPLOYEE = {
   MAX_POSITION_LENGTH: 100,
 };
+
+export const EMPLOYEE_ROLES = {
+  ROLES: ['admin', 'hr', 'manager'],
+  LENGTH: 32,
+};

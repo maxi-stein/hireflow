@@ -8,7 +8,6 @@ import {
   IsArray,
   IsUUID,
 } from 'class-validator';
-import { ReviewStatus } from '../interface/review-status.enum';
 
 export class CreateInterviewReviewDto {
   @IsUUID()
@@ -19,9 +18,6 @@ export class CreateInterviewReviewDto {
 
   @IsUUID()
   candidate_application_id: string;
-
-  @IsEnum(ReviewStatus)
-  status: ReviewStatus;
 
   @IsOptional()
   @IsString()

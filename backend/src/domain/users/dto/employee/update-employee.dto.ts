@@ -1,10 +1,11 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { EmployeeRole } from '../../interfaces/user.enum';
+import { IsArray, IsIn, IsOptional, IsString } from 'class-validator';
+import { EMPLOYEE_ROLES } from '../../../../shared/constants/user.constants';
 
 export class UpdateEmployeeDto {
-  @IsEnum(EmployeeRole)
+  @IsArray()
+  @IsIn(EMPLOYEE_ROLES.ROLES, { each: true })
   @IsOptional()
-  role?: EmployeeRole;
+  roles?: string[];
 
   @IsString()
   @IsOptional()

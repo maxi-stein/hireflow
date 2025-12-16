@@ -14,9 +14,8 @@ export class FilterJobOfferDto extends PaginationDto {
   status?: JobOfferStatus;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  positions?: string[];
+  @IsString()
+  position?: string;
 
   @IsOptional()
   @IsDateString()

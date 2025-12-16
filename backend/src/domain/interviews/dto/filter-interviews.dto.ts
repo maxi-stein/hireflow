@@ -29,4 +29,8 @@ export class FilterInterviewsDto extends PaginationDto {
   @IsOptional()
   @IsUUID()
   employeeId?: string;
+
+  @IsOptional()
+  @IsEnum(['ASC', 'DESC'])
+  order?: 'ASC' | 'DESC';
 }

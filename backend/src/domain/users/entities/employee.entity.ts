@@ -1,4 +1,7 @@
-import { EMPLOYEE } from '../../../shared/constants/user.constants';
+import {
+  EMPLOYEE,
+  EMPLOYEE_ROLES,
+} from '../../../shared/constants/user.constants';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -11,7 +14,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { EmployeeRole } from '../interfaces/user.enum';
 import { Interview } from '../../interviews/entities/interview.entity';
 import { InterviewReview } from '../../interview-review/entity/interview-review.entity';
 
@@ -21,10 +23,11 @@ export class Employee {
   id: string;
 
   @Column({
-    type: 'enum',
-    enum: EmployeeRole,
+    type: 'varchar',
+    array: true,
+    length: EMPLOYEE_ROLES.LENGTH,
   })
-  role: EmployeeRole;
+  roles: string[];
 
   @Column({ type: 'varchar', length: EMPLOYEE.MAX_POSITION_LENGTH })
   position: string;

@@ -2,8 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
+  ManyToMany,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
@@ -15,10 +14,7 @@ export class JobOfferSkill {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'job_offer_id', type: 'uuid' })
-  job_offer_id: string;
-
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, unique: true })
   skill_name: string;
 
   @CreateDateColumn({ name: 'created_at' })
@@ -30,7 +26,6 @@ export class JobOfferSkill {
   @DeleteDateColumn({ name: 'deleted_at' })
   deleted_at: Date;
 
-  @ManyToOne(() => JobOffer, (jobOffer) => jobOffer.skills)
-  @JoinColumn({ name: 'job_offer_id' })
-  job_offer: JobOffer;
+  @ManyToMany(() => JobOffer, (jobOffer) => jobOffer.skills)
+  job_offers: JobOffer[];
 }

@@ -1,10 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/base-user/user.service';
-import * as bcrypt from 'bcrypt';
 import { JwtUser } from '../users/interfaces/jwt.user';
-import { RegisterCandidateDto } from '../users/dto/user/create-user.dto';
-import { AUTH } from '../../shared/constants/auth.constants';
+import { UserType } from '../users/interfaces/user.enum';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -13,56 +12,46 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  //Used in local strategy
+  // Used in local strategy. Checks if password is correct and returns the entire user
   async validateUser(email: string, password: string): Promise<JwtUser> {
-    const user = await this.usersService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      // Fetch the specific entity (candidate or employee) to get the entity_id
-      return await this.usersService.findUserWithEntity(user.id);
+    const user = await this.usersService.findByEmailForAuthentication(email);
+
+    if (
+      user &&
+      user.password &&
+      (await bcrypt.compare(password, user.password))
+    ) {
+      // Remove password from the returned object
+      const { password: _, ...jwtUser } = user;
+      return jwtUser as JwtUser;
     }
     return null;
   }
 
+  /**  After the @UseGuards(LocalAuthGuard) sets the user in the request, this method is called with said user.
+   * Returns the user info + access_token
+   * */
   async login(user: JwtUser) {
     const payload = {
       email: user.email,
-      sub: user.entity_id, // Use entity_id as the subject
-      role: user.user_type,
-      user_id: user.user_id, // Include the actual user_id
+      sub: user.entity_id,
+      type: user.user_type,
+      user_id: user.user_id,
+      employee_roles:
+        user.user_type === UserType.EMPLOYEE ? user.employee_roles : undefined,
     };
+
+    const access_token = this.jwtService.sign(payload);
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token,
       user: {
-        id: user.entity_id, // Return entity_id as the main ID
+        id: user.entity_id,
         email: user.email,
-        role: user.user_type,
+        type: user.user_type,
+        employee_roles: payload.employee_roles,
       },
     };
-  }
-
-  async register(registerCandidate: RegisterCandidateDto) {
-    // Check if user already exists by email
-    const existingUser = await this.usersService.findByEmail(
-      registerCandidate.email,
-    );
-
-    if (existingUser) {
-      throw new UnauthorizedException('User with this email already exists');
-    }
-
-    const hashedPassword = await bcrypt.hash(
-      registerCandidate.password,
-      AUTH.BCRYPT_SALT_ROUNDS,
-    );
-
-    const user = await this.usersService.registerCandidate({
-      ...registerCandidate,
-      password: hashedPassword,
-    });
-
-    const { password, ...result } = user;
-
-    return result;
   }
 
   async getProfileByEntity(entityId: string, userType: JwtUser['user_type']) {
