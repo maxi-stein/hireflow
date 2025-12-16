@@ -1,26 +1,26 @@
-import { 
-  Container, 
-  Title, 
-  Group, 
-  Button, 
-  TextInput, 
-  Select, 
-  Table, 
-  Badge, 
-  ActionIcon, 
+import {
+  Container,
+  Title,
+  Group,
+  Button,
+  TextInput,
+  Select,
+  Table,
+  Badge,
+  ActionIcon,
   Paper,
   Text,
   LoadingOverlay,
   Pagination
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { 
-  IconSearch, 
-  IconPlus, 
-  IconFilter, 
-  IconEye, 
-  IconEdit, 
-  IconTrash 
+import {
+  IconSearch,
+  IconPlus,
+  IconFilter,
+  IconEye,
+  IconEdit,
+  IconTrash
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -30,21 +30,32 @@ import { ROUTES } from '../../router/routes.config';
 import { notifications } from '@mantine/notifications';
 import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
 import { DeleteJobOfferModal } from '../../components/employee/job-postings/DeleteJobOfferModal';
+import { getTableHeaders } from '../../utils/table-headers';
 
 export function JobPostingsPage() {
   const navigate = useNavigate();
+
+  // Search by position (with debounce)
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebouncedValue(search, 1000);
+
+  // Filter by status
   const [filter, setFilter] = useState<string | null>(null);
+
+  // Pagination of job offers
   const [page, setPage] = useState(1);
-  
+
   // Modals
   const [viewModalOpened, setViewModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+
+  // Job offer to view or delete
   const [viewJobOfferId, setViewJobOfferId] = useState<string | null>(null);
   const [deleteJobOffer, setDeleteJobOffer] = useState<JobOffer | null>(null);
 
-  const { data, isLoading } = useJobOffersQuery({
+  const tableHeaders = getTableHeaders("job-offers");
+
+  const { data: jobOffers, isLoading } = useJobOffersQuery({
     page,
     limit: 10,
     status: filter as JobOfferStatus || undefined,
@@ -53,31 +64,29 @@ export function JobPostingsPage() {
 
   const deleteMutation = useDeleteJobOfferMutation();
 
+  // When clicking create Job Posting button, navigate to create job posting page
   const handleCreateClick = () => {
     navigate(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[1].path);
   };
 
+  // When clicking view button, open view modal
   const handleViewClick = (offer: JobOffer) => {
     setViewJobOfferId(offer.id);
     setViewModalOpened(true);
   };
 
+  // When clicking edit button, navigate to edit job posting page
   const handleEditClick = (offerId: string) => {
     navigate(`/manage/job-postings/edit/${offerId}`);
   };
 
-  const handleEditFromModal = () => {
-    if (viewJobOfferId) {
-      setViewModalOpened(false);
-      handleEditClick(viewJobOfferId);
-    }
-  };
-
+  // When clicking delete button, open delete modal
   const handleDeleteClick = (offer: JobOffer) => {
     setDeleteJobOffer(offer);
     setDeleteModalOpened(true);
   };
 
+  // When clicking delete button inside delete modal, delete job offer
   const handleConfirmDelete = async () => {
     if (!deleteJobOffer) return;
 
@@ -107,8 +116,8 @@ export function JobPostingsPage() {
           <Title order={2}>Job Postings</Title>
           <Text c="dimmed" size="sm">Manage your company's job offers</Text>
         </div>
-        <Button 
-          leftSection={<IconPlus size={20} />} 
+        <Button
+          leftSection={<IconPlus size={20} />}
           onClick={handleCreateClick}
         >
           Create Job Posting
@@ -141,21 +150,17 @@ export function JobPostingsPage() {
 
       <Paper radius="md" withBorder style={{ position: 'relative', minHeight: 200 }}>
         <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        
+
         <Table verticalSpacing="sm" highlightOnHover>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Position</Table.Th>
-              <Table.Th>Location</Table.Th>
-              <Table.Th>Work Mode</Table.Th>
-              <Table.Th>Applicants</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th>Posted Date</Table.Th>
-              <Table.Th style={{ width: 100 }}>Actions</Table.Th>
+              {tableHeaders.map((header) => (
+                <Table.Th key={header.accessorKey}>{header.title}</Table.Th>
+              ))}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {data?.data.map((offer) => (
+            {jobOffers?.data.map((offer) => (
               <Table.Tr key={offer.id}>
                 <Table.Td>
                   <Text fw={500}>{offer.position}</Text>
@@ -167,10 +172,10 @@ export function JobPostingsPage() {
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  <Text size="sm">{offer.applicants_count}</Text>
+                  <Text size="sm" ta="center">{offer.applicants_count}</Text>
                 </Table.Td>
                 <Table.Td>
-                  <Badge 
+                  <Badge
                     color={offer.status === JobOfferStatus.OPEN ? 'green' : 'red'}
                     variant="light"
                   >
@@ -182,22 +187,22 @@ export function JobPostingsPage() {
                 </Table.Td>
                 <Table.Td>
                   <Group gap={4} wrap="nowrap">
-                    <ActionIcon 
-                      variant="subtle" 
+                    <ActionIcon
+                      variant="subtle"
                       color="gray"
                       onClick={() => handleViewClick(offer)}
                     >
                       <IconEye size={16} />
                     </ActionIcon>
-                    <ActionIcon 
-                      variant="subtle" 
+                    <ActionIcon
+                      variant="subtle"
                       color="blue"
                       onClick={() => handleEditClick(offer.id)}
                     >
                       <IconEdit size={16} />
                     </ActionIcon>
-                    <ActionIcon 
-                      variant="subtle" 
+                    <ActionIcon
+                      variant="subtle"
                       color="red"
                       onClick={() => handleDeleteClick(offer)}
                     >
@@ -207,7 +212,7 @@ export function JobPostingsPage() {
                 </Table.Td>
               </Table.Tr>
             ))}
-            {!isLoading && (!data?.data || data.data.length === 0) && (
+            {!isLoading && (!jobOffers?.data || jobOffers.data.length === 0) && (
               <Table.Tr>
                 <Table.Td colSpan={7} style={{ textAlign: 'center' }} py="xl">
                   <Text c="dimmed">No job postings found</Text>
@@ -217,24 +222,25 @@ export function JobPostingsPage() {
           </Table.Tbody>
         </Table>
 
-        {data?.pagination && data.pagination.totalPages > 1 && (
+        {jobOffers?.pagination && jobOffers.pagination.totalPages > 1 && (
           <Group justify="center" p="md" style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
-            <Pagination 
-              total={data.pagination.totalPages} 
-              value={page} 
-              onChange={setPage} 
+            <Pagination
+              total={jobOffers.pagination.totalPages}
+              value={page}
+              onChange={setPage}
             />
           </Group>
         )}
       </Paper>
 
+      {/* Job Offer Details Modal */}
       <ViewJobOfferModal
         opened={viewModalOpened}
         onClose={() => setViewModalOpened(false)}
         jobOfferId={viewJobOfferId}
-        onEdit={handleEditFromModal}
       />
 
+      {/* Delete Job Offer Modal */}
       <DeleteJobOfferModal
         opened={deleteModalOpened}
         onClose={() => setDeleteModalOpened(false)}

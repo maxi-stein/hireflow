@@ -7,10 +7,9 @@ interface ViewJobOfferModalProps {
   opened: boolean;
   onClose: () => void;
   jobOfferId: string | null;
-  onEdit: () => void;
 }
 
-export function ViewJobOfferModal({ opened, onClose, jobOfferId, onEdit }: ViewJobOfferModalProps) {
+export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferModalProps) {
   const { data: jobOffer, isLoading, isError, error, refetch } = useJobOfferQuery(jobOfferId || '');
 
   return (
@@ -21,7 +20,7 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId, onEdit }: ViewJ
       size="lg"
     >
       <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-      
+
       {isError && (
         <Alert
           icon={<IconAlertCircle size={16} />}
@@ -63,7 +62,7 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId, onEdit }: ViewJ
           <Group grow>
             <div>
               <Text size="sm" c="dimmed" fw={500}>Status</Text>
-              <Badge 
+              <Badge
                 color={jobOffer.status === JobOfferStatus.OPEN ? 'green' : 'red'}
                 variant="light"
               >
@@ -114,9 +113,6 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId, onEdit }: ViewJ
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={onClose}>
               Close
-            </Button>
-            <Button onClick={onEdit} leftSection={<IconEdit size={16} />}>
-              Edit Job Posting
             </Button>
           </Group>
         </Stack>
