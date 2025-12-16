@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme, Modal } from '@mantine/core';
+import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight, IconPlus, IconCalendarEvent } from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
@@ -10,26 +10,40 @@ import { InterviewStatus } from '../../services/interview.service';
 import { ScheduleInterviewModal } from '../../components/employee/interviews/ScheduleInterviewModal';
 import { InterviewDetailsModal } from '../../components/employee/interviews/InterviewDetailsModal';
 import { CalendarDayCell } from '../../components/employee/interviews/CalendarDayCell';
+import { CancelInterviewModal } from '../../components/employee/interviews/CancelInterviewModal';
+import { getDaysInMonth } from '../../utils/date-utils';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export function InterviewsPage() {
+  // Get color scheme
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
+
+  // Get application id from url
   const [searchParams, setSearchParams] = useSearchParams();
   const applicationId = searchParams.get('applicationId');
-  
-  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Used to display interview details modal
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
+
+  // Used to edit interview
   const [interviewToEdit, setInterviewToEdit] = useState<Interview | null>(null);
+
+  // Used to schedule interview
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+
+  // Used to cancel interview
   const [interviewToCancel, setInterviewToCancel] = useState<Interview | null>(null);
 
-  const { data: application } = useCandidateApplicationQuery(applicationId);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   // Calculate start and end of the month for fetching
   const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
   const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+  // If application id is provided, fetch application (used to schedule an interview)
+  const { data: application } = useCandidateApplicationQuery(applicationId);
 
   const { data: interviewsData } = useInterviewsQuery({
     start_date: startOfMonth.toISOString(),
@@ -38,24 +52,6 @@ export function InterviewsPage() {
   });
 
   const interviews = interviewsData?.data || [];
-
-  const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const days = new Date(year, month + 1, 0).getDate();
-    const firstDay = new Date(year, month, 1).getDay();
-    
-    const daysArray = [];
-    // Add empty slots for previous month
-    for (let i = 0; i < firstDay; i++) {
-      daysArray.push(null);
-    }
-    // Add days of current month
-    for (let i = 1; i <= days; i++) {
-      daysArray.push(new Date(year, month, i));
-    }
-    return daysArray;
-  };
 
   const days = getDaysInMonth(currentDate);
 
@@ -67,6 +63,7 @@ export function InterviewsPage() {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
 
+  // Get interviews for a specific day
   const getInterviewsForDay = (date: Date) => {
     return interviews.filter(interview => {
       const interviewDate = new Date(interview.scheduled_time);
@@ -90,6 +87,7 @@ export function InterviewsPage() {
     setInterviewToCancel(interview);
   };
 
+  // Cancel interview
   const confirmCancel = async () => {
     if (!interviewToCancel) return;
     try {
@@ -111,8 +109,8 @@ export function InterviewsPage() {
       <Group justify="space-between" mb="lg">
         <Title order={2}>Interview Calendar</Title>
         {application ? (
-          <Button 
-            leftSection={<IconCalendarEvent size={16} />} 
+          <Button
+            leftSection={<IconCalendarEvent size={16} />}
             onClick={() => setIsScheduleModalOpen(true)}
             color="blue"
           >
@@ -126,6 +124,7 @@ export function InterviewsPage() {
       </Group>
 
       <Paper withBorder p="md" radius="md" mb="xl">
+        {/* Calendar Header */}
         <Group justify="space-between" mb="md">
           <Group>
             <ActionIcon variant="subtle" onClick={handlePrevMonth}>
@@ -147,11 +146,11 @@ export function InterviewsPage() {
               <Text ta="center" fw={500} c="dimmed">{day}</Text>
             </Grid.Col>
           ))}
-          
+
           {days.map((date, index) => {
             const isToday = date?.toDateString() === new Date().toDateString();
             const dayInterviews = date ? getInterviewsForDay(date) : [];
-            
+
             return (
               <Grid.Col span={1} key={index} style={{ minHeight: 120 }}>
                 <CalendarDayCell
@@ -168,12 +167,12 @@ export function InterviewsPage() {
       </Paper>
 
       {/* Modals */}
-      <ScheduleInterviewModal 
-        opened={isScheduleModalOpen} 
+      <ScheduleInterviewModal
+        opened={isScheduleModalOpen}
         onClose={() => {
           setIsScheduleModalOpen(false);
           setInterviewToEdit(null);
-        }} 
+        }}
         initialApplicationId={applicationId || undefined}
         interviewToEdit={interviewToEdit}
         onSuccess={() => {
@@ -182,28 +181,19 @@ export function InterviewsPage() {
           }
         }}
       />
-      <InterviewDetailsModal 
-        interview={selectedInterview} 
-        onClose={() => setSelectedInterview(null)} 
+      <InterviewDetailsModal
+        interview={selectedInterview}
+        onClose={() => setSelectedInterview(null)}
         onReschedule={handleReschedule}
         onCancel={handleCancel}
       />
 
-      <Modal 
-        opened={!!interviewToCancel} 
-        onClose={() => setInterviewToCancel(null)} 
-        title="Cancel Interview"
-        centered
-        zIndex={1000}
-      >
-        <Text size="sm" mb="lg">
-          Are you sure you want to cancel this interview? This action cannot be undone.
-        </Text>
-        <Group justify="flex-end">
-          <Button variant="default" onClick={() => setInterviewToCancel(null)}>No, keep it</Button>
-          <Button color="red" onClick={confirmCancel} loading={updateMutation.isPending}>Yes, cancel interview</Button>
-        </Group>
-      </Modal>
+      <CancelInterviewModal
+        opened={!!interviewToCancel}
+        onClose={() => setInterviewToCancel(null)}
+        onConfirm={confirmCancel}
+        isLoading={updateMutation.isPending}
+      />
     </Container>
   );
 }
