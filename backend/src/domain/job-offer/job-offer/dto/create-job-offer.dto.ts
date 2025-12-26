@@ -6,6 +6,7 @@ import {
   ValidateNested,
   MinLength,
   ArrayMaxSize,
+  IsDateString,
 } from 'class-validator';
 import { WorkMode } from '../interfaces/work-mode.enum';
 import { Type } from 'class-transformer';
@@ -34,6 +35,10 @@ export class CreateJobOfferDto {
   @IsOptional()
   @IsString()
   benefits?: string;
+
+  @IsOptional()
+  @IsDateString()
+  deadline?: string;
 
   @IsOptional()
   @IsArray()

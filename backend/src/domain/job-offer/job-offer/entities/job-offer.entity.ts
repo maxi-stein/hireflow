@@ -41,6 +41,9 @@ export class JobOffer {
   @Column({ type: 'text', nullable: true })
   benefits?: string;
 
+  @Column({ type: 'date', nullable: true })
+  deadline?: Date;
+
   @Column({
     type: 'enum',
     enum: JobOfferStatus,

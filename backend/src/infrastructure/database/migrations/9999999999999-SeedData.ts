@@ -78,17 +78,17 @@ export class SeedData9999999999999 implements MigrationInterface {
     // Job Offer 1
     await queryRunner.query(`
       INSERT INTO "job_offers"
-        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at")
+        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440006', 'Desarrollador Full Stack', 'Remoto', 'full-remote', 'Buscamos un Full Stack Developer con experiencia en TypeScript.', '50000-70000', 'Seguro, vacaciones, capacitaciones', 'OPEN', false, NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-446655440006', 'Desarrollador Full Stack', 'Remoto', 'full-remote', 'Buscamos un Full Stack Developer con experiencia en TypeScript.', '50000-70000', 'Seguro, vacaciones, capacitaciones', 'OPEN', false, NOW(), NOW(), '2026-03-01')
     `);
 
     // Job Offer 2
     await queryRunner.query(`
       INSERT INTO "job_offers"
-        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at")
+        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440007', 'Desarrollador Backend', 'Remoto', 'full-remote', 'Se requiere Backend Developer con Node.js y PostgreSQL.', '45000-65000', 'Seguro dental, capacitaciones', 'OPEN', false, NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-446655440007', 'Desarrollador Backend', 'Remoto', 'full-remote', 'Se requiere Backend Developer con Node.js y PostgreSQL.', '45000-65000', 'Seguro dental, capacitaciones', 'OPEN', false, NOW(), NOW(), '2026-04-15')
     `);
 
     // Create unique skills

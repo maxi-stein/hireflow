@@ -19,7 +19,7 @@ export class JobOfferService {
     private readonly jobOfferRepository: Repository<JobOffer>,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
-  ) {}
+  ) { }
 
   async create(
     createJobOfferDto: CreateJobOfferDto,
@@ -70,6 +70,18 @@ export class JobOfferService {
 
     if (end_date) {
       query.andWhere('jobOffer.created_at <= :end_date', { end_date });
+    }
+
+    if (filterDto.deadline_from) {
+      query.andWhere('jobOffer.deadline >= :deadline_from', {
+        deadline_from: filterDto.deadline_from,
+      });
+    }
+
+    if (filterDto.deadline_to) {
+      query.andWhere('jobOffer.deadline <= :deadline_to', {
+        deadline_to: filterDto.deadline_to,
+      });
     }
 
     query.loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications'); // Count applicants for each job offer
