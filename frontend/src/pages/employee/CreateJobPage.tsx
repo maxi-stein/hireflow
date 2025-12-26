@@ -13,6 +13,7 @@ import {
   Stack,
   Box
 } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -53,6 +54,7 @@ export function CreateJobPage() {
       description: '',
       salary: '',
       benefits: '',
+      deadline: null as Date | null,
       skills: [] as string[],
       status: JobOfferStatus.OPEN as JobOfferStatus,
     },
@@ -69,6 +71,7 @@ export function CreateJobPage() {
         description: jobOffer.description,
         salary: jobOffer.salary || '',
         benefits: jobOffer.benefits || '',
+        deadline: jobOffer.deadline ? new Date(jobOffer.deadline) : null,
         skills: jobOffer.skills.map(s => s.skill_name),
         status: jobOffer.status,
       });
@@ -79,6 +82,7 @@ export function CreateJobPage() {
     try {
       const payload = {
         ...values,
+        deadline: values.deadline ? values.deadline.toISOString() : undefined,
         skills: values.skills.map(skill => ({ skill_name: skill })), // Map skills to objects with skill_name property
       };
 
@@ -178,6 +182,7 @@ export function CreateJobPage() {
 
             <TagsInput
               label="Required Skills"
+              required
               placeholder="Type to search skills (e.g. React, TypeScript)"
               description="Add up to 10 key skills for this position"
               maxTags={10}
@@ -190,14 +195,21 @@ export function CreateJobPage() {
 
             <Group grow align="flex-start">
               <TextInput
-                label="Salary Range (Optional)"
+                label="Salary Range"
                 placeholder="e.g. $3000 - $5000 USD"
                 {...form.getInputProps('salary')}
+              />
+              <DateInput
+                label="Application Deadline"
+                placeholder="Select deadline"
+                minDate={new Date()}
+                clearable
+                {...form.getInputProps('deadline')}
               />
             </Group>
 
             <Textarea
-              label="Benefits (Optional)"
+              label="Benefits"
               placeholder="List the benefits offered..."
               minRows={3}
               autosize

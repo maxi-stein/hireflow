@@ -4,6 +4,7 @@ import { IconChevronLeft, IconChevronRight, IconPlus, IconCalendarEvent } from '
 import { useSearchParams } from 'react-router-dom';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
 import { useCandidateApplicationQuery } from '../../hooks/api/useCandidateApplications';
+import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { notifications } from '@mantine/notifications';
 import type { Interview } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
@@ -12,6 +13,8 @@ import { InterviewDetailsModal } from '../../components/employee/interviews/Inte
 import { CalendarDayCell } from '../../components/employee/interviews/CalendarDayCell';
 import { CancelInterviewModal } from '../../components/employee/interviews/CancelInterviewModal';
 import { getDaysInMonth } from '../../utils/date-utils';
+import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
+import type { JobOffer } from '../../services/job-offer.service';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -26,6 +29,9 @@ export function InterviewsPage() {
 
   // Used to display interview details modal
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
+
+  // Used to display job offer details modal
+  const [selectedJobOffer, setSelectedJobOffer] = useState<JobOffer | null>(null);
 
   // Used to edit interview
   const [interviewToEdit, setInterviewToEdit] = useState<Interview | null>(null);
@@ -51,7 +57,14 @@ export function InterviewsPage() {
     limit: 100, // Fetch enough for the month
   });
 
+  const { data: jobOffersData } = useJobOffersQuery({
+    deadline_from: startOfMonth.toISOString(),
+    deadline_to: endOfMonth.toISOString(),
+    limit: 100,
+  });
+
   const interviews = interviewsData?.data || [];
+  const jobOffers = jobOffersData?.data || [];
 
   const days = getDaysInMonth(currentDate);
 
@@ -71,6 +84,19 @@ export function InterviewsPage() {
         interviewDate.getDate() === date.getDate() &&
         interviewDate.getMonth() === date.getMonth() &&
         interviewDate.getFullYear() === date.getFullYear()
+      );
+    });
+  };
+
+  // Get job offers deadline for a specific day
+  const getJobOffersForDay = (date: Date) => {
+    return jobOffers.filter(offer => {
+      if (!offer.deadline) return false;
+      const deadlineDate = new Date(offer.deadline);
+      return (
+        deadlineDate.getDate() === date.getDate() &&
+        deadlineDate.getMonth() === date.getMonth() &&
+        deadlineDate.getFullYear() === date.getFullYear()
       );
     });
   };
@@ -150,15 +176,18 @@ export function InterviewsPage() {
           {days.map((date, index) => {
             const isToday = date?.toDateString() === new Date().toDateString();
             const dayInterviews = date ? getInterviewsForDay(date) : [];
+            const dayJobOffers = date ? getJobOffersForDay(date) : [];
 
             return (
               <Grid.Col span={1} key={index} style={{ minHeight: 120 }}>
                 <CalendarDayCell
                   date={date}
                   interviews={dayInterviews}
+                  jobOffers={dayJobOffers}
                   isToday={isToday}
                   isDarkMode={isDark}
                   onInterviewClick={setSelectedInterview}
+                  onJobOfferClick={setSelectedJobOffer}
                 />
               </Grid.Col>
             );
@@ -187,6 +216,14 @@ export function InterviewsPage() {
         onReschedule={handleReschedule}
         onCancel={handleCancel}
       />
+
+      {selectedJobOffer && (
+        <ViewJobOfferModal
+          opened={!!selectedJobOffer}
+          onClose={() => setSelectedJobOffer(null)}
+          jobOfferId={selectedJobOffer.id}
+        />
+      )}
 
       <CancelInterviewModal
         opened={!!interviewToCancel}

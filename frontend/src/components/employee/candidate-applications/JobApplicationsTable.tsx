@@ -114,6 +114,15 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
         {new Date(application.created_at).toLocaleDateString()}
       </Table.Td>
       <Table.Td>
+        {application.job_offer.deadline ? (
+          <Text size="sm">
+            {new Date(application.job_offer.deadline).toLocaleDateString()}
+          </Text>
+        ) : (
+          <Text size="xs" c="dimmed">No deadline</Text>
+        )}
+      </Table.Td>
+      <Table.Td>
         <Badge color={getStatusColor(application.status)} variant="light">
           {application.status}
         </Badge>
@@ -188,9 +197,10 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
         <Table verticalSpacing="sm">
           <Table.Thead>
             <Table.Tr>
-              <Table.Th style={{ width: '40%' }}>Candidate</Table.Th>
-              <Table.Th style={{ width: '25%' }}>Applied Date</Table.Th>
-              <Table.Th style={{ width: '20%' }}>Status</Table.Th>
+              <Table.Th style={{ width: '30%' }}>Candidate</Table.Th>
+              <Table.Th style={{ width: '20%' }}>Applied Date</Table.Th>
+              <Table.Th style={{ width: '20%' }}>Deadline</Table.Th>
+              <Table.Th style={{ width: '15%' }}>Status</Table.Th>
               <Table.Th style={{ width: '15%', textAlign: 'right' }}>Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>

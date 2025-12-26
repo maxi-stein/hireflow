@@ -186,6 +186,9 @@ export function JobPostingsPage() {
                   {new Date(offer.created_at).toLocaleDateString()}
                 </Table.Td>
                 <Table.Td>
+                  {offer.deadline ? new Date(offer.deadline).toLocaleDateString() : '-'}
+                </Table.Td>
+                <Table.Td>
                   <Group gap={4} wrap="nowrap">
                     <ActionIcon
                       variant="subtle"

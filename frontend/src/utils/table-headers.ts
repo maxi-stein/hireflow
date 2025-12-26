@@ -10,6 +10,7 @@ export const getTableHeaders = (type: Props) => {
         { title: "Applicants", accessorKey: "applicants_count" },
         { title: "Status", accessorKey: "status" },
         { title: "Posted Date", accessorKey: "created_at" },
+        { title: "Deadline", accessorKey: "deadline" },
       ];
     case "candidates":
       return [

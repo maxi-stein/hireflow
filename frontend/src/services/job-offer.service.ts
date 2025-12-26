@@ -34,6 +34,7 @@ export interface JobOffer {
   updated_at: string;
   skills: JobOfferSkill[];
   applicants_count: number;
+  deadline?: string;
 }
 
 export interface CreateJobOfferDto {
@@ -43,6 +44,7 @@ export interface CreateJobOfferDto {
   description: string;
   salary?: string;
   benefits?: string;
+  deadline?: string;
   skills?: { skill_name: string }[];
 }
 
@@ -53,6 +55,8 @@ export interface JobOfferFilters {
   position?: string;
   start_date?: string;
   end_date?: string;
+  deadline_from?: string;
+  deadline_to?: string;
 }
 
 export type UpdateJobOfferDto = Partial<CreateJobOfferDto>;
@@ -67,8 +71,10 @@ export const jobOfferService = {
       if (filters.position) params.append('position', filters.position);
       if (filters.start_date) params.append('start_date', filters.start_date);
       if (filters.end_date) params.append('end_date', filters.end_date);
+      if (filters.deadline_from) params.append('deadline_from', filters.deadline_from);
+      if (filters.deadline_to) params.append('deadline_to', filters.deadline_to);
     }
-    
+
     const response = await apiClient.get<PaginatedResponse<JobOffer>>(`/job-offers?${params.toString()}`);
     return response.data;
   },

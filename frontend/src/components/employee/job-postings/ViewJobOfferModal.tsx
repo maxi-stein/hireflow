@@ -105,12 +105,21 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferM
             </div>
           )}
 
-          <div>
-            <Text size="sm" c="dimmed" fw={500}>Posted Date</Text>
-            <Text>{new Date(jobOffer.created_at).toLocaleString()}</Text>
-          </div>
+          <Group justify="space-between" align="flex-end" mt="md">
+            <Group gap="xl">
+              <div>
+                <Text size="sm" c="dimmed" fw={500}>Posted Date</Text>
+                <Text>{new Date(jobOffer.created_at).toLocaleDateString()}</Text>
+              </div>
 
-          <Group justify="flex-end" mt="md">
+              {jobOffer.deadline && (
+                <div>
+                  <Text size="sm" c="dimmed" fw={500}>Deadline</Text>
+                  <Text c="red.9" fw={500}>{new Date(jobOffer.deadline).toLocaleDateString()}</Text>
+                </div>
+              )}
+            </Group>
+
             <Button variant="default" onClick={onClose}>
               Close
             </Button>
