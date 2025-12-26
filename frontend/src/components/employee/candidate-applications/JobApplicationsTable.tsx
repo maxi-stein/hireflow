@@ -94,9 +94,9 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
 
       const priorityDiff = statusPriority[a.status] - statusPriority[b.status];
 
-      // If same priority, sort by date (newest first)
+      // If same priority, sort by updated date (newest first)
       if (priorityDiff === 0) {
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
       }
 
       return priorityDiff;
