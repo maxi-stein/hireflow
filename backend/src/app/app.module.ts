@@ -39,7 +39,7 @@ import { UserFileModule } from '../domain/users/user-file/user-file.module';
         POSTGRES_PORT: Joi.number(),
         POSTGRES_HOST: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION_TIME: Joi.string().default('1d'),
+        JWT_EXPIRATION_TIME: Joi.number().default(1800),
       }),
     }),
     UsersModule,
@@ -62,4 +62,4 @@ import { UserFileModule } from '../domain/users/user-file/user-file.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
