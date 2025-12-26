@@ -29,7 +29,7 @@ export class InterviewService {
     private readonly employeeService: EmployeesService,
     @Inject(CandidateApplicationService)
     private readonly candidateApplicationService: CandidateApplicationService,
-  ) {}
+  ) { }
 
   async create(createDto: CreateInterviewDto): Promise<Interview> {
     //If type === individual, then validate if the application_ids array's length is 1
@@ -78,8 +78,21 @@ export class InterviewService {
     }
     // Update application status to IN_PROGRESS if currently APPLIED
     for (const app of applications) {
+      const existingInterviewsCount = await this.interviewRepository
+        .createQueryBuilder('interview')
+        .innerJoin('interview.applications', 'application')
+        .where('application.id = :appId', { appId: app.id })
+        .getCount();
+
+      // If this is not the first interview created, update application timestamp
+      if (existingInterviewsCount > 0) {
+        await this.candidateApplicationService.updateTimestamp(app.id);
+      }
+
       if (app.status === 'APPLIED') {
-        await this.candidateApplicationService.update(app.id, { status: ApplicationStatus.IN_PROGRESS });
+        await this.candidateApplicationService.update(app.id, {
+          status: ApplicationStatus.IN_PROGRESS,
+        });
       }
     }
 
@@ -175,8 +188,8 @@ export class InterviewService {
     const interview = await this.interviewRepository.findOne({
       where: { id },
       relations: [
-        'applications', 
-        'applications.candidate', 
+        'applications',
+        'applications.candidate',
         'applications.candidate.user',
         'applications.job_offer',
         'interviewers',

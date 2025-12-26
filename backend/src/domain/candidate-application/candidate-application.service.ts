@@ -28,7 +28,7 @@ export class CandidateApplicationService {
     private readonly jobOfferService: JobOfferService,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
-  ) {}
+  ) { }
 
   async create(
     createDto: CreateCandidateApplicationDto,
@@ -227,5 +227,9 @@ export class CandidateApplicationService {
     const application = await this.findOne(id);
     const updated = this.applicationRepository.merge(application, updateDto);
     return await this.applicationRepository.save(updated);
+  }
+
+  async updateTimestamp(id: string): Promise<void> {
+    await this.applicationRepository.update(id, { updated_at: new Date() });
   }
 }
