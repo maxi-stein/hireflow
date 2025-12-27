@@ -72,8 +72,6 @@ export function CompareCandidatesPage() {
         app => app.status === ApplicationStatus.APPLIED || app.status === ApplicationStatus.IN_PROGRESS
     ) || [];
 
-    const uniqueCandidates = filteredCandidates;
-
     // Handle URL parameters for deep linking
     useEffect(() => {
         const jobOfferId = searchParams.get('jobOfferId');
@@ -170,7 +168,7 @@ export function CompareCandidatesPage() {
     };
 
     // Get selected candidate applications for comparison
-    const candidatesToCompare = uniqueCandidates.filter(app =>
+    const candidatesToCompare = filteredCandidates.filter(app =>
         selectedCandidates.has(app.candidate.id)
     );
 
@@ -301,15 +299,15 @@ export function CompareCandidatesPage() {
                                         <Accordion.Panel style={{ position: 'relative', minHeight: 100 }}>
                                             <LoadingOverlay visible={isLoadingApps} />
 
-                                            {uniqueCandidates.length === 0 ? (
+                                            {filteredCandidates.length === 0 ? (
                                                 <Alert icon={<IconAlertCircle size={16} />} color="blue" variant="light">
                                                     No candidates with APPLIED or IN_PROGRESS status
                                                 </Alert>
                                             ) : (
                                                 <Stack gap="xs">
-                                                    {uniqueCandidates.map(application => (
+                                                    {filteredCandidates.map(application => (
                                                         <Paper
-                                                            key={application.candidate.id}
+                                                            key={`${application.candidate.id}-${application.id}`}
                                                             p="sm"
                                                             withBorder
                                                             onClick={() => handleCandidateToggle(application.candidate.id)}
