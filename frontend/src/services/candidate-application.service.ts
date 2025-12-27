@@ -23,6 +23,17 @@ export interface Candidate {
   user: CandidateUser;
 }
 
+export interface JobOfferSkill {
+  id: string;
+  skill_name: string;
+}
+
+export interface CandidateSkillAnswer {
+  id: string;
+  years_of_experience: number;
+  job_offer_skill: JobOfferSkill;
+}
+
 export interface CandidateApplication {
   id: string;
   status: ApplicationStatus;
@@ -30,6 +41,7 @@ export interface CandidateApplication {
   updated_at: string;
   candidate: Candidate;
   job_offer: JobOffer;
+  skill_answers?: CandidateSkillAnswer[];
 }
 
 export interface ApplicationFilters {
@@ -56,7 +68,7 @@ export const candidateApplicationService = {
       if (filters.end_date) params.append('end_date', filters.end_date);
       if (filters.search) params.append('search', filters.search);
     }
-    
+
     const response = await apiClient.get<PaginatedResponse<CandidateApplication>>(`/candidate-applications?${params.toString()}`);
     return response.data;
   },

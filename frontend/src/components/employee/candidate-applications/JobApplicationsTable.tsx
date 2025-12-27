@@ -146,7 +146,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconScale size={14} />}
-                onClick={() => navigate(`/manage/candidates/compare?candidate1=${application.candidate.id}`)}
+                onClick={() => navigate(`/manage/candidates/compare?jobOfferId=${jobOfferId}&candidateId=${application.candidate.id}`)}
               >
                 Compare
               </Menu.Item>

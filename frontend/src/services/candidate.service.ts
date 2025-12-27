@@ -29,8 +29,8 @@ export interface CandidateProfile {
   github?: string;
   linkedin?: string;
   user: CandidateUser;
-  educations: Education[];
-  work_experiences: WorkExperience[];
+  educations?: Education[];
+  work_experiences?: WorkExperience[];
   profile_created_at: string;
   profile_updated_at: string;
 }

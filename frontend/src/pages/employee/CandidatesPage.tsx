@@ -21,7 +21,7 @@ import { useInterviewScheduling } from '../../hooks/useInterviewScheduling';
 export function CandidatesPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   const { data: candidate, isLoading: isLoadingCandidate } = useCandidateQuery(id || '');
   const { data: applications, isLoading: isLoadingApplications } = useAllCandidateApplicationsQuery({
     candidate_id: id,
@@ -29,7 +29,7 @@ export function CandidatesPage() {
   });
   const { data: interviews, isLoading: isLoadingInterviews } = useCandidateInterviewsQuery(id || '');
   const { data: files } = useCandidateFilesQuery(id || '');
-  
+
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
   const [rejectModalOpened, setRejectModalOpened] = useState(false);
   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
@@ -89,11 +89,11 @@ export function CandidatesPage() {
 
   const handleConfirmReject = async () => {
     if (!selectedApplicationId) return;
-    
+
     try {
-      await updateStatusMutation.mutateAsync({ 
-        id: selectedApplicationId, 
-        status: ApplicationStatus.REJECTED 
+      await updateStatusMutation.mutateAsync({
+        id: selectedApplicationId,
+        status: ApplicationStatus.REJECTED
       });
       notifications.show({
         title: 'Application Rejected',
@@ -146,19 +146,11 @@ export function CandidatesPage() {
     );
   }
 
-  const sortedEducation = [...(candidate.educations || [])].sort((a, b) => 
-    new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
-  );
-
-  const sortedExperience = [...(candidate.work_experiences || [])].sort((a, b) => 
-    new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
-  );
-
   return (
     <Container size="xl" py="xl">
-      <Button 
-        variant="subtle" 
-        leftSection={<IconChevronLeft size={16} />} 
+      <Button
+        variant="subtle"
+        leftSection={<IconChevronLeft size={16} />}
         onClick={() => navigate(-1)}
         mb="lg"
       >
@@ -169,34 +161,34 @@ export function CandidatesPage() {
         {/* Left Column: Profile Info */}
         <Grid.Col span={{ base: 12, md: 4 }}>
           <Stack gap="lg">
-            <CandidateProfileCard 
+            <CandidateProfileCard
               candidate={candidate}
               profilePictureUrl={profilePictureUrl}
               resume={resume}
               onDownloadResume={handleDownloadResume}
             />
 
-            <EducationSection educations={sortedEducation} />
+            <EducationSection educations={candidate.educations || []} />
           </Stack>
         </Grid.Col>
 
         {/* Right Column: Applications, Interviews & Experience */}
         <Grid.Col span={{ base: 12, md: 8 }}>
           <Stack gap="lg">
-            
-              <ApplicationsSection 
-                applications={applications?.data || []}
-                getStatusColor={getStatusColor}
-                onReject={handleRejectClick}
-                onSchedule={(appId, pos) => handleScheduleClick(appId, id || '')}
-              />
 
-            <InterviewHistorySection 
-              interviews={interviews?.data || []} 
-              getStatusColor={getInterviewStatusColor} 
+            <ApplicationsSection
+              applications={applications?.data || []}
+              getStatusColor={getStatusColor}
+              onReject={handleRejectClick}
+              onSchedule={(appId, pos) => handleScheduleClick(appId, id || '')}
             />
 
-            <WorkExperienceSection experiences={sortedExperience} />
+            <InterviewHistorySection
+              interviews={interviews?.data || []}
+              getStatusColor={getInterviewStatusColor}
+            />
+
+            <WorkExperienceSection experiences={candidate.work_experiences || []} />
 
           </Stack>
         </Grid.Col>
