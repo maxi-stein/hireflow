@@ -99,6 +99,10 @@ export function CompareCandidatesPage() {
         setSelectedCandidates(newSelected);
     };
 
+    const handleClearSelection = () => {
+        setSelectedCandidates(new Set());
+    };
+
     const handleCompare = () => {
         if (selectedCandidates.size >= 2) {
             setShowComparison(true);
@@ -222,10 +226,30 @@ export function CompareCandidatesPage() {
     return (
         <Container size="xl" py="xl">
             <Stack gap="lg">
-                <div>
-                    <Title order={2}>Compare Candidates</Title>
-                    <Text c="dimmed" size="sm">Select candidates from a job offer to compare</Text>
-                </div>
+                <Group justify="space-between" align="flex-end">
+                    <div>
+                        <Title order={2}>Compare Candidates</Title>
+                        <Text c="dimmed" size="sm">Select candidates from a job offer to compare</Text>
+                    </div>
+                    <Group gap="sm">
+                        <Button
+                            variant="subtle"
+                            color="gray"
+                            onClick={handleClearSelection}
+                            disabled={selectedCandidates.size === 0}
+                            leftSection={<IconX size={16} />}
+                        >
+                            Clear Selection
+                        </Button>
+                        <Button
+                            leftSection={<IconScale size={20} />}
+                            disabled={selectedCandidates.size < 2}
+                            onClick={handleCompare}
+                        >
+                            Compare Candidates
+                        </Button>
+                    </Group>
+                </Group>
 
                 {/* Job Offer Search */}
                 <Paper p="md" withBorder>
@@ -238,78 +262,103 @@ export function CompareCandidatesPage() {
                     />
 
                     <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-                        {jobOffersData?.data.map(offer => (
-                            <Accordion key={offer.id} variant="separated" value={accordionValue} onChange={handleAccordionChange}>
-                                <Accordion.Item value={offer.id}>
-                                    <Accordion.Control>
-                                        <Group justify="space-between" wrap="nowrap">
-                                            <div>
-                                                <Text fw={500}>{offer.position}</Text>
-                                                <Text size="sm" c="dimmed">{offer.location}</Text>
-                                            </div>
-                                            <Badge>{offer.applicants_count} applicants</Badge>
-                                        </Group>
-                                    </Accordion.Control>
-                                    <Accordion.Panel style={{ position: 'relative', minHeight: 100 }}>
-                                        <LoadingOverlay visible={isLoadingApps} />
+                        {jobOffersData?.data.map((offer, index) => {
+                            const bgColors = ['blue', 'teal', 'grape', 'orange', 'indigo', 'green', 'cyan', 'pink'];
+                            const color = bgColors[index % bgColors.length];
 
-                                        {uniqueCandidates.length === 0 ? (
-                                            <Alert icon={<IconAlertCircle size={16} />} color="blue" variant="light">
-                                                No candidates with APPLIED or IN_PROGRESS status
-                                            </Alert>
-                                        ) : (
-                                            <Stack gap="xs">
-                                                {uniqueCandidates.map(application => (
-                                                    <Paper
-                                                        key={application.candidate.id}
-                                                        p="sm"
-                                                        withBorder
-                                                        onClick={() => handleCandidateToggle(application.candidate.id)}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            transition: 'background-color 0.2s'
-                                                        }}
-                                                        onMouseEnter={(e) => {
-                                                            e.currentTarget.style.backgroundColor = isDark
-                                                                ? 'var(--mantine-color-dark-6)'
-                                                                : 'var(--mantine-color-gray-0)';
-                                                        }}
-                                                        onMouseLeave={(e) => {
-                                                            e.currentTarget.style.backgroundColor = '';
-                                                        }}
-                                                    >
-                                                        <Group justify="space-between">
-                                                            <Group>
-                                                                <Checkbox
-                                                                    checked={selectedCandidates.has(application.candidate.id)}
-                                                                    onChange={() => handleCandidateToggle(application.candidate.id)}
-                                                                    onClick={(e) => e.stopPropagation()}
-                                                                />
-                                                                <CandidateAvatar
-                                                                    candidateId={application.candidate.id}
-                                                                    firstName={application.candidate.user.first_name}
-                                                                    lastName={application.candidate.user.last_name}
-                                                                    radius="xl"
-                                                                />
-                                                                <div>
-                                                                    <Text fw={500}>
-                                                                        {application.candidate.user.first_name} {application.candidate.user.last_name}
-                                                                    </Text>
-                                                                    <Text size="xs" c="dimmed">{application.candidate.user.email}</Text>
-                                                                </div>
+                            return (
+                                <Accordion
+                                    key={offer.id}
+                                    variant="separated"
+                                    value={accordionValue}
+                                    onChange={handleAccordionChange}
+                                    styles={{
+                                        item: {
+                                            backgroundColor: isDark
+                                                ? `var(--mantine-color-${color}-light)`
+                                                : `var(--mantine-color-${color}-light)`,
+                                            borderColor: `var(--mantine-color-${color}-light-color)`,
+                                        },
+                                        control: {
+                                            '&:hover': {
+                                                backgroundColor: isDark
+                                                    ? `var(--mantine-color-${color}-9)`
+                                                    : `var(--mantine-color-${color}-1)`,
+                                            }
+                                        }
+                                    }}
+                                >
+                                    <Accordion.Item value={offer.id}>
+                                        <Accordion.Control>
+                                            <Group justify="space-between" wrap="nowrap">
+                                                <div>
+                                                    <Text fw={500}>{offer.position}</Text>
+                                                    <Text size="sm" c="dimmed">{offer.location}</Text>
+                                                </div>
+                                                <Badge>{offer.applicants_count} applicants</Badge>
+                                            </Group>
+                                        </Accordion.Control>
+                                        <Accordion.Panel style={{ position: 'relative', minHeight: 100 }}>
+                                            <LoadingOverlay visible={isLoadingApps} />
+
+                                            {uniqueCandidates.length === 0 ? (
+                                                <Alert icon={<IconAlertCircle size={16} />} color="blue" variant="light">
+                                                    No candidates with APPLIED or IN_PROGRESS status
+                                                </Alert>
+                                            ) : (
+                                                <Stack gap="xs">
+                                                    {uniqueCandidates.map(application => (
+                                                        <Paper
+                                                            key={application.candidate.id}
+                                                            p="sm"
+                                                            withBorder
+                                                            onClick={() => handleCandidateToggle(application.candidate.id)}
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                                transition: 'background-color 0.2s'
+                                                            }}
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.backgroundColor = isDark
+                                                                    ? 'var(--mantine-color-dark-6)'
+                                                                    : 'var(--mantine-color-gray-0)';
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.backgroundColor = '';
+                                                            }}
+                                                        >
+                                                            <Group justify="space-between">
+                                                                <Group>
+                                                                    <Checkbox
+                                                                        checked={selectedCandidates.has(application.candidate.id)}
+                                                                        onChange={() => handleCandidateToggle(application.candidate.id)}
+                                                                        onClick={(e) => e.stopPropagation()}
+                                                                    />
+                                                                    <CandidateAvatar
+                                                                        candidateId={application.candidate.id}
+                                                                        firstName={application.candidate.user.first_name}
+                                                                        lastName={application.candidate.user.last_name}
+                                                                        radius="xl"
+                                                                    />
+                                                                    <div>
+                                                                        <Text fw={500}>
+                                                                            {application.candidate.user.first_name} {application.candidate.user.last_name}
+                                                                        </Text>
+                                                                        <Text size="xs" c="dimmed">{application.candidate.user.email}</Text>
+                                                                    </div>
+                                                                </Group>
+                                                                <Badge color={getStatusColor(application.status)} variant="light">
+                                                                    {application.status}
+                                                                </Badge>
                                                             </Group>
-                                                            <Badge color={getStatusColor(application.status)} variant="light">
-                                                                {application.status}
-                                                            </Badge>
-                                                        </Group>
-                                                    </Paper>
-                                                ))}
-                                            </Stack>
-                                        )}
-                                    </Accordion.Panel>
-                                </Accordion.Item>
-                            </Accordion>
-                        ))}
+                                                        </Paper>
+                                                    ))}
+                                                </Stack>
+                                            )}
+                                        </Accordion.Panel>
+                                    </Accordion.Item>
+                                </Accordion>
+                            );
+                        })}
                     </SimpleGrid>
 
                     {isLoadingJobs && (
@@ -321,32 +370,6 @@ export function CompareCandidatesPage() {
                     )}
                 </Paper>
 
-                {/* Compare Button - Sticky */}
-                {selectedCandidates.size > 0 && (
-                    <Paper
-                        shadow="md"
-                        p="md"
-                        radius="md"
-                        withBorder
-                        style={{
-                            position: 'sticky',
-                            bottom: 20,
-                            zIndex: 100,
-                            backgroundColor: 'var(--mantine-color-body)',
-                        }}
-                    >
-                        <Group justify="center">
-                            <Button
-                                leftSection={<IconScale size={20} />}
-                                size="lg"
-                                disabled={selectedCandidates.size < 2}
-                                onClick={handleCompare}
-                            >
-                                Compare {selectedCandidates.size} Candidate{selectedCandidates.size !== 1 ? 's' : ''}
-                            </Button>
-                        </Group>
-                    </Paper>
-                )}
             </Stack>
         </Container>
     );
