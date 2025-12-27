@@ -27,7 +27,7 @@ export class CandidateService {
     private readonly usersService: UsersService,
     private readonly educationService: EducationService,
     private readonly workExperienceService: WorkExperienceService,
-  ) {}
+  ) { }
 
   // Public method for candidate creation/registration
   async create(registerCandidateDto: RegisterCandidateDto): Promise<User> {
@@ -61,7 +61,7 @@ export class CandidateService {
 
         // Return user with candidate relation (excluding password)
         const userWithCandidate = await this.usersService.findOne(
-          {id: userSaved.id},
+          { id: userSaved.id },
           transactionalEntityManager,
           ['candidate', 'employee'],
         );
@@ -77,6 +77,14 @@ export class CandidateService {
   ): Promise<PaginatedResponse<CandidateResponseDto>> {
     const [candidates, total] = await this.candidateRepository.findAndCount({
       relations: ['user', 'educations', 'work_experiences'],
+      order: {
+        work_experiences: {
+          start_date: 'DESC',
+        },
+        educations: {
+          start_date: 'DESC',
+        },
+      },
       skip: (paginationDto.page - 1) * paginationDto.limit,
       take: paginationDto.limit,
     });
@@ -95,6 +103,14 @@ export class CandidateService {
     const candidate = await this.candidateRepository.findOne({
       where: { id },
       relations: ['user', 'educations', 'work_experiences'],
+      order: {
+        work_experiences: {
+          start_date: 'DESC',
+        },
+        educations: {
+          start_date: 'DESC',
+        },
+      },
     });
 
     if (!candidate) {

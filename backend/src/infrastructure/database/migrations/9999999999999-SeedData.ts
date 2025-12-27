@@ -57,6 +57,15 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440041', '550e8400-e29b-41d4-a716-446655440004', 'Globex', 'Full Stack Developer', '2021-07-01', NULL, 'Building customer-facing apps with TypeScript and PostgreSQL.', NOW(), NOW())
     `);
 
+    // Educations for Candidate 1 (Alice)
+    await queryRunner.query(`
+      INSERT INTO "educations"
+        ("id", "candidateId", "institution", "degree_type", "field_of_study", "start_date", "end_date", "description", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440060', '550e8400-e29b-41d4-a716-446655440004', 'MIT', 'Licenciatura', 'Computer Science', '2014-09-01', '2018-06-01', 'Graduated with honors.', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440061', '550e8400-e29b-41d4-a716-446655440004', 'Stanford', 'Maestría', 'Software Engineering', '2018-09-01', '2020-06-01', 'Focused on distributed systems.', NOW(), NOW())
+    `);
+
     // Candidate 2
     await queryRunner.query(`
       INSERT INTO "candidates" 
@@ -73,6 +82,15 @@ export class SeedData9999999999999 implements MigrationInterface {
       VALUES
         ('550e8400-e29b-41d4-a716-446655440042', '550e8400-e29b-41d4-a716-446655440005', 'Initech', 'Backend Developer', '2019-03-01', '2022-02-28', 'Designed REST APIs and database schemas.', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440043', '550e8400-e29b-41d4-a716-446655440005', 'Hooli', 'Senior Backend Developer', '2022-03-01', NULL, 'Leading backend services with NestJS and Docker.', NOW(), NOW())
+    `);
+
+    // Educations for Candidate 2 (Bob)
+    await queryRunner.query(`
+      INSERT INTO "educations"
+        ("id", "candidateId", "institution", "degree_type", "field_of_study", "start_date", "end_date", "description", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440062', '550e8400-e29b-41d4-a716-446655440005', 'UBA', 'Licenciatura', 'Computer Science', '2012-03-01', '2017-12-01', 'Focus on Algorithms.', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440063', '550e8400-e29b-41d4-a716-446655440005', 'Coursera', 'Certificación', 'Cloud Computing', '2023-01-01', '2023-06-01', 'Intensive course on AWS.', NOW(), NOW())
     `);
 
     // Job Offer 1
