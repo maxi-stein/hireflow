@@ -1,47 +1,45 @@
-import { Paper, Avatar, Title, Text, Group, Button, ActionIcon, Stack } from '@mantine/core';
-import { 
-  IconMapPin, 
-  IconDownload, 
-  IconBrandLinkedin, 
-  IconBrandGithub, 
-  IconMail, 
-  IconPhone, 
-  IconCalendar 
+import { Paper, Title, Text, Group, Button, ActionIcon, Stack } from '@mantine/core';
+import {
+  IconMapPin,
+  IconDownload,
+  IconBrandLinkedin,
+  IconBrandGithub,
+  IconMail,
+  IconPhone,
+  IconCalendar
 } from '@tabler/icons-react';
 import { type CandidateProfile } from '../../../services/candidate.service';
 import { type UserFile } from '../../../services/user-file.service';
+import { CandidateAvatar } from '../../shared/CandidateAvatar';
 
 interface CandidateProfileCardProps {
   candidate: CandidateProfile;
-  profilePictureUrl: string | null;
   resume?: UserFile;
   onDownloadResume: () => void;
 }
 
-export function CandidateProfileCard({ 
-  candidate, 
-  profilePictureUrl, 
-  resume, 
-  onDownloadResume 
+export function CandidateProfileCard({
+  candidate,
+  resume,
+  onDownloadResume
 }: CandidateProfileCardProps) {
   const { user } = candidate;
 
   return (
     <Paper withBorder radius="md" p="xl" style={{ textAlign: 'center' }}>
-      <Avatar 
-        src={profilePictureUrl} 
-        size={120} 
-        radius={120} 
-        mx="auto" 
-        color="blue"
-      >
-        {user.first_name[0]}{user.last_name[0]}
-      </Avatar>
+      <CandidateAvatar
+        candidateId={candidate.id}
+        firstName={user.first_name}
+        lastName={user.last_name}
+        size={120}
+        radius={120}
+        mx="auto"
+      />
       <Title order={2} mt="md">
         {user.first_name} {user.last_name}
       </Title>
       <Text c="dimmed" size="sm">{user.email}</Text>
-      
+
       {(candidate.city || candidate.country) && (
         <Group justify="center" gap="xs" mt="xs">
           <IconMapPin size={16} color="gray" />
@@ -52,10 +50,10 @@ export function CandidateProfileCard({
       )}
 
       {resume ? (
-        <Button 
+        <Button
           onClick={onDownloadResume}
-          variant="light" 
-          fullWidth 
+          variant="light"
+          fullWidth
           mt="md"
           leftSection={<IconDownload size={16} />}
         >

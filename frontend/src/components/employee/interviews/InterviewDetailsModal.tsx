@@ -1,4 +1,5 @@
 import { Modal, Text, Group, Badge, Stack, Button, Anchor, Avatar } from '@mantine/core';
+import { CandidateAvatar } from '../../shared/CandidateAvatar';
 import { InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
 import { IconCalendar, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
@@ -31,12 +32,20 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             {interview.applications?.map(app => (
-              <Text key={app.id} size="lg" fw={700}>
-                {app.candidate?.user?.first_name || 'Unknown'} {app.candidate?.user?.last_name || ''}
-              </Text>
+              <Group key={app.id} gap="sm">
+                <CandidateAvatar
+                  candidateId={app.candidate.id}
+                  firstName={app.candidate.user.first_name}
+                  lastName={app.candidate.user.last_name}
+                  size="md"
+                />
+                <Text size="lg" fw={700}>
+                  {app.candidate?.user?.first_name || 'Unknown'} {app.candidate?.user?.last_name || ''}
+                </Text>
+              </Group>
             ))}
             {(!interview.applications || interview.applications.length === 0) && (
-               <Text size="lg" fw={700} c="dimmed">No candidates</Text>
+              <Text size="lg" fw={700} c="dimmed">No candidates</Text>
             )}
           </Stack>
           <Badge color={getStatusColor(interview.status)}>{interview.status}</Badge>
@@ -77,7 +86,7 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
             </Group>
           ))}
         </Stack>
-        
+
         <Group justify="flex-end" mt="md">
           <Button variant="default" onClick={onClose}>Close</Button>
           {onCancel && interview.status !== InterviewStatus.CANCELLED && interview.status !== InterviewStatus.COMPLETED && (

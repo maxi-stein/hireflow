@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Grid, Stack, LoadingOverlay, Text } from '@mantine/core';
 import { IconChevronLeft, IconX, IconCalendarEvent } from '@tabler/icons-react';
@@ -30,35 +30,15 @@ export function CandidatesPage() {
   const { data: interviews, isLoading: isLoadingInterviews } = useCandidateInterviewsQuery(id || '');
   const { data: files } = useCandidateFilesQuery(id || '');
 
-  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
   const [rejectModalOpened, setRejectModalOpened] = useState(false);
   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
   const [selectedJobPosition, setSelectedJobPosition] = useState<string>('');
 
   const { handleScheduleClick, modalOpened, closeModal, confirmSchedule } = useInterviewScheduling();
 
-  const profilePicture = files?.find(f => f.file_type === FileType.PROFILE_PICTURE);
   const resume = files?.find(f => f.file_type === FileType.RESUME);
 
   const updateStatusMutation = useUpdateApplicationStatusMutation();
-
-  // Load profile picture as blob
-  useEffect(() => {
-    if (profilePicture) {
-      userFileService.downloadFile(profilePicture.id).then((blob) => {
-        const url = URL.createObjectURL(blob);
-        setProfilePictureUrl(url);
-      }).catch((e) => {
-        // show placeholder
-        setProfilePictureUrl(null);
-      });
-    }
-    return () => {
-      if (profilePictureUrl) {
-        URL.revokeObjectURL(profilePictureUrl);
-      }
-    };
-  }, [profilePicture?.id]);
 
   const handleDownloadResume = async () => {
     if (!resume) return;
@@ -163,7 +143,6 @@ export function CandidatesPage() {
           <Stack gap="lg">
             <CandidateProfileCard
               candidate={candidate}
-              profilePictureUrl={profilePictureUrl}
               resume={resume}
               onDownloadResume={handleDownloadResume}
             />

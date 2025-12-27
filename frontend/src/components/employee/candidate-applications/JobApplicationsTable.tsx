@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
 import { useInterviewScheduling } from '../../../hooks/useInterviewScheduling';
 import { ConfirmActionModal } from '../../common/ConfirmActionModal';
+import { CandidateAvatar } from '../../shared/CandidateAvatar';
 
 export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: string, jobTitle: string }) {
   const navigate = useNavigate();
@@ -105,10 +106,20 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
   const rows = sortedApplications.map((application) => (
     <Table.Tr key={application.id}>
       <Table.Td>
-        <Text fw={500}>
-          {application.candidate.user.first_name} {application.candidate.user.last_name}
-        </Text>
-        <Text size="xs" c="dimmed">{application.candidate.user.email}</Text>
+        <Group gap="sm">
+          <CandidateAvatar
+            candidateId={application.candidate.id}
+            firstName={application.candidate.user.first_name}
+            lastName={application.candidate.user.last_name}
+            size="sm"
+          />
+          <div>
+            <Text fw={500}>
+              {application.candidate.user.first_name} {application.candidate.user.last_name}
+            </Text>
+            <Text size="xs" c="dimmed">{application.candidate.user.email}</Text>
+          </div>
+        </Group>
       </Table.Td>
       <Table.Td>
         {new Date(application.created_at).toLocaleDateString()}

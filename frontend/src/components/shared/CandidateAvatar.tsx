@@ -20,8 +20,13 @@ export function CandidateAvatar({ candidateId, firstName, lastName, ...props }: 
     const fetchImage = async () => {
       if (profilePicture) {
         try {
+          // Get the image as a binary large object from the database 
           const blob = await userFileService.downloadFile(profilePicture.id);
+
+          // Create a temporary URL for the image in RAM memory
+          // The src in Avatar (<img/>) needs a URL to display the image
           objectUrl = URL.createObjectURL(blob);
+
           setImageUrl(objectUrl);
         } catch {
           setImageUrl(null);
@@ -40,7 +45,7 @@ export function CandidateAvatar({ candidateId, firstName, lastName, ...props }: 
 
   return (
     <Avatar src={imageUrl} color="blue" {...props}>
-      {firstName} {lastName}
+      {firstName?.charAt(0)}{lastName?.charAt(0)}
     </Avatar>
   );
 }

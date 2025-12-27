@@ -2,7 +2,6 @@ import {
     Card,
     Stack,
     Group,
-    Avatar,
     Text,
     Badge,
     Button,
@@ -15,6 +14,7 @@ import { IconX, IconCalendarEvent, IconDownload } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../../hooks/api/useCandidates';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
+import { CandidateAvatar } from '../../shared/CandidateAvatar';
 
 interface CandidateComparisonCardProps {
     application: CandidateApplication;
@@ -37,13 +37,13 @@ export function CandidateComparisonCard({
             <Stack gap="md">
                 {/* Header with Avatar */}
                 <Group>
-                    <Avatar
-                        color="blue"
+                    <CandidateAvatar
+                        candidateId={application.candidate.id}
+                        firstName={application.candidate.user.first_name}
+                        lastName={application.candidate.user.last_name}
                         size="lg"
                         radius="xl"
-                    >
-                        {application.candidate.user.first_name[0]}{application.candidate.user.last_name[0]}
-                    </Avatar>
+                    />
                     <div style={{ flex: 1 }}>
                         <Text fw={700} size="lg">
                             {application.candidate.user.first_name} {application.candidate.user.last_name}

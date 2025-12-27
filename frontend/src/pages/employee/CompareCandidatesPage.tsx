@@ -14,7 +14,6 @@ import {
     LoadingOverlay,
     Accordion,
     Alert,
-    Avatar,
     useMantineColorScheme
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
@@ -26,6 +25,7 @@ import { ApplicationStatus } from '../../services/candidate-application.service'
 import { ConfirmActionModal } from '../../components/common/ConfirmActionModal';
 import { useNavigate } from 'react-router-dom';
 import { CandidateComparisonCard } from '../../components/employee/compare/CandidateComparisonCard';
+import { CandidateAvatar } from '../../components/shared/CandidateAvatar';
 
 export function CompareCandidatesPage() {
     const [searchParams] = useSearchParams();
@@ -285,12 +285,12 @@ export function CompareCandidatesPage() {
                                                                     onChange={() => handleCandidateToggle(application.candidate.id)}
                                                                     onClick={(e) => e.stopPropagation()}
                                                                 />
-                                                                <Avatar
-                                                                    color="blue"
+                                                                <CandidateAvatar
+                                                                    candidateId={application.candidate.id}
+                                                                    firstName={application.candidate.user.first_name}
+                                                                    lastName={application.candidate.user.last_name}
                                                                     radius="xl"
-                                                                >
-                                                                    {application.candidate.user.first_name[0]}{application.candidate.user.last_name[0]}
-                                                                </Avatar>
+                                                                />
                                                                 <div>
                                                                     <Text fw={500}>
                                                                         {application.candidate.user.first_name} {application.candidate.user.last_name}
