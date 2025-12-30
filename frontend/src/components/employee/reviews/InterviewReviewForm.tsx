@@ -2,17 +2,16 @@ import { useState, useEffect } from 'react';
 import { Paper, Group, Text, Button, Stack, Textarea, NumberInput, TagsInput, LoadingOverlay, Grid, Divider, Box, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { IconCalendarEvent, IconCheck, IconDeviceFloppy } from '@tabler/icons-react';
+import { IconCalendarEvent, IconDeviceFloppy } from '@tabler/icons-react';
 import { useInterviewQuery } from '../../../hooks/api/useInterviews';
 import { useInterviewReviewsQuery, useCreateReviewMutation, useUpdateReviewMutation } from '../../../hooks/api/useInterviewReviews';
-import { useUpdateApplicationStatusMutation } from '../../../hooks/api/useCandidateApplications';
-import { ApplicationStatus } from '../../../services/candidate-application.service';
+
+
 import { ScheduleInterviewModal } from '../../../components/employee/interviews/ScheduleInterviewModal';
 import { useAppStore } from '../../../store/useAppStore';
 import { validateWithJoi } from '../../../utils/form-validation';
 import { interviewReviewSchema } from '../../../schemas/interveiw-review.schema';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../router/routes.config';
 import { CandidateAvatar } from '../../shared/CandidateAvatar';
 import { ScoreBadge } from '../../shared/ScoreBadge';
 
@@ -33,7 +32,6 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
 
   const createReviewMutation = useCreateReviewMutation();
   const updateReviewMutation = useUpdateReviewMutation();
-  const updateStatusMutation = useUpdateApplicationStatusMutation();
 
   // Find if current user already reviewed
   const myReview = reviews?.find(r => r.employee_id === user?.id);
@@ -88,26 +86,12 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
         notifications.show({ title: 'Success', message: 'Review submitted successfully', color: 'green' });
       }
       onSuccess();
+      // Redirect to candidate profile
+      if (candidateId) {
+        navigate(`/manage/candidates/${candidateId}`);
+      }
     } catch (error) {
       notifications.show({ title: 'Error', message: 'Failed to submit review', color: 'red' });
-    }
-  };
-
-  const handleHire = async () => {
-    if (!interview) return;
-    const applicationId = interview.applications?.[0]?.id;
-    if (!applicationId) return;
-
-    try {
-      await updateStatusMutation.mutateAsync({
-        id: applicationId,
-        status: ApplicationStatus.HIRED,
-      });
-      notifications.show({ title: 'Success', message: 'Candidate hired successfully!', color: 'green' });
-      // Redirect to candidates list (using first child of group)
-      navigate(ROUTES.EMPLOYEE.CANDIDATES_GROUP.children?.[0].path || '/manage/candidates/applications');
-    } catch (error) {
-      notifications.show({ title: 'Error', message: 'Failed to hire candidate', color: 'red' });
     }
   };
 
@@ -140,14 +124,6 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
             onClick={() => setIsScheduleModalOpen(true)}
           >
             Schedule Next
-          </Button>
-          <Button
-            color="green"
-            size="xs"
-            leftSection={<IconCheck size={16} />}
-            onClick={handleHire}
-          >
-            Hire Candidate
           </Button>
         </Group>
       </Group>

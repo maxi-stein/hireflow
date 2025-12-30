@@ -37,6 +37,7 @@ export interface RouteConfig {
   requiresAuth?: boolean;
   allowedRoles?: readonly ('candidate' | 'employee')[];
   children?: RouteConfig[];
+  section?: 'job-postings' | 'candidates' | 'interviews';
 }
 
 //Centralized route configuration
@@ -120,6 +121,7 @@ export const ROUTES = {
       showInNav: true,
       requiresAuth: true,
       allowedRoles: ['employee'],
+      section: 'job-postings',
       children: [
         {
           path: '/manage/job-postings',
@@ -128,6 +130,7 @@ export const ROUTES = {
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
+          section: 'job-postings',
         },
         {
           path: '/manage/job-postings/new',
@@ -136,6 +139,7 @@ export const ROUTES = {
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
+          section: 'job-postings',
         },
         {
           path: '/manage/job-postings/edit/:id',
@@ -144,6 +148,7 @@ export const ROUTES = {
           showInNav: false,
           requiresAuth: true,
           allowedRoles: ['employee'],
+          section: 'job-postings',
         },
       ],
     },
@@ -154,6 +159,7 @@ export const ROUTES = {
       showInNav: true,
       requiresAuth: true,
       allowedRoles: ['employee'],
+      section: 'candidates',
       children: [
         {
           path: '/manage/candidates/applications',
@@ -162,6 +168,7 @@ export const ROUTES = {
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
+          section: 'candidates',
         },
         {
           path: '/manage/candidates/compare',
@@ -170,6 +177,7 @@ export const ROUTES = {
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
+          section: 'candidates',
         },
         {
           path: '/manage/candidates/:id',
@@ -178,6 +186,7 @@ export const ROUTES = {
           showInNav: false, // Hidden because it needs an ID usually, or we can make a directory page
           requiresAuth: true,
           allowedRoles: ['employee'],
+          section: 'candidates',
         },
       ],
     },
@@ -189,6 +198,7 @@ export const ROUTES = {
       showInNav: true,
       requiresAuth: true,
       allowedRoles: ['employee'],
+      section: 'interviews',
       children: [
         {
           path: '/manage/interviews',
@@ -197,6 +207,7 @@ export const ROUTES = {
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
+          section: 'interviews',
         },
         {
           path: '/manage/reviews',
@@ -206,6 +217,7 @@ export const ROUTES = {
           requiresAuth: true,
           allowedRoles: ['employee'],
           icon: <IconClipboardCheck size={20} />,
+          section: 'interviews',
         },
       ],
     },

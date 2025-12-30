@@ -9,7 +9,8 @@ import {
   Menu,
   TextInput,
   Text,
-  Title
+  Title,
+  Select
 } from '@mantine/core';
 import { useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
@@ -31,6 +32,9 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
   // Search applications (with debounce)
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebouncedValue(search, 500);
+
+  // Filter state
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   // Update application status
   const updateStatusMutation = useUpdateApplicationStatusMutation();
@@ -81,16 +85,19 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
     return null; // Don't show table if no applications and no search active
   }
 
-  // Filter out HIRED applications and sort by status priority and date
+  // Filter and sort applications
   const sortedApplications = allApplications?.data
-    .filter(app => app.status !== ApplicationStatus.HIRED) // Exclude HIRED
+    .filter(app => {
+      if (statusFilter === 'all') return true;
+      return app.status === statusFilter;
+    })
     .sort((a, b) => {
-      // Define status priority: IN_PROGRESS > APPLIED > REJECTED
+      // Define status priority: IN_PROGRESS > APPLIED > HIRED > REJECTED
       const statusPriority: Record<ApplicationStatus, number> = {
         [ApplicationStatus.IN_PROGRESS]: 1,
         [ApplicationStatus.APPLIED]: 2,
-        [ApplicationStatus.REJECTED]: 3,
-        [ApplicationStatus.HIRED]: 4, // Won't appear due to filter
+        [ApplicationStatus.HIRED]: 3,
+        [ApplicationStatus.REJECTED]: 4,
       };
 
       const priorityDiff = statusPriority[a.status] - statusPriority[b.status];
@@ -193,6 +200,20 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
       <Group justify="space-between" mb="md">
         <Title order={4}>{jobTitle}</Title>
         <Group>
+          <Select
+            placeholder="Filter by status"
+            data={[
+              { value: 'all', label: 'All Statuses' },
+              { value: ApplicationStatus.APPLIED, label: 'Applied' },
+              { value: ApplicationStatus.IN_PROGRESS, label: 'In Progress' },
+              { value: ApplicationStatus.HIRED, label: 'Hired' },
+              { value: ApplicationStatus.REJECTED, label: 'Rejected' },
+            ]}
+            value={statusFilter}
+            onChange={(value) => setStatusFilter(value || 'all')}
+            size="xs"
+            w={150}
+          />
           <TextInput
             placeholder="Search candidate..."
             leftSection={<IconSearch size={14} />}

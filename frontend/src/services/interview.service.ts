@@ -1,6 +1,7 @@
 import { apiClient } from './api';
 import type { PaginatedResponse } from '../types/common';
 import type { CandidateApplication } from './candidate-application.service';
+import type { InterviewReview } from './interview-review.service';
 
 export const InterviewStatus = {
   SCHEDULED: 'SCHEDULED',
@@ -35,6 +36,7 @@ export interface Interview {
   status: InterviewStatus;
   applications: CandidateApplication[];
   interviewers: Interviewer[];
+  reviews?: InterviewReview[];
 }
 
 export interface CreateInterviewDto {
@@ -68,13 +70,16 @@ export const interviewService = {
       if (filters.limit) params.append('limit', filters.limit.toString());
       if (filters.applicationId) params.append('applicationId', filters.applicationId);
       if (filters.employeeId) params.append('employeeId', filters.employeeId);
-      if (filters.candidate_application_id) params.append('candidate_application_id', filters.candidate_application_id);
+      if (filters.candidate_application_id)
+        params.append('candidate_application_id', filters.candidate_application_id);
       if (filters.start_date) params.append('start_date', filters.start_date);
       if (filters.end_date) params.append('end_date', filters.end_date);
       if (filters.status) params.append('status', filters.status);
       if (filters.order) params.append('order', filters.order);
     }
-    const response = await apiClient.get<PaginatedResponse<Interview>>(`/interviews?${params.toString()}`);
+    const response = await apiClient.get<PaginatedResponse<Interview>>(
+      `/interviews?${params.toString()}`,
+    );
     return response.data;
   },
 
@@ -89,7 +94,9 @@ export const interviewService = {
   },
 
   getByCandidate: async (candidateId: string): Promise<PaginatedResponse<Interview>> => {
-    const response = await apiClient.get<PaginatedResponse<Interview>>(`/interviews/candidate/${candidateId}`);
+    const response = await apiClient.get<PaginatedResponse<Interview>>(
+      `/interviews/candidate/${candidateId}`,
+    );
     return response.data;
   },
 

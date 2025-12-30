@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Grid, Stack, LoadingOverlay, Text } from '@mantine/core';
-import { IconChevronLeft, IconX, IconCalendarEvent } from '@tabler/icons-react';
+import { IconChevronLeft, IconX, IconCalendarEvent, IconCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
 import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
@@ -16,6 +16,8 @@ import { WorkExperienceSection } from '../../components/employee/candidate-detai
 import { EducationSection } from '../../components/employee/candidate-details/EducationSection';
 import { ApplicationsSection } from '../../components/employee/candidate-details/ApplicationsSection';
 import { CandidateProfileCard } from '../../components/employee/candidate-details/CandidateProfileCard';
+import { ApplicationWorkflowStepper } from '../../components/employee/candidate-details/ApplicationWorkflowStepper';
+import { DecisionBanner } from '../../components/employee/candidate-details/DecisionBanner';
 import { useInterviewScheduling } from '../../hooks/useInterviewScheduling';
 
 export function CandidatesPage() {
@@ -39,6 +41,55 @@ export function CandidatesPage() {
   const resume = files?.find(f => f.file_type === FileType.RESUME);
 
   const updateStatusMutation = useUpdateApplicationStatusMutation();
+  const [hireModalOpened, setHireModalOpened] = useState(false);
+
+  // Logic to determine if decision is needed
+  const activeApplication = applications?.data.find(app => app.status === ApplicationStatus.IN_PROGRESS);
+
+  const relevantInterviews = interviews?.data.filter(interview =>
+    interview.applications.some(app => app.id === activeApplication?.id) &&
+    (interview.reviews && interview.reviews.length > 0)
+  ) || [];
+
+  const hasReviews = relevantInterviews.length > 0;
+
+  const averageScore = hasReviews
+    ? relevantInterviews.reduce((acc, interview) => {
+      const interviewAvg = interview.reviews?.reduce((sum, r) => sum + (r.score || 0), 0) || 0;
+      return acc + (interviewAvg / (interview.reviews?.length || 1));
+    }, 0) / relevantInterviews.length
+    : 0;
+
+  const handleHireClick = () => {
+    if (activeApplication) {
+      setSelectedApplicationId(activeApplication.id);
+      setSelectedJobPosition(activeApplication.job_offer.position);
+      setHireModalOpened(true);
+    }
+  };
+
+  const handleConfirmHire = async () => {
+    if (!selectedApplicationId) return;
+    try {
+      await updateStatusMutation.mutateAsync({
+        id: selectedApplicationId,
+        status: ApplicationStatus.HIRED
+      });
+      notifications.show({
+        title: 'Candidate Hired!',
+        message: 'The candidate has been successfully hired.',
+        color: 'green',
+      });
+      setHireModalOpened(false);
+      setSelectedApplicationId(null);
+    } catch (error) {
+      notifications.show({
+        title: 'Error',
+        message: 'Failed to hire candidate.',
+        color: 'red',
+      });
+    }
+  };
 
   const handleDownloadResume = async () => {
     if (!resume) return;
@@ -155,11 +206,29 @@ export function CandidatesPage() {
         <Grid.Col span={{ base: 12, md: 8 }}>
           <Stack gap="lg">
 
+
+
+            {/* Stepper for Active or Most Recent Application */}
+            {(activeApplication || applications?.data?.[0]) && (
+              <ApplicationWorkflowStepper
+                status={activeApplication?.status || applications?.data?.[0]?.status || ApplicationStatus.APPLIED}
+              />
+            )}
+
+            {activeApplication && hasReviews && (
+              <DecisionBanner
+                score={Math.round(averageScore)}
+                onHire={handleHireClick}
+                onReject={() => handleRejectClick(activeApplication.id, activeApplication.job_offer.position)}
+                isLoading={updateStatusMutation.isPending}
+              />
+            )}
+
             <ApplicationsSection
               applications={applications?.data || []}
               getStatusColor={getStatusColor}
               onReject={handleRejectClick}
-              onSchedule={(appId, pos) => handleScheduleClick(appId, id || '')}
+              onSchedule={(appId) => handleScheduleClick(appId, id || '')}
             />
 
             <InterviewHistorySection
@@ -188,6 +257,24 @@ export function CandidatesPage() {
         confirmLabel="Reject"
         confirmColor="red"
         confirmIcon={<IconX size={16} />}
+        isLoading={updateStatusMutation.isPending}
+      />
+
+      <ConfirmActionModal
+        opened={hireModalOpened}
+        onClose={() => setHireModalOpened(false)}
+        onConfirm={handleConfirmHire}
+        title="Hire Candidate"
+        message={
+          <Text>
+            Are you sure you want to hire this candidate for <strong>"{selectedJobPosition}"</strong>?
+            <br /><br />
+            This will mark the application as HIRED.
+          </Text>
+        }
+        confirmLabel="Hire Candidate"
+        confirmColor="green"
+        confirmIcon={<IconCheck size={16} />}
         isLoading={updateStatusMutation.isPending}
       />
 
