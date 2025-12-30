@@ -4,14 +4,15 @@ import { useMyPendingReviewsQuery, useMyCompletedReviewsQuery } from '../../hook
 import { IconClipboardCheck, IconHistory, IconSearch } from '@tabler/icons-react';
 import { InterviewReviewForm } from '../../components/employee/reviews/InterviewReviewForm';
 import { CandidateAvatar } from '../../components/shared/CandidateAvatar';
+import { ScoreBadge } from '../../components/shared/ScoreBadge';
 
 export function ReviewsPage() {
   const [selectedInterviewId, setSelectedInterviewId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const { data: pendingReviewsData } = useMyPendingReviewsQuery();
   const { data: completedReviewsData } = useMyCompletedReviewsQuery();
-  
+
   const pendingReviews = pendingReviewsData?.data || [];
   const completedReviews = completedReviewsData?.data || [];
 
@@ -57,7 +58,7 @@ export function ReviewsPage() {
           w={300}
         />
       </Group>
-      
+
       <Tabs defaultValue="pending" keepMounted={false}>
         <Tabs.List mb="md">
           <Tabs.Tab value="pending" leftSection={<IconClipboardCheck size={16} />}>
@@ -79,61 +80,61 @@ export function ReviewsPage() {
           <Paper withBorder p="md" radius="md">
             <Stack>
               {filteredPendingReviews.map(interview => (
-                  <Box key={interview.id} style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
-                    <Group justify="space-between" p="sm">
-                      <Group>
-                        <CandidateAvatar
-                          candidateId={interview.applications?.[0]?.candidate?.id || ''}
-                          firstName={interview.applications?.[0]?.candidate?.user?.first_name}
-                          lastName={interview.applications?.[0]?.candidate?.user?.last_name}
-                          radius="xl"
-                        />
-                        <Box>
-                          <Text fw={500}>
-                            {interview.applications?.[0]?.candidate?.user?.first_name} {interview.applications?.[0]?.candidate?.user?.last_name}
-                          </Text>
-                          <Text size="sm" c="dimmed">
-                            {interview.applications?.[0]?.job_offer?.position}
-                          </Text>
-                        </Box>
-                      </Group>
-                      <Group>
-                        <Box style={{ textAlign: 'right' }}>
-                          <Text size="sm">
-                            {new Date(interview.scheduled_time).toLocaleDateString()}
-                          </Text>
-                          <Text size="sm" c="dimmed">
-                            {new Date(interview.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-                          </Text>
-                        </Box>
-                        <Button 
-                          variant={selectedInterviewId === interview.id ? "filled" : "light"}
-                          size="xs"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleReviewClick(interview.id);
-                          }}
-                        >
-                          {selectedInterviewId === interview.id ? 'Close' : 'Review'}
-                        </Button>
-                      </Group>
-                    </Group>
-                    <Collapse in={selectedInterviewId === interview.id}>
-                      <Box p="md">
-                        {selectedInterviewId === interview.id && (
-                          <InterviewReviewForm 
-                            interviewId={interview.id} 
-                            onCancel={handleCloseReview}
-                            onSuccess={handleCloseReview}
-                          />
-                        )}
+                <Box key={interview.id} style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+                  <Group justify="space-between" p="sm">
+                    <Group>
+                      <CandidateAvatar
+                        candidateId={interview.applications?.[0]?.candidate?.id || ''}
+                        firstName={interview.applications?.[0]?.candidate?.user?.first_name}
+                        lastName={interview.applications?.[0]?.candidate?.user?.last_name}
+                        radius="xl"
+                      />
+                      <Box>
+                        <Text fw={500}>
+                          {interview.applications?.[0]?.candidate?.user?.first_name} {interview.applications?.[0]?.candidate?.user?.last_name}
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          {interview.applications?.[0]?.job_offer?.position}
+                        </Text>
                       </Box>
-                    </Collapse>
-                  </Box>
-                ))}
-                {filteredPendingReviews.length === 0 && (
-                  <Text c="dimmed" ta="center" py="xl">No pending reviews found.</Text>
-                )}
+                    </Group>
+                    <Group>
+                      <Box style={{ textAlign: 'right' }}>
+                        <Text size="sm">
+                          {new Date(interview.scheduled_time).toLocaleDateString()}
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          {new Date(interview.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+                        </Text>
+                      </Box>
+                      <Button
+                        variant={selectedInterviewId === interview.id ? "filled" : "light"}
+                        size="xs"
+                        w={70}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleReviewClick(interview.id);
+                        }}
+                      >
+                        {selectedInterviewId === interview.id ? 'Close' : 'Review'}
+                      </Button>
+                    </Group>
+                  </Group>
+                  <Collapse in={selectedInterviewId === interview.id}>
+                    <Box p="md">
+                      {selectedInterviewId === interview.id && (
+                        <InterviewReviewForm
+                          interviewId={interview.id}
+                          onSuccess={handleCloseReview}
+                        />
+                      )}
+                    </Box>
+                  </Collapse>
+                </Box>
+              ))}
+              {filteredPendingReviews.length === 0 && (
+                <Text c="dimmed" ta="center" py="xl">No pending reviews found.</Text>
+              )}
             </Stack>
           </Paper>
         </Tabs.Panel>
@@ -142,61 +143,66 @@ export function ReviewsPage() {
           <Paper withBorder p="md" radius="md">
             <Stack>
               {filteredCompletedReviews.map(review => (
-                  <Box key={review.id} style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
-                    <Group justify="space-between" p="sm">
-                      <Group>
-                        <CandidateAvatar
-                          candidateId={review.candidate_application?.candidate?.id || ''}
-                          firstName={review.candidate_application?.candidate?.user?.first_name}
-                          lastName={review.candidate_application?.candidate?.user?.last_name}
-                          radius="xl"
-                        />
-                        <Box>
+                <Box key={review.id} style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+                  <Group justify="space-between" p="sm">
+                    <Group>
+                      <CandidateAvatar
+                        candidateId={review.candidate_application?.candidate?.id || ''}
+                        firstName={review.candidate_application?.candidate?.user?.first_name}
+                        lastName={review.candidate_application?.candidate?.user?.last_name}
+                        radius="xl"
+                      />
+                      <Box>
+                        <Group gap="sm" align="center">
                           <Text fw={500}>
                             {review.candidate_application?.candidate?.user?.first_name} {review.candidate_application?.candidate?.user?.last_name}
                           </Text>
-                          <Text size="sm" c="dimmed">
-                            {review.candidate_application?.job_offer?.position}
-                          </Text>
-                        </Box>
-                      </Group>
-                      <Group>
-                        <Box style={{ textAlign: 'right' }}>
-                          <Text size="sm">
-                            Reviewed on {new Date(review.created_at).toLocaleDateString()}
-                          </Text>
-                          <Group gap="xs" justify="flex-end">
-                            <Text size="sm" fw={500}>Score: {review.score}/10</Text>
-                          </Group>
-                        </Box>
-                        <Button 
-                          variant={selectedInterviewId === review.interview_id ? "filled" : "subtle"}
-                          size="xs"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleReviewClick(review.interview_id);
-                          }}
-                        >
-                          {selectedInterviewId === review.interview_id ? 'Close' : 'View Details'}
-                        </Button>
-                      </Group>
-                    </Group>
-                    <Collapse in={selectedInterviewId === review.interview_id}>
-                      <Box p="md">
-                        {selectedInterviewId === review.interview_id && (
-                          <InterviewReviewForm 
-                            interviewId={review.interview_id} 
-                            onCancel={handleCloseReview}
-                            onSuccess={handleCloseReview}
-                          />
-                        )}
+                          <ScoreBadge score={review.score} size="sm" />
+                        </Group>
+                        <Text size="sm" c="dimmed">
+                          {review.candidate_application?.job_offer?.position}
+                        </Text>
                       </Box>
-                    </Collapse>
-                  </Box>
-                ))}
-                {filteredCompletedReviews.length === 0 && (
-                  <Text c="dimmed" ta="center" py="xl">No completed reviews found.</Text>
-                )}
+                    </Group>
+                    <Group>
+                      <Box style={{ textAlign: 'right' }}>
+                        <Stack gap={4} align="flex-end">
+                          <Text size="sm" fw={500}>
+                            By: {review.employee?.user.first_name} {review.employee?.user.last_name}
+                          </Text>
+                          <Text size="xs" c="dimmed">
+                            {new Date(review.created_at).toLocaleDateString()}
+                          </Text>
+                        </Stack>
+                      </Box>
+                      <Button
+                        variant={selectedInterviewId === review.interview_id ? "filled" : "subtle"}
+                        size="xs"
+                        w={90}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleReviewClick(review.interview_id);
+                        }}
+                      >
+                        {selectedInterviewId === review.interview_id ? 'Close' : 'View Details'}
+                      </Button>
+                    </Group>
+                  </Group>
+                  <Collapse in={selectedInterviewId === review.interview_id}>
+                    <Box p="md">
+                      {selectedInterviewId === review.interview_id && (
+                        <InterviewReviewForm
+                          interviewId={review.interview_id}
+                          onSuccess={handleCloseReview}
+                        />
+                      )}
+                    </Box>
+                  </Collapse>
+                </Box>
+              ))}
+              {filteredCompletedReviews.length === 0 && (
+                <Text c="dimmed" ta="center" py="xl">No completed reviews found.</Text>
+              )}
             </Stack>
           </Paper>
         </Tabs.Panel>

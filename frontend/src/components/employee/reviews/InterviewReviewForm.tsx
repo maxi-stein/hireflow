@@ -14,14 +14,14 @@ import { interviewReviewSchema } from '../../../schemas/interveiw-review.schema'
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../router/routes.config';
 import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { ScoreBadge } from '../../shared/ScoreBadge';
 
 interface InterviewReviewFormProps {
   interviewId: string;
-  onCancel: () => void;
   onSuccess: () => void;
 }
 
-export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: InterviewReviewFormProps) {
+export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewFormProps) {
   const user = useAppStore(state => state.user);
   const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: Interv
 
   useEffect(() => {
     if (myReview) {
-      form.setValues({
+      form.initialize({
         score: myReview.score || 5,
         notes: myReview.notes || '',
         strengths: myReview.strengths || [],
@@ -159,7 +159,10 @@ export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: Interv
               <Stack gap="xs">
                 <Box>
                   <Text c="dimmed" size="xs" tt="uppercase" fw={700}>Candidate</Text>
-                  <Text size="lg" fw={500}>{candidate?.first_name} {candidate?.last_name}</Text>
+                  <Group gap="xs" align="center">
+                    <Text size="lg" fw={500}>{candidate?.first_name} {candidate?.last_name}</Text>
+                    {isEditMode && <ScoreBadge score={form.values.score} size="xs" />}
+                  </Group>
                   <Text size="sm" c="dimmed">{candidate?.email}</Text>
                 </Box>
                 <Divider />
@@ -172,6 +175,15 @@ export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: Interv
                   <Text c="dimmed" size="xs" tt="uppercase" fw={700}>Interview Date</Text>
                   <Text>{new Date(interview.scheduled_time).toLocaleString()}</Text>
                 </Box>
+                {myReview?.employee?.user && (
+                  <>
+                    <Divider />
+                    <Box>
+                      <Text c="dimmed" size="xs" tt="uppercase" fw={700}>Reviewer</Text>
+                      <Text fw={500}>{myReview.employee.user.first_name} {myReview.employee.user.last_name}</Text>
+                    </Box>
+                  </>
+                )}
               </Stack>
             </Paper>
 
@@ -232,7 +244,9 @@ export function InterviewReviewForm({ interviewId, onCancel, onSuccess }: Interv
                 />
 
                 <Group justify="flex-end" mt="xl">
-                  <Button variant="default" onClick={onCancel}>Cancel</Button>
+                  {isEditMode && (
+                    <Button variant="default" onClick={() => form.reset()}>Reset</Button>
+                  )}
                   <Button type="submit" leftSection={<IconDeviceFloppy size={16} />}>
                     {isEditMode ? 'Update Review' : 'Submit Review'}
                   </Button>
