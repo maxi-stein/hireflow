@@ -111,7 +111,7 @@ export class InterviewReviewService {
 
     return await this.reviewRepository.find({
       where: { interview_id: interviewId },
-      relations: ['employee', 'candidate_application'],
+      relations: ['employee', 'employee.user', 'candidate_application'],
     });
   }
 
@@ -180,7 +180,12 @@ export class InterviewReviewService {
       .innerJoinAndSelect('application.candidate', 'candidate')
       .innerJoinAndSelect('candidate.user', 'user')
       .innerJoinAndSelect('application.job_offer', 'job_offer')
-      .leftJoin('interview.reviews', 'review', 'review.employee_id = :employeeId', { employeeId })
+      .leftJoin(
+        'interview.reviews',
+        'review',
+        'review.employee_id = :employeeId',
+        { employeeId },
+      )
       .where('interviewer.id = :employeeId', { employeeId })
       .andWhere('interview.scheduled_time <= :now', { now: new Date() })
       .andWhere('review.id IS NULL')
@@ -215,6 +220,8 @@ export class InterviewReviewService {
         'candidate_application.candidate',
         'candidate_application.candidate.user',
         'candidate_application.job_offer',
+        'employee',
+        'employee.user',
       ],
       order: { created_at: 'DESC' },
       skip,
