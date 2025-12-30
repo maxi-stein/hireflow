@@ -29,7 +29,7 @@ export class InterviewService {
     private readonly employeeService: EmployeesService,
     @Inject(CandidateApplicationService)
     private readonly candidateApplicationService: CandidateApplicationService,
-  ) { }
+  ) {}
 
   async create(createDto: CreateInterviewDto): Promise<Interview> {
     //If type === individual, then validate if the application_ids array's length is 1
@@ -193,7 +193,7 @@ export class InterviewService {
         'applications.candidate.user',
         'applications.job_offer',
         'interviewers',
-        'interviewers.user'
+        'interviewers.user',
       ],
     });
 
@@ -211,7 +211,10 @@ export class InterviewService {
       throw new BadRequestException('Cannot update a completed interview');
     }
 
-    if (updateDto.scheduled_time && new Date(updateDto.scheduled_time) < new Date()) {
+    if (
+      updateDto.scheduled_time &&
+      new Date(updateDto.scheduled_time) < new Date()
+    ) {
       throw new BadRequestException('Cannot schedule an interview in the past');
     }
 
@@ -320,6 +323,7 @@ export class InterviewService {
       .innerJoinAndSelect('application.job_offer', 'job_offer')
       .innerJoinAndSelect('interview.interviewers', 'interviewer')
       .innerJoinAndSelect('interviewer.user', 'user')
+      .leftJoinAndSelect('interview.reviews', 'review')
       .where('candidate.id = :candidateId', { candidateId })
       .orderBy('interview.scheduled_time', 'DESC')
       .skip(skip)
