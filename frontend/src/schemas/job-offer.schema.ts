@@ -21,6 +21,9 @@ export const createJobOfferSchema = Joi.object({
   salary: Joi.string().allow('').optional(),
   benefits: Joi.string().allow('').optional(),
   skills: Joi.array().items(Joi.string()).optional(),
+  deadline: Joi.date().allow(null).optional().messages({
+    'date.base': 'Invalid date format',
+  }),
   status: Joi.string().valid(...Object.values(JobOfferStatus)).optional().messages({
     'any.only': 'Invalid status selected',
   }),

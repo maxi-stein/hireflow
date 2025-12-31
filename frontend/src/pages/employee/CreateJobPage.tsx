@@ -82,7 +82,7 @@ export function CreateJobPage() {
     try {
       const payload = {
         ...values,
-        deadline: values.deadline ? values.deadline.toISOString() : undefined,
+        deadline: values.deadline ? new Date(values.deadline).toISOString() : undefined,
         skills: values.skills.map(skill => ({ skill_name: skill })), // Map skills to objects with skill_name property
       };
 
@@ -94,7 +94,9 @@ export function CreateJobPage() {
           color: 'green',
         });
       } else {
-        await createMutation.mutateAsync(payload);
+        // Remove status for new creations as it's handled by the backend
+        const { status, ...createPayload } = payload;
+        await createMutation.mutateAsync(createPayload as any);
         notifications.show({
           title: 'Success',
           message: 'Job posting created successfully',

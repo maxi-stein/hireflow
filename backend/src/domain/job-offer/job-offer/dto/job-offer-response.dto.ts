@@ -14,5 +14,6 @@ export class JobOfferResponseDto {
   created_at: Date;
   updated_at: Date;
   skills: JobOfferSkillResponseDto[];
+  deadline?: Date;
   applicants_count: number;
 }
