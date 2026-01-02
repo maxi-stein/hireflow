@@ -70,38 +70,23 @@ export const router = createBrowserRouter([
                 path: ROUTES.EMPLOYEE.DASHBOARD.path,
                 element: ROUTES.EMPLOYEE.DASHBOARD.element,
               },
-              {
-                path: ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[0].path,
-                element: ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[0].element,
-              },
-              {
-                path: ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[1].path,
-                element: ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[1].element,
-              },
-              {
-                path: ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[2].path,
-                element: ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[2].element,
-              },
-              {
-                path: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[0].path,
-                element: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[0].element,
-              },
-              {
-                path: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[1].path,
-                element: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[1].element,
-              },
-              {
-                path: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[2].path,
-                element: ROUTES.EMPLOYEE.CANDIDATES_GROUP.children[2].element,
-              },
-              {
-                path: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[0].path,
-                element: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[0].element,
-              },
-              {
-                path: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[1].path,
-                element: ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children[1].element,
-              },
+              // Job Postings Group
+              ...(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children || []).map(route => ({
+                path: route.path,
+                element: route.element,
+              })),
+
+              // Candidates Group
+              ...(ROUTES.EMPLOYEE.CANDIDATES_GROUP.children || []).map(route => ({
+                path: route.path,
+                element: route.element,
+              })),
+
+              // Interviews Group
+              ...(ROUTES.EMPLOYEE.INTERVIEWS_GROUP.children || []).map(route => ({
+                path: route.path,
+                element: route.element,
+              })),
             ],
           },
         ],
