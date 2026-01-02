@@ -11,7 +11,7 @@ import {
     Grid,
     Box
 } from '@mantine/core';
-import { IconX, IconCalendarEvent, IconDownload, IconMail, IconPhone } from '@tabler/icons-react';
+import { IconX, IconCalendarEvent, IconDownload, IconMail, IconPhone, IconCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../../hooks/api/useCandidates';
 import { useCandidateInterviewsQuery } from '../../../hooks/api/useInterviews';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
@@ -23,6 +23,7 @@ interface CandidateComparisonCardProps {
     application: CandidateApplication;
     onReject: (application: CandidateApplication) => void;
     onScheduleInterview: (applicationId: string) => void;
+    onHire: (application: CandidateApplication) => void;
     getStatusColor: (status: ApplicationStatus) => string;
     accordionValue: string[];
     onAccordionChange: (value: string[]) => void;
@@ -32,6 +33,7 @@ export function CandidateComparisonCard({
     application,
     onReject,
     onScheduleInterview,
+    onHire,
     getStatusColor,
     accordionValue,
     onAccordionChange
@@ -289,9 +291,20 @@ export function CandidateComparisonCard({
                 }}
             >
                 <Stack gap="xs">
+                    {application.status !== ApplicationStatus.HIRED && application.status !== ApplicationStatus.REJECTED && (
+                        <Button
+                            leftSection={<IconCheck size={16} />}
+                            variant="filled"
+                            color="green"
+                            fullWidth
+                            onClick={() => onHire(application)}
+                        >
+                            Hire Candidate
+                        </Button>
+                    )}
                     <Button
                         leftSection={<IconCalendarEvent size={16} />}
-                        variant="filled"
+                        variant="light"
                         fullWidth
                         onClick={() => onScheduleInterview(application.id)}
                     >

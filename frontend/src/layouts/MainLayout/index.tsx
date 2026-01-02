@@ -7,7 +7,7 @@ import { SideNav } from './SideNav';
 import { HeaderContainer } from '../../components/shared/HeaderContainer';
 
 export function MainLayout() {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <AppShell
@@ -24,7 +24,7 @@ export function MainLayout() {
       </HeaderContainer>
 
       <AppShell.Navbar p="md">
-        <SideNav />
+        <SideNav onNavigate={close} />
       </AppShell.Navbar>
 
       <AppShell.Main>

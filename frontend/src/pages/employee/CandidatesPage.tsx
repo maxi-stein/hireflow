@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { getApplicationStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid } from '@mantine/core';
-import { IconChevronLeft, IconX } from '@tabler/icons-react';
+import { IconChevronLeft, IconX, IconCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
 import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
@@ -33,8 +33,10 @@ export function CandidatesPage() {
   const { data: files } = useCandidateFilesQuery(id || '');
 
   const [rejectModalOpened, setRejectModalOpened] = useState(false);
-  const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
-  const [selectedJobPosition, setSelectedJobPosition] = useState<string>('');
+  const [applicationToReject, setApplicationToReject] = useState<{ id: string; position: string } | null>(null);
+
+  const [hireModalOpened, setHireModalOpened] = useState(false);
+  const [applicationToHire, setApplicationToHire] = useState<{ id: string; position: string } | null>(null);
 
   // Schedule Interview State
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
@@ -66,17 +68,21 @@ export function CandidatesPage() {
   };
 
   const handleRejectClick = (applicationId: string, position: string) => {
-    setSelectedApplicationId(applicationId);
-    setSelectedJobPosition(position);
+    setApplicationToReject({ id: applicationId, position });
     setRejectModalOpened(true);
   };
 
+  const handleHireClick = (applicationId: string, position: string) => {
+    setApplicationToHire({ id: applicationId, position });
+    setHireModalOpened(true);
+  };
+
   const handleConfirmReject = async () => {
-    if (!selectedApplicationId) return;
+    if (!applicationToReject) return;
 
     try {
       await updateStatusMutation.mutateAsync({
-        id: selectedApplicationId,
+        id: applicationToReject.id,
         status: ApplicationStatus.REJECTED
       });
       notifications.show({
@@ -86,7 +92,33 @@ export function CandidatesPage() {
         icon: <IconX size={16} />
       });
       setRejectModalOpened(false);
-      setSelectedApplicationId(null);
+      setApplicationToReject(null);
+    } catch (error) {
+      console.error('Error rejecting application:', error);
+      notifications.show({
+        title: 'Error',
+        message: 'Failed to update application status.',
+        color: 'red',
+      });
+    }
+  };
+
+  const handleConfirmHire = async () => {
+    if (!applicationToHire) return;
+
+    try {
+      await updateStatusMutation.mutateAsync({
+        id: applicationToHire.id,
+        status: ApplicationStatus.HIRED
+      });
+      notifications.show({
+        title: 'Candidate Hired',
+        message: `The candidate has been hired for ${applicationToHire.position}.`,
+        color: 'green',
+        icon: <IconCheck size={16} />
+      });
+      setHireModalOpened(false);
+      setApplicationToHire(null);
     } catch (error) {
       notifications.show({
         title: 'Error',
@@ -155,6 +187,7 @@ export function CandidatesPage() {
           interviews={interviews?.data || []}
           getStatusColor={getApplicationStatusColor}
           onReject={handleRejectClick}
+          onHire={handleHireClick}
           onSchedule={handleScheduleInterview}
         />
 
@@ -180,13 +213,32 @@ export function CandidatesPage() {
         title="Reject Application"
         message={
           <Text>
-            Are you sure you want to reject this candidate's application for{' '}
-            <strong>"{selectedJobPosition}"</strong>? This action cannot be undone.
+            Are you sure you want to reject the application for <strong>{applicationToReject?.position}</strong>?
+            <br />
+            This action can be undone later if needed.
           </Text>
         }
         confirmLabel="Reject"
         confirmColor="red"
         confirmIcon={<IconX size={16} />}
+        isLoading={updateStatusMutation.isPending}
+      />
+
+      <ConfirmActionModal
+        opened={hireModalOpened}
+        onClose={() => setHireModalOpened(false)}
+        onConfirm={handleConfirmHire}
+        title="Hire Candidate"
+        message={
+          <Text>
+            Are you sure you want to hire this candidate for <strong>{applicationToHire?.position}</strong>?
+            <br />
+            This will mark the application as HIRED.
+          </Text>
+        }
+        confirmLabel="Hire"
+        confirmColor="green"
+        confirmIcon={<IconCheck size={16} />}
         isLoading={updateStatusMutation.isPending}
       />
 

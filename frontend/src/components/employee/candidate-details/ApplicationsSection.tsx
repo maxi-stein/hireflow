@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Paper, Title, Card, Group, Box, Text, Badge, Divider, Button, Alert, SimpleGrid, Pagination } from '@mantine/core';
-import { IconX, IconCalendarEvent, IconAlertCircle } from '@tabler/icons-react';
+import { IconX, IconCalendarEvent, IconAlertCircle, IconCheck } from '@tabler/icons-react';
 import { ApplicationStatus, type CandidateApplication } from '../../../services/candidate-application.service';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
@@ -10,6 +10,7 @@ interface ApplicationsSectionProps {
   interviews: Interview[];
   getStatusColor: (status: ApplicationStatus) => string;
   onReject: (applicationId: string, position: string) => void;
+  onHire: (applicationId: string, position: string) => void;
   onSchedule: (applicationId: string) => void;
 }
 
@@ -18,6 +19,7 @@ export function ApplicationsSection({
   interviews,
   getStatusColor,
   onReject,
+  onHire,
   onSchedule
 }: ApplicationsSectionProps) {
   const [activePage, setActivePage] = useState(1);
@@ -100,7 +102,7 @@ export function ApplicationsSection({
               <Divider my="md" />
 
               <Group justify="flex-end">
-                {app.status !== ApplicationStatus.REJECTED && (
+                {app.status !== ApplicationStatus.REJECTED && app.status !== ApplicationStatus.HIRED && (
                   <Button
                     variant="light"
                     color="red"
@@ -109,6 +111,18 @@ export function ApplicationsSection({
                     onClick={() => onReject(app.id, app.job_offer.position)}
                   >
                     Reject
+                  </Button>
+                )}
+
+                {app.status !== ApplicationStatus.REJECTED && app.status !== ApplicationStatus.HIRED && (
+                  <Button
+                    variant="filled"
+                    color="green"
+                    size="xs"
+                    leftSection={<IconCheck size={14} />}
+                    onClick={() => onHire(app.id, app.job_offer.position)}
+                  >
+                    Hire
                   </Button>
                 )}
 

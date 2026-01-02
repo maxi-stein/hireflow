@@ -18,7 +18,7 @@ import {
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
-import { IconSearch, IconScale, IconAlertCircle, IconX } from '@tabler/icons-react';
+import { IconSearch, IconScale, IconAlertCircle, IconX, IconCheck } from '@tabler/icons-react';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
 import { ApplicationStatus } from '../../services/candidate-application.service';
@@ -52,6 +52,7 @@ export function CompareCandidatesPage() {
 
     // Candidate to reject
     const [candidateToReject, setCandidateToReject] = useState<{ id: string; name: string } | null>(null);
+    const [candidateToHire, setCandidateToHire] = useState<{ id: string; name: string } | null>(null);
 
     // Synchronized accordion state across all cards (must be outside conditional)
     const [accordionValue, setAccordionValue] = useState<string[]>(['skills']);
@@ -160,6 +161,36 @@ export function CompareCandidatesPage() {
         navigate(`/manage/interviews?applicationId=${applicationId}`);
     };
 
+    const handleHireClick = (application: any) => {
+        setCandidateToHire({
+            id: application.id,
+            name: `${application.candidate.user.first_name} ${application.candidate.user.last_name}`
+        });
+    };
+
+    const handleConfirmHire = async () => {
+        if (!candidateToHire) return;
+
+        try {
+            await updateStatusMutation.mutateAsync({
+                id: candidateToHire.id,
+                status: ApplicationStatus.HIRED
+            });
+
+            // Remove from selected candidates
+            const newSelected = new Set(selectedCandidates);
+            const hiredApp = candidatesToCompare.find(app => app.id === candidateToHire.id);
+            if (hiredApp) {
+                newSelected.delete(hiredApp.candidate.id);
+                setSelectedCandidates(newSelected);
+            }
+
+            setCandidateToHire(null);
+        } catch (error) {
+            console.error('Error hiring candidate:', error);
+        }
+    };
+
     // Get selected candidate applications for comparison
     const candidatesToCompare = filteredCandidates.filter(app =>
         selectedCandidates.has(app.candidate.id)
@@ -184,6 +215,7 @@ export function CompareCandidatesPage() {
                         <CandidateComparisonCard
                             key={application.candidate.id}
                             application={application}
+                            onHire={handleHireClick}
                             onReject={handleRejectClick}
                             onScheduleInterview={handleScheduleInterview}
                             getStatusColor={getApplicationStatusColor}
@@ -209,6 +241,25 @@ export function CompareCandidatesPage() {
                     confirmLabel="Reject"
                     confirmColor="red"
                     confirmIcon={<IconX size={16} />}
+                    isLoading={updateStatusMutation.isPending}
+                />
+
+                {/* Hire Confirmation Modal */}
+                <ConfirmActionModal
+                    opened={!!candidateToHire}
+                    onClose={() => setCandidateToHire(null)}
+                    onConfirm={handleConfirmHire}
+                    title="Hire Candidate"
+                    message={
+                        <Text>
+                            Are you sure you want to hire <strong>{candidateToHire?.name}</strong>?
+                            <br /><br />
+                            This will change their application status to HIRED.
+                        </Text>
+                    }
+                    confirmLabel="Hire"
+                    confirmColor="green"
+                    confirmIcon={<IconCheck size={16} />}
                     isLoading={updateStatusMutation.isPending}
                 />
             </Container>

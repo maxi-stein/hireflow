@@ -3,7 +3,11 @@ import { useLocation, useNavigate, matchPath } from 'react-router-dom';
 import { useAppStore } from '../../../store/useAppStore';
 import { getNavItemsForUser, getAllRoutes, type RouteConfig } from '../../../router/routes.config';
 
-export function SideNav() {
+interface SideNavProps {
+  onNavigate?: () => void;
+}
+
+export function SideNav({ onNavigate }: SideNavProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useAppStore((state) => state.user);
@@ -26,6 +30,11 @@ export function SideNav() {
     return !!matchPath({ path: item.path, end: false }, location.pathname);
   };
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    onNavigate?.(); // Close mobile menu after navigation
+  };
+
   return (
     <Stack gap="xs">
       {navItems.map((item) => {
@@ -35,7 +44,7 @@ export function SideNav() {
             key={item.path}
             label={item.label}
             leftSection={item.icon}
-            onClick={() => !item.children && navigate(item.path)}
+            onClick={() => !item.children && handleNavigate(item.path)}
             active={active}
             defaultOpened={active}
             variant="subtle"
@@ -44,7 +53,7 @@ export function SideNav() {
               <NavLink
                 key={child.path}
                 label={child.label}
-                onClick={() => navigate(child.path)}
+                onClick={() => handleNavigate(child.path)}
                 active={matchPath({ path: child.path, end: true }, location.pathname) !== null}
                 variant="subtle"
               />
