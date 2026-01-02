@@ -10,7 +10,14 @@ interface CandidateInterviewsDisplayProps {
 }
 
 export function CandidateInterviewsDisplay({ interviews, applicationId }: CandidateInterviewsDisplayProps) {
-  if (!interviews || interviews.length === 0) return null;
+  // Always render a Detail to maintain alignment
+  if (!interviews || interviews.length === 0) {
+    return (
+      <Alert variant="light" color="gray" p="xs">
+        <Text size="sm" c="dimmed">No interviews scheduled</Text>
+      </Alert>
+    );
+  }
 
   return (
     <Stack gap="xs" mt="md">

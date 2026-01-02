@@ -26,6 +26,7 @@ import { ConfirmActionModal } from '../../components/common/ConfirmActionModal';
 import { useNavigate } from 'react-router-dom';
 import { CandidateComparisonCard } from '../../components/employee/compare/CandidateComparisonCard';
 import { CandidateAvatar } from '../../components/shared/CandidateAvatar';
+import { getApplicationStatusColor } from '../../utils/application.utils';
 
 export function CompareCandidatesPage() {
     const [searchParams] = useSearchParams();
@@ -40,8 +41,8 @@ export function CompareCandidatesPage() {
     // Selected job offer
     const [selectedJobOfferId, setSelectedJobOfferId] = useState<string | null>(null);
 
-    // Accordion open state
-    const [accordionValue, setAccordionValue] = useState<string | null>(null);
+    // Accordion open state for job offers
+    const [jobAccordionValue, setJobAccordionValue] = useState<string | null>(null);
 
     // Selected candidates for comparison
     const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set());
@@ -51,6 +52,9 @@ export function CompareCandidatesPage() {
 
     // Candidate to reject
     const [candidateToReject, setCandidateToReject] = useState<{ id: string; name: string } | null>(null);
+
+    // Synchronized accordion state across all cards (must be outside conditional)
+    const [accordionValue, setAccordionValue] = useState<string[]>(['skills']);
 
     // Mutation for updating application status
     const updateStatusMutation = useUpdateApplicationStatusMutation();
@@ -79,7 +83,7 @@ export function CompareCandidatesPage() {
 
         if (jobOfferId) {
             setSelectedJobOfferId(jobOfferId);
-            setAccordionValue(jobOfferId);
+            setJobAccordionValue(jobOfferId);
         }
 
         if (candidateId) {
@@ -111,12 +115,12 @@ export function CompareCandidatesPage() {
         setShowComparison(false);
         // Keep the accordion open with selections preserved
         if (selectedJobOfferId) {
-            setAccordionValue(selectedJobOfferId);
+            setJobAccordionValue(selectedJobOfferId);
         }
     };
 
     const handleAccordionChange = (value: string | null) => {
-        setAccordionValue(value);
+        setJobAccordionValue(value);
         if (value) {
             setSelectedJobOfferId(value);
         }
@@ -156,17 +160,6 @@ export function CompareCandidatesPage() {
         navigate(`/manage/interviews?applicationId=${applicationId}`);
     };
 
-    const getStatusColor = (status: ApplicationStatus) => {
-        switch (status) {
-            case ApplicationStatus.APPLIED:
-                return 'gray';
-            case ApplicationStatus.IN_PROGRESS:
-                return 'blue';
-            default:
-                return 'gray';
-        }
-    };
-
     // Get selected candidate applications for comparison
     const candidatesToCompare = filteredCandidates.filter(app =>
         selectedCandidates.has(app.candidate.id)
@@ -186,14 +179,16 @@ export function CompareCandidatesPage() {
                     </Button>
                 </Group>
 
-                <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
+                <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg" style={{ alignItems: 'stretch' }}>
                     {candidatesToCompare.map(application => (
                         <CandidateComparisonCard
                             key={application.candidate.id}
                             application={application}
                             onReject={handleRejectClick}
                             onScheduleInterview={handleScheduleInterview}
-                            getStatusColor={getStatusColor}
+                            getStatusColor={getApplicationStatusColor}
+                            accordionValue={accordionValue}
+                            onAccordionChange={setAccordionValue}
                         />
                     ))}
                 </SimpleGrid>
@@ -268,7 +263,7 @@ export function CompareCandidatesPage() {
                                 <Accordion
                                     key={offer.id}
                                     variant="separated"
-                                    value={accordionValue}
+                                    value={jobAccordionValue}
                                     onChange={handleAccordionChange}
                                     styles={{
                                         item: {
@@ -344,7 +339,7 @@ export function CompareCandidatesPage() {
                                                                         <Text size="xs" c="dimmed">{application.candidate.user.email}</Text>
                                                                     </div>
                                                                 </Group>
-                                                                <Badge color={getStatusColor(application.status)} variant="light">
+                                                                <Badge color={getApplicationStatusColor(application.status)} variant="light">
                                                                     {application.status}
                                                                 </Badge>
                                                             </Group>
