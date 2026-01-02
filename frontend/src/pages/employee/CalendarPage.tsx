@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme } from '@mantine/core';
-import { IconChevronLeft, IconChevronRight, IconPlus, IconCalendarEvent } from '@tabler/icons-react';
-import { useSearchParams } from 'react-router-dom';
+import { IconChevronLeft, IconChevronRight, IconPlus } from '@tabler/icons-react';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
-import { useCandidateApplicationQuery } from '../../hooks/api/useCandidateApplications';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { notifications } from '@mantine/notifications';
 import type { Interview } from '../../services/interview.service';
@@ -23,9 +21,6 @@ export function InterviewsPage() {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
 
-  // Get application id from url
-  const [searchParams, setSearchParams] = useSearchParams();
-  const applicationId = searchParams.get('applicationId');
 
   // Used to display interview details modal
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
@@ -48,8 +43,6 @@ export function InterviewsPage() {
   const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
   const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-  // If application id is provided, fetch application (used to schedule an interview)
-  const { data: application } = useCandidateApplicationQuery(applicationId);
 
   const { data: interviewsData } = useInterviewsQuery({
     start_date: startOfMonth.toISOString(),
@@ -134,35 +127,23 @@ export function InterviewsPage() {
     <Container size="xl" py="xl">
       <Group justify="space-between" mb="lg">
         <Title order={2}>Interview Calendar</Title>
-        {application ? (
-          <Button
-            leftSection={<IconCalendarEvent size={16} />}
-            onClick={() => setIsScheduleModalOpen(true)}
-            color="blue"
-          >
-            Schedule meeting with {application.candidate.user.first_name} {application.candidate.user.last_name}
-          </Button>
-        ) : (
-          <Button leftSection={<IconPlus size={16} />} onClick={() => setIsScheduleModalOpen(true)}>
-            Schedule Interview
-          </Button>
-        )}
+        <Button leftSection={<IconPlus size={16} />} onClick={() => setIsScheduleModalOpen(true)}>
+          Schedule Interview
+        </Button>
       </Group>
 
       <Paper withBorder p="md" radius="md" mb="xl">
         {/* Calendar Header */}
-        <Group justify="space-between" mb="md">
-          <Group>
-            <ActionIcon variant="subtle" onClick={handlePrevMonth}>
-              <IconChevronLeft size={20} />
-            </ActionIcon>
-            <Title order={4}>
-              {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-            </Title>
-            <ActionIcon variant="subtle" onClick={handleNextMonth}>
-              <IconChevronRight size={20} />
-            </ActionIcon>
-          </Group>
+        <Group justify="center" mb="md" miw="225px">
+          <ActionIcon variant="subtle" onClick={handlePrevMonth}>
+            <IconChevronLeft size={20} />
+          </ActionIcon>
+          <Title order={4}>
+            {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </Title>
+          <ActionIcon variant="subtle" onClick={handleNextMonth}>
+            <IconChevronRight size={20} />
+          </ActionIcon>
         </Group>
 
         {/* Calendar Grid */}
@@ -202,13 +183,10 @@ export function InterviewsPage() {
           setIsScheduleModalOpen(false);
           setInterviewToEdit(null);
         }}
-        initialApplicationId={applicationId || undefined}
-        interviewToEdit={interviewToEdit}
         onSuccess={() => {
-          if (applicationId) {
-            setSearchParams({});
-          }
+          // Refresh or close logic if needed
         }}
+        interviewToEdit={interviewToEdit}
       />
       <InterviewDetailsModal
         interview={selectedInterview}

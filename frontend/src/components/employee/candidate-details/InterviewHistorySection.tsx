@@ -1,18 +1,8 @@
 import { Paper, Group, Title, Stack, Card, Text, Badge, Box } from '@mantine/core';
 import { IconClock } from '@tabler/icons-react';
-import { type InterviewStatus } from '../../../services/interview.service';
+import { InterviewStatus, type Interview } from '../../../services/interview.service';
+import { getEffectiveInterviewStatus } from '../../../utils/interview.utils';
 
-interface Interview {
-  id: string;
-  scheduled_time: string;
-  type: string;
-  status: InterviewStatus;
-  applications: Array<{
-    job_offer?: {
-      position: string;
-    };
-  }>;
-}
 
 interface InterviewHistorySectionProps {
   interviews: Interview[];
@@ -38,8 +28,11 @@ export function InterviewHistorySection({ interviews, getStatusColor }: Intervie
                     {interview.type} Interview • {interview.applications[0]?.job_offer?.position || 'Unknown Position'}
                   </Text>
                 </Box>
-                <Badge color={getStatusColor(interview.status)} variant="light">
-                  {interview.status}
+                <Badge
+                  color={getStatusColor(getEffectiveInterviewStatus(interview))}
+                  variant="light"
+                >
+                  {getEffectiveInterviewStatus(interview)}
                 </Badge>
               </Group>
             </Card>

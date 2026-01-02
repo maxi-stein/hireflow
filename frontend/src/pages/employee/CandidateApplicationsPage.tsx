@@ -46,6 +46,7 @@ export function CandidateApplicationsPage() {
                 key={job.id}
                 jobOfferId={job.id}
                 jobTitle={job.position}
+                deadline={job.deadline}
               />
             ))}
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Button, Grid, Stack, LoadingOverlay, Text } from '@mantine/core';
-import { IconChevronLeft, IconX, IconCalendarEvent, IconCheck } from '@tabler/icons-react';
+import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid } from '@mantine/core';
+import { IconChevronLeft, IconX } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
 import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
@@ -15,10 +15,9 @@ import { InterviewHistorySection } from '../../components/employee/candidate-det
 import { WorkExperienceSection } from '../../components/employee/candidate-details/WorkExperienceSection';
 import { EducationSection } from '../../components/employee/candidate-details/EducationSection';
 import { ApplicationsSection } from '../../components/employee/candidate-details/ApplicationsSection';
-import { CandidateProfileCard } from '../../components/employee/candidate-details/CandidateProfileCard';
-import { ApplicationWorkflowStepper } from '../../components/employee/candidate-details/ApplicationWorkflowStepper';
-import { DecisionBanner } from '../../components/employee/candidate-details/DecisionBanner';
-import { useInterviewScheduling } from '../../hooks/useInterviewScheduling';
+import { CandidateHeader } from '../../components/employee/candidate-details/CandidateHeader';
+import { CandidateLinks } from '../../components/employee/candidate-details/CandidateLinks';
+import { ScheduleInterviewModal } from '../../components/employee/interviews/ScheduleInterviewModal';
 
 export function CandidatesPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,67 +28,20 @@ export function CandidatesPage() {
     candidate_id: id,
     limit: 50
   });
-  const { data: interviews, isLoading: isLoadingInterviews } = useCandidateInterviewsQuery(id || '');
+  const { data: interviews, isLoading: isLoadingInterviews, refetch: refetchInterviews } = useCandidateInterviewsQuery(id || '');
   const { data: files } = useCandidateFilesQuery(id || '');
 
   const [rejectModalOpened, setRejectModalOpened] = useState(false);
   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
   const [selectedJobPosition, setSelectedJobPosition] = useState<string>('');
 
-  const { handleScheduleClick, modalOpened, closeModal, confirmSchedule } = useInterviewScheduling();
+  // Schedule Interview State
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [scheduleApplicationId, setScheduleApplicationId] = useState<string | undefined>(undefined);
 
   const resume = files?.find(f => f.file_type === FileType.RESUME);
 
   const updateStatusMutation = useUpdateApplicationStatusMutation();
-  const [hireModalOpened, setHireModalOpened] = useState(false);
-
-  // Logic to determine if decision is needed
-  const activeApplication = applications?.data.find(app => app.status === ApplicationStatus.IN_PROGRESS);
-
-  const relevantInterviews = interviews?.data.filter(interview =>
-    interview.applications.some(app => app.id === activeApplication?.id) &&
-    (interview.reviews && interview.reviews.length > 0)
-  ) || [];
-
-  const hasReviews = relevantInterviews.length > 0;
-
-  const averageScore = hasReviews
-    ? relevantInterviews.reduce((acc, interview) => {
-      const interviewAvg = interview.reviews?.reduce((sum, r) => sum + (r.score || 0), 0) || 0;
-      return acc + (interviewAvg / (interview.reviews?.length || 1));
-    }, 0) / relevantInterviews.length
-    : 0;
-
-  const handleHireClick = () => {
-    if (activeApplication) {
-      setSelectedApplicationId(activeApplication.id);
-      setSelectedJobPosition(activeApplication.job_offer.position);
-      setHireModalOpened(true);
-    }
-  };
-
-  const handleConfirmHire = async () => {
-    if (!selectedApplicationId) return;
-    try {
-      await updateStatusMutation.mutateAsync({
-        id: selectedApplicationId,
-        status: ApplicationStatus.HIRED
-      });
-      notifications.show({
-        title: 'Candidate Hired!',
-        message: 'The candidate has been successfully hired.',
-        color: 'green',
-      });
-      setHireModalOpened(false);
-      setSelectedApplicationId(null);
-    } catch (error) {
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to hire candidate.',
-        color: 'red',
-      });
-    }
-  };
 
   const handleDownloadResume = async () => {
     if (!resume) return;
@@ -130,6 +82,7 @@ export function CandidatesPage() {
         title: 'Application Rejected',
         message: 'The candidate has been disqualified from this position.',
         color: 'red',
+        icon: <IconX size={16} />
       });
       setRejectModalOpened(false);
       setSelectedApplicationId(null);
@@ -140,6 +93,11 @@ export function CandidatesPage() {
         color: 'red',
       });
     }
+  };
+
+  const handleScheduleInterview = (applicationId: string) => {
+    setScheduleApplicationId(applicationId);
+    setScheduleModalOpen(true);
   };
 
   const getStatusColor = (status: ApplicationStatus) => {
@@ -188,59 +146,40 @@ export function CandidatesPage() {
         Back to List
       </Button>
 
-      <Grid gutter="lg">
-        {/* Left Column: Profile Info */}
-        <Grid.Col span={{ base: 12, md: 4 }}>
-          <Stack gap="lg">
-            <CandidateProfileCard
-              candidate={candidate}
-              resume={resume}
-              onDownloadResume={handleDownloadResume}
-            />
+      <Stack gap="xl">
 
-            <EducationSection educations={candidate.educations || []} />
-          </Stack>
-        </Grid.Col>
+        {/* Section 1: Top Info (Header & Contact) */}
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
+          <CandidateHeader candidate={candidate} />
+          <CandidateLinks
+            candidate={candidate}
+            resume={resume}
+            onDownloadResume={handleDownloadResume}
+          />
+        </SimpleGrid>
 
-        {/* Right Column: Applications, Interviews & Experience */}
-        <Grid.Col span={{ base: 12, md: 8 }}>
-          <Stack gap="lg">
+        {/* Section 2: Applications */}
+        <ApplicationsSection
+          applications={applications?.data || []}
+          interviews={interviews?.data || []}
+          getStatusColor={getStatusColor}
+          onReject={handleRejectClick}
+          onSchedule={handleScheduleInterview}
+        />
 
+        {/* Section 3: Details */}
+        <Stack gap="lg">
+          <EducationSection educations={candidate.educations || []} />
 
+          <WorkExperienceSection experiences={candidate.work_experiences || []} />
 
-            {/* Stepper for Active or Most Recent Application */}
-            {(activeApplication || applications?.data?.[0]) && (
-              <ApplicationWorkflowStepper
-                status={activeApplication?.status || applications?.data?.[0]?.status || ApplicationStatus.APPLIED}
-              />
-            )}
+          <InterviewHistorySection
+            interviews={interviews?.data || []}
+            getStatusColor={getInterviewStatusColor}
+          />
+        </Stack>
 
-            {activeApplication && hasReviews && (
-              <DecisionBanner
-                score={Math.round(averageScore)}
-                onHire={handleHireClick}
-                onReject={() => handleRejectClick(activeApplication.id, activeApplication.job_offer.position)}
-                isLoading={updateStatusMutation.isPending}
-              />
-            )}
-
-            <ApplicationsSection
-              applications={applications?.data || []}
-              getStatusColor={getStatusColor}
-              onReject={handleRejectClick}
-              onSchedule={(appId) => handleScheduleClick(appId, id || '')}
-            />
-
-            <InterviewHistorySection
-              interviews={interviews?.data || []}
-              getStatusColor={getInterviewStatusColor}
-            />
-
-            <WorkExperienceSection experiences={candidate.work_experiences || []} />
-
-          </Stack>
-        </Grid.Col>
-      </Grid>
+      </Stack>
 
       {/* Confirmation Modals */}
       <ConfirmActionModal
@@ -260,39 +199,16 @@ export function CandidatesPage() {
         isLoading={updateStatusMutation.isPending}
       />
 
-      <ConfirmActionModal
-        opened={hireModalOpened}
-        onClose={() => setHireModalOpened(false)}
-        onConfirm={handleConfirmHire}
-        title="Hire Candidate"
-        message={
-          <Text>
-            Are you sure you want to hire this candidate for <strong>"{selectedJobPosition}"</strong>?
-            <br /><br />
-            This will mark the application as HIRED.
-          </Text>
-        }
-        confirmLabel="Hire Candidate"
-        confirmColor="green"
-        confirmIcon={<IconCheck size={16} />}
-        isLoading={updateStatusMutation.isPending}
-      />
-
-      <ConfirmActionModal
-        opened={modalOpened}
-        onClose={closeModal}
-        onConfirm={confirmSchedule}
-        title="Schedule Interview"
-        message={
-          <Text>
-            This candidate already has a future interview scheduled.
-            <br /><br />
-            Are you sure you want to schedule another interview?
-          </Text>
-        }
-        confirmLabel="Continue"
-        confirmColor="blue"
-        confirmIcon={<IconCalendarEvent size={16} />}
+      <ScheduleInterviewModal
+        opened={scheduleModalOpen}
+        onClose={() => {
+          setScheduleModalOpen(false);
+          setScheduleApplicationId(undefined);
+        }}
+        initialApplicationId={scheduleApplicationId}
+        onSuccess={() => {
+          refetchInterviews();
+        }}
       />
     </Container>
   );

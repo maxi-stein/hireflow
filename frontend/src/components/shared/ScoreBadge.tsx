@@ -1,4 +1,5 @@
-import { Badge, type MantineColor } from '@mantine/core';
+import { Badge } from '@mantine/core';
+import { getScoreColor } from '../../utils/score.utils';
 
 interface ScoreBadgeProps {
     score: number | undefined;
@@ -8,16 +9,10 @@ interface ScoreBadgeProps {
 export function ScoreBadge({ score, size = 'md' }: ScoreBadgeProps) {
     const s = score || 0;
 
-    const getColor = (): MantineColor => {
-        if (s >= 8) return 'green';
-        if (s >= 5) return 'yellow';
-        return 'red';
-    };
-
     return (
         <Badge
             size={size}
-            color={getColor()}
+            color={getScoreColor(s)}
             variant="light"
             style={{ fontWeight: 700 }}
         >

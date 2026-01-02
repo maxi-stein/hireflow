@@ -10,20 +10,18 @@ import {
   TextInput,
   Text,
   Title,
-  Select
+  Select,
+  Box
 } from '@mantine/core';
 import { useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../../hooks/api/useCandidateApplications';
+import { useAllCandidateApplicationsQuery } from '../../../hooks/api/useCandidateApplications';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
-import { IconEye, IconScale, IconX, IconCheck, IconDotsVertical, IconSearch, IconCalendarEvent } from '@tabler/icons-react';
+import { IconEye, IconScale, IconDotsVertical, IconSearch } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { notifications } from '@mantine/notifications';
-import { useInterviewScheduling } from '../../../hooks/useInterviewScheduling';
-import { ConfirmActionModal } from '../../common/ConfirmActionModal';
 import { CandidateAvatar } from '../../shared/CandidateAvatar';
 
-export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: string, jobTitle: string }) {
+export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOfferId: string, jobTitle: string, deadline?: string | null }) {
   const navigate = useNavigate();
 
   // Paginate the list of applications
@@ -36,35 +34,12 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
   // Filter state
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  // Update application status
-  const updateStatusMutation = useUpdateApplicationStatusMutation();
-
-  // Interview scheduling custom hook
-  const { handleScheduleClick, modalOpened, closeModal, confirmSchedule } = useInterviewScheduling();
-
   const { data: allApplications, isLoading } = useAllCandidateApplicationsQuery({
     page,
     limit: 5, // Show 5 per job posting to save space
     job_offer_id: jobOfferId,
     search: debouncedSearch,
   });
-
-  const handleStatusUpdate = async (id: string, status: ApplicationStatus) => {
-    try {
-      await updateStatusMutation.mutateAsync({ id, status });
-      notifications.show({
-        title: 'Success',
-        message: `Application status updated to ${status}`,
-        color: 'green',
-      });
-    } catch (error) {
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to update application status',
-        color: 'red',
-      });
-    }
-  };
 
   const getStatusColor = (status: ApplicationStatus) => {
     switch (status) {
@@ -132,15 +107,6 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
         {new Date(application.created_at).toLocaleDateString()}
       </Table.Td>
       <Table.Td>
-        {application.job_offer.deadline ? (
-          <Text size="sm">
-            {new Date(application.job_offer.deadline).toLocaleDateString()}
-          </Text>
-        ) : (
-          <Text size="xs" c="dimmed">No deadline</Text>
-        )}
-      </Table.Td>
-      <Table.Td>
         <Badge color={getStatusColor(application.status)} variant="light">
           {application.status}
         </Badge>
@@ -160,31 +126,13 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
                 leftSection={<IconEye size={14} />}
                 onClick={() => navigate(`/manage/candidates/${application.candidate.id}`)}
               >
-                View Details
+                Candidate Details
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconScale size={14} />}
                 onClick={() => navigate(`/manage/candidates/compare?jobOfferId=${jobOfferId}&candidateId=${application.candidate.id}`)}
               >
                 Compare
-              </Menu.Item>
-
-              <Menu.Divider />
-
-              <Menu.Label>Status</Menu.Label>
-              <Menu.Item
-                color="green"
-                leftSection={<IconCheck size={14} />}
-                onClick={() => handleScheduleClick(application.id, application.candidate.id)}
-              >
-                Schedule Interview
-              </Menu.Item>
-              <Menu.Item
-                color="red"
-                leftSection={<IconX size={14} />}
-                onClick={() => handleStatusUpdate(application.id, ApplicationStatus.REJECTED)}
-              >
-                Reject
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
@@ -198,7 +146,14 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
       <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
 
       <Group justify="space-between" mb="md">
-        <Title order={4}>{jobTitle}</Title>
+        <Box>
+          <Title order={4}>{jobTitle}</Title>
+          {deadline && (
+            <Text size="xs" c="red">
+              Deadline: {new Date(deadline).toLocaleDateString()}
+            </Text>
+          )}
+        </Box>
         <Group>
           <Select
             placeholder="Filter by status"
@@ -231,7 +186,6 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
             <Table.Tr>
               <Table.Th style={{ width: '30%' }}>Candidate</Table.Th>
               <Table.Th style={{ width: '20%' }}>Applied Date</Table.Th>
-              <Table.Th style={{ width: '20%' }}>Deadline</Table.Th>
               <Table.Th style={{ width: '15%' }}>Status</Table.Th>
               <Table.Th style={{ width: '15%', textAlign: 'right' }}>Actions</Table.Th>
             </Table.Tr>
@@ -261,22 +215,6 @@ export function JobApplicationsTable({ jobOfferId, jobTitle }: { jobOfferId: str
           />
         </Group>
       )}
-      <ConfirmActionModal
-        opened={modalOpened}
-        onClose={closeModal}
-        onConfirm={confirmSchedule}
-        title="Schedule Interview"
-        message={
-          <Text>
-            This candidate already has a future interview scheduled.
-            <br /><br />
-            Are you sure you want to schedule another interview?
-          </Text>
-        }
-        confirmLabel="Continue"
-        confirmColor="blue"
-        confirmIcon={<IconCalendarEvent size={16} />}
-      />
     </Paper>
   );
 }
