@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Paper, Title, Card, Group, Box, Text, Badge, Divider, Button, Alert, SimpleGrid, Pagination, Stack } from '@mantine/core';
-import { IconX, IconCalendarEvent, IconAlertCircle, IconClock, IconMessageCircle } from '@tabler/icons-react';
+import { IconX, IconCalendarEvent, IconAlertCircle, IconClock, IconMessageCircle, IconHistory } from '@tabler/icons-react';
 import { ApplicationStatus, type CandidateApplication } from '../../../services/candidate-application.service';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { getScoreColor } from '../../../utils/score.utils';
@@ -118,61 +118,74 @@ export function ApplicationsSection({
                     if (effectiveStatus === InterviewStatus.COMPLETED) {
                       const reviews = interview.reviews?.filter(r => r.candidate_application_id === app.id) || [];
 
-                      if (reviews.length > 0) {
-                        return reviews.map(review => (
-                          <Alert
-                            key={review.id}
-                            variant="light"
-                            color="gray"
-                            p="xs"
-                          >
-                            <SimpleGrid cols={2}>
-                              <Group align="flex-start" wrap="nowrap">
-                                <IconMessageCircle size={18} style={{ marginTop: 2 }} />
-                                <Box>
-                                  <Text fw={600} size="sm" lh={1.2}>Interview Review</Text>
-                                  <Group gap={6} mt={4}>
-                                    <Text size="xs" c="dimmed">Score:</Text>
-                                    <Badge color={getScoreColor(review.score)} variant="filled" size="xs">
-                                      {review.score ? `${review.score}/10` : 'N/A'}
-                                    </Badge>
-                                  </Group>
-                                </Box>
-                              </Group>
-                              <Box>
-                                {review.strengths && review.strengths.length > 0 && (
-                                  <Group gap={4} mb={4}>
-                                    <Text size="xs" fw={700} c="green" style={{ width: 70 }}>Strengths:</Text>
-                                    <Group gap={4} style={{ flex: 1 }}>
-                                      {review.strengths.slice(0, 3).map(s => <Badge key={s} size="xs" variant="outline" color="green" radius="sm">{s}</Badge>)}
+                      return (
+                        <Box key={interview.id}>
+                          <Group gap="xs" mb="xs">
+                            <IconHistory size={14} style={{ opacity: 0.7 }} />
+                            <Text size="xs" fw={700} c="dimmed" tt="uppercase">
+                              Interview - {new Date(interview.scheduled_time).toLocaleDateString()}
+                            </Text>
+                          </Group>
+
+                          {reviews.length > 0 ? (
+                            <Stack gap="xs">
+                              {reviews.map(review => (
+                                <Alert
+                                  key={review.id}
+                                  variant="light"
+                                  color="gray"
+                                  p="xs"
+                                >
+                                  <SimpleGrid cols={2}>
+                                    <Group align="flex-start" wrap="nowrap">
+                                      <IconMessageCircle size={18} style={{ marginTop: 2 }} />
+                                      <Box>
+                                        <Text fw={600} size="sm" lh={1.2}>Interview Review</Text>
+                                        <Text size="xs" c="dimmed" mb={4}>
+                                          By: {review.employee?.user?.first_name} {review.employee?.user?.last_name}
+                                        </Text>
+                                        <Group gap={6}>
+                                          <Text size="xs" c="dimmed">Score:</Text>
+                                          <Badge color={getScoreColor(review.score)} variant="filled" size="xs">
+                                            {review.score ? `${review.score}/10` : 'N/A'}
+                                          </Badge>
+                                        </Group>
+                                      </Box>
                                     </Group>
-                                  </Group>
-                                )}
-                                {review.weaknesses && review.weaknesses.length > 0 && (
-                                  <Group gap={4}>
-                                    <Text size="xs" fw={700} c="red" style={{ width: 70 }}>Weaknesses:</Text>
-                                    <Group gap={4} style={{ flex: 1 }}>
-                                      {review.weaknesses.slice(0, 3).map(w => <Badge key={w} size="xs" variant="outline" color="red" radius="sm">{w}</Badge>)}
-                                    </Group>
-                                  </Group>
-                                )}
-                              </Box>
-                            </SimpleGrid>
-                          </Alert>
-                        ));
-                      } else {
-                        return (
-                          <Alert
-                            key={interview.id}
-                            variant="light"
-                            color="orange"
-                            title="Review Pending"
-                            icon={<IconClock size={16} />}
-                          >
-                            <Text size="sm">Interview completed. Waiting for feedback.</Text>
-                          </Alert>
-                        );
-                      }
+                                    <Box>
+                                      {review.strengths && review.strengths.length > 0 && (
+                                        <Group gap={4} mb={4}>
+                                          <Text size="xs" fw={700} c="green" style={{ width: 70 }}>Strengths:</Text>
+                                          <Group gap={4} style={{ flex: 1 }}>
+                                            {review.strengths.slice(0, 3).map(s => <Badge key={s} size="xs" variant="outline" color="green" radius="sm">{s}</Badge>)}
+                                          </Group>
+                                        </Group>
+                                      )}
+                                      {review.weaknesses && review.weaknesses.length > 0 && (
+                                        <Group gap={4}>
+                                          <Text size="xs" fw={700} c="red" style={{ width: 70 }}>Weaknesses:</Text>
+                                          <Group gap={4} style={{ flex: 1 }}>
+                                            {review.weaknesses.slice(0, 3).map(w => <Badge key={w} size="xs" variant="outline" color="red" radius="sm">{w}</Badge>)}
+                                          </Group>
+                                        </Group>
+                                      )}
+                                    </Box>
+                                  </SimpleGrid>
+                                </Alert>
+                              ))}
+                            </Stack>
+                          ) : (
+                            <Alert
+                              variant="light"
+                              color="orange"
+                              title="Review Pending"
+                              icon={<IconClock size={16} />}
+                            >
+                              <Text size="sm">Interview completed. Waiting for feedback.</Text>
+                            </Alert>
+                          )}
+                        </Box>
+                      );
                     }
 
                     return null;
