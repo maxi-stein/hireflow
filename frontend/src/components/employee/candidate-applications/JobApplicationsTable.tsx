@@ -14,6 +14,7 @@ import {
   Box
 } from '@mantine/core';
 import { useState } from 'react';
+import { getApplicationStatusColor } from '../../../utils/application.utils';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useAllCandidateApplicationsQuery } from '../../../hooks/api/useCandidateApplications';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
@@ -41,20 +42,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
     search: debouncedSearch,
   });
 
-  const getStatusColor = (status: ApplicationStatus) => {
-    switch (status) {
-      case ApplicationStatus.HIRED:
-        return 'green';
-      case ApplicationStatus.REJECTED:
-        return 'red';
-      case ApplicationStatus.APPLIED:
-        return 'gray';
-      case ApplicationStatus.IN_PROGRESS:
-        return 'blue';
-      default:
-        return 'gray';
-    }
-  };
+
 
   if (!isLoading && (!allApplications || allApplications.data.length === 0) && !search && !debouncedSearch) {
     return null; // Don't show table if no applications and no search active
@@ -107,7 +95,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
         {new Date(application.created_at).toLocaleDateString()}
       </Table.Td>
       <Table.Td>
-        <Badge color={getStatusColor(application.status)} variant="light">
+        <Badge color={getApplicationStatusColor(application.status)} variant="light">
           {application.status}
         </Badge>
       </Table.Td>

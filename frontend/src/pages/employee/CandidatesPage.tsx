@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getApplicationStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid } from '@mantine/core';
 import { IconChevronLeft, IconX } from '@tabler/icons-react';
@@ -100,16 +101,6 @@ export function CandidatesPage() {
     setScheduleModalOpen(true);
   };
 
-  const getStatusColor = (status: ApplicationStatus) => {
-    switch (status) {
-      case ApplicationStatus.HIRED: return 'green';
-      case ApplicationStatus.REJECTED: return 'red';
-      case ApplicationStatus.APPLIED: return 'gray';
-      case ApplicationStatus.IN_PROGRESS: return 'blue';
-      default: return 'gray';
-    }
-  };
-
   const getInterviewStatusColor = (status: InterviewStatus) => {
     switch (status) {
       case InterviewStatus.COMPLETED: return 'green';
@@ -162,7 +153,7 @@ export function CandidatesPage() {
         <ApplicationsSection
           applications={applications?.data || []}
           interviews={interviews?.data || []}
-          getStatusColor={getStatusColor}
+          getStatusColor={getApplicationStatusColor}
           onReject={handleRejectClick}
           onSchedule={handleScheduleInterview}
         />
