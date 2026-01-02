@@ -1,7 +1,7 @@
-import { Modal, Title, Stack, Text, Group, Badge, Button, LoadingOverlay, Alert } from '@mantine/core';
-import { IconEdit, IconAlertCircle } from '@tabler/icons-react';
-import { JobOfferStatus } from '../../../services/job-offer.service';
+import { Modal, Title, Stack, Text, Group, Button, LoadingOverlay, Alert } from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { useJobOfferQuery } from '../../../hooks/api/useJobOffers';
+import { JobOfferCard } from '../../jobs/JobOfferCard';
 
 interface ViewJobOfferModalProps {
   opened: boolean;
@@ -42,88 +42,18 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferM
       )}
 
       {jobOffer && (
-        <Stack gap="md">
-          <div>
-            <Text size="sm" c="dimmed" fw={500}>Position</Text>
-            <Text size="lg" fw={600}>{jobOffer.position}</Text>
-          </div>
-
-          <Group grow>
-            <div>
-              <Text size="sm" c="dimmed" fw={500}>Location</Text>
-              <Text>{jobOffer.location}</Text>
-            </div>
-            <div>
-              <Text size="sm" c="dimmed" fw={500}>Work Mode</Text>
-              <Badge variant="light" color="gray">{jobOffer.work_mode}</Badge>
-            </div>
-          </Group>
-
-          <Group grow>
-            <div>
-              <Text size="sm" c="dimmed" fw={500}>Status</Text>
-              <Badge
-                color={jobOffer.status === JobOfferStatus.OPEN ? 'green' : 'red'}
-                variant="light"
-              >
-                {jobOffer.status}
-              </Badge>
-            </div>
-            <div>
-              <Text size="sm" c="dimmed" fw={500}>Applicants</Text>
-              <Text>{jobOffer.applicants_count}</Text>
-            </div>
-          </Group>
-
-          <div>
-            <Text size="sm" c="dimmed" fw={500}>Description</Text>
-            <Text style={{ whiteSpace: 'pre-wrap' }}>{jobOffer.description}</Text>
-          </div>
-
-          {jobOffer.salary && (
-            <div>
-              <Text size="sm" c="dimmed" fw={500}>Salary</Text>
-              <Text>{jobOffer.salary}</Text>
-            </div>
-          )}
-
-          {jobOffer.benefits && (
-            <div>
-              <Text size="sm" c="dimmed" fw={500}>Benefits</Text>
-              <Text style={{ whiteSpace: 'pre-wrap' }}>{jobOffer.benefits}</Text>
-            </div>
-          )}
-
-          {jobOffer.skills.length > 0 && (
-            <div>
-              <Text size="sm" c="dimmed" fw={500} mb="xs">Required Skills</Text>
-              <Group gap="xs">
-                {jobOffer.skills.map((skill) => (
-                  <Badge key={skill.id} variant="light">{skill.skill_name}</Badge>
-                ))}
+        <Stack>
+          <JobOfferCard
+            job={jobOffer}
+            action={
+              <Group justify="flex-end" mt="md">
+                <Button variant="default" onClick={onClose}>
+                  Close
+                </Button>
               </Group>
-            </div>
-          )}
-
-          <Group justify="space-between" align="flex-end" mt="md">
-            <Group gap="xl">
-              <div>
-                <Text size="sm" c="dimmed" fw={500}>Posted Date</Text>
-                <Text>{new Date(jobOffer.created_at).toLocaleDateString()}</Text>
-              </div>
-
-              {jobOffer.deadline && (
-                <div>
-                  <Text size="sm" c="dimmed" fw={500}>Deadline</Text>
-                  <Text c="red.9" fw={500}>{new Date(jobOffer.deadline).toLocaleDateString()}</Text>
-                </div>
-              )}
-            </Group>
-
-            <Button variant="default" onClick={onClose}>
-              Close
-            </Button>
-          </Group>
+            }
+            showSensitiveData
+          />
         </Stack>
       )}
     </Modal>

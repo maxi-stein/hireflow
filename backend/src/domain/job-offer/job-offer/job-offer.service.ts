@@ -85,6 +85,7 @@ export class JobOfferService {
     }
 
     query.loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications'); // Count applicants for each job offer
+    query.leftJoinAndSelect('jobOffer.skills', 'skills');
 
     query.skip((page - 1) * limit).take(limit);
 
