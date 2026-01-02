@@ -53,6 +53,7 @@ export interface ApplicationFilters {
   start_date?: string;
   end_date?: string;
   search?: string;
+  exclude_status?: ApplicationStatus;
 }
 
 export const candidateApplicationService = {
@@ -67,6 +68,7 @@ export const candidateApplicationService = {
       if (filters.start_date) params.append('start_date', filters.start_date);
       if (filters.end_date) params.append('end_date', filters.end_date);
       if (filters.search) params.append('search', filters.search);
+      if (filters.exclude_status) params.append('exclude_status', filters.exclude_status);
     }
 
     const response = await apiClient.get<PaginatedResponse<CandidateApplication>>(`/candidate-applications?${params.toString()}`);

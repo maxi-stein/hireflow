@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { getApplicationStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid } from '@mantine/core';
-import { IconChevronLeft, IconX, IconCheck } from '@tabler/icons-react';
+import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
+import { IconChevronLeft, IconX, IconCheck, IconCircleCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
 import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
@@ -31,6 +31,9 @@ export function CandidatesPage() {
   });
   const { data: interviews, isLoading: isLoadingInterviews, refetch: refetchInterviews } = useCandidateInterviewsQuery(id || '');
   const { data: files } = useCandidateFilesQuery(id || '');
+
+  const hiredApplication = applications?.data.find(app => app.status === ApplicationStatus.HIRED);
+  const isHired = !!hiredApplication;
 
   const [rejectModalOpened, setRejectModalOpened] = useState(false);
   const [applicationToReject, setApplicationToReject] = useState<{ id: string; position: string } | null>(null);
@@ -173,7 +176,7 @@ export function CandidatesPage() {
 
         {/* Section 1: Top Info (Header & Contact) */}
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
-          <CandidateHeader candidate={candidate} />
+          <CandidateHeader candidate={candidate} isHired={isHired} />
           <CandidateLinks
             candidate={candidate}
             resume={resume}
@@ -181,15 +184,27 @@ export function CandidatesPage() {
           />
         </SimpleGrid>
 
-        {/* Section 2: Applications */}
-        <ApplicationsSection
-          applications={applications?.data || []}
-          interviews={interviews?.data || []}
-          getStatusColor={getApplicationStatusColor}
-          onReject={handleRejectClick}
-          onHire={handleHireClick}
-          onSchedule={handleScheduleInterview}
-        />
+        {/* Section 2: Applications or Hired Status */}
+        {isHired ? (
+          <Alert
+            variant="light"
+            color="green"
+            title="Candidate Hired"
+            icon={<IconCircleCheck size={18} />}
+          >
+            This candidate has been hired for the position of <strong>{hiredApplication.job_offer.position}</strong>.
+            All other applications and scheduling for this candidate are now closed.
+          </Alert>
+        ) : (
+          <ApplicationsSection
+            applications={applications?.data || []}
+            interviews={interviews?.data || []}
+            getStatusColor={getApplicationStatusColor}
+            onReject={handleRejectClick}
+            onHire={handleHireClick}
+            onSchedule={handleScheduleInterview}
+          />
+        )}
 
         {/* Section 3: Details */}
         <Stack gap="lg">

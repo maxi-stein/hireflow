@@ -40,6 +40,8 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
     limit: 5, // Show 5 per job posting to save space
     job_offer_id: jobOfferId,
     search: debouncedSearch,
+    status: statusFilter !== 'all' ? statusFilter as ApplicationStatus : undefined,
+    exclude_status: ApplicationStatus.HIRED,
   });
 
 
@@ -48,12 +50,8 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
     return null; // Don't show table if no applications and no search active
   }
 
-  // Filter and sort applications
+  // Sort applications
   const sortedApplications = allApplications?.data
-    .filter(app => {
-      if (statusFilter === 'all') return true;
-      return app.status === statusFilter;
-    })
     .sort((a, b) => {
       // Define status priority: IN_PROGRESS > APPLIED > HIRED > REJECTED
       const statusPriority: Record<ApplicationStatus, number> = {
@@ -149,7 +147,6 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
               { value: 'all', label: 'All Statuses' },
               { value: ApplicationStatus.APPLIED, label: 'Applied' },
               { value: ApplicationStatus.IN_PROGRESS, label: 'In Progress' },
-              { value: ApplicationStatus.HIRED, label: 'Hired' },
               { value: ApplicationStatus.REJECTED, label: 'Rejected' },
             ]}
             value={statusFilter}
@@ -164,7 +161,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
             value={search}
             onChange={(event) => setSearch(event.currentTarget.value)}
           />
-          <Badge variant="outline">{sortedApplications.length} Applications</Badge>
+          <Badge variant="outline">{allApplications?.pagination.total} Applications</Badge>
         </Group>
       </Group>
 

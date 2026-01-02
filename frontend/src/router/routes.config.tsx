@@ -26,6 +26,7 @@ import { CalendarPage } from '../pages/employee/CalendarPage';
 import { CandidatesPage } from '../pages/employee/CandidatesPage';
 
 import { ReviewsPage } from '../pages/employee/ReviewsPage';
+import { HiredCandidatesPage } from '../pages/employee/HiredCandidatesPage';
 
 // Route configuration type
 export interface RouteConfig {
@@ -174,6 +175,15 @@ export const ROUTES = {
           path: '/manage/candidates/compare',
           element: <CompareCandidatesPage />,
           label: 'Compare Candidates',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+          section: 'candidates',
+        },
+        {
+          path: '/manage/candidates/hired',
+          element: <HiredCandidatesPage />,
+          label: 'Hired Candidates',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
