@@ -19,6 +19,7 @@ import { InterviewModule } from '../domain/interviews/interview.module';
 import { InterviewReviewModule } from '../domain/interview-review/interview-review.module';
 import { JobOfferModule } from '../domain/job-offer/job-offer/job-offer.module';
 import { UserFileModule } from '../domain/users/user-file/user-file.module';
+import { DashboardModule } from 'src/domain/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { UserFileModule } from '../domain/users/user-file/user-file.module';
     CandidateApplicationModule,
     InterviewModule,
     InterviewReviewModule,
+    DashboardModule,
     DatabaseModule,
     AuthModule,
   ],
