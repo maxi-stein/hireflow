@@ -22,7 +22,7 @@ import { JobPostingsPage } from '../pages/employee/JobPostingsPage';
 import { CreateJobPage } from '../pages/employee/CreateJobPage';
 import { CandidateApplicationsPage } from '../pages/employee/CandidateApplicationsPage';
 import { CompareCandidatesPage } from '../pages/employee/CompareCandidatesPage';
-import { InterviewsPage } from '../pages/employee/InterviewsPage';
+import { CalendarPage } from '../pages/employee/CalendarPage';
 import { CandidatesPage } from '../pages/employee/CandidatesPage';
 
 import { ReviewsPage } from '../pages/employee/ReviewsPage';
@@ -202,7 +202,7 @@ export const ROUTES = {
       children: [
         {
           path: '/manage/interviews',
-          element: <InterviewsPage />,
+          element: <CalendarPage />,
           label: 'Calendar',
           showInNav: true,
           requiresAuth: true,

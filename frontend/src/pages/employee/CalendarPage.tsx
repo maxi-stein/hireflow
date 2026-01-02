@@ -16,7 +16,7 @@ import type { JobOffer } from '../../services/job-offer.service';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export function InterviewsPage() {
+export function CalendarPage() {
   // Get color scheme
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
@@ -134,11 +134,11 @@ export function InterviewsPage() {
 
       <Paper withBorder p="md" radius="md" mb="xl">
         {/* Calendar Header */}
-        <Group justify="center" mb="md" miw="225px">
+        <Group justify="center" mb="md" w={220} mx="auto" wrap="nowrap">
           <ActionIcon variant="subtle" onClick={handlePrevMonth}>
             <IconChevronLeft size={20} />
           </ActionIcon>
-          <Title order={4}>
+          <Title order={4} style={{ flex: 1, textAlign: 'center', whiteSpace: 'nowrap' }}>
             {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
           </Title>
           <ActionIcon variant="subtle" onClick={handleNextMonth}>
