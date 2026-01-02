@@ -25,4 +25,8 @@ export class FilterApplicationsDto extends PaginationDto {
 
   @IsOptional()
   search?: string;
+
+  @IsOptional()
+  @IsEnum(ApplicationStatus)
+  exclude_status?: ApplicationStatus;
 }

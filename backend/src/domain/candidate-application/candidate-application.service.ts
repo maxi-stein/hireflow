@@ -138,6 +138,7 @@ export class CandidateApplicationService {
       candidate_id,
       job_offer_id,
       search,
+      exclude_status,
       page = 1,
       limit = 10,
     } = filterDto;
@@ -164,6 +165,10 @@ export class CandidateApplicationService {
 
     if (status) {
       query.andWhere('application.status = :status', { status });
+    }
+
+    if (exclude_status) {
+      query.andWhere('application.status != :exclude_status', { exclude_status });
     }
 
     if (start_date) {
