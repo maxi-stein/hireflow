@@ -13,15 +13,17 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
+  // Root redirect
+  {
+    path: "/",
+    element: <Navigate to="/manage/dashboard" replace />,
+  },
+
   // Public routes with DynamicLayout (shows MainLayout if logged in, PublicLayout if not)
   {
     element: <DynamicLayout />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: ROUTES.PUBLIC.HOME.path,
-        element: ROUTES.PUBLIC.HOME.element,
-      },
       {
         path: ROUTES.PUBLIC.JOBS.path,
         element: ROUTES.PUBLIC.JOBS.element,
@@ -55,6 +57,10 @@ export const router = createBrowserRouter([
                 path: ROUTES.CANDIDATE.APPLICATIONS.path,
                 element: ROUTES.CANDIDATE.APPLICATIONS.element,
               },
+              {
+                path: ROUTES.CANDIDATE.JOB_APPLY.path,
+                element: ROUTES.CANDIDATE.JOB_APPLY.element,
+              },
             ],
           },
 
@@ -65,6 +71,10 @@ export const router = createBrowserRouter([
               {
                 path: ROUTES.EMPLOYEE.DASHBOARD.path,
                 element: ROUTES.EMPLOYEE.DASHBOARD.element,
+              },
+              {
+                path: ROUTES.EMPLOYEE.REGISTER_EMPLOYEE.path,
+                element: ROUTES.EMPLOYEE.REGISTER_EMPLOYEE.element,
               },
               // Job Postings Group
               ...(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children || []).map(route => ({
@@ -93,6 +103,6 @@ export const router = createBrowserRouter([
   // Catch-all redirect
   {
     path: "*",
-    element: <Navigate to={ROUTES.PUBLIC.HOME.path} replace />,
+    element: <Navigate to="/manage/dashboard" replace />,
   },
 ]);

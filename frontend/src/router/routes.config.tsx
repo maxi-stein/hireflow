@@ -8,11 +8,13 @@ import {
   IconUsers,
   IconCalendar,
   IconClipboardCheck,
+  IconUserPlus,
 } from '@tabler/icons-react';
 import { LandingPage } from '../pages/LandingPage';
 import { LoginPage } from '../pages/LoginPage';
 import { JobListPage } from '../pages/jobs/JobListPage';
 import { JobDetailPage } from '../pages/jobs/JobDetailPage';
+import { JobApplicationPage } from '../pages/jobs/JobApplicationPage';
 import { ProfilePage } from '../pages/profile/ProfilePage';
 import { ApplicationsPage } from '../pages/candidate/ApplicationsPage';
 import { EmployeeDashboard } from '../pages/employee/EmployeeDashboard';
@@ -25,6 +27,7 @@ import { CandidatesPage } from '../pages/employee/CandidatesPage';
 
 import { ReviewsPage } from '../pages/employee/ReviewsPage';
 import { HiredCandidatesPage } from '../pages/employee/HiredCandidatesPage';
+import { CreateEmployeePage } from '../pages/employee/CreateEmployeePage';
 
 // Route configuration type
 export interface RouteConfig {
@@ -88,6 +91,13 @@ export const ROUTES = {
       label: 'My Applications',
       icon: <IconFileText size={20} />,
       showInNav: true,
+      requiresAuth: true,
+      allowedRoles: ['candidate'],
+    },
+    JOB_APPLY: {
+      path: '/jobs/:id/apply',
+      element: <JobApplicationPage />,
+      showInNav: false,
       requiresAuth: true,
       allowedRoles: ['candidate'],
     },
@@ -221,6 +231,15 @@ export const ROUTES = {
       ],
     },
 
+    REGISTER_EMPLOYEE: {
+      path: '/manage/users/create',
+      element: <CreateEmployeePage />,
+      label: 'Register Employees',
+      icon: <IconUserPlus size={20} />,
+      showInNav: true,
+      requiresAuth: true,
+      allowedRoles: ['employee'],
+    },
   },
 } as const;
 
