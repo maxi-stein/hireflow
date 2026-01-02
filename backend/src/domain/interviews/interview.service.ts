@@ -29,7 +29,7 @@ export class InterviewService {
     private readonly employeeService: EmployeesService,
     @Inject(CandidateApplicationService)
     private readonly candidateApplicationService: CandidateApplicationService,
-  ) {}
+  ) { }
 
   async create(createDto: CreateInterviewDto): Promise<Interview> {
     //If type === individual, then validate if the application_ids array's length is 1
@@ -324,6 +324,8 @@ export class InterviewService {
       .innerJoinAndSelect('interview.interviewers', 'interviewer')
       .innerJoinAndSelect('interviewer.user', 'user')
       .leftJoinAndSelect('interview.reviews', 'review')
+      .leftJoinAndSelect('review.employee', 'review_employee')
+      .leftJoinAndSelect('review_employee.user', 'review_user')
       .where('candidate.id = :candidateId', { candidateId })
       .orderBy('interview.scheduled_time', 'DESC')
       .skip(skip)

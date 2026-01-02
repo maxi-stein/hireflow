@@ -32,7 +32,7 @@ export class InterviewReviewService {
     private readonly interviewService: InterviewService,
     @Inject(CandidateApplicationService)
     private readonly applicationService: CandidateApplicationService,
-  ) {}
+  ) { }
 
   async create(createDto: CreateInterviewReviewDto): Promise<InterviewReview> {
     const { employee_id: employeeId } = createDto;
@@ -212,21 +212,21 @@ export class InterviewReviewService {
     const { page = 1, limit = 10 } = paginationDto;
     const skip = (page - 1) * limit;
 
-    const [data, total] = await this.reviewRepository.findAndCount({
-      where: { employee_id: employeeId },
-      relations: [
-        'interview',
-        'candidate_application',
-        'candidate_application.candidate',
-        'candidate_application.candidate.user',
-        'candidate_application.job_offer',
-        'employee',
-        'employee.user',
-      ],
-      order: { created_at: 'DESC' },
-      skip,
-      take: limit,
-    });
+    const [data, total] = await this.reviewRepository
+      .createQueryBuilder('review')
+      .innerJoinAndSelect('review.interview', 'interview')
+      .innerJoinAndSelect('interview.interviewers', 'interviewer')
+      .innerJoinAndSelect('review.candidate_application', 'candidate_application')
+      .innerJoinAndSelect('candidate_application.candidate', 'candidate')
+      .innerJoinAndSelect('candidate.user', 'candidate_user')
+      .innerJoinAndSelect('candidate_application.job_offer', 'job_offer')
+      .innerJoinAndSelect('review.employee', 'employee')
+      .innerJoinAndSelect('employee.user', 'employee_user')
+      .where('interviewer.id = :employeeId', { employeeId })
+      .orderBy('review.created_at', 'DESC')
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
 
     return {
       data,
