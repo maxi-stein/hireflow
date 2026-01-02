@@ -1,6 +1,5 @@
 export interface JwtUser {
-  id: string;
-  entity_id?: string;
+  id: string; // This is the entity_id (employee_id or candidate_id) from backend
   type: "employee" | "candidate";
   employee_roles?: string[];
   email: string;

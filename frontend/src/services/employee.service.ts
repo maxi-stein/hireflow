@@ -4,6 +4,7 @@ import type { PaginatedResponse } from '../types/common';
 export interface Employee {
   id: string;
   user: {
+    id: string;
     first_name: string;
     last_name: string;
     email: string;
