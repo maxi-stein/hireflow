@@ -46,10 +46,6 @@ export const router = createBrowserRouter([
             path: ROUTES.COMMON.PROFILE.path,
             element: ROUTES.COMMON.PROFILE.element,
           },
-          {
-            path: ROUTES.COMMON.SETTINGS.path,
-            element: ROUTES.COMMON.SETTINGS.element,
-          },
 
           // Candidate-only routes
           {

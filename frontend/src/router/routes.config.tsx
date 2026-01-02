@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import {
   IconBriefcase,
   IconUser,
-  IconSettings,
   IconFileText,
   IconChartBar,
   IconFileDescription,
@@ -15,7 +14,6 @@ import { LoginPage } from '../pages/LoginPage';
 import { JobListPage } from '../pages/jobs/JobListPage';
 import { JobDetailPage } from '../pages/jobs/JobDetailPage';
 import { ProfilePage } from '../pages/profile/ProfilePage';
-import { SettingsPage } from '../pages/settings/SettingsPage';
 import { ApplicationsPage } from '../pages/candidate/ApplicationsPage';
 import { EmployeeDashboard } from '../pages/employee/EmployeeDashboard';
 import { JobPostingsPage } from '../pages/employee/JobPostingsPage';
@@ -79,16 +77,7 @@ export const ROUTES = {
       showInNav: true,
       requiresAuth: true,
       allowedRoles: ['candidate', 'employee'],
-    },
-    SETTINGS: {
-      path: '/settings',
-      element: <SettingsPage />,
-      label: 'Settings',
-      icon: <IconSettings size={20} />,
-      showInNav: true,
-      requiresAuth: true,
-      allowedRoles: ['candidate', 'employee'],
-    },
+    }
   },
 
   // Candidate-only routes
