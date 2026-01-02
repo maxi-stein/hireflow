@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Paper, Group, Text, Button, Stack, Textarea, NumberInput, TagsInput, LoadingOverlay, Grid, Divider, Box, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { IconCalendarEvent, IconDeviceFloppy } from '@tabler/icons-react';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useInterviewQuery } from '../../../hooks/api/useInterviews';
 import { useInterviewReviewsQuery, useCreateReviewMutation, useUpdateReviewMutation } from '../../../hooks/api/useInterviewReviews';
 
@@ -112,21 +112,9 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
 
   return (
     <Box>
-      <Group justify="space-between" mb="lg">
-        <Title order={3}>
-          {isEditMode ? 'Edit Review' : 'Create Review'}
-        </Title>
-        <Group>
-          <Button
-            variant="light"
-            size="xs"
-            leftSection={<IconCalendarEvent size={16} />}
-            onClick={() => setIsScheduleModalOpen(true)}
-          >
-            Schedule Next
-          </Button>
-        </Group>
-      </Group>
+      <Title order={3}>
+        {isEditMode ? 'Edit Review' : 'Create Review'}
+      </Title>
 
       <Grid gutter="lg">
         <Grid.Col span={{ base: 12, md: 4 }}>

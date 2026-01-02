@@ -12,9 +12,11 @@ import {
 } from '@mantine/core';
 import { IconX, IconCalendarEvent, IconDownload } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../../hooks/api/useCandidates';
+import { useCandidateInterviewsQuery } from '../../../hooks/api/useInterviews';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
 import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
 
 interface CandidateComparisonCardProps {
     application: CandidateApplication;
@@ -29,7 +31,14 @@ export function CandidateComparisonCard({
     onScheduleInterview,
     getStatusColor
 }: CandidateComparisonCardProps) {
-    const { data: candidateProfile, isLoading } = useCandidateQuery(application.candidate.id);
+    const { data: candidateProfile, isLoading: isLoadingProfile } = useCandidateQuery(application.candidate.id);
+    const { data: interviewsData, isLoading: isLoadingInterviews } = useCandidateInterviewsQuery(application.candidate.id);
+
+    const interviews = interviewsData?.data?.filter(i =>
+        i.applications.some(app => app.id === application.id)
+    ).sort((a, b) => new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime()) || [];
+
+    const isLoading = isLoadingProfile || isLoadingInterviews;
 
     return (
         <Card shadow="sm" padding="lg" radius="md" withBorder style={{ position: 'relative' }}>
@@ -59,11 +68,17 @@ export function CandidateComparisonCard({
                     {application.status}
                 </Badge>
 
+                {/* Interviews & Reviews Display */}
+                <CandidateInterviewsDisplay
+                    interviews={interviews}
+                    applicationId={application.id}
+                />
+
                 {/* Candidate Details Accordion */}
                 <Accordion
                     variant="separated"
                     multiple
-                    defaultValue={['experience', 'education', 'skills', 'info']}
+                    defaultValue={['skills']}
                 >
                     {/* Skill Answers - Most Important */}
                     {application.skill_answers && application.skill_answers.length > 0 && (
