@@ -8,7 +8,7 @@ import { getApplicationStatusColor } from '../../utils/application.utils';
 export function HiredCandidatesPage() {
   const navigate = useNavigate();
   const { data: hiredApplications, isLoading } = useAllCandidateApplicationsQuery({
-    status: ApplicationStatus.HIRED,
+    status: [ApplicationStatus.HIRED],
     limit: 100 // Fetch enough hired candidates
   });
 

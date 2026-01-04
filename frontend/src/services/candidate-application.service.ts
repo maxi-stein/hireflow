@@ -47,7 +47,7 @@ export interface CandidateApplication {
 export interface ApplicationFilters {
   page?: number;
   limit?: number;
-  status?: ApplicationStatus;
+  status?: ApplicationStatus[];
   job_offer_id?: string;
   candidate_id?: string;
   start_date?: string;
@@ -57,12 +57,14 @@ export interface ApplicationFilters {
 }
 
 export const candidateApplicationService = {
-  getAll: async (filters?: ApplicationFilters): Promise<PaginatedResponse<CandidateApplication>> => {
+  getAll: async (
+    filters?: ApplicationFilters,
+  ): Promise<PaginatedResponse<CandidateApplication>> => {
     const params = new URLSearchParams();
     if (filters) {
       if (filters.page) params.append('page', filters.page.toString());
       if (filters.limit) params.append('limit', filters.limit.toString());
-      if (filters.status) params.append('status', filters.status);
+      if (filters.status) params.append('status', filters.status.join(','));
       if (filters.job_offer_id) params.append('job_offer_id', filters.job_offer_id);
       if (filters.candidate_id) params.append('candidate_id', filters.candidate_id);
       if (filters.start_date) params.append('start_date', filters.start_date);
@@ -71,7 +73,9 @@ export const candidateApplicationService = {
       if (filters.exclude_status) params.append('exclude_status', filters.exclude_status);
     }
 
-    const response = await apiClient.get<PaginatedResponse<CandidateApplication>>(`/candidate-applications?${params.toString()}`);
+    const response = await apiClient.get<PaginatedResponse<CandidateApplication>>(
+      `/candidate-applications?${params.toString()}`,
+    );
     return response.data;
   },
 
@@ -81,7 +85,9 @@ export const candidateApplicationService = {
   },
 
   updateStatus: async (id: string, status: ApplicationStatus): Promise<CandidateApplication> => {
-    const response = await apiClient.patch<CandidateApplication>(`/candidate-applications/${id}`, { status });
+    const response = await apiClient.patch<CandidateApplication>(`/candidate-applications/${id}`, {
+      status,
+    });
     return response.data;
   },
 
