@@ -6,6 +6,7 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   Unique,
   ManyToMany,
   OneToMany,
@@ -41,6 +42,9 @@ export class CandidateApplication {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updated_at: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deleted_at: Date | null;
 
   @ManyToOne(() => JobOffer, (jobOffer) => jobOffer.applications)
   @JoinColumn({ name: 'job_offer_id' })

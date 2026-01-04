@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialMigration1766759833367 implements MigrationInterface {
-    name = 'InitialMigration1766759833367'
+export class InitialMigration1767548772912 implements MigrationInterface {
+    name = 'InitialMigration1767548772912'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."educations_degree_type_enum" AS ENUM('Licenciatura', 'Maestría', 'Doctorado', 'Técnico Superior', 'Diploma', 'Certificación', 'Otro')`);
@@ -17,7 +17,7 @@ export class InitialMigration1766759833367 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "job_offer_skills" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "skill_name" character varying(100) NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, CONSTRAINT "UQ_6f1e7fee2dd62f4cf0079de8adf" UNIQUE ("skill_name"), CONSTRAINT "PK_a20236946968bdcb25c71a5f845" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "candidate_skill_answers" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "candidate_application_id" uuid NOT NULL, "job_offer_skill_id" uuid NOT NULL, "years_of_experience" integer NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_89c9d1c7267842102517def1b88" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."candidate_applications_status_enum" AS ENUM('APPLIED', 'IN_PROGRESS', 'REJECTED', 'HIRED')`);
-        await queryRunner.query(`CREATE TABLE "candidate_applications" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "job_offer_id" uuid NOT NULL, "candidate_id" uuid NOT NULL, "status" "public"."candidate_applications_status_enum" NOT NULL DEFAULT 'IN_PROGRESS', "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e4b31ec51c8cd938b97fd653e20" UNIQUE ("job_offer_id", "candidate_id"), CONSTRAINT "PK_28ab47cd1defe47ecf047c7c1a6" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "candidate_applications" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "job_offer_id" uuid NOT NULL, "candidate_id" uuid NOT NULL, "status" "public"."candidate_applications_status_enum" NOT NULL DEFAULT 'IN_PROGRESS', "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, CONSTRAINT "UQ_e4b31ec51c8cd938b97fd653e20" UNIQUE ("job_offer_id", "candidate_id"), CONSTRAINT "PK_28ab47cd1defe47ecf047c7c1a6" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "work_experiences" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "candidate_id" uuid NOT NULL, "company_name" character varying(200) NOT NULL, "position" character varying(100) NOT NULL, "start_date" date NOT NULL, "end_date" date, "description" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_3189db15aaccc2861851ea3da17" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."user_files_file_type_enum" AS ENUM('profile_picture', 'cv')`);
         await queryRunner.query(`CREATE TABLE "user_files" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "file_name" character varying(256) NOT NULL, "stored_name" character varying(256) NOT NULL, "file_path" character varying(512) NOT NULL, "mime_type" character varying(64) NOT NULL, "size" integer NOT NULL, "file_type" "public"."user_files_file_type_enum" NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "candidate_id" uuid, CONSTRAINT "PK_a62f81d2afadf20a024e11b43bd" PRIMARY KEY ("id"))`);

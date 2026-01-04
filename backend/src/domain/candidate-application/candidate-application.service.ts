@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository, Not } from 'typeorm';
 import { CreateCandidateApplicationDto } from './dto/create-candidate-application.dto';
 import { UpdateCandidateApplicationDto } from './dto/update-candidate-application';
 import { PaginatedResponse } from '../../shared/dto/pagination/pagination.dto';
@@ -231,9 +231,55 @@ export class CandidateApplicationService {
     id: string,
     updateDto: UpdateCandidateApplicationDto,
   ): Promise<CandidateApplication> {
+    if (updateDto.status === ApplicationStatus.HIRED) {
+      throw new BadRequestException(
+        'Cannot manually set status to HIRED. Use the hire endpoint instead.',
+      );
+    }
+
     const application = await this.findOne(id);
     const updated = this.applicationRepository.merge(application, updateDto);
     return await this.applicationRepository.save(updated);
+  }
+
+  async hire(id: string): Promise<void> {
+    await this.applicationRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        const application = await transactionalEntityManager.findOne(
+          CandidateApplication,
+          {
+            where: { id },
+          },
+        );
+
+        if (!application) {
+          throw new NotFoundException(`Application with ID ${id} not found`);
+        }
+
+        if (application.status === ApplicationStatus.HIRED) {
+          return;
+        }
+
+        // Update status to HIRED
+        application.status = ApplicationStatus.HIRED;
+        await transactionalEntityManager.save(application);
+
+        // Soft delete other applications for this candidate
+        const otherApplications = await transactionalEntityManager.find(
+          CandidateApplication,
+          {
+            where: {
+              candidate_id: application.candidate_id,
+              id: Not(id),
+            },
+          },
+        );
+
+        if (otherApplications.length > 0) {
+          await transactionalEntityManager.softRemove(otherApplications);
+        }
+      },
+    );
   }
 
   async updateTimestamp(id: string): Promise<void> {
