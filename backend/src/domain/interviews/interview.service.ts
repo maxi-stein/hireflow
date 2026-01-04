@@ -29,7 +29,7 @@ export class InterviewService {
     private readonly employeeService: EmployeesService,
     @Inject(CandidateApplicationService)
     private readonly candidateApplicationService: CandidateApplicationService,
-  ) { }
+  ) {}
 
   async create(createDto: CreateInterviewDto): Promise<Interview> {
     //If type === individual, then validate if the application_ids array's length is 1
@@ -134,8 +134,8 @@ export class InterviewService {
       .leftJoinAndSelect('application.candidate', 'candidate')
       .leftJoinAndSelect('candidate.user', 'user');
 
-    if (status) {
-      queryBuilder.andWhere('interview.status = :status', { status });
+    if (status && status.length > 0) {
+      queryBuilder.andWhere('interview.status IN (:...status)', { status });
     }
 
     const applicationFilter = applicationId || candidate_application_id;

@@ -1,12 +1,16 @@
-import { IsOptional, IsEnum, IsUUID, IsDate } from 'class-validator';
+import { IsOptional, IsEnum, IsUUID, IsDate, IsArray } from 'class-validator';
 import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
 import { InterviewStatus } from '../interfaces/interview-status.enum';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class FilterInterviewsDto extends PaginationDto {
   @IsOptional()
-  @IsEnum(InterviewStatus)
-  status?: InterviewStatus;
+  @IsArray()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.split(',') : value,
+  )
+  @IsEnum(InterviewStatus, { each: true })
+  status?: Array<InterviewStatus>;
 
   @IsOptional()
   @IsDate()
