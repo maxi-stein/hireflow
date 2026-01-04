@@ -56,7 +56,7 @@ export interface InterviewFilters {
   candidate_application_id?: string;
   start_date?: string;
   end_date?: string;
-  status?: InterviewStatus;
+  status?: InterviewStatus[];
   order?: 'ASC' | 'DESC';
 }
 
@@ -74,7 +74,7 @@ export const interviewService = {
         params.append('candidate_application_id', filters.candidate_application_id);
       if (filters.start_date) params.append('start_date', filters.start_date);
       if (filters.end_date) params.append('end_date', filters.end_date);
-      if (filters.status) params.append('status', filters.status);
+      if (filters.status) params.append('status', filters.status.join(','));
       if (filters.order) params.append('order', filters.order);
     }
     const response = await apiClient.get<PaginatedResponse<Interview>>(
