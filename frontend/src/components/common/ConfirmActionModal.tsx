@@ -1,4 +1,4 @@
-import { Modal, Title, Stack, Text, Group, Button } from '@mantine/core';
+import { Modal, Stack, Text, Group, Button } from '@mantine/core';
 import { type ReactNode } from 'react';
 
 interface ConfirmActionModalProps {
@@ -13,37 +13,37 @@ interface ConfirmActionModalProps {
   isLoading?: boolean;
 }
 
-export function ConfirmActionModal({ 
-  opened, 
-  onClose, 
+export function ConfirmActionModal({
+  opened,
+  onClose,
   onConfirm,
   title,
   message,
   confirmLabel = 'Confirm',
   confirmColor = 'blue',
   confirmIcon,
-  isLoading 
+  isLoading
 }: ConfirmActionModalProps) {
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>{title}</Title>}
+      title={<Text fw={600} size="lg">{title}</Text>}
       size="sm"
     >
       <Stack gap="md">
         {typeof message === 'string' ? <Text>{message}</Text> : message}
 
         <Group justify="flex-end" mt="md">
-          <Button 
-            variant="default" 
+          <Button
+            variant="default"
             onClick={onClose}
             disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button 
-            color={confirmColor} 
+          <Button
+            color={confirmColor}
             onClick={onConfirm}
             loading={isLoading}
             leftSection={confirmIcon}
