@@ -28,7 +28,7 @@ export class CandidateApplicationService {
     private readonly jobOfferService: JobOfferService,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
-  ) { }
+  ) {}
 
   async create(
     createDto: CreateCandidateApplicationDto,
@@ -163,12 +163,14 @@ export class CandidateApplicationService {
       );
     }
 
-    if (status) {
-      query.andWhere('application.status = :status', { status });
+    if (status && status.length > 0) {
+      query.andWhere('application.status IN (:...status)', { status });
     }
 
     if (exclude_status) {
-      query.andWhere('application.status != :exclude_status', { exclude_status });
+      query.andWhere('application.status != :exclude_status', {
+        exclude_status,
+      });
     }
 
     if (start_date) {

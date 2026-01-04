@@ -1,11 +1,22 @@
-import { IsOptional, IsEnum, IsDateString, IsUUID } from 'class-validator';
+import {
+  IsOptional,
+  IsArray,
+  IsEnum,
+  IsDateString,
+  IsUUID,
+} from 'class-validator';
 import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
 import { ApplicationStatus } from '../interfaces/application-status';
+import { Transform } from 'class-transformer';
 
 export class FilterApplicationsDto extends PaginationDto {
   @IsOptional()
-  @IsEnum(ApplicationStatus)
-  status?: ApplicationStatus;
+  @IsArray()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.split(',') : value,
+  )
+  @IsEnum(ApplicationStatus, { each: true })
+  status?: ApplicationStatus[];
 
   @IsOptional()
   @IsDateString()
