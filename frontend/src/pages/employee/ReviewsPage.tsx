@@ -56,8 +56,6 @@ export function ReviewsPage() {
 
   // Improve ownership check: check employee ID OR user ID
   const isMyReview = (r: InterviewReview) => {
-    console.log(user);
-    console.log(r);
     if (!user) return false;
 
     if (user.id && r.employee?.id === user.id) return true;
