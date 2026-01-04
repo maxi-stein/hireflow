@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { 
-  candidateApplicationService, 
-  type ApplicationFilters, 
-  type ApplicationStatus 
+import {
+  candidateApplicationService,
+  type ApplicationFilters,
+  type ApplicationStatus
 } from '../../services/candidate-application.service';
 
 export const APPLICATIONS_QUERY_KEY = ['candidateApplications'];
@@ -26,8 +26,19 @@ export function useUpdateApplicationStatusMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: ApplicationStatus }) => 
+    mutationFn: ({ id, status }: { id: string; status: ApplicationStatus }) =>
       candidateApplicationService.updateStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: APPLICATIONS_QUERY_KEY });
+    },
+  });
+}
+
+export function useHireApplicationMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => candidateApplicationService.hire(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: APPLICATIONS_QUERY_KEY });
     },

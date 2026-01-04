@@ -20,7 +20,7 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
 import { IconSearch, IconScale, IconAlertCircle, IconX, IconCheck } from '@tabler/icons-react';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
-import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
+import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation, useHireApplicationMutation } from '../../hooks/api/useCandidateApplications';
 import { ApplicationStatus } from '../../services/candidate-application.service';
 import { ConfirmActionModal } from '../../components/common/ConfirmActionModal';
 import { useNavigate } from 'react-router-dom';
@@ -59,6 +59,7 @@ export function CompareCandidatesPage() {
 
     // Mutation for updating application status
     const updateStatusMutation = useUpdateApplicationStatusMutation();
+    const hireMutation = useHireApplicationMutation();
 
     // Fetch job offers
     const { data: jobOffersData, isLoading: isLoadingJobs } = useJobOffersQuery({
@@ -172,10 +173,7 @@ export function CompareCandidatesPage() {
         if (!candidateToHire) return;
 
         try {
-            await updateStatusMutation.mutateAsync({
-                id: candidateToHire.id,
-                status: ApplicationStatus.HIRED
-            });
+            await hireMutation.mutateAsync(candidateToHire.id);
 
             // Remove from selected candidates
             const newSelected = new Set(selectedCandidates);
@@ -260,7 +258,7 @@ export function CompareCandidatesPage() {
                     confirmLabel="Hire"
                     confirmColor="green"
                     confirmIcon={<IconCheck size={16} />}
-                    isLoading={updateStatusMutation.isPending}
+                    isLoading={hireMutation.isPending}
                 />
             </Container>
         );

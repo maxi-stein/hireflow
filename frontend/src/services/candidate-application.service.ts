@@ -84,4 +84,8 @@ export const candidateApplicationService = {
     const response = await apiClient.patch<CandidateApplication>(`/candidate-applications/${id}`, { status });
     return response.data;
   },
+
+  hire: async (applicationId: string): Promise<void> => {
+    await apiClient.post('/candidate-applications/hire', { applicationId });
+  },
 };

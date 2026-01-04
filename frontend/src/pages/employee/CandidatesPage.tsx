@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
 import { IconChevronLeft, IconX, IconCheck, IconCircleCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
-import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation } from '../../hooks/api/useCandidateApplications';
+import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation, useHireApplicationMutation } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { useCandidateFilesQuery } from '../../hooks/api/useUserFiles';
 import { ApplicationStatus } from '../../services/candidate-application.service';
@@ -48,6 +48,7 @@ export function CandidatesPage() {
   const resume = files?.find(f => f.file_type === FileType.RESUME);
 
   const updateStatusMutation = useUpdateApplicationStatusMutation();
+  const hireMutation = useHireApplicationMutation();
 
   const handleDownloadResume = async () => {
     if (!resume) return;
@@ -110,10 +111,7 @@ export function CandidatesPage() {
     if (!applicationToHire) return;
 
     try {
-      await updateStatusMutation.mutateAsync({
-        id: applicationToHire.id,
-        status: ApplicationStatus.HIRED
-      });
+      await hireMutation.mutateAsync(applicationToHire.id);
       notifications.show({
         title: 'Candidate Hired',
         message: `The candidate has been hired for ${applicationToHire.position}.`,
@@ -125,7 +123,7 @@ export function CandidatesPage() {
     } catch (error) {
       notifications.show({
         title: 'Error',
-        message: 'Failed to update application status.',
+        message: 'Failed to hire candidate.',
         color: 'red',
       });
     }
@@ -254,7 +252,7 @@ export function CandidatesPage() {
         confirmLabel="Hire"
         confirmColor="green"
         confirmIcon={<IconCheck size={16} />}
-        isLoading={updateStatusMutation.isPending}
+        isLoading={hireMutation.isPending}
       />
 
       <ScheduleInterviewModal
