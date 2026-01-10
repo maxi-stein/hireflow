@@ -8,9 +8,9 @@ import { validateWithJoi } from '../../utils/form-validation';
 import { createEmployeeSchema } from '../../schemas/employee.schema';
 
 const EMPLOYEE_ROLES = [
-  { value: 'hr', label: 'HR Admin' },
-  { value: 'recruiter', label: 'Recruiter' },
-  { value: 'manager', label: 'Hiring Manager' },
+  { value: 'hr', label: 'Human Resources' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'manager', label: 'Manager' },
 ];
 
 export const CreateEmployeePage = () => {
