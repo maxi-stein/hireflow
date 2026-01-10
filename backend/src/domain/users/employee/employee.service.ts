@@ -5,11 +5,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  EntityManager,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
+import { EntityManager, Repository, UpdateResult } from 'typeorm';
 import { Employee } from '../entities/employee.entity';
 import { CreateEmployeeDto } from '../dto/employee/create-employee.dto';
 import { UpdateEmployeeDto } from '../dto/employee/update-employee.dto';
@@ -62,11 +58,10 @@ export class EmployeesService {
   async createEmployee(
     createEmployeeUserDto: CreateEmployeeUserDto,
   ): Promise<User> {
-
     // Check for duplicate email
-    const existingUser = await this.usersService.findOne({
-      email: createEmployeeUserDto.email,
-    });
+    const existingUser = await this.usersService.findByEmailForAuthentication(
+      createEmployeeUserDto.email,
+    );
 
     if (existingUser) {
       throw new ConflictException(
@@ -75,7 +70,7 @@ export class EmployeesService {
     }
 
     return this.employeeRepository.manager.transaction(
-      async (transactionalEntityManager) => {        
+      async (transactionalEntityManager) => {
         const user = await this.usersService.create(
           {
             first_name: createEmployeeUserDto.first_name,
@@ -126,7 +121,7 @@ export class EmployeesService {
   async findOne(id: string): Promise<Employee> {
     const employee = await this.employeeRepository.findOne({
       where: { id },
-      relations: { user: true }
+      relations: { user: true },
     });
 
     if (!employee) {
@@ -179,5 +174,4 @@ export class EmployeesService {
 
     return employee;
   }
-
 }
