@@ -4,7 +4,12 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { UpdateUserDto } from '../dto/user/update-user.dto';
-import { Repository, UpdateResult, EntityManager, FindOptionsWhere } from 'typeorm';
+import {
+  Repository,
+  UpdateResult,
+  EntityManager,
+  FindOptionsWhere,
+} from 'typeorm';
 import { User } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -40,9 +45,7 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new BadRequestException(
-        'User with this email already exists',
-      );
+      throw new BadRequestException('User with this email already exists');
     }
 
     // Hash password
@@ -60,7 +63,6 @@ export class UsersService {
 
     return await entityManager.save(user);
   }
-
 
   async findAll(
     paginationDto: PaginationDto = { page: 1, limit: 10 },
@@ -93,12 +95,21 @@ export class UsersService {
     where: FindOptionsWhere<User>,
     entityManager?: EntityManager,
     relations?: string[],
+    selectWithPassword?: boolean,
   ): Promise<User> {
     const manager = entityManager || this.userRepository.manager;
-    
+
     const user = await manager.findOne(User, {
       where,
       relations,
+      select: {
+        id: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        user_type: true,
+        password: selectWithPassword || false,
+      },
     });
 
     if (!user) {
@@ -172,10 +183,9 @@ export class UsersService {
   ): Promise<{ user: User; affected: number }> {
     // Hash password if it's included in the update
     if (updateUserDto.password) {
-      const saltRounds = 10;
       updateUserDto.password = await bcrypt.hash(
         updateUserDto.password,
-        saltRounds,
+        AUTH.BCRYPT_SALT_ROUNDS,
       );
     }
 

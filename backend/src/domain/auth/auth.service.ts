@@ -1,9 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/base-user/user.service';
 import { JwtUser } from '../users/interfaces/jwt.user';
 import { UserType } from '../users/interfaces/user.enum';
 import * as bcrypt from 'bcrypt';
+import { ChangePasswordDto } from './dto/ChangePasswordDto';
+import { AUTH } from '../../shared/constants/auth.constants';
 
 @Injectable()
 export class AuthService {
@@ -57,5 +63,32 @@ export class AuthService {
   async getProfileByEntity(entityId: string, userType: JwtUser['user_type']) {
     const user = await this.usersService.findUserByEntityId(entityId, userType);
     return user;
+  }
+
+  async changePassword(user_id: string, changePasswordDto: ChangePasswordDto) {
+    //Get the user with the password
+    const user = await this.usersService.findOne(
+      { id: user_id },
+      undefined,
+      undefined,
+      true,
+    );
+
+    const isPasswordValid = await bcrypt.compare(
+      changePasswordDto.oldPassword,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new BadRequestException({
+        message: 'Old password is incorrect',
+        code: 'WRONG_PASSWORD',
+      });
+    }
+
+    // The usersService.update method handles password hashing, so we pass the plain password
+    return this.usersService.update(user_id, {
+      password: changePasswordDto.newPassword,
+    });
   }
 }
