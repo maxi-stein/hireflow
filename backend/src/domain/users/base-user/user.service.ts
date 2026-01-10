@@ -227,7 +227,12 @@ export class UsersService {
     if (userType === UserType.CANDIDATE) {
       user = await this.userRepository.findOne({
         where: { candidate: { id: entityId } },
-        relations: ['candidate'],
+        relations: [
+          'candidate',
+          'candidate.educations',
+          'candidate.work_experiences',
+          'candidate.files',
+        ],
       });
     } else if (userType === UserType.EMPLOYEE) {
       user = await this.userRepository.findOne({
