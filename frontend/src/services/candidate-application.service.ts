@@ -56,7 +56,23 @@ export interface ApplicationFilters {
   exclude_status?: ApplicationStatus;
 }
 
+export interface SkillAnswerPayload {
+  job_offer_skill_id: string;
+  years_of_experience: number;
+}
+
+export interface CreateCandidateApplicationPayload {
+  job_offer_id: string;
+  candidate_id: string;
+  skill_answers: SkillAnswerPayload[];
+}
+
 export const candidateApplicationService = {
+  create: async (payload: CreateCandidateApplicationPayload): Promise<CandidateApplication> => {
+    const response = await apiClient.post<CandidateApplication>('/candidate-applications', payload);
+    return response.data;
+  },
+
   getAll: async (
     filters?: ApplicationFilters,
   ): Promise<PaginatedResponse<CandidateApplication>> => {

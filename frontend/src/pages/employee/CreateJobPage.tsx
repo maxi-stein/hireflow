@@ -187,7 +187,7 @@ export function CreateJobPage() {
               required
               placeholder="Type to search skills (e.g. React, TypeScript)"
               description="Add up to 10 key skills for this position"
-              maxTags={10}
+              maxTags={50}
               clearable
               data={skillSuggestions.map(s => s.skill_name)}
               searchValue={searchValue}

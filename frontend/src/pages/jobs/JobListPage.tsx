@@ -3,28 +3,58 @@ import { useNavigate } from 'react-router-dom';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { useAppStore } from '../../store/useAppStore';
 import { JobOfferStatus } from '../../services/job-offer.service';
+import type { JobOffer } from '../../services/job-offer.service';
 import { JobOfferCard } from '../../components/jobs/JobOfferCard';
+import { useEffect, useState } from 'react';
+import { candidateApplicationService } from '../../services/candidate-application.service';
+import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 
 export const JobListPage = () => {
   const navigate = useNavigate();
   const { data: jobOffers, isLoading } = useJobOffersQuery({ status: JobOfferStatus.OPEN });
   const user = useAppStore((state) => state.user);
 
-  const handleApply = (jobId: string) => {
+  const [appliedJobIds, setAppliedJobIds] = useState<Set<string>>(new Set());
+  const [selectedJob, setSelectedJob] = useState<JobOffer | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const fetchApplications = async () => {
+    if (user?.type === 'candidate' && user.id) {
+      try {
+        const applications = await candidateApplicationService.getAll({
+          candidate_id: user.id,
+          limit: 100 // Fetch enough to cover most cases, ideally implement pagination or specific check
+        });
+        const ids = new Set(applications.data.map(app => app.job_offer.id));
+        setAppliedJobIds(ids);
+      } catch (error) {
+        console.error('Failed to fetch applications', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchApplications();
+  }, [user]);
+
+  const handleApplyClick = (job: JobOffer) => {
     if (!user) {
-      // Not logged in - redirect to login
       navigate('/login');
       return;
     }
 
     if (user.type === 'employee') {
-      // Employee - redirect to dashboard
       navigate('/manage/dashboard');
       return;
     }
 
-    // Candidate - redirect to dummy page (you can create a proper application page later)
-    navigate(`/jobs/${jobId}/apply`);
+    // Open modal
+    setSelectedJob(job);
+    setModalOpen(true);
+  };
+
+  const handleApplicationSuccess = () => {
+    fetchApplications();
   };
 
   if (isLoading) {
@@ -45,23 +75,40 @@ export const JobListPage = () => {
           </Card>
         ) : (
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
-            {jobOffers.data.map((job) => (
-              <JobOfferCard
-                key={job.id}
-                job={job}
-                action={
-                  user?.type === 'candidate' ? (
-                    <Button
-                      fullWidth
-                      onClick={() => handleApply(job.id)}
-                    >
-                      Apply Now
-                    </Button>
-                  ) : undefined
-                }
-              />
-            ))}
+            {jobOffers.data.map((job) => {
+              const isApplied = appliedJobIds.has(job.id);
+              return (
+                <JobOfferCard
+                  key={job.id}
+                  job={job}
+                  isApplied={isApplied}
+                  action={
+                    user?.type === 'candidate' ? (
+                      <Button
+                        fullWidth
+                        variant={isApplied ? 'light' : 'filled'}
+                        color={isApplied ? 'green' : 'blue'}
+                        onClick={() => isApplied ? navigate('/candidate/applications') : handleApplyClick(job)}
+                      >
+                        {isApplied ? 'View Application' : 'Apply Now'}
+                      </Button>
+                    ) : undefined
+                  }
+                />
+              );
+            })}
           </SimpleGrid>
+        )}
+
+        {selectedJob && user?.type === 'candidate' && (
+          <JobApplicationModal
+            key={selectedJob.id}
+            opened={modalOpen}
+            onClose={() => setModalOpen(false)}
+            jobOffer={selectedJob}
+            candidateId={user.id}
+            onSuccess={handleApplicationSuccess}
+          />
         )}
       </Stack>
     </Container>
