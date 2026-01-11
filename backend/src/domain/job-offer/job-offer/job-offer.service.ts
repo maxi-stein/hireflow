@@ -19,7 +19,7 @@ export class JobOfferService {
     private readonly jobOfferRepository: Repository<JobOffer>,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
-  ) { }
+  ) {}
 
   async create(
     createJobOfferDto: CreateJobOfferDto,
@@ -84,7 +84,10 @@ export class JobOfferService {
       });
     }
 
-    query.loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications'); // Count applicants for each job offer
+    query.loadRelationCountAndMap(
+      'jobOffer.applicants_count',
+      'jobOffer.applications',
+    ); // Count applicants for each job offer
     query.leftJoinAndSelect('jobOffer.skills', 'skills');
 
     query.skip((page - 1) * limit).take(limit);
@@ -103,9 +106,13 @@ export class JobOfferService {
   }
 
   async findOne(id: string): Promise<JobOfferResponseDto> {
-    const jobOffer = await this.jobOfferRepository.createQueryBuilder('jobOffer')
+    const jobOffer = await this.jobOfferRepository
+      .createQueryBuilder('jobOffer')
       .where('jobOffer.id = :id', { id })
-      .loadRelationCountAndMap('jobOffer.applicants_count', 'jobOffer.applications')
+      .loadRelationCountAndMap(
+        'jobOffer.applicants_count',
+        'jobOffer.applications',
+      )
       .leftJoinAndSelect('jobOffer.skills', 'jobOfferSkill')
       .getOne();
 
@@ -138,6 +145,12 @@ export class JobOfferService {
       const skillEntities = await this.jobOfferSkillService.findOrCreateByName(
         skills.map((s) => s.skill_name),
       );
+
+      // Clear existing skills first to ensure clean update of the many-to-many relation
+      jobOffer.skills = [];
+      await this.jobOfferRepository.save(jobOffer);
+
+      // Then assign new skills
       jobOffer.skills = skillEntities;
     }
 

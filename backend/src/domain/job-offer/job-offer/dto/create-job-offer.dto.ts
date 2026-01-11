@@ -42,7 +42,7 @@ export class CreateJobOfferDto {
 
   @IsOptional()
   @IsArray()
-  @ArrayMaxSize(10)
+  @ArrayMaxSize(50)
   @ValidateNested({ each: true })
   @Type(() => CreateJobOfferSkillDto)
   skills?: CreateJobOfferSkillDto[];
