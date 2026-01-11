@@ -5,9 +5,15 @@ export const ProtectedRoute = ({ allowedRoles }: { allowedRoles: string[] }) => 
   const user = useAppStore((state) => state.user);
   const location = useLocation();
 
-  if (!user || !allowedRoles.includes(user.type)) {
+  if (!user) {
     // Pass the current location in state so we can redirect back after login
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (!allowedRoles.includes(user.type)) {
+    // User is logged in but doesn't have permission. Redirect to their dashboard.
+    const redirectPath = user.type === 'candidate' ? '/jobs' : '/manage/dashboard';
+    return <Navigate to={redirectPath} replace />;
   }
 
   return <Outlet />;

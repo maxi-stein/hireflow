@@ -13,17 +13,17 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
-  // Root redirect
-  {
-    path: "/",
-    element: <Navigate to="/manage/dashboard" replace />,
-  },
+
 
   // Public routes with DynamicLayout (shows MainLayout if logged in, PublicLayout if not)
   {
     element: <DynamicLayout />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: ROUTES.PUBLIC.HOME.path,
+        element: ROUTES.PUBLIC.HOME.element,
+      },
       {
         path: ROUTES.PUBLIC.JOBS.path,
         element: ROUTES.PUBLIC.JOBS.element,
@@ -103,6 +103,6 @@ export const router = createBrowserRouter([
   // Catch-all redirect
   {
     path: "*",
-    element: <Navigate to="/manage/dashboard" replace />,
+    element: <Navigate to="/" replace />,
   },
 ]);
