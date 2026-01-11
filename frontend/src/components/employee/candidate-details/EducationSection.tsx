@@ -1,6 +1,7 @@
 import { Paper, Group, Title, Timeline, Text } from '@mantine/core';
 import { IconSchool } from '@tabler/icons-react';
-import { type Education } from '../../../services/candidate.service';
+import { ExperienceTimelineItem } from './ExperienceTimelineItem';
+import type { Education } from '../../../services/education.service';
 
 interface EducationSectionProps {
   educations: Education[];
@@ -16,12 +17,15 @@ export function EducationSection({ educations }: EducationSectionProps) {
       {educations.length > 0 ? (
         <Timeline active={educations.length} bulletSize={24} lineWidth={2}>
           {educations.map((edu) => (
-            <Timeline.Item key={edu.id} title={edu.institution}>
-              <Text size="sm" fw={500}>{edu.degree_type} in {edu.field_of_study}</Text>
-              <Text size="xs" c="dimmed">
-                {new Date(edu.start_date).getFullYear()} - {edu.end_date ? new Date(edu.end_date).getFullYear() : 'Present'}
-              </Text>
-            </Timeline.Item>
+            <ExperienceTimelineItem
+              key={edu.id}
+              id={edu.id}
+              title={edu.institution}
+              subtitle={`${edu.degree_type} in ${edu.field_of_study}`}
+              startDate={edu.start_date}
+              endDate={edu.end_date}
+              description={edu.description}
+            />
           ))}
         </Timeline>
       ) : (

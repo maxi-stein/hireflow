@@ -1,4 +1,6 @@
 export type UserType = 'candidate' | 'employee';
+import type { Education } from '../../services/education.service';
+import type { WorkExperience } from '../../services/work-experience.service';
 
 export interface User {
   id: string;
@@ -12,13 +14,28 @@ export interface User {
   employee?: Employee;
 }
 
+export interface UserFile {
+  id: string;
+  file_name: string;
+  file_path: string;
+  mime_type: string;
+  size: number;
+  file_type: 'profile_picture' | 'cv';
+  created_at: string;
+}
+
 export interface Candidate {
   id: string;
   user_id: string;
   age: number | null;
   phone: string | null;
+  city: string;
+  country: string;
   github: string | null;
   linkedin: string | null;
+  educations: Education[];
+  work_experiences: WorkExperience[];
+  files: UserFile[];
   profile_created_at: string;
   profile_updated_at: string;
 }

@@ -17,4 +17,8 @@ export const authService = {
     const { data } = await apiClient.get<User>('/auth/profile');
     return data;
   },
+
+  changePassword: async (data: any): Promise<void> => {
+    return apiClient.post('/auth/change-password', data);
+  },
 };
