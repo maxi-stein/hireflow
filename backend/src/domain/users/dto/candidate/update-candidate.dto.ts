@@ -1,15 +1,5 @@
 // update-candidate.dto.ts
-import {
-  ArrayNotEmpty,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUrl,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-import { UpdateEducationDto } from '../education/update-education.dto';
-import { UpdateWorkExperienceDto } from '../work-experience/update-work-experience.dto';
+import { IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UpdateCandidateDto {
   @IsOptional()
@@ -43,15 +33,4 @@ export class UpdateCandidateDto {
   @IsOptional()
   @IsUrl()
   linkedin?: string;
-
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateEducationDto)
-  @ArrayNotEmpty()
-  educations?: UpdateEducationDto[];
-
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateWorkExperienceDto)
-  work_experiences?: UpdateWorkExperienceDto[];
 }

@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Candidate } from '../entities/candidate.entity';
@@ -18,7 +15,6 @@ import { UserType } from '../interfaces/user.enum';
 import { RegisterCandidateDto } from '../dto/user/create-user.dto';
 import { UsersService } from '../base-user/user.service';
 
-
 @Injectable()
 export class CandidateService {
   constructor(
@@ -27,7 +23,7 @@ export class CandidateService {
     private readonly usersService: UsersService,
     private readonly educationService: EducationService,
     private readonly workExperienceService: WorkExperienceService,
-  ) { }
+  ) {}
 
   // Public method for candidate creation/registration
   async create(registerCandidateDto: RegisterCandidateDto): Promise<User> {
@@ -135,8 +131,7 @@ export class CandidateService {
           throw new NotFoundException(`Candidate with ID ${id} not found`);
         }
 
-        const { educations, work_experiences, ...candidateFields } =
-          updateCandidateDto;
+        const { ...candidateFields } = updateCandidateDto;
 
         // Update candidate fields
         const updatedCandidate = transactionalEntityManager.merge(
@@ -146,24 +141,6 @@ export class CandidateService {
         );
 
         await transactionalEntityManager.save(updatedCandidate);
-
-        // Update candidate educations
-        if (educations) {
-          await this.educationService.updateEducations(
-            candidate.id,
-            educations,
-            transactionalEntityManager,
-          );
-        }
-
-        // Update candidate work experiences
-        if (work_experiences) {
-          await this.workExperienceService.updateWorkExperiences(
-            candidate.id,
-            work_experiences,
-            transactionalEntityManager,
-          );
-        }
 
         const fullCandidate = await transactionalEntityManager.findOne(
           Candidate,

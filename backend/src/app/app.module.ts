@@ -20,6 +20,8 @@ import { InterviewReviewModule } from '../domain/interview-review/interview-revi
 import { JobOfferModule } from '../domain/job-offer/job-offer/job-offer.module';
 import { UserFileModule } from '../domain/users/user-file/user-file.module';
 import { DashboardModule } from 'src/domain/dashboard/dashboard.module';
+import { WorkExperienceModule } from '../domain/users/work-experience/work-experience.module';
+import { EducationModule } from '../domain/users/education/education.module';
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import { DashboardModule } from 'src/domain/dashboard/dashboard.module';
     EmployeesModule,
     CandidateModule,
     UserFileModule,
+    WorkExperienceModule,
+    EducationModule,
     JobOfferModule,
     CandidateApplicationModule,
     InterviewModule,
@@ -64,4 +68,4 @@ import { DashboardModule } from 'src/domain/dashboard/dashboard.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

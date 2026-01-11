@@ -11,11 +11,7 @@ import {
 import { EducationService } from './education.service';
 import { CreateEducationDto } from '../dto/education/create-education.dto';
 import { UpdateEducationDto } from '../dto/education/update-education.dto';
-import { EducationResponseDto } from '../dto/education/education-response.dto';
-import {
-  PaginatedResponse,
-  PaginationDto,
-} from '../../../shared/dto/pagination/pagination.dto';
+import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
 import { UuidValidationPipe, NotEmptyDtoPipe } from '../../../shared/pipes';
 
 @Controller('educations')

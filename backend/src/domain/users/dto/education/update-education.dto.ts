@@ -4,9 +4,6 @@ import { Type } from 'class-transformer';
 import { DegreeType } from '../../interfaces/education.enum';
 
 export class UpdateEducationDto {
-  @IsUUID()
-  id: string;
-
   @IsOptional()
   @IsString()
   institution?: string;

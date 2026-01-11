@@ -4,6 +4,7 @@ import {
   IsOptional,
   MinLength,
   MaxLength,
+  IsUUID,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -12,6 +13,10 @@ export class CreateWorkExperienceDto {
   @MinLength(1)
   @MaxLength(200)
   company_name: string;
+
+  @IsString()
+  @IsUUID()
+  candidate_id: string;
 
   @IsString()
   @MinLength(1)

@@ -67,28 +67,6 @@ export class WorkExperienceService {
     return await this.workExperienceRepository.save(workExperience);
   }
 
-  // Used by the candidate service when updating the work experience
-  async updateWorkExperiences(
-    candidateId: string,
-    workExperienceDtos: UpdateWorkExperienceDto[],
-    entityManager?: EntityManager,
-  ): Promise<WorkExperience[]> {
-    const manager = entityManager || this.workExperienceRepository.manager;
-
-    // First delete old experiences
-    await manager.delete(WorkExperience, { candidate_id: candidateId });
-
-    // Then create new ones
-    const workExperiences = workExperienceDtos.map((dto) =>
-      manager.create(WorkExperience, {
-        ...dto,
-        candidate_id: candidateId,
-      }),
-    );
-
-    return await manager.save(workExperiences);
-  }
-
   async remove(id: string): Promise<void> {
     const workExperience = await this.findOne(id);
     await this.workExperienceRepository.remove(workExperience);

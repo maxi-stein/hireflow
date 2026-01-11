@@ -7,27 +7,25 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CreateWorkExperienceDto } from '../dto/work-experience/create-work-experience.dto';
 import { UpdateWorkExperienceDto } from '../dto/work-experience/update-work-experience.dto';
 import { WorkExperienceService } from './work-experience.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
-@Controller('candidates/:candidateId/work-experiences')
+@Controller('work-experiences')
 @UseGuards(JwtAuthGuard)
 export class WorkExperienceController {
   constructor(private readonly workExperienceService: WorkExperienceService) {}
 
   @Post()
-  create(
-    @Param('candidateId') candidateId: string,
-    @Body() createDto: CreateWorkExperienceDto,
-  ) {
-    return this.workExperienceService.create(candidateId, createDto);
+  create(@Body() createDto: CreateWorkExperienceDto) {
+    return this.workExperienceService.create(createDto.candidate_id, createDto);
   }
 
   @Get()
-  findAll(@Param('candidateId') candidateId: string) {
+  findAll(@Query('candidate_id') candidateId: string) {
     return this.workExperienceService.findAllByCandidate(candidateId);
   }
 
