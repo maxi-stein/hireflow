@@ -233,6 +233,18 @@ export class UsersService {
           'candidate.work_experiences',
           'candidate.files',
         ],
+        order: {
+          candidate: {
+            educations: {
+              end_date: 'DESC',
+              start_date: 'DESC',
+            },
+            work_experiences: {
+              end_date: 'DESC',
+              start_date: 'DESC',
+            },
+          },
+        },
       });
     } else if (userType === UserType.EMPLOYEE) {
       user = await this.userRepository.findOne({
