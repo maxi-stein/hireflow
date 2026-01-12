@@ -1,5 +1,6 @@
 import { Container, Title, Text, Stack, Card, SimpleGrid, LoadingOverlay, Button } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import { useHighlightEffect } from '../../hooks/useHighlightEffect';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { useAppStore } from '../../store/useAppStore';
 import { JobOfferStatus } from '../../services/job-offer.service';
@@ -11,6 +12,7 @@ import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 
 export const JobListPage = () => {
   const navigate = useNavigate();
+  const { highlightedId, setElementRef } = useHighlightEffect();
   const { data: jobOffers, isLoading } = useJobOffersQuery({ status: JobOfferStatus.OPEN });
   const user = useAppStore((state) => state.user);
 
@@ -77,24 +79,36 @@ export const JobListPage = () => {
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
             {jobOffers.data.map((job) => {
               const isApplied = appliedJobIds.has(job.id);
+              const isHighlighted = highlightedId === job.id;
+
               return (
-                <JobOfferCard
+                <div
                   key={job.id}
-                  job={job}
-                  isApplied={isApplied}
-                  action={
-                    user?.type === 'candidate' ? (
-                      <Button
-                        fullWidth
-                        variant={isApplied ? 'light' : 'filled'}
-                        color={isApplied ? 'green' : 'blue'}
-                        onClick={() => isApplied ? navigate('/candidate/applications') : handleApplyClick(job)}
-                      >
-                        {isApplied ? 'View Application' : 'Apply Now'}
-                      </Button>
-                    ) : undefined
-                  }
-                />
+                  ref={setElementRef(job.id)}
+                  style={{
+                    transition: 'all 0.3s ease',
+                    transform: isHighlighted ? 'scale(1.02)' : 'scale(1)',
+                    boxShadow: isHighlighted ? '0 8px 30px rgba(99, 102, 241, 0.4)' : 'none',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <JobOfferCard
+                    job={job}
+                    isApplied={isApplied}
+                    action={
+                      user?.type === 'candidate' ? (
+                        <Button
+                          fullWidth
+                          variant={isApplied ? 'light' : 'light'}
+                          color={isApplied ? 'gray' : 'gray'}
+                          onClick={() => isApplied ? navigate('/candidate/applications') : handleApplyClick(job)}
+                        >
+                          {isApplied ? 'View Application' : 'Apply Now'}
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                </div>
               );
             })}
           </SimpleGrid>

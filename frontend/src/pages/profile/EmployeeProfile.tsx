@@ -1,5 +1,5 @@
 
-import { Paper, Title, Grid, TextInput, Badge, Group, Card, Text, Avatar, Stack } from '@mantine/core';
+import { Paper, Title, Grid, TextInput, Badge, Group, Text, Avatar, Stack } from '@mantine/core';
 import { ChangePasswordForm } from '../../components/profile/ChangePasswordForm';
 import type { User } from '../../types/models/user.types';
 

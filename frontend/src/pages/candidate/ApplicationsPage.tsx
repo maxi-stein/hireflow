@@ -1,1 +1,94 @@
-export const ApplicationsPage = () => <div>ApplicationsPage</div>;
+import { Container, Title, Text, Stack, LoadingOverlay, Alert, Box, SimpleGrid } from '@mantine/core';
+import { IconInbox } from '@tabler/icons-react';
+import { useAppStore } from '../../store/useAppStore';
+import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
+import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
+import { CandidateApplicationCard } from '../../components/candidate/CandidateApplicationCard';
+import { UpcomingInterviewsAlert } from '../../components/candidate/UpcomingInterviewsAlert';
+import type { Interview } from '../../services/interview.service';
+import { InterviewStatus } from '../../services/interview.service';
+
+export const ApplicationsPage = () => {
+    const user = useAppStore((state) => state.user);
+
+    // Fetch applications for the logged-in candidate
+    const { data: applicationsResponse, isLoading: isLoadingApplications } = useAllCandidateApplicationsQuery({
+        candidate_id: user?.id,
+        limit: 50
+    });
+
+    // Fetch all interviews for the candidate
+    const { data: interviewsResponse, isLoading: isLoadingInterviews } = useCandidateInterviewsQuery(user?.id || '');
+
+    const applications = applicationsResponse?.data || [];
+    const allInterviews = interviewsResponse?.data || [];
+
+    // Helper function to get interviews for a specific application
+    const getInterviewsForApplication = (applicationId: string): Interview[] => {
+        return allInterviews.filter(interview =>
+            interview.applications.some(app => app.id === applicationId)
+        );
+    };
+
+    // Sort applications by creation date (most recent first)
+    const sortedApplications = [...applications].sort((a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    // Get upcoming interviews
+    const now = new Date();
+    const upcomingInterviews = allInterviews
+        .filter(interview =>
+            interview.status === InterviewStatus.SCHEDULED &&
+            new Date(interview.scheduled_time) > now
+        )
+        .map(interview => ({
+            interview,
+            jobPosition: interview.applications[0]?.job_offer?.position || 'Unknown Position'
+        }));
+
+    const isLoading = isLoadingApplications || isLoadingInterviews;
+
+    if (isLoading) {
+        return <LoadingOverlay visible={true} />;
+    }
+
+    return (
+        <Container size="xl" py="xl">
+            <Stack gap="xl">
+                {/* Page Header */}
+                <Box>
+                    <Title order={1}>My Applications</Title>
+                    <Text c="dimmed" size="lg" mt="xs">
+                        Track all your job applications and interview schedules
+                    </Text>
+                </Box>
+
+                {/* Upcoming Interviews Alert */}
+                <UpcomingInterviewsAlert upcomingInterviews={upcomingInterviews} />
+
+                {/* Applications List */}
+                {sortedApplications.length > 0 ? (
+                    <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
+                        {sortedApplications.map((application) => (
+                            <CandidateApplicationCard
+                                key={application.id}
+                                application={application}
+                                interviews={getInterviewsForApplication(application.id)}
+                            />
+                        ))}
+                    </SimpleGrid>
+                ) : (
+                    <Alert
+                        variant="light"
+                        color="blue"
+                        title="No applications yet"
+                        icon={<IconInbox size={20} />}
+                    >
+                        You haven't applied to any positions yet. Visit the Jobs page to find opportunities!
+                    </Alert>
+                )}
+            </Stack>
+        </Container>
+    );
+};

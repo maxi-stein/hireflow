@@ -116,7 +116,7 @@ export function ApplicationsSection({
 
                 {app.status !== ApplicationStatus.REJECTED && app.status !== ApplicationStatus.HIRED && (
                   <Button
-                    variant="filled"
+                    variant="outline"
                     color="green"
                     size="xs"
                     leftSection={<IconCheck size={14} />}

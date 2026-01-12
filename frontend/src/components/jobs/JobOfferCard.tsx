@@ -12,13 +12,13 @@ interface JobOfferCardProps {
 
 export const JobOfferCard = ({ job, action, showSensitiveData = false, isApplied = false }: JobOfferCardProps) => {
   return (
-    <Card withBorder p="lg" radius="md" shadow="sm" style={isApplied ? { borderColor: 'var(--mantine-color-green-filled)', borderWidth: 2 } : undefined}>
+    <Card withBorder p="lg" radius="md" shadow="sm" style={isApplied ? { borderColor: 'var(--mantine-color-gray-filled)', borderWidth: 2 } : undefined}>
       <Stack gap="md">
         <div>
           <Group justify="space-between" mb="xs">
             <Group gap="xs">
               <Title order={3}>{job.position}</Title>
-              {isApplied && <Badge color="green" variant="filled">Applied</Badge>}
+              {isApplied && <Badge color="gray" variant="filled">Applied</Badge>}
             </Group>
             <Badge color="green" variant="light">
               {job.status}
