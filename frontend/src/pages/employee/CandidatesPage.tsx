@@ -4,14 +4,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
 import { IconChevronLeft, IconX, IconCheck, IconCircleCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
-import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation, useHireApplicationMutation } from '../../hooks/api/useCandidateApplications';
+import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { useCandidateFilesQuery } from '../../hooks/api/useUserFiles';
+import { useCandidateActions } from '../../hooks/useCandidateActions';
 import { ApplicationStatus } from '../../services/candidate-application.service';
 import { InterviewStatus } from '../../services/interview.service';
 import { FileType, userFileService } from '../../services/user-file.service';
 import { notifications } from '@mantine/notifications';
-import { ConfirmActionModal } from '../../components/common/ConfirmActionModal';
+import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';
 import { InterviewHistorySection } from '../../components/employee/candidate-details/InterviewHistorySection';
 import { WorkExperienceSection } from '../../components/employee/candidate-details/WorkExperienceSection';
 import { EducationSection } from '../../components/employee/candidate-details/EducationSection';
@@ -24,6 +25,7 @@ export function CandidatesPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  // Data fetching
   const { data: candidate, isLoading: isLoadingCandidate } = useCandidateQuery(id || '');
   const { data: applications, isLoading: isLoadingApplications } = useAllCandidateApplicationsQuery({
     candidate_id: id,
@@ -35,20 +37,31 @@ export function CandidatesPage() {
   const hiredApplication = applications?.data.find(app => app.status === ApplicationStatus.HIRED);
   const isHired = !!hiredApplication;
 
-  const [rejectModalOpened, setRejectModalOpened] = useState(false);
-  const [applicationToReject, setApplicationToReject] = useState<{ id: string; position: string } | null>(null);
-
-  const [hireModalOpened, setHireModalOpened] = useState(false);
-  const [applicationToHire, setApplicationToHire] = useState<{ id: string; position: string } | null>(null);
-
   // Schedule Interview State
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [scheduleApplicationId, setScheduleApplicationId] = useState<string | undefined>(undefined);
 
   const resume = files?.find(f => f.file_type === FileType.RESUME);
 
-  const updateStatusMutation = useUpdateApplicationStatusMutation();
-  const hireMutation = useHireApplicationMutation();
+  // Shared hook for reject/hire actions with notification callbacks
+  const candidateActions = useCandidateActions({
+    onRejectSuccess: () => {
+      notifications.show({
+        title: 'Application Rejected',
+        message: 'The candidate has been disqualified from this position.',
+        color: 'red',
+        icon: <IconX size={16} />
+      });
+    },
+    onHireSuccess: () => {
+      notifications.show({
+        title: 'Candidate Hired',
+        message: 'The candidate has been successfully hired.',
+        color: 'green',
+        icon: <IconCheck size={16} />
+      });
+    },
+  });
 
   const handleDownloadResume = async () => {
     if (!resume) return;
@@ -71,62 +84,13 @@ export function CandidatesPage() {
     }
   };
 
+  // Wrapper handlers to pass position context to the shared hook
   const handleRejectClick = (applicationId: string, position: string) => {
-    setApplicationToReject({ id: applicationId, position });
-    setRejectModalOpened(true);
+    candidateActions.handleRejectClick(applicationId, `application for ${position}`);
   };
 
   const handleHireClick = (applicationId: string, position: string) => {
-    setApplicationToHire({ id: applicationId, position });
-    setHireModalOpened(true);
-  };
-
-  const handleConfirmReject = async () => {
-    if (!applicationToReject) return;
-
-    try {
-      await updateStatusMutation.mutateAsync({
-        id: applicationToReject.id,
-        status: ApplicationStatus.REJECTED
-      });
-      notifications.show({
-        title: 'Application Rejected',
-        message: 'The candidate has been disqualified from this position.',
-        color: 'red',
-        icon: <IconX size={16} />
-      });
-      setRejectModalOpened(false);
-      setApplicationToReject(null);
-    } catch (error) {
-      console.error('Error rejecting application:', error);
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to update application status.',
-        color: 'red',
-      });
-    }
-  };
-
-  const handleConfirmHire = async () => {
-    if (!applicationToHire) return;
-
-    try {
-      await hireMutation.mutateAsync(applicationToHire.id);
-      notifications.show({
-        title: 'Candidate Hired',
-        message: `The candidate has been hired for ${applicationToHire.position}.`,
-        color: 'green',
-        icon: <IconCheck size={16} />
-      });
-      setHireModalOpened(false);
-      setApplicationToHire(null);
-    } catch (error) {
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to hire candidate.',
-        color: 'red',
-      });
-    }
+    candidateActions.handleHireClick(applicationId, `candidate for ${position}`);
   };
 
   const handleScheduleInterview = (applicationId: string) => {
@@ -218,43 +182,33 @@ export function CandidatesPage() {
 
       </Stack>
 
-      {/* Confirmation Modals */}
-      <ConfirmActionModal
-        opened={rejectModalOpened}
-        onClose={() => setRejectModalOpened(false)}
-        onConfirm={handleConfirmReject}
-        title="Reject Application"
-        message={
+      {/* Shared Reject/Hire Confirmation Modals */}
+      <CandidateActionModals
+        candidateToReject={candidateActions.candidateToReject}
+        onRejectClose={candidateActions.handleCancelReject}
+        onRejectConfirm={candidateActions.handleConfirmReject}
+        isRejecting={candidateActions.isRejecting}
+        rejectMessage={
           <Text>
-            Are you sure you want to reject the application for <strong>{applicationToReject?.position}</strong>?
+            Are you sure you want to reject the {candidateActions.candidateToReject?.name}?
             <br />
             This action can be undone later if needed.
           </Text>
         }
-        confirmLabel="Reject"
-        confirmColor="red"
-        confirmIcon={<IconX size={16} />}
-        isLoading={updateStatusMutation.isPending}
-      />
-
-      <ConfirmActionModal
-        opened={hireModalOpened}
-        onClose={() => setHireModalOpened(false)}
-        onConfirm={handleConfirmHire}
-        title="Hire Candidate"
-        message={
+        candidateToHire={candidateActions.candidateToHire}
+        onHireClose={candidateActions.handleCancelHire}
+        onHireConfirm={candidateActions.handleConfirmHire}
+        isHiring={candidateActions.isHiring}
+        hireMessage={
           <Text>
-            Are you sure you want to hire this candidate for <strong>{applicationToHire?.position}</strong>?
+            Are you sure you want to hire this {candidateActions.candidateToHire?.name}?
             <br />
             This will mark the application as HIRED.
           </Text>
         }
-        confirmLabel="Hire"
-        confirmColor="green"
-        confirmIcon={<IconCheck size={16} />}
-        isLoading={hireMutation.isPending}
       />
 
+      {/* Schedule Interview Modal */}
       <ScheduleInterviewModal
         opened={scheduleModalOpen}
         onClose={() => {
