@@ -22,12 +22,14 @@ import { UserFileModule } from '../domain/users/user-file/user-file.module';
 import { DashboardModule } from 'src/domain/dashboard/dashboard.module';
 import { WorkExperienceModule } from '../domain/users/work-experience/work-experience.module';
 import { EducationModule } from '../domain/users/education/education.module';
+import { MailerModule } from '../domain/mailer/mailer.module';
+import { mailerConfig } from 'src/config/mailer.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, authConfig, databaseConfig],
+      load: [appConfig, authConfig, databaseConfig, mailerConfig],
       envFilePath: enviorments[process.env.NODE_ENV] || '.env',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
@@ -43,6 +45,10 @@ import { EducationModule } from '../domain/users/education/education.module';
         POSTGRES_HOST: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION_TIME: Joi.number().default(1800),
+        SMTP_HOST: Joi.string().required(),
+        SMTP_PORT: Joi.number().required(),
+        SMTP_USER: Joi.string().required(),
+        SMTP_PASSWORD: Joi.string().required(),
       }),
     }),
     UsersModule,
@@ -58,6 +64,7 @@ import { EducationModule } from '../domain/users/education/education.module';
     DashboardModule,
     DatabaseModule,
     AuthModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [
