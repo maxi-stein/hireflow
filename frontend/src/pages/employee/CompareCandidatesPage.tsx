@@ -1,31 +1,17 @@
-import { useState, useEffect } from 'react';
-import {
-    Container,
-    Title,
-    Text,
-    TextInput,
-    Paper,
-    Stack,
-    Group,
-    Button,
-    Checkbox,
-    Badge,
-    SimpleGrid,
-    LoadingOverlay,
-    Accordion,
-    Alert,
-    useMantineColorScheme
-} from '@mantine/core';
+import { useState, useEffect, useCallback } from 'react';
+import { Container, SimpleGrid, Stack } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useSearchParams } from 'react-router-dom';
-import { IconSearch, IconScale, IconAlertCircle, IconX, IconCheck } from '@tabler/icons-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useMantineColorScheme } from '@mantine/core';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
-import { useAllCandidateApplicationsQuery, useUpdateApplicationStatusMutation, useHireApplicationMutation } from '../../hooks/api/useCandidateApplications';
+import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
+import { useCandidateActions } from '../../hooks/useCandidateActions';
 import { ApplicationStatus } from '../../services/candidate-application.service';
-import { ConfirmActionModal } from '../../components/common/ConfirmActionModal';
-import { useNavigate } from 'react-router-dom';
 import { CandidateComparisonCard } from '../../components/employee/compare/CandidateComparisonCard';
-import { CandidateAvatar } from '../../components/shared/CandidateAvatar';
+import { ComparisonViewHeader } from '../../components/employee/compare/ComparisonViewHeader';
+import { CompareSelectionHeader } from '../../components/employee/compare/CompareSelectionHeader';
+import { JobOfferSearchPanel } from '../../components/employee/compare/JobOfferSearchPanel';
+import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';
 import { getApplicationStatusColor } from '../../utils/application.utils';
 
 export function CompareCandidatesPage() {
@@ -34,34 +20,45 @@ export function CompareCandidatesPage() {
     const isDark = colorScheme === 'dark';
     const navigate = useNavigate();
 
-    // Job offer search
+    // Job offer search state
     const [search, setSearch] = useState('');
     const [debouncedSearch] = useDebouncedValue(search, 500);
 
-    // Selected job offer
+    // Selected job offer state
     const [selectedJobOfferId, setSelectedJobOfferId] = useState<string | null>(null);
-
-    // Accordion open state for job offers
-    const [jobAccordionValue, setJobAccordionValue] = useState<string | null>(null);
 
     // Selected candidates for comparison
     const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set());
 
-    // Comparison view active
+    // View state (selection vs comparison)
     const [showComparison, setShowComparison] = useState(false);
 
-    // Candidate to reject
-    const [candidateToReject, setCandidateToReject] = useState<{ id: string; name: string } | null>(null);
-    const [candidateToHire, setCandidateToHire] = useState<{ id: string; name: string } | null>(null);
-
-    // Synchronized accordion state across all cards (must be outside conditional)
+    // Synchronized accordion state across comparison cards
     const [accordionValue, setAccordionValue] = useState<string[]>(['skills']);
 
-    // Mutation for updating application status
-    const updateStatusMutation = useUpdateApplicationStatusMutation();
-    const hireMutation = useHireApplicationMutation();
+    // Hook for candidate reject/hire actions with modal management
+    const candidateActions = useCandidateActions({
+        onRejectSuccess: (applicationId) => {
+            // Remove rejected candidate from selection
+            const rejectedApp = candidatesToCompare.find(app => app.id === applicationId);
+            if (rejectedApp) {
+                const newSelected = new Set(selectedCandidates);
+                newSelected.delete(rejectedApp.candidate.id);
+                setSelectedCandidates(newSelected);
+            }
+        },
+        onHireSuccess: (applicationId) => {
+            // Remove hired candidate from selection
+            const hiredApp = candidatesToCompare.find(app => app.id === applicationId);
+            if (hiredApp) {
+                const newSelected = new Set(selectedCandidates);
+                newSelected.delete(hiredApp.candidate.id);
+                setSelectedCandidates(newSelected);
+            }
+        },
+    });
 
-    // Fetch job offers
+    // Fetch job offers with search filter
     const { data: jobOffersData, isLoading: isLoadingJobs } = useJobOffersQuery({
         position: debouncedSearch || undefined,
         limit: 50,
@@ -73,19 +70,23 @@ export function CompareCandidatesPage() {
         limit: 100,
     });
 
-    // Filter candidates by status (APPLIED or IN_PROGRESS only)
+    // Filter candidates by status (only APPLIED or IN_PROGRESS for comparison)
     const filteredCandidates = applicationsData?.data?.filter(
         app => app.status === ApplicationStatus.APPLIED || app.status === ApplicationStatus.IN_PROGRESS
     ) || [];
 
-    // Handle URL parameters for deep linking
+    // Get selected candidate applications for comparison view
+    const candidatesToCompare = filteredCandidates.filter(app =>
+        selectedCandidates.has(app.candidate.id)
+    );
+
+    // Handle URL parameters for deep linking (jobOfferId and candidateId)
     useEffect(() => {
         const jobOfferId = searchParams.get('jobOfferId');
         const candidateId = searchParams.get('candidateId');
 
         if (jobOfferId) {
             setSelectedJobOfferId(jobOfferId);
-            setJobAccordionValue(jobOfferId);
         }
 
         if (candidateId) {
@@ -93,121 +94,72 @@ export function CompareCandidatesPage() {
         }
     }, [searchParams]);
 
-    const handleCandidateToggle = (candidateId: string) => {
-        const newSelected = new Set(selectedCandidates);
-        if (newSelected.has(candidateId)) {
-            newSelected.delete(candidateId);
-        } else {
-            newSelected.add(candidateId);
-        }
-        setSelectedCandidates(newSelected);
-    };
+    // Memoized callback to toggle candidate selection
+    const handleCandidateToggle = useCallback((candidateId: string) => {
+        setSelectedCandidates(prev => {
+            const newSelected = new Set(prev);
+            if (newSelected.has(candidateId)) {
+                newSelected.delete(candidateId);
+            } else {
+                newSelected.add(candidateId);
+            }
+            return newSelected;
+        });
+    }, []);
 
-    const handleClearSelection = () => {
+    // Clear all selected candidates
+    const handleClearSelection = useCallback(() => {
         setSelectedCandidates(new Set());
-    };
+    }, []);
 
-    const handleCompare = () => {
+    // Enter comparison view (requires 2+ candidates)
+    const handleCompare = useCallback(() => {
         if (selectedCandidates.size >= 2) {
             setShowComparison(true);
         }
-    };
+    }, [selectedCandidates.size]);
 
-    const handleBackToSelection = () => {
+    // Return to selection view, preserving selections
+    const handleBackToSelection = useCallback(() => {
         setShowComparison(false);
-        // Keep the accordion open with selections preserved
-        if (selectedJobOfferId) {
-            setJobAccordionValue(selectedJobOfferId);
-        }
-    };
+    }, []);
 
-    const handleAccordionChange = (value: string | null) => {
-        setJobAccordionValue(value);
-        if (value) {
-            setSelectedJobOfferId(value);
-        }
-    };
+    // Handle job offer accordion change
+    const handleJobSelect = useCallback((jobId: string | null) => {
+        setSelectedJobOfferId(jobId);
+    }, []);
 
-    const handleRejectClick = (application: any) => {
-        setCandidateToReject({
-            id: application.id,
-            name: `${application.candidate.user.first_name} ${application.candidate.user.last_name}`
-        });
-    };
-
-    const handleConfirmReject = async () => {
-        if (!candidateToReject) return;
-
-        try {
-            await updateStatusMutation.mutateAsync({
-                id: candidateToReject.id,
-                status: ApplicationStatus.REJECTED
-            });
-
-            // Remove from selected candidates
-            const newSelected = new Set(selectedCandidates);
-            const rejectedApp = candidatesToCompare.find(app => app.id === candidateToReject.id);
-            if (rejectedApp) {
-                newSelected.delete(rejectedApp.candidate.id);
-                setSelectedCandidates(newSelected);
-            }
-
-            setCandidateToReject(null);
-        } catch (error) {
-            console.error('Error rejecting candidate:', error);
-        }
-    };
-
-    const handleScheduleInterview = (applicationId: string) => {
+    // Navigate to interviews page with application pre-selected
+    const handleScheduleInterview = useCallback((applicationId: string) => {
         navigate(`/manage/interviews?applicationId=${applicationId}`);
-    };
+    }, [navigate]);
 
-    const handleHireClick = (application: any) => {
-        setCandidateToHire({
-            id: application.id,
-            name: `${application.candidate.user.first_name} ${application.candidate.user.last_name}`
-        });
-    };
+    // Handlers for reject/hire modal actions
+    const handleRejectClick = useCallback((application: any) => {
+        candidateActions.handleRejectClick(
+            application.id,
+            `${application.candidate.user.first_name} ${application.candidate.user.last_name}`
+        );
+    }, [candidateActions]);
 
-    const handleConfirmHire = async () => {
-        if (!candidateToHire) return;
+    const handleHireClick = useCallback((application: any) => {
+        candidateActions.handleHireClick(
+            application.id,
+            `${application.candidate.user.first_name} ${application.candidate.user.last_name}`
+        );
+    }, [candidateActions]);
 
-        try {
-            await hireMutation.mutateAsync(candidateToHire.id);
-
-            // Remove from selected candidates
-            const newSelected = new Set(selectedCandidates);
-            const hiredApp = candidatesToCompare.find(app => app.id === candidateToHire.id);
-            if (hiredApp) {
-                newSelected.delete(hiredApp.candidate.id);
-                setSelectedCandidates(newSelected);
-            }
-
-            setCandidateToHire(null);
-        } catch (error) {
-            console.error('Error hiring candidate:', error);
-        }
-    };
-
-    // Get selected candidate applications for comparison
-    const candidatesToCompare = filteredCandidates.filter(app =>
-        selectedCandidates.has(app.candidate.id)
-    );
-
-    // Comparison View
+    // ========== COMPARISON VIEW ==========
     if (showComparison) {
         return (
             <Container size="xl" py="xl">
-                <Group justify="space-between" mb="lg">
-                    <div>
-                        <Title order={2}>Candidate Comparison</Title>
-                        <Text c="dimmed" size="sm">Comparing {candidatesToCompare.length} candidates</Text>
-                    </div>
-                    <Button variant="default" onClick={handleBackToSelection}>
-                        Back to Selection
-                    </Button>
-                </Group>
+                {/* Header with candidate count and back button */}
+                <ComparisonViewHeader
+                    candidateCount={candidatesToCompare.length}
+                    onBack={handleBackToSelection}
+                />
 
+                {/* Grid of candidate comparison cards */}
                 <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg" style={{ alignItems: 'stretch' }}>
                     {candidatesToCompare.map(application => (
                         <CandidateComparisonCard
@@ -223,195 +175,46 @@ export function CompareCandidatesPage() {
                     ))}
                 </SimpleGrid>
 
-                {/* Reject Confirmation Modal */}
-                <ConfirmActionModal
-                    opened={!!candidateToReject}
-                    onClose={() => setCandidateToReject(null)}
-                    onConfirm={handleConfirmReject}
-                    title="Reject Candidate"
-                    message={
-                        <Text>
-                            Are you sure you want to reject <strong>{candidateToReject?.name}</strong>?
-                            <br /><br />
-                            This will change their application status to REJECTED and they will be removed from the comparison.
-                        </Text>
-                    }
-                    confirmLabel="Reject"
-                    confirmColor="red"
-                    confirmIcon={<IconX size={16} />}
-                    isLoading={updateStatusMutation.isPending}
-                />
-
-                {/* Hire Confirmation Modal */}
-                <ConfirmActionModal
-                    opened={!!candidateToHire}
-                    onClose={() => setCandidateToHire(null)}
-                    onConfirm={handleConfirmHire}
-                    title="Hire Candidate"
-                    message={
-                        <Text>
-                            Are you sure you want to hire <strong>{candidateToHire?.name}</strong>?
-                            <br /><br />
-                            This will change their application status to HIRED.
-                        </Text>
-                    }
-                    confirmLabel="Hire"
-                    confirmColor="green"
-                    confirmIcon={<IconCheck size={16} />}
-                    isLoading={hireMutation.isPending}
+                {/* Reject and Hire confirmation modals */}
+                <CandidateActionModals
+                    candidateToReject={candidateActions.candidateToReject}
+                    onRejectClose={candidateActions.handleCancelReject}
+                    onRejectConfirm={candidateActions.handleConfirmReject}
+                    isRejecting={candidateActions.isRejecting}
+                    candidateToHire={candidateActions.candidateToHire}
+                    onHireClose={candidateActions.handleCancelHire}
+                    onHireConfirm={candidateActions.handleConfirmHire}
+                    isHiring={candidateActions.isHiring}
                 />
             </Container>
         );
     }
 
-    // Selection View
+    // ========== SELECTION VIEW ==========
     return (
         <Container size="xl" py="xl">
             <Stack gap="lg">
-                <Group justify="space-between" align="flex-end">
-                    <div>
-                        <Title order={2}>Compare Candidates</Title>
-                        <Text c="dimmed" size="sm">Select candidates from a job offer to compare</Text>
-                    </div>
-                    <Group gap="sm">
-                        <Button
-                            variant="subtle"
-                            color="gray"
-                            onClick={handleClearSelection}
-                            disabled={selectedCandidates.size === 0}
-                            leftSection={<IconX size={16} />}
-                        >
-                            Clear Selection
-                        </Button>
-                        <Button
-                            leftSection={<IconScale size={20} />}
-                            disabled={selectedCandidates.size < 2}
-                            onClick={handleCompare}
-                        >
-                            Compare Candidates
-                        </Button>
-                    </Group>
-                </Group>
+                {/* Header with selection count and action buttons */}
+                <CompareSelectionHeader
+                    selectedCount={selectedCandidates.size}
+                    onClearSelection={handleClearSelection}
+                    onCompare={handleCompare}
+                />
 
-                {/* Job Offer Search */}
-                <Paper p="md" withBorder>
-                    <TextInput
-                        placeholder="Search job offers by position..."
-                        leftSection={<IconSearch size={16} />}
-                        value={search}
-                        onChange={(e) => setSearch(e.currentTarget.value)}
-                        mb="md"
-                    />
-
-                    <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-                        {jobOffersData?.data.map((offer, index) => {
-                            const bgColors = ['blue', 'teal', 'grape', 'orange', 'indigo', 'green', 'cyan', 'pink'];
-                            const color = bgColors[index % bgColors.length];
-
-                            return (
-                                <Accordion
-                                    key={offer.id}
-                                    variant="separated"
-                                    value={jobAccordionValue}
-                                    onChange={handleAccordionChange}
-                                    styles={{
-                                        item: {
-                                            backgroundColor: isDark
-                                                ? `var(--mantine-color-${color}-light)`
-                                                : `var(--mantine-color-${color}-light)`,
-                                            borderColor: `var(--mantine-color-${color}-light-color)`,
-                                        },
-                                        control: {
-                                            '&:hover': {
-                                                backgroundColor: isDark
-                                                    ? `var(--mantine-color-${color}-9)`
-                                                    : `var(--mantine-color-${color}-1)`,
-                                            }
-                                        }
-                                    }}
-                                >
-                                    <Accordion.Item value={offer.id}>
-                                        <Accordion.Control>
-                                            <Group justify="space-between" wrap="nowrap">
-                                                <div>
-                                                    <Text fw={500}>{offer.position}</Text>
-                                                    <Text size="sm" c="dimmed">{offer.location}</Text>
-                                                </div>
-                                                <Badge>{offer.applicants_count} applicants</Badge>
-                                            </Group>
-                                        </Accordion.Control>
-                                        <Accordion.Panel style={{ position: 'relative', minHeight: 100 }}>
-                                            <LoadingOverlay visible={isLoadingApps} />
-
-                                            {filteredCandidates.length === 0 ? (
-                                                <Alert icon={<IconAlertCircle size={16} />} color="blue" variant="light">
-                                                    No candidates with APPLIED or IN_PROGRESS status
-                                                </Alert>
-                                            ) : (
-                                                <Stack gap="xs">
-                                                    {filteredCandidates.map(application => (
-                                                        <Paper
-                                                            key={`${application.candidate.id}-${application.id}`}
-                                                            p="sm"
-                                                            withBorder
-                                                            onClick={() => handleCandidateToggle(application.candidate.id)}
-                                                            style={{
-                                                                cursor: 'pointer',
-                                                                transition: 'background-color 0.2s'
-                                                            }}
-                                                            onMouseEnter={(e) => {
-                                                                e.currentTarget.style.backgroundColor = isDark
-                                                                    ? 'var(--mantine-color-dark-6)'
-                                                                    : 'var(--mantine-color-gray-0)';
-                                                            }}
-                                                            onMouseLeave={(e) => {
-                                                                e.currentTarget.style.backgroundColor = '';
-                                                            }}
-                                                        >
-                                                            <Group justify="space-between">
-                                                                <Group>
-                                                                    <Checkbox
-                                                                        checked={selectedCandidates.has(application.candidate.id)}
-                                                                        onChange={() => handleCandidateToggle(application.candidate.id)}
-                                                                        onClick={(e) => e.stopPropagation()}
-                                                                    />
-                                                                    <CandidateAvatar
-                                                                        candidateId={application.candidate.id}
-                                                                        firstName={application.candidate.user.first_name}
-                                                                        lastName={application.candidate.user.last_name}
-                                                                        radius="xl"
-                                                                    />
-                                                                    <div>
-                                                                        <Text fw={500}>
-                                                                            {application.candidate.user.first_name} {application.candidate.user.last_name}
-                                                                        </Text>
-                                                                        <Text size="xs" c="dimmed">{application.candidate.user.email}</Text>
-                                                                    </div>
-                                                                </Group>
-                                                                <Badge color={getApplicationStatusColor(application.status)} variant="light">
-                                                                    {application.status}
-                                                                </Badge>
-                                                            </Group>
-                                                        </Paper>
-                                                    ))}
-                                                </Stack>
-                                            )}
-                                        </Accordion.Panel>
-                                    </Accordion.Item>
-                                </Accordion>
-                            );
-                        })}
-                    </SimpleGrid>
-
-                    {isLoadingJobs && (
-                        <Text ta="center" c="dimmed" py="md">Loading job offers...</Text>
-                    )}
-
-                    {!isLoadingJobs && jobOffersData?.data.length === 0 && (
-                        <Text ta="center" c="dimmed" py="md">No job offers found</Text>
-                    )}
-                </Paper>
-
+                {/* Search panel with job offers and candidate selection */}
+                <JobOfferSearchPanel
+                    search={search}
+                    onSearchChange={setSearch}
+                    jobOffers={jobOffersData?.data || []}
+                    selectedJobOfferId={selectedJobOfferId}
+                    onJobSelect={handleJobSelect}
+                    selectedCandidates={selectedCandidates}
+                    onCandidateToggle={handleCandidateToggle}
+                    isLoadingJobs={isLoadingJobs}
+                    isLoadingApps={isLoadingApps}
+                    filteredCandidates={filteredCandidates}
+                    isDark={isDark}
+                />
             </Stack>
         </Container>
     );
