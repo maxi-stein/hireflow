@@ -87,7 +87,12 @@ export class JobOfferService {
     query.loadRelationCountAndMap(
       'jobOffer.applicants_count',
       'jobOffer.applications',
-    ); // Count applicants for each job offer
+      'application',
+      (qb) =>
+        qb.where('application.status NOT IN (:...excludedStatuses)', {
+          excludedStatuses: ['REJECTED', 'HIRED'],
+        }),
+    );
     query.leftJoinAndSelect('jobOffer.skills', 'skills');
 
     query.skip((page - 1) * limit).take(limit);
@@ -112,6 +117,11 @@ export class JobOfferService {
       .loadRelationCountAndMap(
         'jobOffer.applicants_count',
         'jobOffer.applications',
+        'application',
+        (qb) =>
+          qb.where('application.status NOT IN (:...excludedStatuses)', {
+            excludedStatuses: ['REJECTED', 'HIRED'],
+          }),
       )
       .leftJoinAndSelect('jobOffer.skills', 'jobOfferSkill')
       .getOne();
