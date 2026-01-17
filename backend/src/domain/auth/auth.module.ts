@@ -14,6 +14,7 @@ import { GuardsModule } from './guards/guards.module';
 import { UsersModule } from '../users/base-user/user.module';
 import { CandidateModule } from '../users/candidate/candidate.module';
 import { EmployeesModule } from '../users/employee/employee.module';
+import { MailerModule } from '../mailer/mailer.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { EmployeesModule } from '../users/employee/employee.module';
     CandidateModule,
     PassportModule,
     GuardsModule,
+    MailerModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {

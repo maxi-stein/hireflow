@@ -9,13 +9,16 @@ import { JwtUser } from '../users/interfaces/jwt.user';
 import { UserType } from '../users/interfaces/user.enum';
 import * as bcrypt from 'bcrypt';
 import { ChangePasswordDto } from './dto/ChangePasswordDto';
-import { AUTH } from '../../shared/constants/auth.constants';
+import { MailerService } from '../mailer/mailer.service';
+import { generateRandomPassword } from 'src/domain/auth/utils/password-generator.util';
+import { EmailTemplateType } from 'src/domain/mailer/utils/email-template.factory';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private mailerService: MailerService,
   ) {}
 
   // Used in local strategy. Checks if password is correct and returns the entire user
@@ -90,5 +93,46 @@ export class AuthService {
     return this.usersService.update(user_id, {
       password: changePasswordDto.newPassword,
     });
+  }
+
+  async resetPassword(email: string) {
+    // Find user by email (without password for security)
+    const userForAuth =
+      await this.usersService.findByEmailForAuthentication(email);
+
+    if (!userForAuth) {
+      throw new NotFoundException({
+        message: 'User with this email does not exist',
+        code: 'USER_NOT_FOUND',
+      });
+    }
+
+    // Generate new random password
+    const newPassword = generateRandomPassword(10);
+
+    // Update user's password (usersService.update handles hashing)
+    await this.usersService.update(userForAuth.user_id, {
+      password: newPassword,
+    });
+
+    // Get user details for email personalization
+    const user = await this.usersService.findOne({ email });
+
+    // Send email with new password
+    await this.mailerService.sendMail(
+      EmailTemplateType.PASSWORD_RESET,
+      {
+        email: user.email,
+        newPassword: newPassword,
+        firstName: user.first_name,
+      },
+      [{ address: user.email, name: `${user.first_name} ${user.last_name}` }],
+      'Password Reset - HireFlow',
+    );
+
+    return {
+      message:
+        'Password reset successful. Check your email for the new password.',
+    };
   }
 }
