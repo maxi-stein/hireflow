@@ -3,6 +3,7 @@ import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar'
 import { InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
 import { IconCalendar, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
+import { getInterviewStatusColor } from '../../../utils/application.utils';
 
 interface InterviewDetailsModalProps {
   interview: Interview | null;
@@ -15,16 +16,6 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
   if (!interview) return null;
 
   const jobOffer = interview.applications?.[0]?.job_offer;
-
-  const getStatusColor = (status: InterviewStatus) => {
-    switch (status) {
-      case InterviewStatus.COMPLETED: return 'green';
-      case InterviewStatus.CANCELLED: return 'red';
-      case InterviewStatus.SCHEDULED: return 'blue';
-      case InterviewStatus.RESCHEDULED: return 'orange';
-      default: return 'gray';
-    }
-  };
 
   return (
     <Modal opened={!!interview} onClose={onClose} title="Interview Details">
@@ -48,7 +39,7 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
               <Text size="lg" fw={700} c="dimmed">No candidates</Text>
             )}
           </Stack>
-          <Badge color={getStatusColor(interview.status)}>{interview.status}</Badge>
+          <Badge color={getInterviewStatusColor(interview.status)}>{interview.status}</Badge>
         </Group>
 
         <Text c="dimmed" size="sm">

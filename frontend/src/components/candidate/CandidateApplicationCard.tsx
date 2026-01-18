@@ -4,7 +4,7 @@ import type { CandidateApplication } from '../../services/candidate-application.
 import { ApplicationStatus } from '../../services/candidate-application.service';
 import type { Interview, Interviewer } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
-import { getApplicationStatusColor } from '../../utils/application.utils';
+import { getApplicationStatusColor, getInterviewStatusColor } from '../../utils/application.utils';
 import { useNavigate } from 'react-router-dom';
 
 interface CandidateApplicationCardProps {
@@ -16,22 +16,12 @@ export function CandidateApplicationCard({ application, interviews }: CandidateA
     const { job_offer, status, created_at } = application;
     const navigate = useNavigate();
 
-    const getInterviewStatusColor = (status: InterviewStatus) => {
-        switch (status) {
-            case InterviewStatus.COMPLETED: return 'green';
-            case InterviewStatus.CANCELLED: return 'red';
-            case InterviewStatus.SCHEDULED: return 'blue';
-            case InterviewStatus.NO_SHOW: return 'orange';
-            default: return 'gray';
-        }
-    };
-
     const getInterviewStatusIcon = (status: InterviewStatus) => {
         switch (status) {
             case InterviewStatus.COMPLETED: return IconCheck;
             case InterviewStatus.CANCELLED: return IconX;
             case InterviewStatus.SCHEDULED: return IconClock;
-            case InterviewStatus.NO_SHOW: return IconX;
+            case InterviewStatus.RESCHEDULED: return IconX;
             default: return IconClock;
         }
     };

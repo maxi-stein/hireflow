@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getApplicationStatusColor } from '../../utils/application.utils';
+import { getApplicationStatusColor, getInterviewStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
 import { IconChevronLeft, IconX, IconCheck, IconCircleCheck } from '@tabler/icons-react';
@@ -9,7 +9,6 @@ import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { useCandidateFilesQuery } from '../../hooks/api/useUserFiles';
 import { useCandidateActions } from '../../hooks/useCandidateActions';
 import { ApplicationStatus } from '../../services/candidate-application.service';
-import { InterviewStatus } from '../../services/interview.service';
 import { FileType, userFileService } from '../../services/user-file.service';
 import { notifications } from '@mantine/notifications';
 import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';
@@ -96,16 +95,6 @@ export function CandidatesPage() {
   const handleScheduleInterview = (applicationId: string) => {
     setScheduleApplicationId(applicationId);
     setScheduleModalOpen(true);
-  };
-
-  const getInterviewStatusColor = (status: InterviewStatus) => {
-    switch (status) {
-      case InterviewStatus.COMPLETED: return 'green';
-      case InterviewStatus.CANCELLED: return 'red';
-      case InterviewStatus.SCHEDULED: return 'blue';
-      case InterviewStatus.RESCHEDULED: return 'orange';
-      default: return 'gray';
-    }
   };
 
   const isLoading = isLoadingCandidate || isLoadingApplications || isLoadingInterviews;

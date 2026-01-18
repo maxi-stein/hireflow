@@ -18,7 +18,7 @@ export const JobOfferCard = ({ job, action, showSensitiveData = false, isApplied
           <Group justify="space-between" mb="xs">
             <Group gap="xs">
               <Title order={3}>{job.position}</Title>
-              {isApplied && <Badge color="gray" variant="filled">Applied</Badge>}
+              {isApplied && <Badge color="cyan" variant="filled">Applied</Badge>}
             </Group>
             <Badge color="green" variant="light">
               {job.status}
