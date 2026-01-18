@@ -2,6 +2,7 @@ import { Paper, Group, Title, Stack, Card, Text, Badge, Box } from '@mantine/cor
 import { IconClock } from '@tabler/icons-react';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { getEffectiveInterviewStatus } from '../../../utils/interview.utils';
+import { TimeDisplay } from '../../shared/TimeDisplay';
 
 
 interface InterviewHistorySectionProps {
@@ -22,12 +23,20 @@ export function InterviewHistorySection({ interviews, getStatusColor }: Intervie
           {interviews.map((interview) => (
             <Card key={interview.id} withBorder padding="sm" radius="md">
               <Group justify="space-between">
-                <Box>
-                  <Text fw={500}>{new Date(interview.scheduled_time).toLocaleString()}</Text>
-                  <Text size="xs" c="dimmed">
-                    {interview.type} Interview • {interview.applications[0]?.job_offer?.position || 'Unknown Position'}
-                  </Text>
-                </Box>
+                <Group gap="sm">
+                  <TimeDisplay
+                    date={interview.scheduled_time}
+                    variant="date-time"
+                    color="blue"
+                    size="sm"
+                  />
+                  <Box>
+                    <Text fw={500}>{interview.type} Interview</Text>
+                    <Text size="xs" c="dimmed">
+                      {interview.applications[0]?.job_offer?.position || 'Unknown Position'}
+                    </Text>
+                  </Box>
+                </Group>
                 <Badge
                   color={getStatusColor(getEffectiveInterviewStatus(interview))}
                   variant="light"

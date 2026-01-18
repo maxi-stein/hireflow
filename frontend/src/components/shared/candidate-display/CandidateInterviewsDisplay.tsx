@@ -3,6 +3,7 @@ import { IconCalendarEvent, IconHistory, IconMessageCircle, IconClock } from '@t
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { getEffectiveInterviewStatus } from '../../../utils/interview.utils';
 import { getScoreColor } from '../../../utils/score.utils';
+import { TimeDisplay } from '../TimeDisplay';
 
 interface CandidateInterviewsDisplayProps {
   interviews: Interview[];
@@ -34,7 +35,12 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
               title="Interview Scheduled"
               icon={<IconCalendarEvent size={16} />}
             >
-              <Text size="sm">{new Date(interview.scheduled_time).toLocaleString()}</Text>
+              <TimeDisplay
+                date={interview.scheduled_time}
+                variant="date-time"
+                color="blue"
+                size="sm"
+              />
             </Alert>
           );
         }
@@ -45,11 +51,19 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
 
           return (
             <Box key={interview.id}>
-              <Group gap="xs" mb="xs">
-                <IconHistory size={14} style={{ opacity: 0.7 }} />
-                <Text size="xs" fw={700} c="dimmed" tt="uppercase">
-                  Interview - {new Date(interview.scheduled_time).toLocaleDateString()}
-                </Text>
+              <Group gap="sm" mb="xs">
+                <TimeDisplay
+                  date={interview.scheduled_time}
+                  variant="date-only"
+                  color="gray"
+                  size="xs"
+                />
+                <Group gap="xs">
+                  <IconHistory size={14} style={{ opacity: 0.7 }} />
+                  <Text size="xs" fw={700} c="dimmed" tt="uppercase">
+                    Interview Completed
+                  </Text>
+                </Group>
               </Group>
 
               {reviews.length > 0 ? (

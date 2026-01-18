@@ -3,7 +3,8 @@ import { useState, useMemo } from 'react';
 import { useMyPendingReviewsQuery, useMyCompletedReviewsQuery } from '../../hooks/api/useInterviewReviews';
 import { IconClipboardCheck, IconHistory, IconSearch, IconBriefcase } from '@tabler/icons-react'; // removed IconUser
 import { InterviewReviewForm } from '../../components/employee/reviews/InterviewReviewForm';
-import { CandidateAvatar } from '../../components/shared/CandidateAvatar';
+import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
+import { TimeDisplay } from '../../components/shared/TimeDisplay';
 import { ScoreBadge } from '../../components/shared/ScoreBadge';
 import { useAppStore } from '../../store/useAppStore';
 import type { InterviewReview } from '../../services/interview-review.service';
@@ -112,10 +113,20 @@ export function ReviewsPage() {
                   {candidateInterviews.map(interview => (
                     <Box key={interview.id} p="sm" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
                       <Group justify="space-between">
-                        <Box>
-                          <Text size="sm">{new Date(interview.scheduled_time).toLocaleString()}</Text>
-                          <Text size="xs" c="dimmed">{interview.type} Interview</Text>
-                        </Box>
+                        <Group gap="sm">
+                          <TimeDisplay
+                            date={interview.scheduled_time}
+                            variant="date-time"
+                            color="orange"
+                            size="sm"
+                          />
+                          <Box>
+                            <Text size="sm" fw={500}>{interview.type} Interview</Text>
+                            <Text size="xs" c="dimmed">
+                              {interview.applications[0]?.job_offer?.position || 'Unknown Position'}
+                            </Text>
+                          </Box>
+                        </Group>
                         <Button
                           variant={selectedInterviewId === interview.id ? "filled" : "light"}
                           size="xs"

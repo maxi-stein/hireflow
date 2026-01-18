@@ -1,0 +1,82 @@
+import { Paper, Text } from '@mantine/core';
+
+export interface TimeDisplayProps {
+  date: Date | string;
+  /** Display variant: time-only, date-time, or date-only */
+  variant?: 'time-only' | 'date-time' | 'date-only';
+  /** Color for the time text */
+  color?: 'blue' | 'orange' | 'grape' | 'gray';
+  size?: 'xs' | 'sm' | 'md';
+}
+
+/**
+ * Displays time/date in a consistent, prominent format across the application
+ * Used for interview times, review times, etc.
+ */
+export function TimeDisplay({
+  date,
+  variant = 'time-only',
+  color = 'blue',
+  size = 'sm',
+}: TimeDisplayProps) {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+
+  // Format time as "2:30 PM"
+  const time = dateObj.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  const [timeStr, ampm] = time.split(' ');
+
+  // Format date as "Jan 17"
+  const dateStr = dateObj.toLocaleDateString([], {
+    month: 'short',
+    day: 'numeric'
+  });
+
+  // Size configuration
+  const sizeMap = {
+    xs: { minWidth: 55, time: 'xs', label: '10px', padding: 4 },
+    sm: { minWidth: 65, time: 'sm', label: 'xs', padding: 6 },
+    md: { minWidth: 75, time: 'md', label: 'sm', padding: 8 }
+  };
+
+  const config = sizeMap[size];
+
+  return (
+    <Paper
+      withBorder
+      radius="sm"
+      p={config.padding}
+      style={{
+        textAlign: 'center',
+        minWidth: config.minWidth,
+        backgroundColor: 'var(--mantine-color-gray-0)',
+        flexShrink: 0
+      }}
+    >
+      {variant === 'date-time' && (
+        <Text size="xs" c="dimmed" lh={1} mb={2}>
+          {dateStr}
+        </Text>
+      )}
+
+      {variant === 'date-only' ? (
+        <Text size={config.time as any} fw={800} c={color} lh={1}>
+          {dateStr}
+        </Text>
+      ) : (
+        <>
+          <Text size={config.time as any} fw={800} c={color} lh={1}>
+            {timeStr}
+          </Text>
+          <Text size="xs" fw={700} lh={1} mt={2}>
+            {ampm}
+          </Text>
+        </>
+      )}
+    </Paper>
+  );
+}
