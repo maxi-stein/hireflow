@@ -1,7 +1,8 @@
-import { NavLink, Stack } from '@mantine/core';
+import { Stack, Title } from '@mantine/core';
 import { useLocation, useNavigate, matchPath } from 'react-router-dom';
 import { useAppStore } from '../../../store/useAppStore';
 import { getNavItemsForUser, getAllRoutes, type RouteConfig } from '../../../router/routes.config';
+import { StyledNavLink } from './styled';
 
 interface SideNavProps {
   onNavigate?: () => void;
@@ -36,31 +37,49 @@ export function SideNav({ onNavigate }: SideNavProps) {
   };
 
   return (
-    <Stack gap="xs">
-      {navItems.map((item) => {
-        const active = isActive(item);
-        return (
-          <NavLink
-            key={item.path}
-            label={item.label}
-            leftSection={item.icon}
-            onClick={() => !item.children && handleNavigate(item.path)}
-            active={active}
-            defaultOpened={active}
-            variant="subtle"
-          >
-            {item.children?.filter(child => child.showInNav !== false).map((child) => (
-              <NavLink
-                key={child.path}
-                label={child.label}
-                onClick={() => handleNavigate(child.path)}
-                active={matchPath({ path: child.path, end: true }, location.pathname) !== null}
-                variant="subtle"
-              />
-            ))}
-          </NavLink>
-        )
-      })}
+    <Stack gap="md" p="md" h="100%">
+      <Title
+        order={3}
+        onClick={() => navigate('/')}
+        c="white"
+        style={{ cursor: 'pointer', userSelect: 'none' }}
+        px="xs"
+      >
+        HireFlow
+      </Title>
+      <Stack gap="xs">
+        {navItems.map((item) => {
+          const active = isActive(item);
+          return (
+            <StyledNavLink
+              key={item.path}
+              label={item.label}
+              leftSection={item.icon}
+              onClick={() => !item.children && handleNavigate(item.path)}
+              active={active}
+              defaultOpened={active}
+              variant="subtle"
+              c={active ? "white" : "blue.1"}
+              style={{ transition: 'background-color 0.2s ease' }}
+            >
+              {item.children?.filter(child => child.showInNav !== false).map((child) => {
+                const isChildActive = matchPath({ path: child.path, end: true }, location.pathname) !== null;
+                return (
+                  <StyledNavLink
+                    key={child.path}
+                    label={child.label}
+                    onClick={() => handleNavigate(child.path)}
+                    active={isChildActive}
+                    variant="subtle"
+                    c={isChildActive ? "white" : "blue.2"}
+                    style={{ transition: 'background-color 0.2s ease' }}
+                  />
+                );
+              })}
+            </StyledNavLink>
+          )
+        })}
+      </Stack>
     </Stack>
   );
 }
