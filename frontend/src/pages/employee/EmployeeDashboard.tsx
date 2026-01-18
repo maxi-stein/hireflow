@@ -42,7 +42,8 @@ export const EmployeeDashboard = () => {
         <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }}>
           {stats.map((stat) => (
             <Paper withBorder p="md" radius="md" key={stat.label}>
-              <Group justify="space-between">
+              <Group>
+                <stat.icon size={28} stroke={1.5} color={`var(--mantine-color-${stat.color}-6)`} />
                 <div>
                   <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
                     {stat.label}
@@ -51,7 +52,6 @@ export const EmployeeDashboard = () => {
                     {stat.value}
                   </Text>
                 </div>
-                <stat.icon size={28} stroke={1.5} color={stat.color} />
               </Group>
             </Paper>
           ))}

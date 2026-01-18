@@ -53,7 +53,7 @@ export function TimeDisplay({
       style={{
         textAlign: 'center',
         minWidth: config.minWidth,
-        backgroundColor: 'var(--mantine-color-gray-0)',
+        backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))',
         flexShrink: 0
       }}
     >
