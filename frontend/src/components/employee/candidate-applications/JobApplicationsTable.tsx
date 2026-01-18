@@ -20,7 +20,7 @@ import { useAllCandidateApplicationsQuery } from '../../../hooks/api/useCandidat
 import { ApplicationStatus } from '../../../services/candidate-application.service';
 import { IconEye, IconScale, IconDotsVertical, IconSearch } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 
 export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOfferId: string, jobTitle: string, deadline?: string | null }) {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
     limit: 5, // Show 5 per job posting to save space
     job_offer_id: jobOfferId,
     search: debouncedSearch,
-    status: statusFilter !== 'all' ? statusFilter as ApplicationStatus : undefined,
+    status: statusFilter !== 'all' ? [statusFilter as ApplicationStatus] : undefined,
     exclude_status: ApplicationStatus.HIRED,
   });
 

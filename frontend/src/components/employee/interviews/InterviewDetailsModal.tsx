@@ -1,5 +1,5 @@
 import { Modal, Text, Group, Badge, Stack, Button, Anchor, Avatar } from '@mantine/core';
-import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
 import { IconCalendar, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
@@ -21,7 +21,7 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
       case InterviewStatus.COMPLETED: return 'green';
       case InterviewStatus.CANCELLED: return 'red';
       case InterviewStatus.SCHEDULED: return 'blue';
-      case InterviewStatus.NO_SHOW: return 'orange';
+      case InterviewStatus.RESCHEDULED: return 'orange';
       default: return 'gray';
     }
   };

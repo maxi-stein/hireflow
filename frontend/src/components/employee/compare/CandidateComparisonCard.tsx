@@ -16,7 +16,7 @@ import { useCandidateQuery } from '../../../hooks/api/useCandidates';
 import { useCandidateInterviewsQuery } from '../../../hooks/api/useInterviews';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
-import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
 
 interface CandidateComparisonCardProps {

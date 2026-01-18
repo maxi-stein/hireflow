@@ -103,7 +103,7 @@ export function CandidatesPage() {
       case InterviewStatus.COMPLETED: return 'green';
       case InterviewStatus.CANCELLED: return 'red';
       case InterviewStatus.SCHEDULED: return 'blue';
-      case InterviewStatus.NO_SHOW: return 'orange';
+      case InterviewStatus.RESCHEDULED: return 'orange';
       default: return 'gray';
     }
   };

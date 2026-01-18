@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Avatar, type AvatarProps } from '@mantine/core';
-import { useCandidateFilesQuery } from '../../hooks/api/useUserFiles';
-import { FileType, userFileService } from '../../services/user-file.service';
+import { useCandidateFilesQuery } from '../../../hooks/api/useUserFiles';
+import { FileType, userFileService } from '../../../services/user-file.service';
 
 interface CandidateAvatarProps extends AvatarProps {
   candidateId: string;

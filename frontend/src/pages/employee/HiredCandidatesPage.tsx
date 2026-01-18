@@ -2,7 +2,7 @@ import { Container, Title, Text, Table, Paper, Group, Badge, LoadingOverlay } fr
 import { useNavigate } from 'react-router-dom';
 import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
 import { ApplicationStatus } from '../../services/candidate-application.service';
-import { CandidateAvatar } from '../../components/shared/CandidateAvatar';
+import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
 import { getApplicationStatusColor } from '../../utils/application.utils';
 
 export function HiredCandidatesPage() {

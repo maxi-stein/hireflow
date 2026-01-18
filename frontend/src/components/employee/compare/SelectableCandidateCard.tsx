@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Paper, Group, Checkbox, Badge, Text } from '@mantine/core';
-import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { getApplicationStatusColor } from '../../../utils/application.utils';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 

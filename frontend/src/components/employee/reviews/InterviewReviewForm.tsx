@@ -12,8 +12,8 @@ import { useAppStore } from '../../../store/useAppStore';
 import { validateWithJoi } from '../../../utils/form-validation';
 import { interviewReviewSchema } from '../../../schemas/interveiw-review.schema';
 import { useNavigate } from 'react-router-dom';
-import { CandidateAvatar } from '../../shared/CandidateAvatar';
 import { ScoreBadge } from '../../shared/ScoreBadge';
+import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 
 interface InterviewReviewFormProps {
   interviewId: string;

@@ -1,6 +1,6 @@
 import { Paper, Title, Text, Group, Badge } from '@mantine/core';
 import { IconMapPin, IconCircleCheck } from '@tabler/icons-react';
-import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { type CandidateProfile } from '../../../services/candidate.service';
 
 interface CandidateHeaderProps {

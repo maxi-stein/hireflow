@@ -7,7 +7,7 @@ export const InterviewStatus = {
   SCHEDULED: 'SCHEDULED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',
-  NO_SHOW: 'NO_SHOW',
+  RESCHEDULED: 'RESCHEDULED',
 } as const;
 
 export type InterviewStatus = (typeof InterviewStatus)[keyof typeof InterviewStatus];

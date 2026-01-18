@@ -27,15 +27,15 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
   const createMutation = useCreateInterviewMutation();
   const updateMutation = useUpdateInterviewMutation();
   const [selectedJobOfferId, setSelectedJobOfferId] = useState<string | null>(null);
-  
+
   // Fetch applications with APPLIED or IN_PROGRESS status
-  const { data: appliedApplications } = useAllCandidateApplicationsQuery({ 
-    limit: 100, 
-    status: ApplicationStatus.APPLIED 
+  const { data: appliedApplications } = useAllCandidateApplicationsQuery({
+    limit: 100,
+    status: [ApplicationStatus.APPLIED]
   });
-  const { data: inProgressApplications } = useAllCandidateApplicationsQuery({ 
-    limit: 100, 
-    status: ApplicationStatus.IN_PROGRESS 
+  const { data: inProgressApplications } = useAllCandidateApplicationsQuery({
+    limit: 100,
+    status: [ApplicationStatus.IN_PROGRESS]
   });
   const { data: employees } = useEmployeesQuery({ limit: 40 });
   const { data: jobOffersData } = useJobOffersQuery({ limit: 100 });
@@ -121,7 +121,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
         });
         notifications.show({ title: 'Success', message: 'Interview scheduled successfully', color: 'green' });
       }
-      
+
       if (onSuccess) onSuccess();
       onClose();
       form.reset();
