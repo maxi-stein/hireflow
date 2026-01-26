@@ -23,18 +23,19 @@ export const useProfileQuery = () => {
     queryFn: async () => {
       const user = await authService.getProfile();
       if (token) {
-          // Map User to JwtUser
-          const jwtUser: JwtUser = {
-            id: user.id,
-            email: user.email,
-            type: user.user_type,
-            employee_roles: user.employee?.roles
-          };
-          setAuth(jwtUser, token); 
+        // Map User to JwtUser
+        const jwtUser: JwtUser = {
+          id: user.id,
+          email: user.email,
+          type: user.user_type,
+          employee_roles: user.employee?.roles,
+        };
+        setAuth(jwtUser, token);
       }
       return user;
     },
     enabled: !!token,
     retry: false,
+    staleTime: 5 * 60 * 1000, // 5 mins
   });
 };

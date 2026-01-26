@@ -1,36 +1,13 @@
 
-import { useEffect, useState } from 'react';
 import { Container, LoadingOverlay, Paper, Text, Center } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { EmployeeProfile } from './EmployeeProfile';
-import { authService } from '../../services/auth.service';
-import type { User } from '../../types/models/user.types';
+import { useProfileQuery } from '../../hooks/api/useAuth';
 import { CandidateProfile } from './CandidateProfile';
 
 export const ProfilePage = () => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { data: user, isLoading, refetch } = useProfileQuery();
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const userData = await authService.getProfile();
-                setUser(userData);
-            } catch (error) {
-                notifications.show({
-                    title: 'Error',
-                    message: 'Failed to load profile',
-                    color: 'red',
-                });
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProfile();
-    }, []);
-
-    if (loading) {
+    if (isLoading) {
         return <LoadingOverlay visible={true} />;
     }
 
@@ -49,10 +26,7 @@ export const ProfilePage = () => {
             {user.user_type === 'employee' ? (
                 <EmployeeProfile user={user} />
             ) : (
-                <CandidateProfile user={user} refreshProfile={async () => {
-                    const userData = await authService.getProfile();
-                    setUser(userData);
-                }} />
+                <CandidateProfile user={user} refreshProfile={() => refetch()} />
             )}
         </Container>
     );
