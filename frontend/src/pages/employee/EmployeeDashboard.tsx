@@ -3,16 +3,25 @@ import { IconBriefcase, IconFileText, IconCalendarEvent, IconStar, IconExternalL
 import { useDashboardMetricsQuery } from '../../hooks/api/useDashboard';
 import { useMyPendingReviewsQuery } from '../../hooks/api/useInterviewReviews';
 import { useNavigate } from 'react-router-dom';
-import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
-import { TimeDisplay } from '../../components/shared/TimeDisplay';
 import { useInterviewsQuery } from '../../hooks/api/useInterviews';
 import { InterviewStatus } from '../../services/interview.service';
+import { DashboardListItem } from './components/DashboardListItem';
+import { useMemo } from 'react';
+import { getDateHeader } from '../../utils/date-utils';
 
 export const EmployeeDashboard = () => {
   const navigate = useNavigate();
   const { data: metrics, isLoading } = useDashboardMetricsQuery();
-  const { data: pendingReviewsData } = useMyPendingReviewsQuery(1, 3); // Get first 3
-  const { data: upcomingInterviewsData } = useInterviewsQuery({ limit: 3, status: [InterviewStatus.SCHEDULED, InterviewStatus.RESCHEDULED] });
+  const { data: pendingReviewsData } = useMyPendingReviewsQuery(1, 10);
+
+  // Memoize the start date to prevent infinite refetching loops
+  const startDate = useMemo(() => new Date().toISOString(), []);
+
+  const { data: upcomingInterviewsData } = useInterviewsQuery({
+    limit: 10,
+    status: [InterviewStatus.SCHEDULED, InterviewStatus.RESCHEDULED],
+    start_date: startDate
+  });
 
   const pendingReviews = pendingReviewsData?.data || [];
   const upcomingInterviews = upcomingInterviewsData?.data || [];
@@ -29,6 +38,7 @@ export const EmployeeDashboard = () => {
   ];
 
   const maxCandidates = Math.max(...metrics.candidatesPerJob.map(c => c.count));
+
 
   return (
     <Container size="xl" py="xl">
@@ -104,30 +114,14 @@ export const EmployeeDashboard = () => {
                   if (!candidate || !jobOffer) return null;
 
                   return (
-                    <Paper key={interview.id} p="sm" withBorder radius="md">
-                      <Group justify="space-between">
-                        <Group gap="sm">
-                          <CandidateAvatar
-                            candidateId={candidate.id}
-                            firstName={candidate.user?.first_name}
-                            lastName={candidate.user?.last_name}
-                            size={40}
-                          />
-                          <div>
-                            <Text size="sm" fw={500}>
-                              {candidate.user?.first_name} {candidate.user?.last_name}
-                            </Text>
-                            <Text size="xs" c="dimmed">{jobOffer.position}</Text>
-                          </div>
-                        </Group>
-                        <TimeDisplay
-                          date={interview.scheduled_time}
-                          variant="time-only"
-                          color="orange"
-                          size="sm"
-                        />
-                      </Group>
-                    </Paper>
+                    <DashboardListItem
+                      key={interview.id}
+                      date={interview.scheduled_time}
+                      candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
+                      candidateId={candidate.id}
+                      color='orange'
+                      position={jobOffer.position}
+                    />
                   );
                 })}
               </Stack>
@@ -142,86 +136,44 @@ export const EmployeeDashboard = () => {
             {upcomingInterviews.length === 0 ? (
               <Text c="dimmed" ta="center" py="xl">No upcoming interviews</Text>
             ) : (
-              <Stack gap="md">
-                {(() => {
-                  const grouped = upcomingInterviews.reduce((acc: Record<string, any[]>, interview) => {
-                    const date = new Date(interview.scheduled_time);
-                    const dateKey = date.toDateString();
-                    if (!acc[dateKey]) acc[dateKey] = [];
-                    acc[dateKey].push(interview);
-                    return acc;
-                  }, {});
+              <Stack gap="sm">
+                {upcomingInterviews.map((interview, index) => {
+                  const candidate = interview.applications?.[0]?.candidate;
+                  const jobOffer = interview.applications?.[0]?.job_offer;
+                  if (!candidate || !jobOffer) return null;
 
-                  const today = new Date().toDateString();
-                  const tomorrow = new Date(Date.now() + 86400000).toDateString();
+                  const date = new Date(interview.scheduled_time);
+                  const prevDate = index > 0 ? new Date(upcomingInterviews[index - 1].scheduled_time) : null;
+                  const showHeader = !prevDate || date.toDateString() !== prevDate.toDateString();
 
-                  return Object.entries(grouped).map(([dateKey, interviews]) => {
-                    let label = new Date(dateKey).toLocaleDateString(undefined, {
-                      weekday: 'long',
-                      month: 'short',
-                      day: 'numeric'
-                    });
-
-                    if (dateKey === today) label = 'Today';
-                    else if (dateKey === tomorrow) label = 'Tomorrow';
-
-                    return (
-                      <div key={dateKey}>
-                        <Text size="xs" fw={700} c="blue" tt="uppercase" mb={8} style={{ letterSpacing: '0.5px' }}>
-                          {label}
+                  return (
+                    <div key={interview.id}>
+                      {showHeader && (
+                        <Text size="xs" fw={700} c="dimmed" tt="uppercase" mt={index > 0 ? "md" : 0} mb="xs">
+                          {getDateHeader(date)}
                         </Text>
-                        <Stack gap="xs">
-                          {interviews.map((interview) => {
-                            const candidate = interview.applications?.[0]?.candidate;
-                            const jobOffer = interview.applications?.[0]?.job_offer;
-                            if (!candidate || !jobOffer) return null;
-
-                            return (
-                              <Paper key={interview.id} p="sm" withBorder radius="md" style={{ transition: 'transform 0.2s' }}>
-                                <Group justify="space-between" wrap="nowrap">
-                                  <Group gap="md">
-                                    <TimeDisplay
-                                      date={interview.scheduled_time}
-                                      variant="time-only"
-                                      color="blue"
-                                      size="sm"
-                                    />
-                                    <div>
-                                      <Group gap="xs" mb={2}>
-                                        <CandidateAvatar
-                                          candidateId={candidate.id}
-                                          firstName={candidate.user?.first_name}
-                                          lastName={candidate.user?.last_name}
-                                          size={24}
-                                        />
-                                        <Text size="sm" fw={600}>
-                                          {candidate.user?.first_name} {candidate.user?.last_name}
-                                        </Text>
-                                      </Group>
-                                      <Text size="xs" c="dimmed">
-                                        Interviewer for {jobOffer.position}
-                                      </Text>
-                                    </div>
-                                  </Group>
-                                  <Button
-                                    variant="light"
-                                    color="blue"
-                                    size="xs"
-                                    radius="md"
-                                    leftSection={<IconVideo size={14} />}
-                                    onClick={() => window.open(interview.meeting_link, '_blank')}
-                                  >
-                                    Join
-                                  </Button>
-                                </Group>
-                              </Paper>
-                            );
-                          })}
-                        </Stack>
-                      </div>
-                    );
-                  });
-                })()}
+                      )}
+                      <DashboardListItem
+                        date={interview.scheduled_time}
+                        candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
+                        candidateId={candidate.id}
+                        position={jobOffer.position}
+                        action={
+                          <Button
+                            variant="light"
+                            color="blue"
+                            size="xs"
+                            radius="md"
+                            leftSection={<IconVideo size={14} />}
+                            onClick={() => window.open(interview.meeting_link, '_blank')}
+                          >
+                            Join
+                          </Button>
+                        }
+                      />
+                    </div>
+                  );
+                })}
               </Stack>
             )}
           </Card>

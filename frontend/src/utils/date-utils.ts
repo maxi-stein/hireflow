@@ -15,3 +15,23 @@ export const getDaysInMonth = (date: Date): (Date | null)[] => {
   }
   return daysArray;
 };
+
+export const getDateHeader = (date: Date | string) => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const isToday = dateObj.toDateString() === today.toDateString();
+  const isTomorrow = dateObj.toDateString() === tomorrow.toDateString();
+
+  const dateString = dateObj.toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  if (isToday) return `Today, ${dateString}`;
+  if (isTomorrow) return `Tomorrow, ${dateString}`;
+  return dateString;
+};

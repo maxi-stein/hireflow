@@ -1,11 +1,11 @@
 import { Paper, Text } from '@mantine/core';
 
+export type TimeDisplayColor = 'blue' | 'orange' | 'grape' | 'gray';
+
 export interface TimeDisplayProps {
   date: Date | string;
-  /** Display variant: time-only, date-time, or date-only */
   variant?: 'time-only' | 'date-time' | 'date-only';
-  /** Color for the time text */
-  color?: 'blue' | 'orange' | 'grape' | 'gray';
+  color?: TimeDisplayColor;
   size?: 'xs' | 'sm' | 'md';
 }
 
