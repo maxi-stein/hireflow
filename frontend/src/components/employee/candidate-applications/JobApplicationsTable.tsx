@@ -6,7 +6,7 @@ import {
   Pagination,
   LoadingOverlay,
   ActionIcon,
-  Menu,
+  Tooltip,
   TextInput,
   Text,
   Title,
@@ -18,7 +18,7 @@ import { getApplicationStatusColor } from '../../../utils/application.utils';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useAllCandidateApplicationsQuery } from '../../../hooks/api/useCandidateApplications';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
-import { IconEye, IconScale, IconDotsVertical, IconSearch } from '@tabler/icons-react';
+import { IconEye, IconScale, IconSearch } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 
@@ -98,30 +98,27 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
         </Badge>
       </Table.Td>
       <Table.Td>
-        <Group gap={0} justify="flex-end">
-          <Menu shadow="md" width={200} position="bottom-end">
-            <Menu.Target>
-              <ActionIcon variant="subtle" color="gray">
-                <IconDotsVertical size={16} />
-              </ActionIcon>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              <Menu.Label>Actions</Menu.Label>
-              <Menu.Item
-                leftSection={<IconEye size={14} />}
-                onClick={() => navigate(`/manage/candidates/${application.candidate.id}`)}
-              >
-                Candidate Details
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconScale size={14} />}
-                onClick={() => navigate(`/manage/candidates/compare?jobOfferId=${jobOfferId}&candidateId=${application.candidate.id}`)}
-              >
-                Compare
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+        <Group gap="xs" justify="flex-end">
+          <Tooltip label="View Candidate Details">
+            <ActionIcon
+              variant="light"
+              color="blue"
+              title="View Candidate"
+              onClick={() => navigate(`/manage/candidates/${application.candidate.id}`)}
+            >
+              <IconEye size={18} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Compare Candidate">
+            <ActionIcon
+              variant="light"
+              color="violet"
+              title="Compare"
+              onClick={() => navigate(`/manage/candidates/compare?jobOfferId=${jobOfferId}&candidateId=${application.candidate.id}`)}
+            >
+              <IconScale size={18} />
+            </ActionIcon>
+          </Tooltip>
         </Group>
       </Table.Td>
     </Table.Tr>
