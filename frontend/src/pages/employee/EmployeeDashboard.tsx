@@ -7,7 +7,7 @@ import { useInterviewsQuery } from '../../hooks/api/useInterviews';
 import { InterviewStatus } from '../../services/interview.service';
 import { DashboardListItem } from './components/DashboardListItem';
 import { useMemo } from 'react';
-import { getDateHeader } from '../../utils/date-utils';
+
 
 export const EmployeeDashboard = () => {
   const navigate = useNavigate();
@@ -23,8 +23,17 @@ export const EmployeeDashboard = () => {
     start_date: startDate
   });
 
-  const pendingReviews = pendingReviewsData?.data || [];
-  const upcomingInterviews = upcomingInterviewsData?.data || [];
+  const pendingReviews = useMemo(() => {
+    return [...(pendingReviewsData?.data || [])].sort((a, b) =>
+      new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime()
+    );
+  }, [pendingReviewsData]);
+
+  const upcomingInterviews = useMemo(() => {
+    return [...(upcomingInterviewsData?.data || [])].sort((a, b) =>
+      new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime()
+    );
+  }, [upcomingInterviewsData]);
 
   if (isLoading || !metrics) {
     return <LoadingOverlay visible={true} />;
@@ -107,7 +116,7 @@ export const EmployeeDashboard = () => {
               <Text c="dimmed" ta="center" py="xl">No pending reviews</Text>
             ) : (
               <Stack gap="xs">
-                {pendingReviews.map((interview) => {
+                {pendingReviews.map((interview, index) => {
                   const candidate = interview.applications?.[0]?.candidate;
                   const jobOffer = interview.applications?.[0]?.job_offer;
 
@@ -142,36 +151,26 @@ export const EmployeeDashboard = () => {
                   const jobOffer = interview.applications?.[0]?.job_offer;
                   if (!candidate || !jobOffer) return null;
 
-                  const date = new Date(interview.scheduled_time);
-                  const prevDate = index > 0 ? new Date(upcomingInterviews[index - 1].scheduled_time) : null;
-                  const showHeader = !prevDate || date.toDateString() !== prevDate.toDateString();
-
                   return (
-                    <div key={interview.id}>
-                      {showHeader && (
-                        <Text size="xs" fw={700} c="dimmed" tt="uppercase" mt={index > 0 ? "md" : 0} mb="xs">
-                          {getDateHeader(date)}
-                        </Text>
-                      )}
-                      <DashboardListItem
-                        date={interview.scheduled_time}
-                        candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
-                        candidateId={candidate.id}
-                        position={jobOffer.position}
-                        action={
-                          <Button
-                            variant="light"
-                            color="blue"
-                            size="xs"
-                            radius="md"
-                            leftSection={<IconVideo size={14} />}
-                            onClick={() => window.open(interview.meeting_link, '_blank')}
-                          >
-                            Join
-                          </Button>
-                        }
-                      />
-                    </div>
+                    <DashboardListItem
+                      key={interview.id}
+                      date={interview.scheduled_time}
+                      candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
+                      candidateId={candidate.id}
+                      position={jobOffer.position}
+                      action={
+                        <Button
+                          variant="light"
+                          color="blue"
+                          size="xs"
+                          radius="md"
+                          leftSection={<IconVideo size={14} />}
+                          onClick={() => window.open(interview.meeting_link, '_blank')}
+                        >
+                          Join
+                        </Button>
+                      }
+                    />
                   );
                 })}
               </Stack>

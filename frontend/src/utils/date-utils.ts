@@ -29,6 +29,7 @@ export const getDateHeader = (date: Date | string) => {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
+    year: 'numeric',
   });
 
   if (isToday) return `Today, ${dateString}`;
