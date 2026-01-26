@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { MainLayout } from "../layouts/MainLayout";
 import { DynamicLayout } from "../layouts/DynamicLayout";
 import { ErrorPage } from "../pages/ErrorPage";
 import { ROUTES } from "./routes.config";
@@ -15,11 +14,12 @@ export const router = createBrowserRouter([
 
 
 
-  // Public routes with DynamicLayout (shows MainLayout if logged in, PublicLayout if not)
+  // Main App Structure - DynamicLayout persists across navigation
   {
     element: <DynamicLayout />,
     errorElement: <ErrorPage />,
     children: [
+      // Public routes
       {
         path: ROUTES.PUBLIC.HOME.path,
         element: ROUTES.PUBLIC.HOME.element,
@@ -32,16 +32,10 @@ export const router = createBrowserRouter([
         path: ROUTES.PUBLIC.JOB_DETAIL.path,
         element: ROUTES.PUBLIC.JOB_DETAIL.element,
       },
-    ],
-  },
 
-  // Protected routes for authenticated users
-  {
-    element: <ProtectedRoute allowedRoles={["candidate", "employee"]} />,
-    errorElement: <ErrorPage />,
-    children: [
+      // Protected routes
       {
-        element: <MainLayout />,
+        element: <ProtectedRoute allowedRoles={["candidate", "employee"]} />,
         children: [
           // Common routes (both candidate and employee)
           {

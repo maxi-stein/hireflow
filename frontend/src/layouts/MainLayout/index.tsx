@@ -28,7 +28,7 @@ export function MainLayout() {
 
       <AppShell.Navbar
         style={{
-          backgroundColor: 'light-dark(#112240, #060b13)',
+          backgroundColor: 'light-dark(#112240, rgb(24 24 24))',
           borderRight: 'none',
         }}
       >
