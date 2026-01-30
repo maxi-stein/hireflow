@@ -17,21 +17,27 @@ export const JobListPage = () => {
   const user = useAppStore((state) => state.user);
 
   const [appliedJobIds, setAppliedJobIds] = useState<Set<string>>(new Set());
+  const [applicationsLoading, setApplicationsLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState<JobOffer | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchApplications = async () => {
     if (user?.type === 'candidate' && user.id) {
+      setApplicationsLoading(true);
       try {
         const applications = await candidateApplicationService.getAll({
           candidate_id: user.id,
-          limit: 100 // Fetch enough to cover most cases, ideally implement pagination or specific check
+          limit: 100
         });
         const ids = new Set(applications.data.map(app => app.job_offer.id));
         setAppliedJobIds(ids);
       } catch (error) {
         console.error('Failed to fetch applications', error);
+      } finally {
+        setApplicationsLoading(false);
       }
+    } else {
+      setApplicationsLoading(false);
     }
   };
 
@@ -76,34 +82,59 @@ export const JobListPage = () => {
             <Text ta="center" c="dimmed">No open positions available at this time.</Text>
           </Card>
         ) : (
-          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
+          <Stack gap="md">
             {jobOffers.data.map((job) => {
               const isApplied = appliedJobIds.has(job.id);
+              const isLoadingApplications = applicationsLoading && user?.type === 'candidate';
               const isHighlighted = highlightedId === job.id;
 
               return (
                 <div
+                  id={`job-${job.id}`}
                   key={job.id}
                   ref={setElementRef(job.id)}
                   style={{
                     transition: 'all 0.3s ease',
-                    transform: isHighlighted ? 'scale(1.02)' : 'scale(1)',
+                    transform: isHighlighted ? 'scale(1.01)' : 'scale(1)',
                     boxShadow: isHighlighted ? '0 8px 30px rgba(99, 102, 241, 0.4)' : 'none',
                     borderRadius: '8px',
                   }}
                 >
                   <JobOfferCard
                     job={job}
-                    isApplied={isApplied}
                     action={
                       user?.type === 'candidate' ? (
                         <Button
                           fullWidth
-                          variant={isApplied ? 'light' : 'light'}
-                          color={isApplied ? 'gray' : 'gray'}
-                          onClick={() => isApplied ? navigate('/candidate/applications') : handleApplyClick(job)}
+                          loading={isLoadingApplications}
+                          disabled={isLoadingApplications}
+                          variant={
+                            isLoadingApplications
+                              ? 'light'
+                              : isApplied
+                                ? 'light'
+                                : 'filled'
+                          }
+                          color={
+                            isLoadingApplications
+                              ? 'gray'
+                              : isApplied
+                                ? 'cyan'
+                                : 'green'
+                          }
+                          onClick={() => {
+                            if (isLoadingApplications) return;
+
+                            isApplied
+                              ? navigate('/candidate/applications')
+                              : handleApplyClick(job);
+                          }}
                         >
-                          {isApplied ? 'View Application' : 'Apply Now'}
+                          {isLoadingApplications
+                            ? 'Checking application...'
+                            : isApplied
+                              ? 'View Application'
+                              : 'Apply Now'}
                         </Button>
                       ) : undefined
                     }
@@ -111,7 +142,7 @@ export const JobListPage = () => {
                 </div>
               );
             })}
-          </SimpleGrid>
+          </Stack>
         )}
 
         {selectedJob && user?.type === 'candidate' && (
