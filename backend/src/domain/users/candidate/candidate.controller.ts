@@ -13,7 +13,7 @@ import {
 import { CandidateService } from './candidate.service';
 import { UpdateCandidateDto } from '../dto/candidate/update-candidate.dto';
 import { RegisterCandidateDto } from '../dto/user/create-user.dto';
-import { PaginationDto } from '../../../shared/dto/pagination/pagination.dto';
+import { CandidateFilterDto } from '../dto/candidate/candidate-filter.dto';
 import { UuidValidationPipe, NotEmptyDtoPipe } from '../../../shared/pipes';
 
 @Controller('candidates')
@@ -28,8 +28,9 @@ export class CandidateController {
   }
 
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.candidateService.findAll(paginationDto);
+  @Get()
+  findAll(@Query() filterDto: CandidateFilterDto) {
+    return this.candidateService.findAll(filterDto);
   }
 
   @Get(':id')

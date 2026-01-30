@@ -5,12 +5,11 @@ import { Candidate } from '../entities/candidate.entity';
 import { User } from '../entities/user.entity';
 import { UpdateCandidateDto } from '../dto/candidate/update-candidate.dto';
 import { CandidateResponseDto } from '../dto/candidate/candidate-response.dto';
+import { PaginatedResponse } from '../../../shared/dto/pagination/pagination.dto';
 import {
-  PaginatedResponse,
-  PaginationDto,
-} from '../../../shared/dto/pagination/pagination.dto';
-import { EducationService } from '../education/education.service';
-import { WorkExperienceService } from '../work-experience/work-experience.service';
+  CandidateFilterDto,
+  CandidateSortBy,
+} from '../dto/candidate/candidate-filter.dto';
 import { UserType } from '../interfaces/user.enum';
 import { RegisterCandidateDto } from '../dto/user/create-user.dto';
 import { UsersService } from '../base-user/user.service';
@@ -21,8 +20,6 @@ export class CandidateService {
     @InjectRepository(Candidate)
     private readonly candidateRepository: Repository<Candidate>,
     private readonly usersService: UsersService,
-    private readonly educationService: EducationService,
-    private readonly workExperienceService: WorkExperienceService,
   ) {}
 
   // Public method for candidate creation/registration
@@ -69,28 +66,45 @@ export class CandidateService {
   }
 
   async findAll(
-    paginationDto: PaginationDto = { page: 1, limit: 10 },
+    filterDto: CandidateFilterDto,
   ): Promise<PaginatedResponse<CandidateResponseDto>> {
-    const [candidates, total] = await this.candidateRepository.findAndCount({
-      relations: ['user', 'educations', 'work_experiences'],
-      order: {
-        work_experiences: {
-          start_date: 'DESC',
-        },
-        educations: {
-          start_date: 'DESC',
-        },
-      },
-      skip: (paginationDto.page - 1) * paginationDto.limit,
-      take: paginationDto.limit,
-    });
+    const { page = 1, limit = 10, search, sort } = filterDto;
+    const queryBuilder =
+      this.candidateRepository.createQueryBuilder('candidate');
+
+    queryBuilder
+      .leftJoinAndSelect('candidate.user', 'user')
+      .leftJoinAndSelect('candidate.educations', 'educations')
+      .leftJoinAndSelect('candidate.work_experiences', 'work_experiences');
+
+    if (search) {
+      queryBuilder.andWhere(
+        '(LOWER(user.first_name) LIKE LOWER(:search) OR LOWER(user.last_name) LIKE LOWER(:search) OR LOWER(user.email) LIKE LOWER(:search))',
+        { search: `%${search}%` },
+      );
+    }
+
+    if (sort === CandidateSortBy.LAST_NAME) {
+      queryBuilder.orderBy('user.last_name', 'ASC');
+    } else {
+      queryBuilder.orderBy('candidate.profile_updated_at', 'DESC');
+    }
+
+    // Add secondary sort to ensure stable pagination
+    queryBuilder.addOrderBy('candidate.id', 'ASC');
+
+    const skip = (page - 1) * limit;
+    queryBuilder.skip(skip).take(limit);
+
+    const [candidates, total] = await queryBuilder.getManyAndCount();
+
     return {
       data: candidates.map(this.mapToResponseDto),
       pagination: {
-        page: paginationDto.page,
-        limit: paginationDto.limit,
+        page,
+        limit,
         total,
-        totalPages: Math.ceil(total / paginationDto.limit),
+        totalPages: Math.ceil(total / limit),
       },
     };
   }

@@ -3,8 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Candidate, Education, User } from '../entities';
 import { CandidateController } from './candidate.controller';
 import { CandidateService } from './candidate.service';
-import { EducationService } from '../education/education.service';
-import { WorkExperienceService } from '../work-experience/work-experience.service';
 import { WorkExperience } from '../entities/work-experience.entity';
 import { UsersModule } from '../base-user/user.module';
 
@@ -14,7 +12,7 @@ import { UsersModule } from '../base-user/user.module';
     UsersModule,
   ],
   controllers: [CandidateController],
-  providers: [CandidateService, EducationService, WorkExperienceService],
+  providers: [CandidateService],
   exports: [CandidateService],
 })
 export class CandidateModule {}
