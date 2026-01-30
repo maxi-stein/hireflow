@@ -46,7 +46,7 @@ export const CreateEmployeePage = () => {
         color: 'green',
         icon: <IconCheck size={16} />,
       });
-      navigate('/');
+      navigate('/manage/dashboard');
     } catch (error) {
       notifications.show({
         title: 'Error',

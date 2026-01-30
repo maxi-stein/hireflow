@@ -104,7 +104,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
               variant="light"
               color="blue"
               title="View Candidate"
-              onClick={() => navigate(`/manage/candidates/${application.candidate.id}`)}
+              onClick={() => navigate(`/manage/candidates/list/${application.candidate.id}`)}
             >
               <IconEye size={18} />
             </ActionIcon>

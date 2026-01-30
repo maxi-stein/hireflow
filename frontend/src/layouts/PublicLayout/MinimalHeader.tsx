@@ -19,18 +19,18 @@ export function MinimalHeader() {
   return (
     <Group justify="space-between" h="100%" px="md" py="xs">
       <Group gap="lg">
-        <Title 
-          order={3} 
-          onClick={() => navigate('/')} 
+        <Title
+          order={3}
+          onClick={() => navigate(user?.type === 'employee' ? '/manage/dashboard' : '/')}
           style={{ cursor: 'pointer', userSelect: 'none' }}
         >
           HireFlow
         </Title>
-        
+
         <Group gap="xs">
           <Text size="sm" fw={500} c="dimmed">Explore</Text>
-          <TextInput 
-            placeholder="Find Job Postings..." 
+          <TextInput
+            placeholder="Find Job Postings..."
             leftSection={<IconSearch size={16} />}
             style={{ width: '400px' }}
             radius="xl"

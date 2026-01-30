@@ -67,8 +67,6 @@ export function ReviewsPage() {
   const myCompletedReviews = filteredCompletedReviews.filter(isMyReview);
   const otherCompletedReviews = filteredCompletedReviews.filter(r => !isMyReview(r));
 
-  // --- Grouping Helpers ---
-
   // For Pending (Interview[])
   const renderPendingReviews = (interviews: Interview[]) => {
     // 1. Group by Job

@@ -40,7 +40,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
     <Stack gap="md" p="md" h="100%">
       <Title
         order={3}
-        onClick={() => navigate('/')}
+        onClick={() => navigate(user?.type === 'employee' ? '/manage/dashboard' : '/')}
         c="white"
         style={{ cursor: 'pointer', userSelect: 'none' }}
         px="xs"
@@ -63,7 +63,8 @@ export function SideNav({ onNavigate }: SideNavProps) {
               style={{ transition: 'background-color 0.2s ease' }}
             >
               {item.children?.filter(child => child.showInNav !== false).map((child) => {
-                const isChildActive = matchPath({ path: child.path, end: true }, location.pathname) !== null;
+                const isChildActive = matchPath({ path: child.path, end: false }, location.pathname) !== null;
+
                 return (
                   <StyledNavLink
                     key={child.path}

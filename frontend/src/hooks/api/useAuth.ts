@@ -25,7 +25,7 @@ export const useProfileQuery = () => {
       if (token) {
         // Map User to JwtUser
         const jwtUser: JwtUser = {
-          id: user.id,
+          id: user.employee?.id || user.candidate?.id || user.id,
           email: user.email,
           type: user.user_type,
           employee_roles: user.employee?.roles,

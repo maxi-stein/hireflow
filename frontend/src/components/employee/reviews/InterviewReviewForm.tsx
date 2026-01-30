@@ -88,7 +88,7 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
       onSuccess();
       // Redirect to candidate profile
       if (candidateId) {
-        navigate(`/manage/candidates/${candidateId}`);
+        navigate(`/manage/candidates/list/${candidateId}`);
       }
     } catch (error) {
       notifications.show({ title: 'Error', message: 'Failed to submit review', color: 'red' });
