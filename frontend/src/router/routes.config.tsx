@@ -24,6 +24,7 @@ import { CandidateApplicationsPage } from '../pages/employee/CandidateApplicatio
 import { CompareCandidatesPage } from '../pages/employee/CompareCandidatesPage';
 import { CalendarPage } from '../pages/employee/CalendarPage';
 import { CandidatesPage } from '../pages/employee/CandidatesPage';
+import { CandidatesListPage } from '../pages/employee/CandidatesListPage';
 
 import { ReviewsPage } from '../pages/employee/ReviewsPage';
 import { HiredCandidatesPage } from '../pages/employee/HiredCandidatesPage';
@@ -162,6 +163,15 @@ export const ROUTES = {
       section: 'candidates',
       children: [
         {
+          path: '/manage/candidates/list',
+          element: <CandidatesListPage />,
+          label: 'All Candidates',
+          showInNav: true,
+          requiresAuth: true,
+          allowedRoles: ['employee'],
+          section: 'candidates',
+        },
+        {
           path: '/manage/candidates/applications',
           element: <CandidateApplicationsPage />,
           label: 'Applications',
@@ -189,10 +199,10 @@ export const ROUTES = {
           section: 'candidates',
         },
         {
-          path: '/manage/candidates/:id',
-          element: <CandidatesPage />, // Assuming this is the details/directory page
+          path: '/manage/candidates/list/:id',
+          element: <CandidatesPage />,
           label: 'Candidate Details',
-          showInNav: false, // Hidden because it needs an ID usually, or we can make a directory page
+          showInNav: false,
           requiresAuth: true,
           allowedRoles: ['employee'],
           section: 'candidates',

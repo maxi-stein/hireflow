@@ -35,7 +35,31 @@ export interface UpdateCandidateDto {
   work_experiences?: WorkExperience[];
 }
 
+export interface CandidateFilterParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: 'updated_at' | 'last_name';
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export const candidateService = {
+  getAll: async (params?: CandidateFilterParams): Promise<PaginatedResponse<CandidateProfile>> => {
+    const response = await apiClient.get<PaginatedResponse<CandidateProfile>>('/candidates', {
+      params,
+    });
+    return response.data;
+  },
+
   getById: async (id: string): Promise<CandidateProfile> => {
     const response = await apiClient.get<CandidateProfile>(`/candidates/${id}`);
     return response.data;

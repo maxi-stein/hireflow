@@ -13,7 +13,7 @@ export function HiredCandidatesPage() {
   });
 
   const handleRowClick = (candidateId: string) => {
-    navigate(`/manage/candidates/${candidateId}`);
+    navigate(`/manage/candidates/list/${candidateId}`);
   };
 
   return (

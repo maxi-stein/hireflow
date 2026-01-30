@@ -7,80 +7,82 @@ interface JobOfferCardProps {
   job: JobOffer;
   action?: ReactNode;
   showSensitiveData?: boolean;
-  isApplied?: boolean;
 }
 
-export const JobOfferCard = ({ job, action, showSensitiveData = false, isApplied = false }: JobOfferCardProps) => {
+export const JobOfferCard = ({ job, action, showSensitiveData = false }: JobOfferCardProps) => {
   return (
-    <Card withBorder p="lg" radius="md" shadow="sm" style={isApplied ? { borderColor: 'var(--mantine-color-gray-filled)', borderWidth: 2 } : undefined}>
-      <Stack gap="md">
-        <div>
-          <Group justify="space-between" mb="xs">
-            <Group gap="xs">
-              <Title order={3}>{job.position}</Title>
-              {isApplied && <Badge color="cyan" variant="filled">Applied</Badge>}
-            </Group>
-            <Badge color="green" variant="light">
-              {job.status}
-            </Badge>
-          </Group>
-
-          <Group gap="md" mb="md">
-            <Group gap="xs">
-              <IconMapPin size={16} />
-              <Text size="sm" c="dimmed">{job.location}</Text>
-            </Group>
-            <Group gap="xs">
-              <IconBriefcase size={16} />
-              <Text size="sm" c="dimmed">{job.work_mode}</Text>
-            </Group>
-          </Group>
-        </div>
-
-        <Text lineClamp={3}>{job.description}</Text>
-
-        {job.salary && (
-          <Group gap="xs">
-            <IconCurrencyDollar size={16} />
-            <Text size="sm" fw={500}>{job.salary}</Text>
-          </Group>
-        )}
-
-        {job.benefits && (
+    <Card withBorder p="lg" radius="md" shadow="sm">
+      <Group wrap="nowrap" align="flex-start" gap="xl">
+        {/* Left side - Main content */}
+        <Stack gap="sm" style={{ flex: 1 }}>
           <div>
-            <Text size="sm" fw={500} mb={5}>Benefits:</Text>
-            <Text size="sm" c="dimmed">{job.benefits}</Text>
+            <Title order={3} mb="xs">{job.position}</Title>
+
+            <Group gap="md" mb="sm">
+              <Group gap="xs">
+                <IconMapPin size={16} />
+                <Text size="sm" c="dimmed">{job.location}</Text>
+              </Group>
+              <Group gap="xs">
+                <IconBriefcase size={16} />
+                <Text size="sm" c="dimmed">{job.work_mode}</Text>
+              </Group>
+            </Group>
           </div>
-        )}
 
-        {job.skills && job.skills.length > 0 && (
-          <div>
-            <Text size="sm" fw={500} mb={5}>Required Skills:</Text>
+          <Text lineClamp={2}>{job.description}</Text>
+
+          <Group gap="lg">
+            {job.salary && (
+              <Group gap="xs">
+                <IconCurrencyDollar size={16} />
+                <Text size="sm" fw={500}>{job.salary}</Text>
+              </Group>
+            )}
+
+            {showSensitiveData && job.deadline && (
+              <Group gap="xs">
+                <IconClock size={16} />
+                <Text size="sm" c="dimmed">
+                  Deadline: {new Date(job.deadline).toLocaleDateString()}
+                </Text>
+              </Group>
+            )}
+
+            <Text size="sm" c="dimmed">{job.applicants_count} applicants</Text>
+          </Group>
+
+          {job.skills && job.skills.length > 0 && (
             <Group gap="xs">
-              {job.skills.map((skill) => (
-                <Badge key={skill.id} variant="outline">
+              {job.skills.slice(0, 5).map((skill) => (
+                <Badge key={skill.id} variant="outline" size="sm">
                   {skill.skill_name}
                 </Badge>
               ))}
+              {job.skills.length > 5 && (
+                <Badge variant="outline" size="sm" c="dimmed">
+                  +{job.skills.length - 5} more
+                </Badge>
+              )}
             </Group>
+          )}
+        </Stack>
+
+        {/* Right side - Action button */}
+        {action && (
+          <div style={{ minWidth: '180px', alignSelf: 'flex-start' }}>
+            {action}
           </div>
         )}
+      </Group>
 
-        {showSensitiveData && job.deadline && (
-          <Group gap="xs">
-            <IconClock size={16} />
-            <Text size="sm" c="dimmed">
-              Deadline: {new Date(job.deadline).toLocaleDateString()}
-            </Text>
-          </Group>
-        )}
-
-        <Group gap="xs">
-          <Text size="sm" c="dimmed">{job.applicants_count} applicants</Text>
-        </Group>
-
-        {action}
-      </Stack>
+      {/* Optional: Benefits shown at bottom if exist */}
+      {job.benefits && (
+        <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--mantine-color-gray-3)' }}>
+          <Text size="sm" fw={500} mb={5}>Benefits:</Text>
+          <Text size="sm" c="dimmed">{job.benefits}</Text>
+        </div>
+      )}
     </Card>
   );
 };
