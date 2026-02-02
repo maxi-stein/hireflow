@@ -13,8 +13,11 @@ import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 export const JobListPage = () => {
   const navigate = useNavigate();
   const { highlightedId, setElementRef } = useHighlightEffect();
-  const { data: jobOffers, isLoading } = useJobOffersQuery({ status: JobOfferStatus.OPEN });
   const user = useAppStore((state) => state.user);
+  const { data: jobOffers, isLoading } = useJobOffersQuery({
+    status: JobOfferStatus.OPEN,
+    candidateId: user?.type === 'candidate' ? user.id : undefined,
+  });
 
   const [appliedJobIds, setAppliedJobIds] = useState<Set<string>>(new Set());
   const [applicationsLoading, setApplicationsLoading] = useState(true);

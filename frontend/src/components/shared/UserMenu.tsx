@@ -1,6 +1,6 @@
 import { Avatar, Menu, UnstyledButton, Text, Group, useMantineColorScheme } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-import { IconSun, IconMoon, IconUser, IconSettings, IconLogout } from '@tabler/icons-react';
+import { IconSun, IconMoon, IconUser, IconLogout } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
 
 export function UserMenu() {
@@ -35,18 +35,11 @@ export function UserMenu() {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>Settings</Menu.Label>
         <Menu.Item
           leftSection={<IconUser size={14} />}
           onClick={() => navigate('/profile')}
         >
           Profile
-        </Menu.Item>
-        <Menu.Item
-          leftSection={<IconSettings size={14} />}
-          onClick={() => navigate('/settings')}
-        >
-          Settings
         </Menu.Item>
 
         <Menu.Item
