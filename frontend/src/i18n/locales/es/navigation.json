@@ -1,0 +1,20 @@
+{
+  "home": "Inicio",
+  "jobs": "Empleos",
+  "profile": "Perfil",
+  "applications": "Mis Solicitudes",
+  "dashboard": "Dashboard",
+  "jobPostings": "Ofertas de Empleo",
+  "manage": "Gestionar",
+  "createNew": "Crear Nuevo",
+  "editJob": "Editar Empleo",
+  "candidates": "Candidatos",
+  "allCandidates": "Todos los Candidatos",
+  "compareCandidates": "Comparar Candidatos",
+  "hiredCandidates": "Candidatos Contratados",
+  "candidateDetails": "Detalles del Candidato",
+  "interviews": "Entrevistas",
+  "calendar": "Calendario",
+  "reviews": "Reseñas",
+  "registerEmployees": "Registrar Empleados"
+}

@@ -1,4 +1,4 @@
-import { Container, Title, Text, Stack, Card, SimpleGrid, LoadingOverlay, Button } from '@mantine/core';
+import { Container, Title, Text, Stack, Card, LoadingOverlay, Button } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useHighlightEffect } from '../../hooks/useHighlightEffect';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
@@ -10,7 +10,10 @@ import { useEffect, useState } from 'react';
 import { candidateApplicationService } from '../../services/candidate-application.service';
 import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 
+import { useTranslation } from 'react-i18next';
+
 export const JobListPage = () => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const { highlightedId, setElementRef } = useHighlightEffect();
   const user = useAppStore((state) => state.user);
@@ -137,7 +140,7 @@ export const JobListPage = () => {
                             ? 'Checking application...'
                             : isApplied
                               ? 'View Application'
-                              : 'Apply Now'}
+                              : t('applyNow')}
                         </Button>
                       ) : undefined
                     }

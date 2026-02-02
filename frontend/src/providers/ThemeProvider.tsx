@@ -7,7 +7,7 @@ import { theme } from "../styles/theme";
 
 export const useTheme = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  
+
   return {
     toggleTheme: toggleColorScheme,
     mode: colorScheme,

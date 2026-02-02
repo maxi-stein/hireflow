@@ -4,6 +4,7 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import "./index.css";
+import "./i18n"; // Initialize i18n
 import { QueryProvider } from "./providers/QueryProvider";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import { Notifications } from "@mantine/notifications";

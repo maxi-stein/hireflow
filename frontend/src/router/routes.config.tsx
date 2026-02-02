@@ -60,7 +60,7 @@ export const ROUTES = {
     JOBS: {
       path: '/jobs',
       element: <JobListPage />,
-      label: 'Jobs',
+      label: 'navigation:jobs',
       icon: <IconBriefcase size={20} />,
       showInNav: true,
     },
@@ -76,7 +76,7 @@ export const ROUTES = {
     PROFILE: {
       path: '/profile',
       element: <ProfilePage />,
-      label: 'Profile',
+      label: 'navigation:profile',
       icon: <IconUser size={20} />,
       showInNav: true,
       requiresAuth: true,
@@ -89,7 +89,7 @@ export const ROUTES = {
     APPLICATIONS: {
       path: '/candidate/applications',
       element: <ApplicationsPage />,
-      label: 'My Applications',
+      label: 'navigation:applications',
       icon: <IconFileText size={20} />,
       showInNav: true,
       requiresAuth: true,
@@ -109,7 +109,7 @@ export const ROUTES = {
     DASHBOARD: {
       path: '/manage/dashboard',
       element: <EmployeeDashboard />,
-      label: 'Dashboard',
+      label: 'navigation:dashboard',
       icon: <IconChartBar size={20} />,
       showInNav: true,
       requiresAuth: true,
@@ -117,7 +117,7 @@ export const ROUTES = {
     },
     JOB_POSTINGS_GROUP: {
       path: '#job-postings',
-      label: 'Job Postings',
+      label: 'navigation:jobPostings',
       icon: <IconFileDescription size={20} />,
       showInNav: true,
       requiresAuth: true,
@@ -127,7 +127,7 @@ export const ROUTES = {
         {
           path: '/manage/job-postings',
           element: <JobPostingsPage />,
-          label: 'Manage',
+          label: 'navigation:manage',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -136,7 +136,7 @@ export const ROUTES = {
         {
           path: '/manage/job-postings/new',
           element: <CreateJobPage />,
-          label: 'Create New',
+          label: 'navigation:createNew',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -145,7 +145,7 @@ export const ROUTES = {
         {
           path: '/manage/job-postings/edit/:id',
           element: <CreateJobPage />,
-          label: 'Edit Job',
+          label: 'navigation:editJob',
           showInNav: false,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -155,7 +155,7 @@ export const ROUTES = {
     },
     CANDIDATES_GROUP: {
       path: '#candidates',
-      label: 'Candidates',
+      label: 'navigation:candidates',
       icon: <IconUsers size={20} />,
       showInNav: true,
       requiresAuth: true,
@@ -165,7 +165,7 @@ export const ROUTES = {
         {
           path: '/manage/candidates/list',
           element: <CandidatesListPage />,
-          label: 'All Candidates',
+          label: 'navigation:allCandidates',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -174,7 +174,7 @@ export const ROUTES = {
         {
           path: '/manage/candidates/applications',
           element: <CandidateApplicationsPage />,
-          label: 'Applications',
+          label: 'navigation:applications',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -183,7 +183,7 @@ export const ROUTES = {
         {
           path: '/manage/candidates/compare',
           element: <CompareCandidatesPage />,
-          label: 'Compare Candidates',
+          label: 'navigation:compareCandidates',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -192,7 +192,7 @@ export const ROUTES = {
         {
           path: '/manage/candidates/hired',
           element: <HiredCandidatesPage />,
-          label: 'Hired Candidates',
+          label: 'navigation:hiredCandidates',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -201,7 +201,7 @@ export const ROUTES = {
         {
           path: '/manage/candidates/list/:id',
           element: <CandidatesPage />,
-          label: 'Candidate Details',
+          label: 'navigation:candidateDetails',
           showInNav: false,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -212,7 +212,7 @@ export const ROUTES = {
 
     INTERVIEWS_GROUP: {
       path: '#interviews',
-      label: 'Interviews',
+      label: 'navigation:interviews',
       icon: <IconCalendar size={20} />,
       showInNav: true,
       requiresAuth: true,
@@ -222,7 +222,7 @@ export const ROUTES = {
         {
           path: '/manage/interviews',
           element: <CalendarPage />,
-          label: 'Calendar',
+          label: 'navigation:calendar',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -231,7 +231,7 @@ export const ROUTES = {
         {
           path: '/manage/reviews',
           element: <ReviewsPage />,
-          label: 'Reviews',
+          label: 'navigation:reviews',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
@@ -244,7 +244,7 @@ export const ROUTES = {
     REGISTER_EMPLOYEE: {
       path: '/manage/users/create',
       element: <CreateEmployeePage />,
-      label: 'Register Employees',
+      label: 'navigation:registerEmployees',
       icon: <IconUserPlus size={20} />,
       showInNav: true,
       requiresAuth: true,

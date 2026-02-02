@@ -2,8 +2,10 @@ import { Avatar, Menu, UnstyledButton, Text, Group, useMantineColorScheme } from
 import { useNavigate } from 'react-router-dom';
 import { IconSun, IconMoon, IconUser, IconLogout } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
+import { useTranslation } from 'react-i18next';
 
 export function UserMenu() {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const { user, logout } = useAppStore();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -39,7 +41,7 @@ export function UserMenu() {
           leftSection={<IconUser size={14} />}
           onClick={() => navigate('/profile')}
         >
-          Profile
+          {t('profile')}
         </Menu.Item>
 
         <Menu.Item
@@ -57,7 +59,7 @@ export function UserMenu() {
           leftSection={<IconLogout size={14} />}
           onClick={handleLogout}
         >
-          Logout
+          {t('logout')}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

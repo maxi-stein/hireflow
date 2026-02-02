@@ -1,5 +1,6 @@
 import { Group, Burger } from '@mantine/core';
 import { UserMenu } from '../../components/shared/UserMenu';
+import { LanguageSelector } from '../../components/shared/LanguageSelector';
 
 interface FullHeaderProps {
   opened: boolean;
@@ -12,7 +13,10 @@ export function FullHeader({ opened, toggle }: FullHeaderProps) {
     <Group h="100%" px="md">
       <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       <div style={{ flex: 1 }} />
-      <UserMenu />
+      <Group gap="sm">
+        <LanguageSelector />
+        <UserMenu />
+      </Group>
     </Group>
   );
 }

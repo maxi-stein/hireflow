@@ -1,0 +1,20 @@
+{
+  "home": "Home",
+  "jobs": "Jobs",
+  "profile": "Profile",
+  "applications": "My Applications",
+  "dashboard": "Dashboard",
+  "jobPostings": "Job Postings",
+  "manage": "Manage",
+  "createNew": "Create New",
+  "editJob": "Edit Job",
+  "candidates": "Candidates",
+  "allCandidates": "All Candidates",
+  "compareCandidates": "Compare Candidates",
+  "hiredCandidates": "Hired Candidates",
+  "candidateDetails": "Candidate Details",
+  "interviews": "Interviews",
+  "calendar": "Calendar",
+  "reviews": "Reviews",
+  "registerEmployees": "Register Employees"
+}

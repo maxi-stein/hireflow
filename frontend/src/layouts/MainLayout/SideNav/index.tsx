@@ -3,6 +3,7 @@ import { useLocation, useNavigate, matchPath } from 'react-router-dom';
 import { useAppStore } from '../../../store/useAppStore';
 import { getNavItemsForUser, getAllRoutes, type RouteConfig } from '../../../router/routes.config';
 import { StyledNavLink } from './styled';
+import { useTranslation } from 'react-i18next';
 
 interface SideNavProps {
   onNavigate?: () => void;
@@ -12,6 +13,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useAppStore((state) => state.user);
+  const { t } = useTranslation(['common', 'navigation']);
 
   const allRoutes = getAllRoutes();
   const currentRoute = allRoutes.find(route => matchPath({ path: route.path, end: true }, location.pathname));
@@ -53,7 +55,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
           return (
             <StyledNavLink
               key={item.path}
-              label={item.label}
+              label={item.label ? t(item.label) : ''}
               leftSection={item.icon}
               onClick={() => !item.children && handleNavigate(item.path)}
               active={active}
@@ -68,7 +70,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
                 return (
                   <StyledNavLink
                     key={child.path}
-                    label={child.label}
+                    label={child.label ? t(child.label) : ''}
                     onClick={() => handleNavigate(child.path)}
                     active={isChildActive}
                     variant="subtle"
