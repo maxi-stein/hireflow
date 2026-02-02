@@ -32,4 +32,8 @@ export class FilterJobOfferDto extends PaginationDto {
   @IsOptional()
   @IsDateString()
   deadline_to?: string;
+
+  @IsOptional()
+  @IsString()
+  candidateId?: string;
 }

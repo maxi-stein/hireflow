@@ -11,6 +11,8 @@ import { FilterJobOfferDto } from './dto/filter-job-offer-dto';
 import { JobOfferStatus } from './interfaces';
 import { JobOfferSkillService } from '../job-offer-skills/job-offer-skill.service';
 import { PaginatedResponse } from '../../../shared/dto/pagination/pagination.dto';
+import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
+import { ApplicationStatus } from '../../candidate-application/interfaces/application-status';
 
 @Injectable()
 export class JobOfferService {
@@ -19,7 +21,7 @@ export class JobOfferService {
     private readonly jobOfferRepository: Repository<JobOffer>,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
-  ) {}
+  ) { }
 
   async create(
     createJobOfferDto: CreateJobOfferDto,
@@ -82,6 +84,23 @@ export class JobOfferService {
       query.andWhere('jobOffer.deadline <= :deadline_to', {
         deadline_to: filterDto.deadline_to,
       });
+    }
+
+    if (filterDto.candidateId) {
+      // Filter out job offers where the candidate is already hired
+      query.andWhere((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('1')
+          .from(CandidateApplication, 'ca')
+          .where('ca.job_offer_id = jobOffer.id')
+          .andWhere('ca.candidate_id = :candidateId')
+          .andWhere('ca.status = :hiredStatus')
+          .getQuery();
+        return `NOT EXISTS ${subQuery}`;
+      });
+      query.setParameter('candidateId', filterDto.candidateId);
+      query.setParameter('hiredStatus', ApplicationStatus.HIRED);
     }
 
     query.loadRelationCountAndMap(
