@@ -7,5 +7,7 @@
     "light": "Light Mode",
     "dark": "Dark Mode"
   },
-  "applyNow": "Apply Now"
+  "applyNow": "Apply Now",
+  "na": "N/A",
+  "present": "Present"
 }

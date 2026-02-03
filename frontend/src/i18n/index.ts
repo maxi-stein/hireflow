@@ -8,6 +8,7 @@ import profileEn from './locales/en/profile.json';
 import jobsEn from './locales/en/jobs.json';
 import dashboardEn from './locales/en/dashboard.json';
 import applicationsEn from './locales/en/applications.json';
+import candidatesEn from './locales/en/candidates.json';
 
 import commonEs from './locales/es/common.json';
 import navigationEs from './locales/es/navigation.json';
@@ -15,6 +16,7 @@ import profileEs from './locales/es/profile.json';
 import jobsEs from './locales/es/jobs.json';
 import dashboardEs from './locales/es/dashboard.json';
 import applicationsEs from './locales/es/applications.json';
+import candidatesEs from './locales/es/candidates.json';
 
 export const defaultNS = 'common';
 export const resources = {
@@ -25,6 +27,7 @@ export const resources = {
     jobs: jobsEn,
     dashboard: dashboardEn,
     applications: applicationsEn,
+    candidates: candidatesEn,
   },
   es: {
     common: commonEs,
@@ -33,6 +36,7 @@ export const resources = {
     jobs: jobsEs,
     dashboard: dashboardEs,
     applications: applicationsEs,
+    candidates: candidatesEs,
   },
 } as const;
 

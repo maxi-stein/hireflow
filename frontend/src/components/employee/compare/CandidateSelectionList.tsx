@@ -1,5 +1,6 @@
 import { Stack, Alert } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { SelectableCandidateCard } from './SelectableCandidateCard';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 
@@ -20,10 +21,11 @@ export function CandidateSelectionList({
   onCandidateToggle,
   isDark,
 }: CandidateSelectionListProps) {
+  const { t } = useTranslation('candidates');
   if (candidates.length === 0) {
     return (
       <Alert icon={<IconAlertCircle size={16} />} color="blue" variant="light">
-        No candidates available for comparison
+        {t('compare.searchPanel.emptyCandidates')}
       </Alert>
     );
   }

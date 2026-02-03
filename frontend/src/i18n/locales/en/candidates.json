@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Candidates Database",
+    "subtitle": "Search and manage all registered candidates.",
+    "searchPlaceholder": "Search by name or email...",
+    "sort": {
+      "label": "Sort by",
+      "placeholder": "Sort by",
+      "updatedAt": "Last Updated",
+      "lastName": "Last Name"
+    },
+    "table": {
+      "candidate": "Candidate",
+      "location": "Location",
+      "lastActive": "Last Active",
+      "actions": "Actions",
+      "empty": "No candidates found matching your criteria."
+    }
+  },
+  "compare": {
+    "title": "Compare Candidates",
+    "subtitle": "Select candidates from a job offer to compare",
+    "viewTitle": "Candidate Comparison",
+    "viewSubtitle": "Comparing {{count}} candidates",
+    "buttons": {
+      "clear": "Clear Selection",
+      "compare": "Compare Candidates",
+      "back": "Back to Selection"
+    },
+    "searchPanel": {
+      "placeholder": "Search job offers by position...",
+      "loading": "Loading job offers...",
+      "empty": "No job offers found",
+      "emptyCandidates": "No candidates available for comparison",
+      "applicants": "{{count}} applicants",
+      "candidateSearch": "Search candidates..."
+    },
+    "card": {
+      "sections": {
+        "skills": "Skills & Experience Answers"
+      },
+      "empty": {
+        "skills": "No skills data available",
+        "experience": "No work experience data available",
+        "education": "No education data available",
+        "info": "No additional information available"
+      },
+      "years": "years",
+      "year": "year"
+    }
+  }
+}

@@ -12,6 +12,7 @@ import {
     Box
 } from '@mantine/core';
 import { IconX, IconCalendarEvent, IconDownload, IconMail, IconPhone, IconCheck } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useCandidateQuery } from '../../../hooks/api/useCandidates';
 import { useCandidateInterviewsQuery } from '../../../hooks/api/useInterviews';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
@@ -38,6 +39,7 @@ export function CandidateComparisonCard({
     accordionValue,
     onAccordionChange
 }: CandidateComparisonCardProps) {
+    const { t } = useTranslation('candidates');
     const { data: candidateProfile, isLoading: isLoadingProfile } = useCandidateQuery(application.candidate.id);
     const { data: interviewsData, isLoading: isLoadingInterviews } = useCandidateInterviewsQuery(application.candidate.id);
 
@@ -113,7 +115,7 @@ export function CandidateComparisonCard({
                     fullWidth
                     disabled
                 >
-                    Download CV
+                    {t('candidate.management.links.downloadResume', { ns: 'profile' })}
                 </Button>
             </Box>
 
@@ -137,7 +139,8 @@ export function CandidateComparisonCard({
                             onChange={onAccordionChange}
                         >
                             <Accordion.Item value="skills">
-                                <Accordion.Control>Skills & Experience Answers</Accordion.Control>
+                                {/* Using custom string for Skills as it's not exactly in profile general sections yet, but Experience/Education are */}
+                                <Accordion.Control>{t('compare.card.sections.skills')}</Accordion.Control>
                                 <Accordion.Panel>
                                     {application.skill_answers && application.skill_answers.length > 0 ? (
                                         <Grid gutter="xs">
@@ -151,7 +154,7 @@ export function CandidateComparisonCard({
                                                                     {answer.job_offer_skill.skill_name}
                                                                 </Text>
                                                                 <Badge variant="light" color="blue" size="xs" style={{ flexShrink: 0 }}>
-                                                                    {answer.years_of_experience} {answer.years_of_experience === 1 ? 'year' : 'years'}
+                                                                    {answer.years_of_experience} {answer.years_of_experience === 1 ? t('compare.card.year') : t('compare.card.years')}
                                                                 </Badge>
                                                             </Group>
                                                         </Paper>
@@ -160,7 +163,7 @@ export function CandidateComparisonCard({
                                             })}
                                         </Grid>
                                     ) : (
-                                        <Text size="sm" c="dimmed">No skills data available</Text>
+                                        <Text size="sm" c="dimmed">{t('compare.card.empty.skills')}</Text>
                                     )}
                                 </Accordion.Panel>
                             </Accordion.Item>
@@ -176,7 +179,7 @@ export function CandidateComparisonCard({
                             onChange={onAccordionChange}
                         >
                             <Accordion.Item value="experience">
-                                <Accordion.Control>Work Experience</Accordion.Control>
+                                <Accordion.Control>{t('experience.title', { ns: 'profile' })}</Accordion.Control>
                                 <Accordion.Panel>
                                     {candidateProfile?.work_experiences && candidateProfile.work_experiences.length > 0 ? (
                                         <Stack gap="md">
@@ -185,7 +188,7 @@ export function CandidateComparisonCard({
                                                     <Text fw={600} size="sm">{exp.position}</Text>
                                                     <Text size="sm" c="dimmed">{exp.company_name}</Text>
                                                     <Text size="xs" c="dimmed">
-                                                        {new Date(exp.start_date).toLocaleDateString()} - {exp.end_date ? new Date(exp.end_date).toLocaleDateString() : 'Present'}
+                                                        {new Date(exp.start_date).toLocaleDateString()} - {exp.end_date ? new Date(exp.end_date).toLocaleDateString() : t('present', { ns: 'common' })}
                                                     </Text>
                                                     {exp.description && (
                                                         <Text size="sm" mt="xs">{exp.description}</Text>
@@ -194,7 +197,7 @@ export function CandidateComparisonCard({
                                             ))}
                                         </Stack>
                                     ) : (
-                                        <Text size="sm" c="dimmed">No work experience data available</Text>
+                                        <Text size="sm" c="dimmed">{t('compare.card.empty.experience')}</Text>
                                     )}
                                 </Accordion.Panel>
                             </Accordion.Item>
@@ -210,7 +213,7 @@ export function CandidateComparisonCard({
                             onChange={onAccordionChange}
                         >
                             <Accordion.Item value="education">
-                                <Accordion.Control>Education</Accordion.Control>
+                                <Accordion.Control>{t('education.title', { ns: 'profile' })}</Accordion.Control>
                                 <Accordion.Panel>
                                     {candidateProfile?.educations && candidateProfile.educations.length > 0 ? (
                                         <Stack gap="md">
@@ -219,7 +222,7 @@ export function CandidateComparisonCard({
                                                     <Text fw={600} size="sm">{edu.degree_type} - {edu.field_of_study}</Text>
                                                     <Text size="sm" c="dimmed">{edu.institution}</Text>
                                                     <Text size="xs" c="dimmed">
-                                                        {new Date(edu.start_date).toLocaleDateString()} - {edu.end_date ? new Date(edu.end_date).toLocaleDateString() : 'Present'}
+                                                        {new Date(edu.start_date).toLocaleDateString()} - {edu.end_date ? new Date(edu.end_date).toLocaleDateString() : t('present', { ns: 'common' })}
                                                     </Text>
                                                     {edu.description && (
                                                         <Text size="sm" mt="xs">{edu.description}</Text>
@@ -228,7 +231,7 @@ export function CandidateComparisonCard({
                                             ))}
                                         </Stack>
                                     ) : (
-                                        <Text size="sm" c="dimmed">No education data available</Text>
+                                        <Text size="sm" c="dimmed">{t('compare.card.empty.education')}</Text>
                                     )}
                                 </Accordion.Panel>
                             </Accordion.Item>
@@ -244,18 +247,18 @@ export function CandidateComparisonCard({
                             onChange={onAccordionChange}
                         >
                             <Accordion.Item value="info">
-                                <Accordion.Control>Additional Info</Accordion.Control>
+                                <Accordion.Control>{t('candidate.personalInfo', { ns: 'profile' })}</Accordion.Control>
                                 <Accordion.Panel>
                                     <Stack gap="xs">
                                         {candidateProfile?.age && (
-                                            <Text size="sm"><strong>Age:</strong> {candidateProfile.age}</Text>
+                                            <Text size="sm"><strong>{t('candidate.age', { ns: 'profile' })}:</strong> {candidateProfile.age}</Text>
                                         )}
                                         {candidateProfile?.city && candidateProfile?.country && (
-                                            <Text size="sm"><strong>Location:</strong> {candidateProfile.city}, {candidateProfile.country}</Text>
+                                            <Text size="sm"><strong>{t('candidate.city', { ns: 'profile' })}/{t('candidate.country', { ns: 'profile' })}:</strong> {candidateProfile.city}, {candidateProfile.country}</Text>
                                         )}
                                         {candidateProfile?.linkedin && (
                                             <Text size="sm">
-                                                <strong>LinkedIn:</strong>{' '}
+                                                <strong>{t('candidate.linkedin', { ns: 'profile' })}:</strong>{' '}
                                                 <a href={candidateProfile.linkedin} target="_blank" rel="noopener noreferrer">
                                                     Profile
                                                 </a>
@@ -263,14 +266,14 @@ export function CandidateComparisonCard({
                                         )}
                                         {candidateProfile?.github && (
                                             <Text size="sm">
-                                                <strong>GitHub:</strong>{' '}
+                                                <strong>{t('candidate.github', { ns: 'profile' })}:</strong>{' '}
                                                 <a href={candidateProfile.github} target="_blank" rel="noopener noreferrer">
                                                     Profile
                                                 </a>
                                             </Text>
                                         )}
                                         {!candidateProfile?.age && !candidateProfile?.city && !candidateProfile?.linkedin && !candidateProfile?.github && (
-                                            <Text size="sm" c="dimmed">No additional information available</Text>
+                                            <Text size="sm" c="dimmed">{t('compare.card.empty.info')}</Text>
                                         )}
                                     </Stack>
                                 </Accordion.Panel>
@@ -299,7 +302,7 @@ export function CandidateComparisonCard({
                             fullWidth
                             onClick={() => onHire(application)}
                         >
-                            Hire Candidate
+                            {t('candidate.actions.hire', { ns: 'profile' })}
                         </Button>
                     )}
                     <Button
@@ -308,7 +311,7 @@ export function CandidateComparisonCard({
                         fullWidth
                         onClick={() => onScheduleInterview(application.id)}
                     >
-                        Schedule Interview
+                        {t('candidate.actions.schedule', { ns: 'profile' })}
                     </Button>
                     <Button
                         leftSection={<IconX size={16} />}
@@ -317,7 +320,7 @@ export function CandidateComparisonCard({
                         fullWidth
                         onClick={() => onReject(application)}
                     >
-                        Reject Candidate
+                        {t('candidate.actions.reject', { ns: 'profile' })}
                     </Button>
                 </Stack>
             </Paper>

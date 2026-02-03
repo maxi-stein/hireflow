@@ -1,5 +1,6 @@
 import { Paper, TextInput, SimpleGrid, Text } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { JobOfferAccordionItem } from './JobOfferAccordionItem';
 import type { JobOffer } from '../../../services/job-offer.service';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
@@ -35,12 +36,13 @@ export function JobOfferSearchPanel({
   filteredCandidates,
   isDark,
 }: JobOfferSearchPanelProps) {
+  const { t } = useTranslation('candidates');
   const bgColors = ['blue', 'teal', 'grape', 'orange', 'indigo', 'green', 'cyan', 'pink'];
 
   return (
     <Paper p="md" withBorder>
       <TextInput
-        placeholder="Search job offers by position..."
+        placeholder={t('compare.searchPanel.placeholder')}
         leftSection={<IconSearch size={16} />}
         value={search}
         onChange={(e) => onSearchChange(e.currentTarget.value)}
@@ -70,11 +72,11 @@ export function JobOfferSearchPanel({
       </SimpleGrid>
 
       {isLoadingJobs && (
-        <Text ta="center" c="dimmed" py="md">Loading job offers...</Text>
+        <Text ta="center" c="dimmed" py="md">{t('compare.searchPanel.loading')}</Text>
       )}
 
       {!isLoadingJobs && jobOffers.length === 0 && (
-        <Text ta="center" c="dimmed" py="md">No job offers found</Text>
+        <Text ta="center" c="dimmed" py="md">{t('compare.searchPanel.empty')}</Text>
       )}
     </Paper>
   );

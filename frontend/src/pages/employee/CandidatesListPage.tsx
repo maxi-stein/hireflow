@@ -14,6 +14,7 @@ import {
   LoadingOverlay
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
+import { useTranslation } from 'react-i18next';
 import { IconSearch, IconEye, IconSortAscending, IconSortDescending, IconUser } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +22,7 @@ import { useCandidatesQuery } from '../../hooks/api/useCandidates';
 import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
 
 export function CandidatesListPage() {
+  const { t } = useTranslation('candidates');
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -68,7 +70,7 @@ export function CandidatesListPage() {
         {candidate.city && candidate.country ? (
           <Text size="sm">{candidate.city}, {candidate.country}</Text>
         ) : (
-          <Text size="sm" c="dimmed">N/A</Text>
+          <Text size="sm" c="dimmed">{t('na', { ns: 'common' })}</Text>
         )}
       </Table.Td>
       <Table.Td>
@@ -77,12 +79,12 @@ export function CandidatesListPage() {
       </Table.Td>
       <Table.Td>
         <Group gap="xs" justify="flex-end">
-          <Tooltip label="View Details">
+          <Tooltip label={t('table.tooltips.viewCandidate', { ns: 'applications' })}>
             <ActionIcon
               variant="light"
               color="blue"
               onClick={() => navigate(`/manage/candidates/list/${candidate.id}`)}
-              aria-label="View details"
+              aria-label={t('table.tooltips.viewCandidate', { ns: 'applications' })}
             >
               <IconEye size={18} />
             </ActionIcon>
@@ -97,9 +99,9 @@ export function CandidatesListPage() {
       <Stack gap="lg">
         <Group justify="space-between" align="flex-end">
           <div>
-            <Title order={2}>Candidates Database</Title>
+            <Title order={2}>{t('list.title')}</Title>
             <Text c="dimmed" size="sm">
-              Search and manage all registered candidates.
+              {t('list.subtitle')}
             </Text>
           </div>
         </Group>
@@ -107,19 +109,19 @@ export function CandidatesListPage() {
         <Paper p="md" withBorder radius="md">
           <Group justify="space-between" mb="md">
             <TextInput
-              placeholder="Search by name or email..."
+              placeholder={t('list.searchPlaceholder')}
               leftSection={<IconSearch size={16} />}
               value={search}
               onChange={handleSearchChange}
               w={300}
             />
             <Select
-              label="Sort by"
-              placeholder="Sort by"
+              label={t('list.sort.label')}
+              placeholder={t('list.sort.placeholder')}
               leftSection={sortBy === 'updated_at' ? <IconSortDescending size={16} /> : <IconSortAscending size={16} />}
               data={[
-                { value: 'updated_at', label: 'Last Updated' },
-                { value: 'last_name', label: 'Last Name' },
+                { value: 'updated_at', label: t('list.sort.updatedAt') },
+                { value: 'last_name', label: t('list.sort.lastName') },
               ]}
               value={sortBy}
               onChange={handleSortChange}
@@ -134,10 +136,10 @@ export function CandidatesListPage() {
             <Table horizontalSpacing="md" verticalSpacing="sm" highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>Candidate</Table.Th>
-                  <Table.Th>Location</Table.Th>
-                  <Table.Th>Last Active</Table.Th>
-                  <Table.Th style={{ textAlign: 'right' }}>Actions</Table.Th>
+                  <Table.Th>{t('table.candidate')}</Table.Th>
+                  <Table.Th>{t('candidate.city', { ns: 'profile' })}/{t('candidate.country', { ns: 'profile' })}</Table.Th>
+                  <Table.Th>{t('table.lastActive')}</Table.Th>
+                  <Table.Th style={{ textAlign: 'right' }}>{t('table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -147,7 +149,7 @@ export function CandidatesListPage() {
                     <Table.Td colSpan={4}>
                       <Stack align="center" py="xl" gap="xs">
                         <IconUser size={40} color="gray" style={{ opacity: 0.5 }} />
-                        <Text c="dimmed">No candidates found matching your criteria.</Text>
+                        <Text c="dimmed">{t('list.table.empty')}</Text>
                       </Stack>
                     </Table.Td>
                   </Table.Tr>

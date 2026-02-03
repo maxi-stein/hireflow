@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Base de Datos de Candidatos",
+    "subtitle": "Buscar y gestionar todos los candidatos registrados.",
+    "searchPlaceholder": "Buscar por nombre o email...",
+    "sort": {
+      "label": "Ordenar por",
+      "placeholder": "Ordenar por",
+      "updatedAt": "Última Actualización",
+      "lastName": "Apellido"
+    },
+    "table": {
+      "candidate": "Candidato",
+      "location": "Ubicación",
+      "lastActive": "Última Actividad",
+      "actions": "Acciones",
+      "empty": "No se encontraron candidatos con esos criterios."
+    }
+  },
+  "compare": {
+    "title": "Comparar Candidatos",
+    "subtitle": "Seleccione candidatos de una oferta para comparar",
+    "viewTitle": "Comparación de Candidatos",
+    "viewSubtitle": "Comparando {{count}} candidatos",
+    "buttons": {
+      "clear": "Limpiar Selección",
+      "compare": "Comparar Candidatos",
+      "back": "Volver a Selección"
+    },
+    "searchPanel": {
+      "placeholder": "Buscar ofertas por puesto...",
+      "loading": "Cargando ofertas...",
+      "empty": "No se encontraron ofertas",
+      "emptyCandidates": "No hay candidatos disponibles para comparar",
+      "applicants": "{{count}} postulantes",
+      "candidateSearch": "Buscar candidatos..."
+    },
+    "card": {
+      "sections": {
+        "skills": "Habilidades y Experiencia"
+      },
+      "empty": {
+        "skills": "No hay datos de habilidades",
+        "experience": "No hay experiencia laboral registrada",
+        "education": "No hay educación registrada",
+        "info": "No hay información adicional"
+      },
+      "years": "años",
+      "year": "año"
+    }
+  }
+}

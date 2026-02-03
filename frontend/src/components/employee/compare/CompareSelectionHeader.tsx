@@ -1,5 +1,6 @@
 import { Group, Title, Text, Button } from '@mantine/core';
 import { IconX, IconScale } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 
 export interface CompareSelectionHeaderProps {
   selectedCount: number;
@@ -16,11 +17,12 @@ export function CompareSelectionHeader({
   onClearSelection,
   onCompare,
 }: CompareSelectionHeaderProps) {
+  const { t } = useTranslation('candidates');
   return (
     <Group justify="space-between" align="flex-end">
       <div>
-        <Title order={2}>Compare Candidates</Title>
-        <Text c="dimmed" size="sm">Select candidates from a job offer to compare</Text>
+        <Title order={2}>{t('compare.title')}</Title>
+        <Text c="dimmed" size="sm">{t('compare.subtitle')}</Text>
       </div>
       <Group gap="sm">
         <Button
@@ -30,14 +32,14 @@ export function CompareSelectionHeader({
           disabled={selectedCount === 0}
           leftSection={<IconX size={16} />}
         >
-          Clear Selection
+          {t('compare.buttons.clear')}
         </Button>
         <Button
           leftSection={<IconScale size={20} />}
           disabled={selectedCount < 2}
           onClick={onCompare}
         >
-          Compare Candidates
+          {t('compare.buttons.compare')}
         </Button>
       </Group>
     </Group>

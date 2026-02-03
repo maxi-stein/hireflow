@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Accordion, Group, Text, Badge, LoadingOverlay } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { CandidateSelectionList } from './CandidateSelectionList';
 import type { JobOffer } from '../../../services/job-offer.service';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
@@ -32,6 +33,7 @@ function JobOfferAccordionItemComponent({
   onCandidateToggle,
   isDark,
 }: JobOfferAccordionItemProps) {
+  const { t } = useTranslation('candidates');
   return (
     <Accordion
       variant="separated"
@@ -60,7 +62,7 @@ function JobOfferAccordionItemComponent({
               <Text fw={500}>{offer.position}</Text>
               <Text size="sm" c="dimmed">{offer.location}</Text>
             </div>
-            <Badge>{offer.applicants_count} applicants</Badge>
+            <Badge>{t('compare.searchPanel.applicants', { count: offer.applicants_count })}</Badge>
           </Group>
         </Accordion.Control>
         <Accordion.Panel style={{ position: 'relative', minHeight: 100 }}>
