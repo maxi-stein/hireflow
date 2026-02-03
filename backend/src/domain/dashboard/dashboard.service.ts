@@ -60,18 +60,20 @@ export class DashboardService {
         limit: 0,
       });
 
-    const candidatesPerJob = candidatesApplied.reduce(
-      (acc, app) => {
-        const jobTitle = app.job_offer.position;
-        if (acc[jobTitle]) {
-          acc[jobTitle]++;
-        } else {
-          acc[jobTitle] = 1;
-        }
+    const candidatesPerJob = activeJobOffers.reduce(
+      (acc, job) => {
+        acc[job.position] = 0;
         return acc;
       },
       {} as Record<string, number>,
     );
+
+    candidatesApplied.forEach((app) => {
+      const jobTitle = app.job_offer?.position;
+      if (jobTitle && candidatesPerJob[jobTitle] !== undefined) {
+        candidatesPerJob[jobTitle]++;
+      }
+    });
 
     const candidatesPerJobSorted = Object.entries(candidatesPerJob).sort(
       (a, b) => b[1] - a[1],
