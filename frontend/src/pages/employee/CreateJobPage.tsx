@@ -25,8 +25,10 @@ import { notifications } from '@mantine/notifications';
 import { createJobOfferSchema } from '../../schemas/job-offer.schema';
 import { validateWithJoi } from '../../utils/form-validation';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function CreateJobPage() {
+  const { t } = useTranslation('jobs');
   const navigate = useNavigate();
 
   // Get job offer id from url params (only when editing)
@@ -89,8 +91,8 @@ export function CreateJobPage() {
       if (isEditMode && id) {
         await updateMutation.mutateAsync({ id, data: payload });
         notifications.show({
-          title: 'Success',
-          message: 'Job posting updated successfully',
+          title: t('create.notifications.successUpdateTitle'),
+          message: t('create.notifications.successUpdateMessage'),
           color: 'green',
         });
       } else {
@@ -98,8 +100,8 @@ export function CreateJobPage() {
         const { status, ...createPayload } = payload;
         await createMutation.mutateAsync(createPayload as any);
         notifications.show({
-          title: 'Success',
-          message: 'Job posting created successfully',
+          title: t('create.notifications.successCreateTitle'),
+          message: t('create.notifications.successCreateMessage'),
           color: 'green',
         });
       }
@@ -107,8 +109,8 @@ export function CreateJobPage() {
       navigate(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[0].path);
     } catch (error) {
       notifications.show({
-        title: 'Error',
-        message: `Failed to ${isEditMode ? 'update' : 'create'} job posting. Please try again.`,
+        title: t('create.notifications.errorTitle'),
+        message: isEditMode ? t('create.notifications.errorMessageUpdate') : t('create.notifications.errorMessageCreate'),
         color: 'red',
         autoClose: 5000,
       });
@@ -121,9 +123,9 @@ export function CreateJobPage() {
   return (
     <Container size="md" py="xl">
       <Box mb="lg">
-        <Title order={2}>{isEditMode ? 'Update Job Posting' : 'Create New Job Posting'}</Title>
+        <Title order={2}>{isEditMode ? t('create.titleEdit') : t('create.titleNew')}</Title>
         <Text c="dimmed" size="sm">
-          {isEditMode ? 'Update the job posting details.' : 'Fill in the details to publish a new job offer.'}
+          {isEditMode ? t('create.subtitleEdit') : t('create.subtitleNew')}
         </Text>
       </Box>
 
@@ -134,19 +136,19 @@ export function CreateJobPage() {
           <Stack gap="lg">
             <Group grow align="flex-start">
               <TextInput
-                label="Position Title"
-                placeholder="e.g. Senior Frontend Engineer"
+                label={t('create.form.position')}
+                placeholder={t('create.form.positionPlaceholder')}
                 required
                 {...form.getInputProps('position')}
               />
               <Select
-                label="Work Mode"
-                placeholder="Select work mode"
+                label={t('create.form.workMode')}
+                placeholder={t('create.form.workModePlaceholder')}
                 required
                 data={[
-                  { value: WorkMode.HYBRID, label: 'Hybrid' },
-                  { value: WorkMode.FULL_REMOTE, label: 'Full Remote' },
-                  { value: WorkMode.OFFICE, label: 'On-site' },
+                  { value: WorkMode.HYBRID, label: t('workMode.hybrid') },
+                  { value: WorkMode.FULL_REMOTE, label: t('workMode.remote') },
+                  { value: WorkMode.OFFICE, label: t('workMode.office') },
                 ]}
                 {...form.getInputProps('work_mode')}
               />
@@ -154,19 +156,19 @@ export function CreateJobPage() {
 
             <Group grow align="flex-start">
               <TextInput
-                label="Location"
-                placeholder="e.g. Buenos Aires, Argentina"
+                label={t('create.form.location')}
+                placeholder={t('create.form.locationPlaceholder')}
                 required
                 {...form.getInputProps('location')}
               />
               {isEditMode && (
                 <Select
-                  label="Status"
-                  placeholder="Select status"
+                  label={t('create.form.status')}
+                  placeholder={t('create.form.statusPlaceholder')}
                   required
                   data={[
-                    { value: JobOfferStatus.OPEN, label: 'Open' },
-                    { value: JobOfferStatus.CLOSED, label: 'Closed' },
+                    { value: JobOfferStatus.OPEN, label: t('status.open') },
+                    { value: JobOfferStatus.CLOSED, label: t('status.closed') },
                   ]}
                   {...form.getInputProps('status')}
                 />
@@ -174,8 +176,8 @@ export function CreateJobPage() {
             </Group>
 
             <Textarea
-              label="Job Description"
-              placeholder="Describe the role, responsibilities, and requirements..."
+              label={t('create.form.description')}
+              placeholder={t('create.form.descriptionPlaceholder')}
               minRows={6}
               autosize
               required
@@ -183,10 +185,10 @@ export function CreateJobPage() {
             />
 
             <TagsInput
-              label="Required Skills"
+              label={t('create.form.skills')}
               required
-              placeholder="Type to search skills (e.g. React, TypeScript)"
-              description="Add up to 10 key skills for this position"
+              placeholder={t('create.form.skillsPlaceholder')}
+              description={t('create.form.skillsDescription')}
               maxTags={50}
               clearable
               data={skillSuggestions.map(s => s.skill_name)}
@@ -197,13 +199,13 @@ export function CreateJobPage() {
 
             <Group grow align="flex-start">
               <TextInput
-                label="Salary Range"
-                placeholder="e.g. $3000 - $5000 USD"
+                label={t('create.form.salary')}
+                placeholder={t('create.form.salaryPlaceholder')}
                 {...form.getInputProps('salary')}
               />
               <DateInput
-                label="Application Deadline"
-                placeholder="Select deadline"
+                label={t('create.form.deadline')}
+                placeholder={t('create.form.deadlinePlaceholder')}
                 minDate={new Date()}
                 clearable
                 {...form.getInputProps('deadline')}
@@ -211,8 +213,8 @@ export function CreateJobPage() {
             </Group>
 
             <Textarea
-              label="Benefits"
-              placeholder="List the benefits offered..."
+              label={t('create.form.benefits')}
+              placeholder={t('create.form.benefitsPlaceholder')}
               minRows={3}
               autosize
               {...form.getInputProps('benefits')}
@@ -223,14 +225,14 @@ export function CreateJobPage() {
                 variant="default"
                 onClick={() => navigate(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[0].path)}
               >
-                Cancel
+                {t('create.cancel')}
               </Button>
               <Button
                 type="submit"
                 leftSection={<IconDeviceFloppy size={20} />}
                 loading={isLoading}
               >
-                {isEditMode ? 'Update Job Posting' : 'Create Job Posting'}
+                {isEditMode ? t('create.submitEdit') : t('create.submitNew')}
               </Button>
             </Group>
           </Stack>

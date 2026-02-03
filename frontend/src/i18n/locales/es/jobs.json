@@ -1,0 +1,82 @@
+{
+  "create": {
+    "titleNew": "Crear Nueva Vacante",
+    "titleEdit": "Actualizar Vacante",
+    "subtitleNew": "Complete los detalles para publicar una nueva oferta de trabajo.",
+    "subtitleEdit": "Actualice los detalles de la oferta de trabajo.",
+    "submitNew": "Crear Vacante",
+    "submitEdit": "Actualizar Vacante",
+    "cancel": "Cancelar",
+    "form": {
+      "position": "Título del Puesto",
+      "positionPlaceholder": "ej. Ingeniero Frontend Senior",
+      "workMode": "Modalidad de Trabajo",
+      "workModePlaceholder": "Seleccionar modalidad",
+      "location": "Ubicación",
+      "locationPlaceholder": "ej. Buenos Aires, Argentina",
+      "status": "Estado",
+      "statusPlaceholder": "Seleccionar estado",
+      "description": "Descripción del Puesto",
+      "descriptionPlaceholder": "Describa el rol, responsabilidades y requisitos...",
+      "skills": "Habilidades Requeridas",
+      "skillsPlaceholder": "Escriba para buscar habilidades (ej. React, TypeScript)",
+      "skillsDescription": "Agregue hasta 10 habilidades clave para esta posición",
+      "salary": "Rango Salarial",
+      "salaryPlaceholder": "ej. $3000 - $5000 USD",
+      "deadline": "Fecha Límite de Aplicación",
+      "deadlinePlaceholder": "Seleccionar fecha límite",
+      "benefits": "Beneficios",
+      "benefitsPlaceholder": "Liste los beneficios ofrecidos..."
+    },
+    "notifications": {
+      "successCreateTitle": "Éxito",
+      "successCreateMessage": "Vacante creada exitosamente",
+      "successUpdateTitle": "Éxito",
+      "successUpdateMessage": "Vacante actualizada exitosamente",
+      "errorTitle": "Error",
+      "errorMessageCreate": "Error al crear la vacante. Por favor intente nuevamente.",
+      "errorMessageUpdate": "Error al actualizar la vacante. Por favor intente nuevamente."
+    }
+  },
+  "list": {
+    "title": "Vacantes de Trabajo",
+    "subtitle": "Administre las ofertas de trabajo de su empresa",
+    "createButton": "Crear Vacante",
+    "searchPlaceholder": "Buscar por puesto...",
+    "filterStatus": "Filtrar por estado",
+    "empty": "No se encontraron vacantes",
+    "table": {
+      "position": "Puesto",
+      "location": "Ubicación",
+      "workMode": "Modalidad",
+      "applicants": "Candidatos",
+      "status": "Estado",
+      "posted": "Publicado",
+      "deadline": "Límite",
+      "actions": "Acciones"
+    },
+    "deleteModal": {
+      "title": "Eliminar Vacante",
+      "message": "¿Está seguro de que desea eliminar la vacante para <1>{{position}}</1>? Esta acción no se puede deshacer.",
+      "confirm": "Eliminar Vacante",
+      "cancel": "Cancelar",
+      "successTitle": "Éxito",
+      "successMessage": "Vacante eliminada exitosamente",
+      "errorTitle": "Error",
+      "errorMessage": "Error al eliminar la vacante. Por favor intente nuevamente."
+    },
+    "viewModal": {
+      "title": "Detalles de la Oferta",
+      "close": "Cerrar"
+    }
+  },
+  "status": {
+    "open": "Abierta",
+    "closed": "Cerrada"
+  },
+  "workMode": {
+    "hybrid": "Híbrido",
+    "remote": "Remoto Total",
+    "office": "Presencial"
+  }
+}

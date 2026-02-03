@@ -1,4 +1,5 @@
 import { Modal, Title, Stack, Text, Group, Button, LoadingOverlay, Alert } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useJobOfferQuery } from '../../../hooks/api/useJobOffers';
 import { JobOfferCard } from '../../jobs/JobOfferCard';
@@ -10,13 +11,14 @@ interface ViewJobOfferModalProps {
 }
 
 export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferModalProps) {
+  const { t } = useTranslation('jobs');
   const { data: jobOffer, isLoading, isError, error, refetch } = useJobOfferQuery(jobOfferId || '');
 
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>Job Posting Details</Title>}
+      title={<Title order={3}>{t('list.viewModal.title')}</Title>}
       size="lg"
     >
       <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
@@ -48,7 +50,7 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferM
             action={
               <Group justify="flex-end" mt="md">
                 <Button variant="default" onClick={onClose}>
-                  Close
+                  {t('list.viewModal.close')}
                 </Button>
               </Group>
             }

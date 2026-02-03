@@ -24,15 +24,16 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useJobOffersQuery, useDeleteJobOfferMutation } from '../../hooks/api/useJobOffers';
-import { JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
+import { WorkMode, JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
 import { ROUTES } from '../../router/routes.config';
 import { notifications } from '@mantine/notifications';
 import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
 import { DeleteJobOfferModal } from '../../components/employee/job-postings/DeleteJobOfferModal';
-import { getTableHeaders } from '../../utils/table-headers';
 
 export function JobPostingsPage() {
+  const { t } = useTranslation('jobs');
   const navigate = useNavigate();
 
   // Search by position (with debounce)
@@ -53,7 +54,16 @@ export function JobPostingsPage() {
   const [viewJobOfferId, setViewJobOfferId] = useState<string | null>(null);
   const [deleteJobOffer, setDeleteJobOffer] = useState<JobOffer | null>(null);
 
-  const tableHeaders = getTableHeaders("job-offers");
+  const tableHeaders = [
+    { title: t('list.table.position'), accessorKey: "position" },
+    { title: t('list.table.location'), accessorKey: "location" },
+    { title: t('list.table.workMode'), accessorKey: "work_mode" },
+    { title: t('list.table.applicants'), accessorKey: "applicants_count" },
+    { title: t('list.table.status'), accessorKey: "status" },
+    { title: t('list.table.posted'), accessorKey: "created_at" },
+    { title: t('list.table.deadline'), accessorKey: "deadline" },
+    { title: t('list.table.actions'), accessorKey: "actions" },
+  ];
 
   const { data: jobOffers, isLoading } = useJobOffersQuery({
     page,
@@ -93,16 +103,16 @@ export function JobPostingsPage() {
     try {
       await deleteMutation.mutateAsync(deleteJobOffer.id);
       notifications.show({
-        title: 'Success',
-        message: 'Job posting deleted successfully',
+        title: t('list.deleteModal.successTitle'),
+        message: t('list.deleteModal.successMessage'),
         color: 'green',
       });
       setDeleteModalOpened(false);
       setDeleteJobOffer(null);
     } catch (error) {
       notifications.show({
-        title: 'Error',
-        message: 'Failed to delete job posting. Please try again.',
+        title: t('list.deleteModal.errorTitle'),
+        message: t('list.deleteModal.errorMessage'),
         color: 'red',
       });
       console.error(error);
@@ -113,32 +123,32 @@ export function JobPostingsPage() {
     <Container size="xl" py="xl">
       <Group justify="space-between" mb="lg">
         <div>
-          <Title order={2}>Job Postings</Title>
-          <Text c="dimmed" size="sm">Manage your company's job offers</Text>
+          <Title order={2}>{t('list.title')}</Title>
+          <Text c="dimmed" size="sm">{t('list.subtitle')}</Text>
         </div>
         <Button
           leftSection={<IconPlus size={20} />}
           onClick={handleCreateClick}
         >
-          Create Job Posting
+          {t('list.createButton')}
         </Button>
       </Group>
 
       <Paper p="md" mb="lg" radius="md" withBorder>
         <Group>
           <TextInput
-            placeholder="Search by position..."
+            placeholder={t('list.searchPlaceholder')}
             leftSection={<IconSearch size={16} />}
             value={search}
             onChange={(e) => setSearch(e.currentTarget.value)}
             style={{ flex: 1 }}
           />
           <Select
-            placeholder="Filter by status"
+            placeholder={t('list.filterStatus')}
             leftSection={<IconFilter size={16} />}
             data={[
-              { value: JobOfferStatus.OPEN, label: 'Open' },
-              { value: JobOfferStatus.CLOSED, label: 'Closed' },
+              { value: JobOfferStatus.OPEN, label: t('status.open') },
+              { value: JobOfferStatus.CLOSED, label: t('status.closed') },
             ]}
             value={filter}
             onChange={setFilter}
@@ -168,7 +178,7 @@ export function JobPostingsPage() {
                 <Table.Td>{offer.location}</Table.Td>
                 <Table.Td>
                   <Badge variant="light" color="gray">
-                    {offer.work_mode}
+                    {offer.work_mode === WorkMode.HYBRID ? t('workMode.hybrid') : offer.work_mode === WorkMode.FULL_REMOTE ? t('workMode.remote') : t('workMode.office')}
                   </Badge>
                 </Table.Td>
                 <Table.Td>
@@ -179,7 +189,7 @@ export function JobPostingsPage() {
                     color={offer.status === JobOfferStatus.OPEN ? 'green' : 'red'}
                     variant="light"
                   >
-                    {offer.status}
+                    {offer.status === JobOfferStatus.OPEN ? t('status.open') : t('status.closed')}
                   </Badge>
                 </Table.Td>
                 <Table.Td>
@@ -217,8 +227,8 @@ export function JobPostingsPage() {
             ))}
             {!isLoading && (!jobOffers?.data || jobOffers.data.length === 0) && (
               <Table.Tr>
-                <Table.Td colSpan={7} style={{ textAlign: 'center' }} py="xl">
-                  <Text c="dimmed">No job postings found</Text>
+                <Table.Td colSpan={8} style={{ textAlign: 'center' }} py="xl">
+                  <Text c="dimmed">{t('list.empty')}</Text>
                 </Table.Td>
               </Table.Tr>
             )}

@@ -52,7 +52,7 @@
     },
     "management": {
       "hiredTitle": "Candidato Contratado",
-      "hiredMessage": "Este candidato ha sido contratado para la posición de <strong>{{position}}</strong>. Todas las demás solicitudes y agendamientos para este candidato están cerradas.",
+      "hiredMessage": "Este candidato ha sido contratado para la posición de <1>{{position}}</1>. Todas las demás solicitudes y agendamientos para este candidato están cerradas.",
       "header": {
         "hiredBadge": "CONTRATADO"
       },

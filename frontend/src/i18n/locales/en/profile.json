@@ -52,7 +52,7 @@
     },
     "management": {
       "hiredTitle": "Candidate Hired",
-      "hiredMessage": "This candidate has been hired for the position of <strong>{{position}}</strong>. All other applications and scheduling for this candidate are now closed.",
+      "hiredMessage": "This candidate has been hired for the position of <1>{{position}}</1>. All other applications and scheduling for this candidate are now closed.",
       "header": {
         "hiredBadge": "HIRED"
       },

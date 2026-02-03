@@ -1,0 +1,82 @@
+{
+  "create": {
+    "titleNew": "Create New Job Posting",
+    "titleEdit": "Update Job Posting",
+    "subtitleNew": "Fill in the details to publish a new job offer.",
+    "subtitleEdit": "Update the job posting details.",
+    "submitNew": "Create Job Posting",
+    "submitEdit": "Update Job Posting",
+    "cancel": "Cancel",
+    "form": {
+      "position": "Position Title",
+      "positionPlaceholder": "e.g. Senior Frontend Engineer",
+      "workMode": "Work Mode",
+      "workModePlaceholder": "Select work mode",
+      "location": "Location",
+      "locationPlaceholder": "e.g. Buenos Aires, Argentina",
+      "status": "Status",
+      "statusPlaceholder": "Select status",
+      "description": "Job Description",
+      "descriptionPlaceholder": "Describe the role, responsibilities, and requirements...",
+      "skills": "Required Skills",
+      "skillsPlaceholder": "Type to search skills (e.g. React, TypeScript)",
+      "skillsDescription": "Add up to 10 key skills for this position",
+      "salary": "Salary Range",
+      "salaryPlaceholder": "e.g. $3000 - $5000 USD",
+      "deadline": "Application Deadline",
+      "deadlinePlaceholder": "Select deadline",
+      "benefits": "Benefits",
+      "benefitsPlaceholder": "List the benefits offered..."
+    },
+    "notifications": {
+      "successCreateTitle": "Success",
+      "successCreateMessage": "Job posting created successfully",
+      "successUpdateTitle": "Success",
+      "successUpdateMessage": "Job posting updated successfully",
+      "errorTitle": "Error",
+      "errorMessageCreate": "Failed to create job posting. Please try again.",
+      "errorMessageUpdate": "Failed to update job posting. Please try again."
+    }
+  },
+  "list": {
+    "title": "Job Postings",
+    "subtitle": "Manage your company's job offers",
+    "createButton": "Create Job Posting",
+    "searchPlaceholder": "Search by position...",
+    "filterStatus": "Filter by status",
+    "empty": "No job postings found",
+    "table": {
+      "position": "Position",
+      "location": "Location",
+      "workMode": "Work Mode",
+      "applicants": "Applicants",
+      "status": "Status",
+      "posted": "Posted",
+      "deadline": "Deadline",
+      "actions": "Actions"
+    },
+    "deleteModal": {
+      "title": "Delete Job Posting",
+      "message": "Are you sure you want to delete the job posting for <1>{{position}}</1>? This action cannot be undone.",
+      "confirm": "Delete Job Posting",
+      "cancel": "Cancel",
+      "successTitle": "Success",
+      "successMessage": "Job posting deleted successfully",
+      "errorTitle": "Error",
+      "errorMessage": "Failed to delete job posting. Please try again."
+    },
+    "viewModal": {
+      "title": "Job Offer Details",
+      "close": "Close"
+    }
+  },
+  "status": {
+    "open": "Open",
+    "closed": "Closed"
+  },
+  "workMode": {
+    "hybrid": "Hybrid",
+    "remote": "Full Remote",
+    "office": "On-site"
+  }
+}
