@@ -1,4 +1,4 @@
-import { Container, Title, Text, Stack, LoadingOverlay, Alert, Box, SimpleGrid } from '@mantine/core';
+import { Container, Title, Text, Stack, LoadingOverlay, Alert, Box } from '@mantine/core';
 import { IconInbox } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
 import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
@@ -69,7 +69,7 @@ export const ApplicationsPage = () => {
 
                 {/* Applications List */}
                 {sortedApplications.length > 0 ? (
-                    <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
+                    <Stack gap="lg">
                         {sortedApplications.map((application) => (
                             <CandidateApplicationCard
                                 key={application.id}
@@ -77,7 +77,7 @@ export const ApplicationsPage = () => {
                                 interviews={getInterviewsForApplication(application.id)}
                             />
                         ))}
-                    </SimpleGrid>
+                    </Stack>
                 ) : (
                     <Alert
                         variant="light"
