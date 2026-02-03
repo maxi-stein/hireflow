@@ -76,7 +76,9 @@
   },
   "workMode": {
     "hybrid": "Híbrido",
-    "remote": "Remoto Total",
+    "remote": "Remoto",
     "office": "Presencial"
-  }
+  },
+  "benefits": "Beneficios",
+  "deadline": "Fecha Límite"
 }

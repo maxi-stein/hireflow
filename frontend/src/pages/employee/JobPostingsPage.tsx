@@ -178,7 +178,7 @@ export function JobPostingsPage() {
                 <Table.Td>{offer.location}</Table.Td>
                 <Table.Td>
                   <Badge variant="light" color="gray">
-                    {offer.work_mode === WorkMode.HYBRID ? t('workMode.hybrid') : offer.work_mode === WorkMode.FULL_REMOTE ? t('workMode.remote') : t('workMode.office')}
+                    {offer.work_mode === WorkMode.HYBRID ? t('workMode.hybrid') : offer.work_mode === WorkMode.REMOTE ? t('workMode.remote') : t('workMode.office')}
                   </Badge>
                 </Table.Td>
                 <Table.Td>

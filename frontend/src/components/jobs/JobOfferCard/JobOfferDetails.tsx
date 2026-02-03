@@ -1,5 +1,6 @@
 import { Group, Text, ThemeIcon } from '@mantine/core';
 import { IconCurrencyDollar, IconClock } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 
 interface JobOfferDetailsProps {
   salary?: string;
@@ -8,6 +9,7 @@ interface JobOfferDetailsProps {
 }
 
 export const JobOfferDetails = ({ salary, deadline, showSensitiveData }: JobOfferDetailsProps) => {
+  const { t } = useTranslation('jobs');
   const formattedDeadline = deadline ? new Date(deadline).toLocaleDateString() : null;
 
   return (
@@ -27,7 +29,7 @@ export const JobOfferDetails = ({ salary, deadline, showSensitiveData }: JobOffe
             <IconClock size={16} />
           </ThemeIcon>
           <Text size="sm" c="dimmed">
-            Deadline: {formattedDeadline}
+            {t('deadline')}: {formattedDeadline}
           </Text>
         </Group>
       )}

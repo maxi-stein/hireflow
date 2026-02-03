@@ -4,6 +4,7 @@ import type { JobOffer } from '../../../services/job-offer.service';
 import { JobOfferMeta } from './JobOfferMeta';
 import { JobOfferSkills } from './JobOfferSkills';
 import { JobOfferDetails } from './JobOfferDetails';
+import { useTranslation } from 'react-i18next';
 
 interface JobOfferCardProps {
   job: JobOffer;
@@ -12,6 +13,7 @@ interface JobOfferCardProps {
 }
 
 export const JobOfferCard = ({ job, action, showSensitiveData = false }: JobOfferCardProps) => {
+  const { t } = useTranslation('jobs');
   return (
     <Card
       padding="lg"
@@ -92,7 +94,7 @@ export const JobOfferCard = ({ job, action, showSensitiveData = false }: JobOffe
           bg="var(--mantine-color-default-hover)"
         >
           <Group gap={8} align="center">
-            <Text size="xs" fw={700} tt="uppercase" c="dimmed">Benefits:</Text>
+            <Text size="xs" fw={700} tt="uppercase" c="dimmed">{t('benefits')}:</Text>
             <Text size="sm">{job.benefits}</Text>
           </Group>
         </Card.Section>

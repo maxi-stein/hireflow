@@ -47,13 +47,6 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferM
         <Stack>
           <JobOfferCard
             job={jobOffer}
-            action={
-              <Group justify="flex-end" mt="md">
-                <Button variant="default" onClick={onClose}>
-                  {t('list.viewModal.close')}
-                </Button>
-              </Group>
-            }
             showSensitiveData
           />
         </Stack>

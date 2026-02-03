@@ -76,7 +76,9 @@
   },
   "workMode": {
     "hybrid": "Hybrid",
-    "remote": "Full Remote",
+    "remote": "Remote",
     "office": "On-site"
-  }
+  },
+  "benefits": "Benefits",
+  "deadline": "Deadline"
 }
