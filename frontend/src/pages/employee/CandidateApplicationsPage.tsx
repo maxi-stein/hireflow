@@ -9,12 +9,13 @@ import {
   Box,
 } from '@mantine/core';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { JobOfferStatus } from '../../services/job-offer.service';
 import { JobApplicationsTable } from '../../components/employee/candidate-applications/JobApplicationsTable';
 
-
 export function CandidateApplicationsPage() {
+  const { t } = useTranslation('applications');
 
   // Paginate the list of job offers
   const [page, setPage] = useState(1);
@@ -30,14 +31,14 @@ export function CandidateApplicationsPage() {
     <Container size="xl" py="xl">
       <Stack gap="lg">
         <Box>
-          <Title order={2}>Candidate Applications</Title>
+          <Title order={2}>{t('title')}</Title>
           <Text c="dimmed" size="sm">
-            Review applications grouped by Job Posting.
+            {t('subtitle')}
           </Text>
         </Box>
 
         {isLoadingJobs ? (
-          <Text>Loading job postings...</Text>
+          <Text>{t('loading')}</Text>
         ) : (
           <>
             {/* List of job offers */}
@@ -53,7 +54,7 @@ export function CandidateApplicationsPage() {
             {/* No job offers found */}
             {jobOffers?.data.length === 0 && (
               <Paper p="xl" withBorder radius="md">
-                <Text ta="center" c="dimmed">No active job postings found.</Text>
+                <Text ta="center" c="dimmed">{t('empty')}</Text>
               </Paper>
             )}
 

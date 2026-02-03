@@ -48,7 +48,9 @@
       "downloadError": "Error al descargar CV.",
       "backToList": "Volver a la Lista",
       "goBack": "Volver",
-      "notFound": "Candidato no encontrado."
+      "notFound": "Candidato no encontrado.",
+      "rejectModalMessage": "¿Está seguro de que desea rechazar <1>{{name}}</1>? Esta acción se puede deshacer más tarde si es necesario.",
+      "hireModalMessage": "¿Está seguro de que desea contratar <1>{{name}}</1>? Esto marcará la aplicación como CONTRATADO."
     },
     "management": {
       "hiredTitle": "Candidato Contratado",

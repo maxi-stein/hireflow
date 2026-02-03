@@ -1,0 +1,32 @@
+{
+  "title": "Candidate Applications",
+  "subtitle": "Review applications grouped by Job Posting.",
+  "loading": "Loading job postings...",
+  "empty": "No active job postings found.",
+  "table": {
+    "headers": {
+      "candidate": "Candidate",
+      "appliedDate": "Applied Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "filters": {
+      "statusPlaceholder": "Filter by status",
+      "allStatuses": "All Statuses",
+      "applied": "Applied",
+      "inProgress": "In Progress",
+      "rejected": "Rejected",
+      "searchPlaceholder": "Search candidate..."
+    },
+    "applicationsBadge": "Applications",
+    "deadline": "Deadline:",
+    "tooltips": {
+      "viewCandidate": "View Candidate Details",
+      "compareCandidate": "Compare Candidate"
+    },
+    "emptyStates": {
+      "noMatch": "No candidates found matching your search.",
+      "noApplications": "No applications yet."
+    }
+  }
+}

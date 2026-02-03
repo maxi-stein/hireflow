@@ -1,0 +1,32 @@
+{
+  "title": "Aplicaciones de Candidatos",
+  "subtitle": "Revise las aplicaciones agrupadas por Oferta de Trabajo.",
+  "loading": "Cargando ofertas de trabajo...",
+  "empty": "No se encontraron ofertas de trabajo activas.",
+  "table": {
+    "headers": {
+      "candidate": "Candidato",
+      "appliedDate": "Fecha de Aplicación",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "filters": {
+      "statusPlaceholder": "Filtrar por estado",
+      "allStatuses": "Todos los Estados",
+      "applied": "Aplicado",
+      "inProgress": "En Progreso",
+      "rejected": "Rechazado",
+      "searchPlaceholder": "Buscar candidato..."
+    },
+    "applicationsBadge": "Aplicaciones",
+    "deadline": "Fecha Límite:",
+    "tooltips": {
+      "viewCandidate": "Ver Detalles del Candidato",
+      "compareCandidate": "Comparar Candidato"
+    },
+    "emptyStates": {
+      "noMatch": "No se encontraron candidatos que coincidan con su búsqueda.",
+      "noApplications": "Aún no hay aplicaciones."
+    }
+  }
+}

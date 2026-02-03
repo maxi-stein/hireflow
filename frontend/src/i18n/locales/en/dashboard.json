@@ -1,0 +1,23 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Overview of your recruitment activities",
+  "stats": {
+    "activeJobOffers": "Active Job Offers",
+    "applicationsToday": "Applications Today",
+    "pendingInterviews": "Pending Interviews",
+    "pendingReviews": "Pending Reviews"
+  },
+  "candidatesPerJob": {
+    "title": "Candidates per Active Job"
+  },
+  "pendingReviews": {
+    "title": "Pending Reviews",
+    "viewAll": "View All",
+    "empty": "No pending reviews"
+  },
+  "upcomingInterviews": {
+    "title": "Upcoming Interviews",
+    "empty": "No upcoming interviews",
+    "join": "Join"
+  }
+}

@@ -7,9 +7,11 @@ import { useInterviewsQuery } from '../../hooks/api/useInterviews';
 import { InterviewStatus } from '../../services/interview.service';
 import { DashboardListItem } from './components/DashboardListItem';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 
 export const EmployeeDashboard = () => {
+  const { t } = useTranslation('dashboard');
   const navigate = useNavigate();
   const { data: metrics, isLoading } = useDashboardMetricsQuery();
   const { data: pendingReviewsData } = useMyPendingReviewsQuery(1, 10);
@@ -40,10 +42,10 @@ export const EmployeeDashboard = () => {
   }
 
   const stats = [
-    { label: 'Active Job Offers', value: metrics.activeJobOffers, icon: IconBriefcase, color: 'blue' },
-    { label: 'Applications Today', value: metrics.applicationsToday, icon: IconFileText, color: 'green' },
-    { label: 'Pending Interviews', value: metrics.pendingInterviews, icon: IconCalendarEvent, color: 'orange' },
-    { label: 'Pending Reviews', value: metrics.pendingReviews, icon: IconStar, color: 'grape' },
+    { label: t('stats.activeJobOffers'), value: metrics.activeJobOffers, icon: IconBriefcase, color: 'blue' },
+    { label: t('stats.applicationsToday'), value: metrics.applicationsToday, icon: IconFileText, color: 'green' },
+    { label: t('stats.pendingInterviews'), value: metrics.pendingInterviews, icon: IconCalendarEvent, color: 'orange' },
+    { label: t('stats.pendingReviews'), value: metrics.pendingReviews, icon: IconStar, color: 'grape' },
   ];
 
   const maxCandidates = Math.max(...metrics.candidatesPerJob.map(c => c.count));
@@ -53,8 +55,8 @@ export const EmployeeDashboard = () => {
     <Container size="xl" py="xl">
       <Stack gap="xl">
         <div>
-          <Title order={2} mb="sm">Dashboard</Title>
-          <Text c="dimmed">Overview of your recruitment activities</Text>
+          <Title order={2} mb="sm">{t('title')}</Title>
+          <Text c="dimmed">{t('subtitle')}</Text>
         </div>
 
         {/* Row 1: Key Metrics */}
@@ -78,7 +80,7 @@ export const EmployeeDashboard = () => {
 
         {/* Row 2: Candidates per Job Chart */}
         <Card withBorder radius="md" p="xl">
-          <Title order={3} mb="lg">Candidates per Active Job</Title>
+          <Title order={3} mb="lg">{t('candidatesPerJob.title')}</Title>
           <Stack gap="md">
             {metrics.candidatesPerJob.map((item) => (
               <div key={item.jobTitle}>
@@ -101,22 +103,22 @@ export const EmployeeDashboard = () => {
         <SimpleGrid cols={{ base: 1, md: 2 }}>
           <Card withBorder radius="md" p="xl">
             <Group justify="space-between" mb="md">
-              <Title order={3}>Pending Reviews</Title>
+              <Title order={3}>{t('pendingReviews.title')}</Title>
               <Button
                 variant="light"
                 size="xs"
                 rightSection={<IconExternalLink size={14} />}
                 onClick={() => navigate('/manage/reviews')}
               >
-                View All
+                {t('pendingReviews.viewAll')}
               </Button>
             </Group>
 
             {pendingReviews.length === 0 ? (
-              <Text c="dimmed" ta="center" py="xl">No pending reviews</Text>
+              <Text c="dimmed" ta="center" py="xl">{t('pendingReviews.empty')}</Text>
             ) : (
               <Stack gap="xs">
-                {pendingReviews.map((interview, index) => {
+                {pendingReviews.map((interview) => {
                   const candidate = interview.applications?.[0]?.candidate;
                   const jobOffer = interview.applications?.[0]?.job_offer;
 
@@ -139,14 +141,14 @@ export const EmployeeDashboard = () => {
 
           <Card withBorder radius="md" p="xl">
             <Group justify="space-between" mb="md">
-              <Title order={3}>Upcoming Interviews</Title>
+              <Title order={3}>{t('upcomingInterviews.title')}</Title>
             </Group>
 
             {upcomingInterviews.length === 0 ? (
-              <Text c="dimmed" ta="center" py="xl">No upcoming interviews</Text>
+              <Text c="dimmed" ta="center" py="xl">{t('upcomingInterviews.empty')}</Text>
             ) : (
               <Stack gap="sm">
-                {upcomingInterviews.map((interview, index) => {
+                {upcomingInterviews.map((interview) => {
                   const candidate = interview.applications?.[0]?.candidate;
                   const jobOffer = interview.applications?.[0]?.job_offer;
                   if (!candidate || !jobOffer) return null;
@@ -167,7 +169,7 @@ export const EmployeeDashboard = () => {
                           leftSection={<IconVideo size={14} />}
                           onClick={() => window.open(interview.meeting_link, '_blank')}
                         >
-                          Join
+                          {t('upcomingInterviews.join')}
                         </Button>
                       }
                     />

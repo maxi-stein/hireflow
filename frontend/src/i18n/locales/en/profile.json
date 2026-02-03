@@ -48,7 +48,9 @@
       "downloadError": "Failed to download resume.",
       "backToList": "Back to List",
       "goBack": "Go Back",
-      "notFound": "Candidate not found."
+      "notFound": "Candidate not found.",
+      "rejectModalMessage": "Are you sure you want to reject <1>{{name}}</1>? This action can be undone later if needed.",
+      "hireModalMessage": "Are you sure you want to hire <1>{{name}}</1>? This will mark the application as HIRED."
     },
     "management": {
       "hiredTitle": "Candidate Hired",

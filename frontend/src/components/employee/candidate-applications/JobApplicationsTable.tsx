@@ -14,6 +14,7 @@ import {
   Box
 } from '@mantine/core';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getApplicationStatusColor } from '../../../utils/application.utils';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useAllCandidateApplicationsQuery } from '../../../hooks/api/useCandidateApplications';
@@ -23,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 
 export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOfferId: string, jobTitle: string, deadline?: string | null }) {
+  const { t } = useTranslation('applications');
   const navigate = useNavigate();
 
   // Paginate the list of applications
@@ -99,17 +101,17 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
       </Table.Td>
       <Table.Td>
         <Group gap="xs" justify="flex-end">
-          <Tooltip label="View Candidate Details">
+          <Tooltip label={t('table.tooltips.viewCandidate')}>
             <ActionIcon
               variant="light"
               color="blue"
-              title="View Candidate"
+              title={t('table.tooltips.viewCandidate')}
               onClick={() => navigate(`/manage/candidates/list/${application.candidate.id}`)}
             >
               <IconEye size={18} />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label="Compare Candidate">
+          <Tooltip label={t('table.tooltips.compareCandidate')}>
             <ActionIcon
               variant="light"
               color="violet"
@@ -133,18 +135,18 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
           <Title order={4}>{jobTitle}</Title>
           {deadline && (
             <Text size="xs" c="red">
-              Deadline: {new Date(deadline).toLocaleDateString()}
+              {t('table.deadline')} {new Date(deadline).toLocaleDateString()}
             </Text>
           )}
         </Box>
         <Group>
           <Select
-            placeholder="Filter by status"
+            placeholder={t('table.filters.statusPlaceholder')}
             data={[
-              { value: 'all', label: 'All Statuses' },
-              { value: ApplicationStatus.APPLIED, label: 'Applied' },
-              { value: ApplicationStatus.IN_PROGRESS, label: 'In Progress' },
-              { value: ApplicationStatus.REJECTED, label: 'Rejected' },
+              { value: 'all', label: t('table.filters.allStatuses') },
+              { value: ApplicationStatus.APPLIED, label: t('table.filters.applied') },
+              { value: ApplicationStatus.IN_PROGRESS, label: t('table.filters.inProgress') },
+              { value: ApplicationStatus.REJECTED, label: t('table.filters.rejected') },
             ]}
             value={statusFilter}
             onChange={(value) => setStatusFilter(value || 'all')}
@@ -152,13 +154,13 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
             w={150}
           />
           <TextInput
-            placeholder="Search candidate..."
+            placeholder={t('table.filters.searchPlaceholder')}
             leftSection={<IconSearch size={14} />}
             size="xs"
             value={search}
             onChange={(event) => setSearch(event.currentTarget.value)}
           />
-          <Badge variant="outline">{allApplications?.pagination.total} Applications</Badge>
+          <Badge variant="outline">{allApplications?.pagination.total} {t('table.applicationsBadge')}</Badge>
         </Group>
       </Group>
 
@@ -166,10 +168,10 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
         <Table verticalSpacing="sm">
           <Table.Thead>
             <Table.Tr>
-              <Table.Th style={{ width: '30%' }}>Candidate</Table.Th>
-              <Table.Th style={{ width: '20%' }}>Applied Date</Table.Th>
-              <Table.Th style={{ width: '15%' }}>Status</Table.Th>
-              <Table.Th style={{ width: '15%', textAlign: 'right' }}>Actions</Table.Th>
+              <Table.Th style={{ width: '30%' }}>{t('table.headers.candidate')}</Table.Th>
+              <Table.Th style={{ width: '20%' }}>{t('table.headers.appliedDate')}</Table.Th>
+              <Table.Th style={{ width: '15%' }}>{t('table.headers.status')}</Table.Th>
+              <Table.Th style={{ width: '15%', textAlign: 'right' }}>{t('table.headers.actions')}</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -178,7 +180,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
               <Table.Tr>
                 <Table.Td colSpan={4}>
                   <Text ta="center" c="dimmed" py="sm">
-                    {search ? 'No candidates found matching your search.' : 'No applications yet.'}
+                    {search ? t('table.emptyStates.noMatch') : t('table.emptyStates.noApplications')}
                   </Text>
                 </Table.Td>
               </Table.Tr>

@@ -6,10 +6,15 @@ import commonEn from './locales/en/common.json';
 import navigationEn from './locales/en/navigation.json';
 import profileEn from './locales/en/profile.json';
 import jobsEn from './locales/en/jobs.json';
+import dashboardEn from './locales/en/dashboard.json';
+import applicationsEn from './locales/en/applications.json';
+
 import commonEs from './locales/es/common.json';
 import navigationEs from './locales/es/navigation.json';
 import profileEs from './locales/es/profile.json';
 import jobsEs from './locales/es/jobs.json';
+import dashboardEs from './locales/es/dashboard.json';
+import applicationsEs from './locales/es/applications.json';
 
 export const defaultNS = 'common';
 export const resources = {
@@ -18,12 +23,16 @@ export const resources = {
     navigation: navigationEn,
     profile: profileEn,
     jobs: jobsEn,
+    dashboard: dashboardEn,
+    applications: applicationsEn,
   },
   es: {
     common: commonEs,
     navigation: navigationEs,
     profile: profileEs,
     jobs: jobsEs,
+    dashboard: dashboardEs,
+    applications: applicationsEs,
   },
 } as const;
 

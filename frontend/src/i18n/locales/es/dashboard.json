@@ -1,0 +1,23 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Resumen de sus actividades de reclutamiento",
+  "stats": {
+    "activeJobOffers": "Ofertas de Trabajo Activas",
+    "applicationsToday": "Aplicaciones Hoy",
+    "pendingInterviews": "Entrevistas Pendientes",
+    "pendingReviews": "Reseñas Pendientes"
+  },
+  "candidatesPerJob": {
+    "title": "Candidatos por Trabajo Activo"
+  },
+  "pendingReviews": {
+    "title": "Reseñas Pendientes",
+    "viewAll": "Ver Todo",
+    "empty": "No hay reseñas pendientes"
+  },
+  "upcomingInterviews": {
+    "title": "Próximas Entrevistas",
+    "empty": "No hay entrevistas próximas",
+    "join": "Unirse"
+  }
+}
