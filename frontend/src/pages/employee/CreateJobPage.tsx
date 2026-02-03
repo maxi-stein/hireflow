@@ -147,7 +147,7 @@ export function CreateJobPage() {
                 required
                 data={[
                   { value: WorkMode.HYBRID, label: t('workMode.hybrid') },
-                  { value: WorkMode.FULL_REMOTE, label: t('workMode.remote') },
+                  { value: WorkMode.REMOTE, label: t('workMode.remote') },
                   { value: WorkMode.OFFICE, label: t('workMode.office') },
                 ]}
                 {...form.getInputProps('work_mode')}

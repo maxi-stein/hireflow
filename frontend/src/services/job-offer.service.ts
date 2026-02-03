@@ -10,7 +10,7 @@ export type JobOfferStatus = (typeof JobOfferStatus)[keyof typeof JobOfferStatus
 
 export const WorkMode = {
   HYBRID: 'hybrid',
-  FULL_REMOTE: 'full-remote',
+  REMOTE: 'remote',
   OFFICE: 'office',
 } as const;
 
@@ -77,7 +77,9 @@ export const jobOfferService = {
       if (filters.candidateId) params.append('candidateId', filters.candidateId);
     }
 
-    const response = await apiClient.get<PaginatedResponse<JobOffer>>(`/job-offers?${params.toString()}`);
+    const response = await apiClient.get<PaginatedResponse<JobOffer>>(
+      `/job-offers?${params.toString()}`,
+    );
     return response.data;
   },
 
@@ -103,7 +105,9 @@ export const jobOfferService = {
   searchSkills: async (query: string): Promise<JobOfferSkill[]> => {
     if (!query) return [];
     // encodeURIComponent() transforms special characters into their URL-encoded equivalents (space -> %20, etc.)
-    const response = await apiClient.get<JobOfferSkill[]>(`/job-offer-skills/search?query=${encodeURIComponent(query)}`);
+    const response = await apiClient.get<JobOfferSkill[]>(
+      `/job-offer-skills/search?query=${encodeURIComponent(query)}`,
+    );
     return response.data;
   },
 };
