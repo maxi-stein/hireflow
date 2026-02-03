@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { getApplicationStatusColor, getInterviewStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
@@ -145,7 +145,12 @@ export function CandidatesPage() {
             title={t('candidate.management.hiredTitle')}
             icon={<IconCircleCheck size={18} />}
           >
-            <div dangerouslySetInnerHTML={{ __html: t('candidate.management.hiredMessage', { position: hiredApplication.job_offer.position }) }} />
+            <Trans
+              i18nKey="candidate.management.hiredMessage"
+              ns="profile"
+              values={{ position: hiredApplication.job_offer.position }}
+              components={{ 1: <strong /> }}
+            />
           </Alert>
         ) : (
           <ApplicationsSection

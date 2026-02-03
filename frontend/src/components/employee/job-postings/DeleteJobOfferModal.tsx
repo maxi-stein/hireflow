@@ -1,4 +1,5 @@
 import { Modal, Title, Stack, Text, Group, Button } from '@mantine/core';
+import { useTranslation, Trans } from 'react-i18next';
 import { IconTrash } from '@tabler/icons-react';
 import { type JobOffer } from '../../../services/job-offer.service';
 
@@ -10,43 +11,48 @@ interface DeleteJobOfferModalProps {
   isLoading?: boolean;
 }
 
-export function DeleteJobOfferModal({ 
-  opened, 
-  onClose, 
-  jobOffer, 
+export function DeleteJobOfferModal({
+  opened,
+  onClose,
+  jobOffer,
   onConfirm,
-  isLoading 
+  isLoading
 }: DeleteJobOfferModalProps) {
+  const { t } = useTranslation('jobs');
   if (!jobOffer) return null;
 
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>Confirm Deletion</Title>}
+      title={<Title order={3}>{t('list.deleteModal.title')}</Title>}
       size="sm"
     >
       <Stack gap="md">
         <Text>
-          Are you sure you want to delete the job posting <strong>"{jobOffer.position}"</strong>?
-          This action cannot be undone.
+          <Trans
+            i18nKey="list.deleteModal.message"
+            ns="jobs"
+            values={{ position: jobOffer.position }}
+            components={{ 1: <strong /> }}
+          />
         </Text>
 
         <Group justify="flex-end" mt="md">
-          <Button 
-            variant="default" 
+          <Button
+            variant="default"
             onClick={onClose}
             disabled={isLoading}
           >
-            Cancel
+            {t('list.deleteModal.cancel')}
           </Button>
-          <Button 
-            color="red" 
+          <Button
+            color="red"
             onClick={onConfirm}
             loading={isLoading}
             leftSection={<IconTrash size={16} />}
           >
-            Delete
+            {t('list.deleteModal.confirm')}
           </Button>
         </Group>
       </Stack>
