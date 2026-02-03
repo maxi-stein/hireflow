@@ -136,10 +136,10 @@ export function CandidatesListPage() {
             <Table horizontalSpacing="md" verticalSpacing="sm" highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>{t('table.candidate')}</Table.Th>
+                  <Table.Th>{t('list.table.candidate')}</Table.Th>
                   <Table.Th>{t('candidate.city', { ns: 'profile' })}/{t('candidate.country', { ns: 'profile' })}</Table.Th>
-                  <Table.Th>{t('table.lastActive')}</Table.Th>
-                  <Table.Th style={{ textAlign: 'right' }}>{t('table.actions')}</Table.Th>
+                  <Table.Th>{t('list.table.lastActive')}</Table.Th>
+                  <Table.Th style={{ textAlign: 'right' }}>{t('list.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>

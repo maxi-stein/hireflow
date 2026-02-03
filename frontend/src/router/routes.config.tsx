@@ -17,13 +17,13 @@ import { JobDetailPage } from '../pages/jobs/JobDetailPage';
 import { JobApplicationPage } from '../pages/jobs/JobApplicationPage';
 import { ProfilePage } from '../pages/profile/ProfilePage';
 import { ApplicationsPage } from '../pages/candidate/ApplicationsPage';
-import { EmployeeDashboard } from '../pages/employee/EmployeeDashboard';
+import { DashboardPage } from '../pages/employee/DashboardPage';
 import { JobPostingsPage } from '../pages/employee/JobPostingsPage';
 import { CreateJobPage } from '../pages/employee/CreateJobPage';
 import { CandidateApplicationsPage } from '../pages/employee/CandidateApplicationsPage';
 import { CompareCandidatesPage } from '../pages/employee/CompareCandidatesPage';
 import { CalendarPage } from '../pages/employee/CalendarPage';
-import { CandidatesPage } from '../pages/employee/CandidatesPage';
+import { CandidatePage } from '../pages/employee/CandidatePage';
 import { CandidatesListPage } from '../pages/employee/CandidatesListPage';
 
 import { ReviewsPage } from '../pages/employee/ReviewsPage';
@@ -108,7 +108,7 @@ export const ROUTES = {
   EMPLOYEE: {
     DASHBOARD: {
       path: '/manage/dashboard',
-      element: <EmployeeDashboard />,
+      element: <DashboardPage />,
       label: 'navigation:dashboard',
       icon: <IconChartBar size={20} />,
       showInNav: true,
@@ -200,7 +200,7 @@ export const ROUTES = {
         },
         {
           path: '/manage/candidates/list/:id',
-          element: <CandidatesPage />,
+          element: <CandidatePage />,
           label: 'navigation:candidateDetails',
           showInNav: false,
           requiresAuth: true,

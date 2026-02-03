@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 
-export const EmployeeDashboard = () => {
+export const DashboardPage = () => {
   const { t } = useTranslation('dashboard');
   const navigate = useNavigate();
   const { data: metrics, isLoading } = useDashboardMetricsQuery();

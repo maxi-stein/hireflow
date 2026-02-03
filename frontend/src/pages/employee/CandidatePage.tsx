@@ -21,7 +21,7 @@ import { CandidateHeader } from '../../components/employee/candidate-details/Can
 import { CandidateLinks } from '../../components/employee/candidate-details/CandidateLinks';
 import { ScheduleInterviewModal } from '../../components/employee/interviews/ScheduleInterviewModal';
 
-export function CandidatesPage() {
+export function CandidatePage() {
   const { t } = useTranslation('profile');
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
