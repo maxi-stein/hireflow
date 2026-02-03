@@ -3,5 +3,9 @@
   "login": "Login",
   "logout": "Logout",
   "profile": "Profile",
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode"
+  },
   "applyNow": "Apply Now"
 }

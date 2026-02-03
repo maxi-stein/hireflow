@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getApplicationStatusColor, getInterviewStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
@@ -21,6 +22,7 @@ import { CandidateLinks } from '../../components/employee/candidate-details/Cand
 import { ScheduleInterviewModal } from '../../components/employee/interviews/ScheduleInterviewModal';
 
 export function CandidatesPage() {
+  const { t } = useTranslation('profile');
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -46,16 +48,16 @@ export function CandidatesPage() {
   const candidateActions = useCandidateActions({
     onRejectSuccess: () => {
       notifications.show({
-        title: 'Application Rejected',
-        message: 'The candidate has been disqualified from this position.',
+        title: t('candidate.actions.confirmReject'),
+        message: t('candidate.actions.confirmRejectMessage'),
         color: 'red',
         icon: <IconX size={16} />
       });
     },
     onHireSuccess: () => {
       notifications.show({
-        title: 'Candidate Hired',
-        message: 'The candidate has been successfully hired.',
+        title: t('candidate.actions.confirmHire'),
+        message: t('candidate.actions.confirmHireMessage'),
         color: 'green',
         icon: <IconCheck size={16} />
       });
@@ -76,8 +78,8 @@ export function CandidatesPage() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       notifications.show({
-        title: 'Error',
-        message: 'Failed to download resume.',
+        title: t('candidate.notifications.errorTitle'),
+        message: t('candidate.actions.downloadError'),
         color: 'red',
       });
     }
@@ -106,8 +108,8 @@ export function CandidatesPage() {
   if (!candidate) {
     return (
       <Container py="xl">
-        <Text>Candidate not found.</Text>
-        <Button onClick={() => navigate(-1)} mt="md">Go Back</Button>
+        <Text>{t('candidate.actions.notFound')}</Text>
+        <Button onClick={() => navigate(-1)} mt="md">{t('candidate.actions.goBack')}</Button>
       </Container>
     );
   }
@@ -120,7 +122,7 @@ export function CandidatesPage() {
         onClick={() => navigate(-1)}
         mb="lg"
       >
-        Back to List
+        {t('candidate.actions.backToList')}
       </Button>
 
       <Stack gap="xl">
@@ -140,11 +142,10 @@ export function CandidatesPage() {
           <Alert
             variant="light"
             color="green"
-            title="Candidate Hired"
+            title={t('candidate.management.hiredTitle')}
             icon={<IconCircleCheck size={18} />}
           >
-            This candidate has been hired for the position of <strong>{hiredApplication.job_offer.position}</strong>.
-            All other applications and scheduling for this candidate are now closed.
+            <div dangerouslySetInnerHTML={{ __html: t('candidate.management.hiredMessage', { position: hiredApplication.job_offer.position }) }} />
           </Alert>
         ) : (
           <ApplicationsSection

@@ -1,0 +1,174 @@
+{
+  "failedToLoad": "Error al cargar el perfil de usuario.",
+  "employee": {
+    "badge": "Empleado",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Email",
+    "position": "Cargo",
+    "roles": "Roles",
+    "na": "N/A",
+    "rolesList": {
+      "hr": "Recursos Humanos",
+      "admin": "Administrador",
+      "manager": "Manager"
+    },
+    "create": {
+      "title": "Registrar Nuevo Empleado",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Juan",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Pérez",
+      "email": "Email",
+      "emailPlaceholder": "juan.perez@empresa.com",
+      "position": "Cargo",
+      "positionPlaceholder": "Reclutador Senior",
+      "defaultPassword": "Contraseña Predeterminada",
+      "defaultPasswordDescription": "Contraseña predeterminada. Es obligatorio cambiarla después del primer inicio de sesión.",
+      "roles": "Roles",
+      "rolesPlaceholder": "Seleccionar roles",
+      "submit": "Crear Empleado",
+      "notifications": {
+        "successTitle": "Éxito",
+        "successMessage": "Empleado creado exitosamente",
+        "errorTitle": "Error",
+        "errorMessage": "Error al crear empleado"
+      }
+    }
+  },
+  "candidate": {
+    "actions": {
+      "hire": "Contratar",
+      "reject": "Rechazar",
+      "schedule": "Agendar Entrevista",
+      "confirmHire": "Candidato Contratado",
+      "confirmHireMessage": "El candidato ha sido contratado exitosamente.",
+      "confirmReject": "Solicitud Rechazada",
+      "confirmRejectMessage": "El candidato ha sido descalificado de esta posición.",
+      "downloadError": "Error al descargar CV.",
+      "backToList": "Volver a la Lista",
+      "goBack": "Volver",
+      "notFound": "Candidato no encontrado."
+    },
+    "management": {
+      "hiredTitle": "Candidato Contratado",
+      "hiredMessage": "Este candidato ha sido contratado para la posición de <strong>{{position}}</strong>. Todas las demás solicitudes y agendamientos para este candidato están cerradas.",
+      "header": {
+        "hiredBadge": "CONTRATADO"
+      },
+      "links": {
+        "title": "Contacto y Documentos",
+        "downloadResume": "Descargar CV",
+        "noResume": "No hay CV subido",
+        "joined": "Se unió el {{date}}"
+      },
+      "applications": {
+        "title": "Postulaciones",
+        "appliedOn": "Aplicó el {{date}}",
+        "decisionNeeded": "Decisión Requerida",
+        "decisionDetail": "Entrevista y revisión completadas. Listo para el siguiente paso.",
+        "reject": "Rechazar",
+        "hire": "Contratar",
+        "schedule": "Agendar Entrevista",
+        "rejectedStatus": "Solicitud Rechazada",
+        "empty": "No se encontraron postulaciones activas para este candidato."
+      },
+      "interviews": {
+        "title": "Historial de Entrevistas",
+        "type": "Entrevista {{type}}",
+        "unknownPosition": "Posición Desconocida",
+        "empty": "No hay entrevistas programadas o completadas."
+      }
+    },
+    "changePhoto": "Cambiar Foto",
+    "city": "Ciudad",
+    "country": "País",
+    "viewResume": "Ver CV",
+    "addNew": "Agregar nuevo",
+    "uploadResume": "Subir CV",
+    "resumeHint": "PDF, máx 5MB",
+    "currentResume": "Actual: {{fileName}}",
+    "personalInfo": "Información Personal",
+    "phone": "Teléfono",
+    "age": "Edad",
+    "github": "URL de GitHub",
+    "linkedin": "URL de LinkedIn",
+    "saveChanges": "Guardar Cambios",
+    "downloadResume": "Descargar CV",
+    "noResume": "No hay CV subido",
+    "joined": "Se unió el {{date}}",
+    "notifications": {
+      "successTitle": "Éxito",
+      "profileUpdated": "Perfil actualizado",
+      "picitureUploaded": "Foto de perfil subida",
+      "cvUploaded": "CV subido",
+      "errorTitle": "Error",
+      "updateFailed": "Error al actualizar perfil",
+      "uploadPhotoFailed": "Error al subir foto",
+      "uploadCvFailed": "Error al subir CV",
+      "openCvFailed": "Error al abrir CV"
+    },
+    "card": {
+      "downloadResume": "Descargar CV",
+      "noResume": "No hay CV subido",
+      "joined": "Se unió el {{date}}"
+    }
+  },
+  "password": {
+    "title": "Cambiar Contraseña",
+    "current": "Contraseña Actual",
+    "currentPlaceholder": "Tu contraseña actual",
+    "new": "Nueva Contraseña",
+    "newPlaceholder": "Nueva contraseña",
+    "confirm": "Confirmar Nueva Contraseña",
+    "confirmPlaceholder": "Confirmar nueva contraseña",
+    "update": "Actualizar Contraseña",
+    "success": "Contraseña cambiada exitosamente",
+    "failed": "Error al cambiar contraseña"
+  },
+  "experience": {
+    "title": "Experiencia Laboral",
+    "add": "Agregar Experiencia",
+    "edit": "Editar Experiencia",
+    "company": "Empresa",
+    "position": "Cargo",
+    "description": "Descripción",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "current": "Trabajo aquí actualmente",
+    "present": "Presente",
+    "save": "Guardar",
+    "deleteTitle": "Eliminar Experiencia Laboral",
+    "deleteMessage": "¿Estás seguro de que quieres eliminar esta experiencia laboral? Esta acción no se puede deshacer.",
+    "notifications": {
+      "updated": "Experiencia laboral actualizada",
+      "added": "Experiencia laboral agregada",
+      "deleted": "Experiencia laboral eliminada",
+      "failedSave": "Error al guardar experiencia laboral",
+      "failedDelete": "Error al eliminar experiencia laboral"
+    }
+  },
+  "education": {
+    "title": "Educación",
+    "add": "Agregar Educación",
+    "edit": "Editar Educación",
+    "institution": "Institución",
+    "degreeType": "Tipo de Título",
+    "fieldOfStudy": "Campo de Estudio",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "current": "Estudio aquí actualmente",
+    "present": "Presente",
+    "description": "Descripción",
+    "save": "Guardar",
+    "deleteTitle": "Eliminar Educación",
+    "deleteMessage": "¿Estás seguro de que quieres eliminar esta entrada de educación? Esta acción no se puede deshacer.",
+    "notifications": {
+      "updated": "Educación actualizada",
+      "added": "Educación agregada",
+      "deleted": "Educación eliminada",
+      "failedSave": "Error al guardar educación",
+      "failedDelete": "Error al eliminar educación"
+    }
+  }
+}

@@ -1,6 +1,6 @@
-
 import { useState } from 'react';
 import { Paper, Title, Button, Group, Stack, Text, Modal, TextInput, Textarea, Checkbox, ActionIcon, Select } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { DateInput } from '@mantine/dates';
 import { IconPlus, IconPencil, IconTrash } from '@tabler/icons-react';
@@ -19,6 +19,7 @@ interface EducationSectionProps {
 }
 
 export const EducationSection = ({ candidateId, educationList, onUpdate }: EducationSectionProps) => {
+    const { t } = useTranslation('profile');
     const [opened, setOpened] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -84,18 +85,18 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
             if (editingId) {
                 // Update: don't send candidate_id or current
                 await educationService.update(editingId, payload);
-                notifications.show({ title: 'Success', message: 'Education updated', color: 'green' });
+                notifications.show({ title: t('candidate.notifications.successTitle'), message: t('education.notifications.updated'), color: 'green' });
             } else {
                 // Create: include candidate_id
                 await educationService.create(candidateId, payload);
-                notifications.show({ title: 'Success', message: 'Education added', color: 'green' });
+                notifications.show({ title: t('candidate.notifications.successTitle'), message: t('education.notifications.added'), color: 'green' });
             }
             onUpdate();
             setOpened(false);
         } catch (error) {
             console.error('Error saving education:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Failed to save education';
-            notifications.show({ title: 'Error', message: errorMessage, color: 'red' });
+            const errorMessage = error instanceof Error ? error.message : t('education.notifications.failedSave');
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: errorMessage, color: 'red' });
         } finally {
             setLoading(false);
         }
@@ -112,21 +113,21 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
         try {
             await educationService.delete(itemToDelete);
 
-            notifications.show({ title: 'Success', message: 'Education deleted', color: 'green' });
+            notifications.show({ title: t('candidate.notifications.successTitle'), message: t('education.notifications.deleted'), color: 'green' });
             onUpdate();
             setDeleteModalOpen(false);
             setItemToDelete(null);
         } catch (error) {
-            notifications.show({ title: 'Error', message: 'Failed to delete education', color: 'red' });
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: t('education.notifications.failedDelete'), color: 'red' });
         }
     };
 
     return (
         <Paper withBorder shadow="sm" p="lg" radius="md">
             <Group justify="space-between" mb="md">
-                <Title order={3}>Education</Title>
+                <Title order={3}>{t('education.title')}</Title>
                 <Button leftSection={<IconPlus size={16} />} variant="light" onClick={() => handleOpen()}>
-                    Add Education
+                    {t('education.add')}
                 </Button>
             </Group>
 
@@ -139,7 +140,7 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
                                 <Text fw={500}>{edu.degree_type} - {edu.field_of_study}</Text>
                                 <Text size="sm" c="dimmed">
                                     {dayjs(edu.start_date).format('MMM YYYY')} -{' '}
-                                    {!edu.end_date ? 'Present' : dayjs(edu.end_date).format('MMM YYYY')}
+                                    {!edu.end_date ? t('education.present') : dayjs(edu.end_date).format('MMM YYYY')}
                                 </Text>
                                 {edu.description && <Text mt="xs" size="sm">{edu.description}</Text>}
                             </div>
@@ -156,36 +157,36 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
                 ))}
             </Stack>
 
-            <Modal opened={opened} onClose={() => setOpened(false)} title={editingId ? 'Edit Education' : 'Add Education'}>
+            <Modal opened={opened} onClose={() => setOpened(false)} title={editingId ? t('education.edit') : t('education.add')}>
                 <form onSubmit={form.onSubmit(handleSubmit)}>
                     <Stack>
-                        <TextInput label="Institution" required {...form.getInputProps('institution')} />
+                        <TextInput label={t('education.institution')} required {...form.getInputProps('institution')} />
                         <Select
-                            label="Degree Type"
+                            label={t('education.degreeType')}
                             placeholder="Select degree type"
                             data={Object.values(DegreeType)}
                             required
                             {...form.getInputProps('degree_type')}
                         />
-                        <TextInput label="Field of Study" required {...form.getInputProps('field_of_study')} />
+                        <TextInput label={t('education.fieldOfStudy')} required {...form.getInputProps('field_of_study')} />
                         <Group grow>
-                            <DateInput label="Start Date" required {...form.getInputProps('start_date')} />
+                            <DateInput label={t('education.startDate')} required {...form.getInputProps('start_date')} />
                             <DateInput
-                                label="End Date"
+                                label={t('education.endDate')}
                                 disabled={form.values.end_date === null}
                                 {...form.getInputProps('end_date')}
                             />
                         </Group>
                         <Checkbox
-                            label="I am currently studying here"
+                            label={t('education.current')}
                             checked={form.values.end_date === null}
                             onChange={(event) => {
                                 const checked = event.currentTarget.checked;
                                 form.setFieldValue('end_date', checked ? null : new Date());
                             }}
                         />
-                        <Textarea label="Description" {...form.getInputProps('description')} />
-                        <Button type="submit" loading={loading}>Save</Button>
+                        <Textarea label={t('education.description')} {...form.getInputProps('description')} />
+                        <Button type="submit" loading={loading}>{t('education.save')}</Button>
                     </Stack>
                 </form>
             </Modal>
@@ -194,8 +195,8 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
                 opened={deleteModalOpen}
                 onClose={() => setDeleteModalOpen(false)}
                 onConfirm={handleDelete}
-                title="Delete Education"
-                message="Are you sure you want to delete this education entry? This action cannot be undone."
+                title={t('education.deleteTitle')}
+                message={t('education.deleteMessage')}
             />
         </Paper >
     );

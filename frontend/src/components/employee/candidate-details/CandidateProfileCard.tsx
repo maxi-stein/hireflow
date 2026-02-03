@@ -1,4 +1,5 @@
 import { Paper, Title, Text, Group, Button, ActionIcon, Stack } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import {
   IconMapPin,
   IconDownload,
@@ -10,7 +11,7 @@ import {
 } from '@tabler/icons-react';
 import { type CandidateProfile } from '../../../services/candidate.service';
 import { type UserFile } from '../../../services/user-file.service';
-import { CandidateAvatar } from '../../shared/CandidateAvatar';
+import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 
 interface CandidateProfileCardProps {
   candidate: CandidateProfile;
@@ -23,6 +24,7 @@ export function CandidateProfileCard({
   resume,
   onDownloadResume
 }: CandidateProfileCardProps) {
+  const { t } = useTranslation('profile');
   const { user } = candidate;
 
   return (
@@ -57,12 +59,12 @@ export function CandidateProfileCard({
           mt="md"
           leftSection={<IconDownload size={16} />}
         >
-          Download Resume
+          {t('candidate.card.downloadResume')}
         </Button>
       ) : (
         <Paper withBorder p="sm" mt="md">
           <Text size="sm" c="dimmed" ta="center">
-            No resume uploaded
+            {t('candidate.card.noResume')}
           </Text>
         </Paper>
       )}
@@ -92,7 +94,7 @@ export function CandidateProfileCard({
         )}
         <Group gap="xs">
           <IconCalendar size={16} color="gray" />
-          <Text size="sm">Joined {new Date(candidate.profile_created_at).toLocaleDateString()}</Text>
+          <Text size="sm">{t('candidate.card.joined', { date: new Date(candidate.profile_created_at).toLocaleDateString() })}</Text>
         </Group>
       </Stack>
     </Paper>

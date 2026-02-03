@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { Paper, Title, Button, Group, Stack, Text, Modal, TextInput, Textarea, Checkbox, ActionIcon } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { DateInput } from '@mantine/dates';
 import { IconPlus, IconPencil, IconTrash } from '@tabler/icons-react';
@@ -19,6 +20,7 @@ interface WorkExperienceSectionProps {
 }
 
 export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: WorkExperienceSectionProps) => {
+    const { t } = useTranslation('profile');
     const [opened, setOpened] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -76,17 +78,17 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
 
             if (editingId) {
                 await workExperienceService.update(editingId, payload);
-                notifications.show({ title: 'Success', message: 'Work experience updated', color: 'green' });
+                notifications.show({ title: t('candidate.notifications.successTitle'), message: t('experience.notifications.updated'), color: 'green' });
             } else {
                 await workExperienceService.create(candidateId, payload);
-                notifications.show({ title: 'Success', message: 'Work experience added', color: 'green' });
+                notifications.show({ title: t('candidate.notifications.successTitle'), message: t('experience.notifications.added'), color: 'green' });
             }
             onUpdate();
             setOpened(false);
         } catch (error) {
             console.error('Error saving work experience:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Failed to save work experience';
-            notifications.show({ title: 'Error', message: errorMessage, color: 'red' });
+            const errorMessage = error instanceof Error ? error.message : t('experience.notifications.failedSave');
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: errorMessage, color: 'red' });
         } finally {
             setLoading(false);
         }
@@ -103,21 +105,21 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
         try {
             await workExperienceService.delete(itemToDelete);
 
-            notifications.show({ title: 'Success', message: 'Work experience deleted', color: 'green' });
+            notifications.show({ title: t('candidate.notifications.successTitle'), message: t('experience.notifications.deleted'), color: 'green' });
             onUpdate();
             setDeleteModalOpen(false);
             setItemToDelete(null);
         } catch (error) {
-            notifications.show({ title: 'Error', message: 'Failed to delete work experience', color: 'red' });
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: t('experience.notifications.failedDelete'), color: 'red' });
         }
     };
 
     return (
         <Paper withBorder shadow="sm" p="lg" radius="md">
             <Group justify="space-between" mb="md">
-                <Title order={3}>Work Experience</Title>
+                <Title order={3}>{t('experience.title')}</Title>
                 <Button leftSection={<IconPlus size={16} />} variant="light" onClick={() => handleOpen()}>
-                    Add Experience
+                    {t('experience.add')}
                 </Button>
             </Group>
 
@@ -130,7 +132,7 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
                                 <Text fw={500}>{exp.company_name}</Text>
                                 <Text size="sm" c="dimmed">
                                     {dayjs(exp.start_date).format('MMM YYYY')} -{' '}
-                                    {!exp.end_date ? 'Present' : dayjs(exp.end_date).format('MMM YYYY')}
+                                    {!exp.end_date ? t('experience.present') : dayjs(exp.end_date).format('MMM YYYY')}
                                 </Text>
                                 <Text mt="xs" size="sm">{exp.description}</Text>
                             </div>
@@ -147,29 +149,29 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
                 ))}
             </Stack>
 
-            <Modal opened={opened} onClose={() => setOpened(false)} title={editingId ? 'Edit Experience' : 'Add Experience'}>
+            <Modal opened={opened} onClose={() => setOpened(false)} title={editingId ? t('experience.edit') : t('experience.add')}>
                 <form onSubmit={form.onSubmit(handleSubmit)}>
                     <Stack>
-                        <TextInput label="Company" required {...form.getInputProps('company')} />
-                        <TextInput label="Position" required {...form.getInputProps('position')} />
-                        <Textarea label="Description" {...form.getInputProps('description')} />
+                        <TextInput label={t('experience.company')} required {...form.getInputProps('company')} />
+                        <TextInput label={t('experience.position')} required {...form.getInputProps('position')} />
+                        <Textarea label={t('experience.description')} {...form.getInputProps('description')} />
                         <Group grow>
-                            <DateInput label="Start Date" required {...form.getInputProps('start_date')} />
+                            <DateInput label={t('experience.startDate')} required {...form.getInputProps('start_date')} />
                             <DateInput
-                                label="End Date"
+                                label={t('experience.endDate')}
                                 disabled={form.values.end_date === null}
                                 {...form.getInputProps('end_date')}
                             />
                         </Group>
                         <Checkbox
-                            label="I currently work here"
+                            label={t('experience.current')}
                             checked={form.values.end_date === null}
                             onChange={(event) => {
                                 const checked = event.currentTarget.checked;
                                 form.setFieldValue('end_date', checked ? null : new Date());
                             }}
                         />
-                        <Button type="submit" loading={loading}>Save</Button>
+                        <Button type="submit" loading={loading}>{t('experience.save')}</Button>
                     </Stack>
                 </form>
             </Modal>
@@ -178,8 +180,8 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
                 opened={deleteModalOpen}
                 onClose={() => setDeleteModalOpen(false)}
                 onConfirm={handleDelete}
-                title="Delete Work Experience"
-                message="Are you sure you want to delete this work experience? This action cannot be undone."
+                title={t('experience.deleteTitle')}
+                message={t('experience.deleteMessage')}
             />
         </Paper >
     );

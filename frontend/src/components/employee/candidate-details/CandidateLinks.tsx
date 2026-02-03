@@ -10,6 +10,8 @@ import {
 import { type CandidateProfile } from '../../../services/candidate.service';
 import { type UserFile } from '../../../services/user-file.service';
 
+import { useTranslation } from 'react-i18next';
+
 interface CandidateLinksProps {
   candidate: CandidateProfile;
   resume?: UserFile;
@@ -21,11 +23,12 @@ export function CandidateLinks({
   resume,
   onDownloadResume
 }: CandidateLinksProps) {
+  const { t } = useTranslation('profile');
   const { user } = candidate;
 
   return (
     <Paper withBorder radius="md" p="lg">
-      <Title order={3} mb="lg">Contact & Documents</Title>
+      <Title order={3} mb="lg">{t('candidate.management.links.title')}</Title>
 
       <Group align="flex-start" justify="space-between">
         <Stack gap="sm">
@@ -37,7 +40,7 @@ export function CandidateLinks({
           )}
           <Group gap="xs">
             <IconCalendar size={16} color="gray" />
-            <Text size="sm">Joined {new Date(candidate.profile_created_at).toLocaleDateString()}</Text>
+            <Text size="sm">{t('candidate.management.links.joined', { date: new Date(candidate.profile_created_at).toLocaleDateString() })}</Text>
           </Group>
 
           <Group gap="md">
@@ -65,12 +68,12 @@ export function CandidateLinks({
               fullWidth
               leftSection={<IconDownload size={16} />}
             >
-              Download Resume
+              {t('candidate.management.links.downloadResume')}
             </Button>
           ) : (
             <Paper withBorder p="sm">
               <Text size="sm" c="dimmed" ta="center">
-                No resume uploaded
+                {t('candidate.management.links.noResume')}
               </Text>
             </Paper>
           )}

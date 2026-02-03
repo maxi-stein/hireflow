@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Paper, Title, Grid, TextInput, Button, Group, Stack, Avatar, FileButton, Text, Divider } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconUpload, IconBrandGithub, IconBrandLinkedin, IconMapPin, IconPhone, IconWorld, IconEye } from '@tabler/icons-react';
@@ -17,6 +18,7 @@ interface CandidateProfileProps {
 }
 
 export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps) => {
+    const { t } = useTranslation('profile');
     const { candidate } = user;
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const [uploadingCV, setUploadingCV] = useState(false);
@@ -42,10 +44,10 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                 ...values,
                 age: values.age ? Number(values.age) : undefined,
             });
-            notifications.show({ title: 'Success', message: 'Profile updated', color: 'green' });
+            notifications.show({ title: t('candidate.notifications.successTitle'), message: t('candidate.notifications.profileUpdated'), color: 'green' });
             refreshProfile();
         } catch (error) {
-            notifications.show({ title: 'Error', message: 'Failed to update profile', color: 'red' });
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: t('candidate.notifications.updateFailed'), color: 'red' });
         } finally {
             setLoading(false);
         }
@@ -79,10 +81,10 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
         setUploadingPhoto(true);
         try {
             await fileService.uploadProfilePicture(file);
-            notifications.show({ title: 'Success', message: 'Profile picture uploaded', color: 'green' });
+            notifications.show({ title: t('candidate.notifications.successTitle'), message: t('candidate.notifications.picitureUploaded'), color: 'green' });
             refreshProfile();
         } catch (error) {
-            notifications.show({ title: 'Error', message: 'Failed to upload photo', color: 'red' });
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: t('candidate.notifications.uploadPhotoFailed'), color: 'red' });
         } finally {
             setUploadingPhoto(false);
         }
@@ -93,10 +95,10 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
         setUploadingCV(true);
         try {
             await fileService.uploadCV(file);
-            notifications.show({ title: 'Success', message: 'CV uploaded', color: 'green' });
+            notifications.show({ title: t('candidate.notifications.successTitle'), message: t('candidate.notifications.cvUploaded'), color: 'green' });
             refreshProfile();
         } catch (error) {
-            notifications.show({ title: 'Error', message: 'Failed to upload CV', color: 'red' });
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: t('candidate.notifications.uploadCvFailed'), color: 'red' });
         } finally {
             setUploadingCV(false);
         }
@@ -109,7 +111,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
         } catch (error) {
-            notifications.show({ title: 'Error', message: 'Failed to open CV', color: 'red' });
+            notifications.show({ title: t('candidate.notifications.errorTitle'), message: t('candidate.notifications.openCvFailed'), color: 'red' });
         }
     };
 
@@ -129,7 +131,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                                 {user.first_name[0]}{user.last_name[0]}
                             </Avatar>
                             <FileButton onChange={handlePhotoUpload} accept="image/png,image/jpeg">
-                                {(props) => <Button variant="subtle" size="xs" loading={uploadingPhoto} {...props}>Change Photo</Button>}
+                                {(props) => <Button variant="subtle" size="xs" loading={uploadingPhoto} {...props}>{t('candidate.changePhoto')}</Button>}
                             </FileButton>
                         </Stack>
                         <Stack gap={0}>
@@ -153,7 +155,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                                     leftSection={<IconEye size={16} />}
                                     onClick={handleViewCV}
                                 >
-                                    View Resume
+                                    {t('candidate.viewResume')}
                                 </Button>
                                 <FileButton onChange={handleCVUpload} accept="application/pdf">
                                     {(props) => (
@@ -162,7 +164,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                                             loading={uploadingCV}
                                             {...props}
                                         >
-                                            Add new
+                                            {t('candidate.addNew')}
                                         </Button>
                                     )}
                                 </FileButton>
@@ -176,51 +178,51 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                                         loading={uploadingCV}
                                         {...props}
                                     >
-                                        Upload Resume
+                                        {t('candidate.uploadResume')}
                                     </Button>
                                 )}
                             </FileButton>
                         )}
-                        <Text size="xs" c="dimmed">PDF, max 5MB</Text>
-                        {cvFile && <Text size="xs" c="dimmed">Current: {cvFile.file_name}</Text>}
+                        <Text size="xs" c="dimmed">{t('candidate.resumeHint')}</Text>
+                        {cvFile && <Text size="xs" c="dimmed">{t('candidate.currentResume', { fileName: cvFile.file_name })}</Text>}
                     </Stack>
                 </Group>
 
-                <Divider my="md" label="Personal Information" labelPosition="center" />
+                <Divider my="md" label={t('candidate.personalInfo')} labelPosition="center" />
 
                 <form onSubmit={form.onSubmit(handleUpdateProfile)}>
                     <Grid>
                         <Grid.Col span={{ base: 12, sm: 6 }}>
                             <TextInput
-                                label="Phone"
+                                label={t('candidate.phone')}
                                 leftSection={<IconPhone size={16} />}
                                 {...form.getInputProps('phone')}
                             />
                         </Grid.Col>
                         <Grid.Col span={{ base: 12, sm: 6 }}>
                             <TextInput
-                                label="Age"
+                                label={t('candidate.age')}
                                 type="number"
                                 {...form.getInputProps('age')}
                             />
                         </Grid.Col>
                         <Grid.Col span={{ base: 12, sm: 6 }}>
                             <TextInput
-                                label="City"
+                                label={t('candidate.city')}
                                 leftSection={<IconWorld size={16} />}
                                 {...form.getInputProps('city')}
                             />
                         </Grid.Col>
                         <Grid.Col span={{ base: 12, sm: 6 }}>
                             <TextInput
-                                label="Country"
+                                label={t('candidate.country')}
                                 leftSection={<IconWorld size={16} />}
                                 {...form.getInputProps('country')}
                             />
                         </Grid.Col>
                         <Grid.Col span={{ base: 12, sm: 6 }}>
                             <TextInput
-                                label="GitHub URL"
+                                label={t('candidate.github')}
                                 leftSection={<IconBrandGithub size={16} />}
                                 placeholder="https://github.com/username"
                                 {...form.getInputProps('github')}
@@ -228,7 +230,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                         </Grid.Col>
                         <Grid.Col span={{ base: 12, sm: 6 }}>
                             <TextInput
-                                label="LinkedIn URL"
+                                label={t('candidate.linkedin')}
                                 leftSection={<IconBrandLinkedin size={16} />}
                                 placeholder="https://linkedin.com/in/username"
                                 {...form.getInputProps('linkedin')}
@@ -236,7 +238,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                         </Grid.Col>
                         <Grid.Col span={12}>
                             <Group justify="flex-end">
-                                <Button type="submit" loading={loading}>Save Changes</Button>
+                                <Button type="submit" loading={loading}>{t('candidate.saveChanges')}</Button>
                             </Group>
                         </Grid.Col>
                     </Grid>

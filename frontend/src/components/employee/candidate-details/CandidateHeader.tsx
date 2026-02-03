@@ -8,7 +8,10 @@ interface CandidateHeaderProps {
   isHired?: boolean;
 }
 
+import { useTranslation } from 'react-i18next';
+
 export function CandidateHeader({ candidate, isHired }: CandidateHeaderProps) {
+  const { t } = useTranslation('profile');
   const { user } = candidate;
 
   return (
@@ -34,7 +37,7 @@ export function CandidateHeader({ candidate, isHired }: CandidateHeaderProps) {
                   size="lg"
                   leftSection={<IconCircleCheck size={14} />}
                 >
-                  HIRED
+                  {t('candidate.management.header.hiredBadge')}
                 </Badge>
               )}
             </Group>

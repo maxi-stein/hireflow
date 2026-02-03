@@ -4,18 +4,22 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import commonEn from './locales/en/common.json';
 import navigationEn from './locales/en/navigation.json';
+import profileEn from './locales/en/profile.json';
 import commonEs from './locales/es/common.json';
 import navigationEs from './locales/es/navigation.json';
+import profileEs from './locales/es/profile.json';
 
 export const defaultNS = 'common';
 export const resources = {
   en: {
     common: commonEn,
     navigation: navigationEn,
+    profile: profileEn,
   },
   es: {
     common: commonEs,
     navigation: navigationEs,
+    profile: profileEs,
   },
 } as const;
 

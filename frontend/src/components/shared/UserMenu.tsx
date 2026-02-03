@@ -49,7 +49,7 @@ export function UserMenu() {
           closeMenuOnClick={false}
           onClick={() => toggleColorScheme()}
         >
-          {dark ? 'Light Mode' : 'Dark Mode'}
+          {dark ? t('theme.light') : t('theme.dark')}
         </Menu.Item>
 
         <Menu.Divider />

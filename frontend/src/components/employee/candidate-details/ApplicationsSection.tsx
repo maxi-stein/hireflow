@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Paper, Title, Card, Group, Box, Text, Badge, Divider, Button, Alert, SimpleGrid, Pagination } from '@mantine/core';
 import { IconX, IconCalendarEvent, IconAlertCircle, IconCheck } from '@tabler/icons-react';
 import { ApplicationStatus, type CandidateApplication } from '../../../services/candidate-application.service';
@@ -22,6 +23,7 @@ export function ApplicationsSection({
   onHire,
   onSchedule
 }: ApplicationsSectionProps) {
+  const { t } = useTranslation('profile');
   const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 4;
 
@@ -44,8 +46,8 @@ export function ApplicationsSection({
     if (appInterviews.some(i => i.status === InterviewStatus.COMPLETED && (i.reviews?.length ?? 0) > 0)) {
       return {
         type: 'decision',
-        message: 'Decision Needed',
-        detail: 'Interview and review completed. Ready for next step.',
+        message: t('candidate.management.applications.decisionNeeded'),
+        detail: t('candidate.management.applications.decisionDetail'),
         color: 'yellow',
         icon: <IconAlertCircle size={16} />
       };
@@ -56,7 +58,7 @@ export function ApplicationsSection({
 
   return (
     <Paper withBorder radius="md" p="lg">
-      <Title order={3} mb="lg">Job Applications</Title>
+      <Title order={3} mb="lg">{t('candidate.management.applications.title')}</Title>
 
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
         {paginatedApplications.map((app) => {
@@ -73,7 +75,7 @@ export function ApplicationsSection({
                   <Title order={4}>{app.job_offer.position}</Title>
                   <Text size="sm" c="dimmed">{app.job_offer.location} • {app.job_offer.work_mode}</Text>
                   <Text size="xs" mt="xs" c="dimmed">
-                    Applied on {new Date(app.created_at).toLocaleDateString()}
+                    {t('candidate.management.applications.appliedOn', { date: new Date(app.created_at).toLocaleDateString() })}
                   </Text>
                 </Box>
                 <Badge color={getStatusColor(app.status)} size="lg">
@@ -110,7 +112,7 @@ export function ApplicationsSection({
                     leftSection={<IconX size={14} />}
                     onClick={() => onReject(app.id, app.job_offer.position)}
                   >
-                    Reject
+                    {t('candidate.management.applications.reject')}
                   </Button>
                 )}
 
@@ -122,7 +124,7 @@ export function ApplicationsSection({
                     leftSection={<IconCheck size={14} />}
                     onClick={() => onHire(app.id, app.job_offer.position)}
                   >
-                    Hire
+                    {t('candidate.management.applications.hire')}
                   </Button>
                 )}
 
@@ -134,12 +136,12 @@ export function ApplicationsSection({
                     leftSection={<IconCalendarEvent size={14} />}
                     onClick={() => onSchedule(app.id)}
                   >
-                    Schedule Interview
+                    {t('candidate.management.applications.schedule')}
                   </Button>
                 )}
 
                 {app.status === ApplicationStatus.REJECTED && (
-                  <Text size="sm" c="dimmed" fs="italic">Application Rejected</Text>
+                  <Text size="sm" c="dimmed" fs="italic">{t('candidate.management.applications.rejectedStatus')}</Text>
                 )}
               </Group>
             </Card>
@@ -147,7 +149,7 @@ export function ApplicationsSection({
         })}
 
         {(!applications || applications.length === 0) && (
-          <Text c="dimmed">No active applications found for this candidate.</Text>
+          <Text c="dimmed">{t('candidate.management.applications.empty')}</Text>
         )}
       </SimpleGrid>
 

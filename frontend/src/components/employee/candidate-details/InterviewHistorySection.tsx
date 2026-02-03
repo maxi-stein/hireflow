@@ -10,12 +10,15 @@ interface InterviewHistorySectionProps {
   getStatusColor: (status: InterviewStatus) => string;
 }
 
+import { useTranslation } from 'react-i18next';
+
 export function InterviewHistorySection({ interviews, getStatusColor }: InterviewHistorySectionProps) {
+  const { t } = useTranslation('profile');
   return (
     <Paper withBorder radius="md" p="lg">
       <Group mb="md">
         <IconClock size={20} />
-        <Title order={4}>Interview History</Title>
+        <Title order={4}>{t('candidate.management.interviews.title')}</Title>
       </Group>
 
       {interviews.length > 0 ? (
@@ -31,9 +34,9 @@ export function InterviewHistorySection({ interviews, getStatusColor }: Intervie
                     size="sm"
                   />
                   <Box>
-                    <Text fw={500}>{interview.type} Interview</Text>
+                    <Text fw={500}>{t('candidate.management.interviews.type', { type: interview.type })}</Text>
                     <Text size="xs" c="dimmed">
-                      {interview.applications[0]?.job_offer?.position || 'Unknown Position'}
+                      {interview.applications[0]?.job_offer?.position || t('candidate.management.interviews.unknownPosition')}
                     </Text>
                   </Box>
                 </Group>
@@ -48,7 +51,7 @@ export function InterviewHistorySection({ interviews, getStatusColor }: Intervie
           ))}
         </Stack>
       ) : (
-        <Text c="dimmed" size="sm">No interviews scheduled or completed.</Text>
+        <Text c="dimmed" size="sm">{t('candidate.management.interviews.empty')}</Text>
       )}
     </Paper>
   );

@@ -1,4 +1,5 @@
 import { Container, Title, TextInput, MultiSelect, Button, Paper, Stack, Group } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconCheck, IconX } from '@tabler/icons-react';
@@ -7,14 +8,15 @@ import { employeeService } from '../../services/employee.service';
 import { validateWithJoi } from '../../utils/form-validation';
 import { createEmployeeSchema } from '../../schemas/employee.schema';
 
-const EMPLOYEE_ROLES = [
-  { value: 'hr', label: 'Human Resources' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'manager', label: 'Manager' },
-];
-
 export const CreateEmployeePage = () => {
+  const { t } = useTranslation('profile');
   const navigate = useNavigate();
+
+  const EMPLOYEE_ROLES = [
+    { value: 'hr', label: t('employee.rolesList.hr') },
+    { value: 'admin', label: t('employee.rolesList.admin') },
+    { value: 'manager', label: t('employee.rolesList.manager') },
+  ];
   const form = useForm({
     initialValues: {
       first_name: '',
@@ -41,16 +43,16 @@ export const CreateEmployeePage = () => {
       });
 
       notifications.show({
-        title: 'Success',
-        message: 'Employee created successfully',
+        title: t('employee.create.notifications.successTitle'),
+        message: t('employee.create.notifications.successMessage'),
         color: 'green',
         icon: <IconCheck size={16} />,
       });
       navigate('/manage/dashboard');
     } catch (error) {
       notifications.show({
-        title: 'Error',
-        message: 'Failed to create employee',
+        title: t('employee.create.notifications.errorTitle'),
+        message: t('employee.create.notifications.errorMessage'),
         color: 'red',
         icon: <IconX size={16} />,
       });
@@ -59,21 +61,21 @@ export const CreateEmployeePage = () => {
 
   return (
     <Container size="sm" py="xl">
-      <Title order={2} mb="lg">Register New Employee</Title>
+      <Title order={2} mb="lg">{t('employee.create.title')}</Title>
       <Paper withBorder p="xl" radius="md">
         <form onSubmit={form.onSubmit(handleSubmit)} autoComplete="off">
           <Stack>
             <Group grow>
               <TextInput
-                label="First Name"
-                placeholder="John"
+                label={t('employee.create.firstName')}
+                placeholder={t('employee.create.firstNamePlaceholder')}
                 withAsterisk
                 autoComplete="off"
                 {...form.getInputProps('first_name')}
               />
               <TextInput
-                label="Last Name"
-                placeholder="Doe"
+                label={t('employee.create.lastName')}
+                placeholder={t('employee.create.lastNamePlaceholder')}
                 withAsterisk
                 autoComplete="off"
                 {...form.getInputProps('last_name')}
@@ -81,38 +83,38 @@ export const CreateEmployeePage = () => {
             </Group>
 
             <TextInput
-              label="Email"
-              placeholder="john.doe@company.com"
+              label={t('employee.create.email')}
+              placeholder={t('employee.create.emailPlaceholder')}
               withAsterisk
               autoComplete="off"
               {...form.getInputProps('email')}
             />
 
             <TextInput
-              label="Default Password"
+              label={t('employee.create.defaultPassword')}
               value="Consultoria-Global-Reset-Password"
               disabled
-              description="Default Password. It is mandatory to change it after first login."
+              description={t('employee.create.defaultPasswordDescription')}
             />
 
             <TextInput
-              label="Position"
-              placeholder="Senior Recruiter"
+              label={t('employee.create.position')}
+              placeholder={t('employee.create.positionPlaceholder')}
               withAsterisk
               autoComplete="off"
               {...form.getInputProps('position')}
             />
 
             <MultiSelect
-              label="Roles"
-              placeholder="Select roles"
+              label={t('employee.create.roles')}
+              placeholder={t('employee.create.rolesPlaceholder')}
               data={EMPLOYEE_ROLES}
               withAsterisk
               {...form.getInputProps('roles')}
             />
 
             <Button type="submit" mt="md" loading={false}>
-              Create Employee
+              {t('employee.create.submit')}
             </Button>
           </Stack>
         </form>
