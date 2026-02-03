@@ -184,22 +184,24 @@ export function CandidatesPage() {
         onRejectConfirm={candidateActions.handleConfirmReject}
         isRejecting={candidateActions.isRejecting}
         rejectMessage={
-          <Text>
-            Are you sure you want to reject the {candidateActions.candidateToReject?.name}?
-            <br />
-            This action can be undone later if needed.
-          </Text>
+          <Trans
+            i18nKey="candidate.actions.rejectModalMessage"
+            ns="profile"
+            values={{ name: candidateActions.candidateToReject?.name }}
+            components={{ 1: <strong /> }}
+          />
         }
         candidateToHire={candidateActions.candidateToHire}
         onHireClose={candidateActions.handleCancelHire}
         onHireConfirm={candidateActions.handleConfirmHire}
         isHiring={candidateActions.isHiring}
         hireMessage={
-          <Text>
-            Are you sure you want to hire this {candidateActions.candidateToHire?.name}?
-            <br />
-            This will mark the application as HIRED.
-          </Text>
+          <Trans
+            i18nKey="candidate.actions.hireModalMessage"
+            ns="profile"
+            values={{ name: candidateActions.candidateToHire?.name }}
+            components={{ 1: <strong /> }}
+          />
         }
       />
 
