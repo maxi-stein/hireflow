@@ -48,8 +48,6 @@ export const JobOfferCard = ({ job, action, showSensitiveData = false }: JobOffe
                 </Text>
               </Group>
             )}
-
-            <Text size="sm" c="dimmed">{job.applicants_count} applicants</Text>
           </Group>
 
           {job.skills && job.skills.length > 0 && (
