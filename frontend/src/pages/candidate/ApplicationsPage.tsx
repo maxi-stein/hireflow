@@ -3,10 +3,10 @@ import { IconInbox } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
 import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
-import { CandidateApplicationCard } from '../../components/candidate/CandidateApplicationCard';
 import { UpcomingInterviewsAlert } from '../../components/candidate/UpcomingInterviewsAlert';
 import type { Interview } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
+import { CandidateApplicationCard } from '../../components/candidate/CandidateApplicationCard';
 
 export const ApplicationsPage = () => {
     const user = useAppStore((state) => state.user);
