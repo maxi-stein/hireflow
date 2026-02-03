@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight, IconPlus } from '@tabler/icons-react';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
@@ -14,12 +15,13 @@ import { getDaysInMonth } from '../../utils/date-utils';
 import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
 import type { JobOffer } from '../../services/job-offer.service';
 
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 
 export function CalendarPage() {
   // Get color scheme
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
+  const { t, i18n } = useTranslation(['calendar', 'profile']);
 
 
   // Used to display interview details modal
@@ -114,21 +116,21 @@ export function CalendarPage() {
         id: interviewToCancel.id,
         data: { status: InterviewStatus.CANCELLED }
       });
-      notifications.show({ title: 'Success', message: 'Interview cancelled', color: 'green' });
+      notifications.show({ title: 'Success', message: t('notifications.cancelSuccess'), color: 'green' });
       setInterviewToCancel(null);
       setSelectedInterview(null);
     } catch (error) {
       console.error(error);
-      notifications.show({ title: 'Error', message: 'Failed to cancel interview', color: 'red' });
+      notifications.show({ title: 'Error', message: t('notifications.cancelError'), color: 'red' });
     }
   };
 
   return (
     <Container size="xl" py="xl">
       <Group justify="space-between" mb="lg">
-        <Title order={2}>Interview Calendar</Title>
+        <Title order={2}>{t('title')}</Title>
         <Button leftSection={<IconPlus size={16} />} onClick={() => setIsScheduleModalOpen(true)}>
-          Schedule Interview
+          {t('candidate.actions.schedule', { ns: 'profile' })}
         </Button>
       </Group>
 
@@ -139,7 +141,7 @@ export function CalendarPage() {
             <IconChevronLeft size={20} />
           </ActionIcon>
           <Title order={4} style={{ flex: 1, textAlign: 'center', whiteSpace: 'nowrap' }}>
-            {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            {currentDate.toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' })}
           </Title>
           <ActionIcon variant="subtle" onClick={handleNextMonth}>
             <IconChevronRight size={20} />
@@ -148,7 +150,7 @@ export function CalendarPage() {
 
         {/* Calendar Grid */}
         <Grid columns={7} gutter="xs">
-          {DAYS.map(day => (
+          {(t('weekdays', { returnObjects: true }) as string[]).map(day => (
             <Grid.Col span={1} key={day}>
               <Text ta="center" fw={500} c="dimmed">{day}</Text>
             </Grid.Col>

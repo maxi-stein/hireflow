@@ -17,6 +17,14 @@
       "empty": "No se encontraron candidatos con esos criterios."
     }
   },
+  "hired": {
+    "title": "Candidatos Contratados",
+    "subtitle": "Lista de todos los candidatos que han sido contratados y sus respectivos puestos.",
+    "table": {
+      "hiredDate": "Fecha de Contratación",
+      "empty": "No se encontraron candidatos contratados."
+    }
+  },
   "compare": {
     "title": "Comparar Candidatos",
     "subtitle": "Seleccione candidatos de una oferta para comparar",

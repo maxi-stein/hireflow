@@ -17,6 +17,14 @@
       "empty": "No candidates found matching your criteria."
     }
   },
+  "hired": {
+    "title": "Hired Candidates",
+    "subtitle": "List of all candidates who have been hired and their respective positions.",
+    "table": {
+      "hiredDate": "Hired Date",
+      "empty": "No hired candidates found."
+    }
+  },
   "compare": {
     "title": "Compare Candidates",
     "subtitle": "Select candidates from a job offer to compare",

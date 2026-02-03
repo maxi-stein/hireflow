@@ -1,0 +1,13 @@
+{
+  "title": "Calendario de Entrevistas",
+  "actions": {
+    "schedule": "Agendar Entrevista",
+    "cancel": "Cancelar Entrevista",
+    "reschedule": "Reagendar"
+  },
+  "weekdays": ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+  "notifications": {
+    "cancelSuccess": "Entrevista cancelada",
+    "cancelError": "Error al cancelar entrevista"
+  }
+}

@@ -1,4 +1,5 @@
 import { Paper, Text, Stack, Box } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import type { Interview } from '../../../services/interview.service';
 import type { JobOffer } from '../../../services/job-offer.service';
 
@@ -21,6 +22,7 @@ export function CalendarDayCell({
   onInterviewClick,
   onJobOfferClick
 }: CalendarDayCellProps) {
+  const { t } = useTranslation(['applications']);
   // Return empty cell for null dates (empty slots in calendar)
   if (!date) {
     return <Paper withBorder h="100%" p="xs" />;
@@ -53,7 +55,7 @@ export function CalendarDayCell({
             onClick={() => onJobOfferClick?.(offer)}
           >
             <Text size="xs" truncate fw={700} c={isDarkMode ? 'white' : 'red.9'}>
-              DEADLINE
+              {t('table.deadline', { ns: 'applications' })}
             </Text>
             <Text size="xs" truncate c={isDarkMode ? 'white' : 'red.9'} fw={500}>
               {offer.position}

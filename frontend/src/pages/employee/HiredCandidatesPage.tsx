@@ -5,7 +5,10 @@ import { ApplicationStatus } from '../../services/candidate-application.service'
 import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
 import { getApplicationStatusColor } from '../../utils/application.utils';
 
+import { useTranslation } from 'react-i18next';
+
 export function HiredCandidatesPage() {
+  const { t } = useTranslation(['candidates', 'profile', 'applications']);
   const navigate = useNavigate();
   const { data: hiredApplications, isLoading } = useAllCandidateApplicationsQuery({
     status: [ApplicationStatus.HIRED],
@@ -18,8 +21,8 @@ export function HiredCandidatesPage() {
 
   return (
     <Container size="xl" py="xl">
-      <Title order={2} mb="md">Hired Candidates</Title>
-      <Text c="dimmed" mb="xl">List of all candidates who have been hired and their respective positions.</Text>
+      <Title order={2} mb="md">{t('hired.title', { ns: 'candidates' })}</Title>
+      <Text c="dimmed" mb="xl">{t('hired.subtitle', { ns: 'candidates' })}</Text>
 
       <Paper withBorder radius="md" p="md" pos="relative">
         <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
@@ -28,10 +31,10 @@ export function HiredCandidatesPage() {
           <Table highlightOnHover verticalSpacing="sm">
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>Candidate</Table.Th>
-                <Table.Th>Position</Table.Th>
-                <Table.Th>Hired Date</Table.Th>
-                <Table.Th>Status</Table.Th>
+                <Table.Th>{t('list.table.candidate', { ns: 'candidates' })}</Table.Th>
+                <Table.Th>{t('employee.position', { ns: 'profile' })}</Table.Th>
+                <Table.Th>{t('hired.table.hiredDate', { ns: 'candidates' })}</Table.Th>
+                <Table.Th>{t('table.headers.status', { ns: 'applications' })}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -70,7 +73,7 @@ export function HiredCandidatesPage() {
                   </Table.Td>
                   <Table.Td>
                     <Badge color={getApplicationStatusColor(app.status)} variant="light">
-                      {app.status}
+                      {t(`table.filters.${app.status === 'HIRED' ? 'hired' : app.status}`, { ns: 'applications', defaultValue: app.status })}
                     </Badge>
                   </Table.Td>
                 </Table.Tr>
@@ -78,7 +81,7 @@ export function HiredCandidatesPage() {
             </Table.Tbody>
           </Table>
         ) : (
-          !isLoading && <Text c="dimmed" ta="center" py="xl">No hired candidates found.</Text>
+          !isLoading && <Text c="dimmed" ta="center" py="xl">{t('hired.table.empty', { ns: 'candidates' })}</Text>
         )}
       </Paper>
     </Container>

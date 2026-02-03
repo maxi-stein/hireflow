@@ -1,0 +1,13 @@
+{
+  "title": "Interview Calendar",
+  "actions": {
+    "schedule": "Schedule Interview",
+    "cancel": "Cancel Interview",
+    "reschedule": "Reschedule"
+  },
+  "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "notifications": {
+    "cancelSuccess": "Interview cancelled",
+    "cancelError": "Failed to cancel interview"
+  }
+}
