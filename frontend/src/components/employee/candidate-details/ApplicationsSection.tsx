@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Paper, Title, Card, Group, Box, Text, Badge, Divider, Button, Alert, SimpleGrid, Pagination } from '@mantine/core';
-import { IconX, IconCalendarEvent, IconAlertCircle, IconCheck } from '@tabler/icons-react';
+import { Paper, Title, Card, Group, Box, Text, Badge, Divider, Button, SimpleGrid, Pagination } from '@mantine/core';
+import { IconX, IconCalendarEvent, IconCheck } from '@tabler/icons-react';
 import { ApplicationStatus, type CandidateApplication } from '../../../services/candidate-application.service';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
@@ -38,32 +38,12 @@ export function ApplicationsSection({
     ).sort((a, b) => new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime());
   };
 
-  const getNextAction = (applicationId: string) => {
-    const appInterviews = getApplicationInterviews(applicationId);
-
-
-    // Only show decision needed if there are completed reviews
-    if (appInterviews.some(i => i.status === InterviewStatus.COMPLETED && (i.reviews?.length ?? 0) > 0)) {
-      return {
-        type: 'decision',
-        message: t('candidate.management.applications.decisionNeeded'),
-        detail: t('candidate.management.applications.decisionDetail'),
-        color: 'yellow',
-        icon: <IconAlertCircle size={16} />
-      };
-    }
-
-    return null;
-  };
-
   return (
     <Paper withBorder radius="md" p="lg">
       <Title order={3} mb="lg">{t('candidate.management.applications.title')}</Title>
 
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
         {paginatedApplications.map((app) => {
-          const nextAction = app.status === ApplicationStatus.IN_PROGRESS ? getNextAction(app.id) : null;
-
           // Determine if we are in "Edit" or "Schedule" mode for the button
           const appInterviews = getApplicationInterviews(app.id);
           const upcomingInterview = appInterviews.find(i => i.status === InterviewStatus.SCHEDULED);
@@ -82,18 +62,6 @@ export function ApplicationsSection({
                   {app.status}
                 </Badge>
               </Group>
-
-              {nextAction && (
-                <Alert
-                  variant="light"
-                  color={nextAction.color}
-                  title={nextAction.message}
-                  icon={nextAction.icon}
-                  mt="md"
-                >
-                  {nextAction.detail}
-                </Alert>
-              )}
 
               {/* Interview Feedback Section */}
               <CandidateInterviewsDisplay

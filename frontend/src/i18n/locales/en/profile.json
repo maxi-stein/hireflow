@@ -67,8 +67,6 @@
       "applications": {
         "title": "Job Applications",
         "appliedOn": "Applied on {{date}}",
-        "decisionNeeded": "Decision Needed",
-        "decisionDetail": "Interview and review completed. Ready for next step.",
         "reject": "Reject",
         "hire": "Hire",
         "schedule": "Schedule Interview",

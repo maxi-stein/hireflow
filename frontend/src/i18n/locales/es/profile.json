@@ -67,8 +67,6 @@
       "applications": {
         "title": "Postulaciones",
         "appliedOn": "Aplicó el {{date}}",
-        "decisionNeeded": "Decisión Requerida",
-        "decisionDetail": "Entrevista y revisión completadas. Listo para el siguiente paso.",
         "reject": "Rechazar",
         "hire": "Contratar",
         "schedule": "Agendar Entrevista",
