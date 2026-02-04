@@ -19,6 +19,8 @@ import dashboardEs from './locales/es/dashboard.json';
 import applicationsEs from './locales/es/applications.json';
 import candidatesEs from './locales/es/candidates.json';
 import calendarEs from './locales/es/calendar.json';
+import reviewsEn from './locales/en/reviews.json';
+import reviewsEs from './locales/es/reviews.json';
 
 export const defaultNS = 'common';
 export const resources = {
@@ -31,6 +33,7 @@ export const resources = {
     applications: applicationsEn,
     candidates: candidatesEn,
     calendar: calendarEn,
+    reviews: reviewsEn,
   },
   es: {
     common: commonEs,
@@ -41,6 +44,7 @@ export const resources = {
     applications: applicationsEs,
     candidates: candidatesEs,
     calendar: calendarEs,
+    reviews: reviewsEs,
   },
 } as const;
 

@@ -1,0 +1,61 @@
+{
+  "title": "My Reviews",
+  "tabs": {
+    "pending": "Pending Reviews",
+    "completed": "Completed Reviews"
+  },
+  "searchPlaceholder": "Search by candidate name...",
+  "empty": {
+    "pending": "No pending reviews found.",
+    "completed": "No reviews yet.",
+    "team": "No team reviews found."
+  },
+  "sections": {
+    "myReviews": "My Reviews",
+    "teamReviews": "Team Reviews"
+  },
+  "card": {
+    "by": "By:",
+    "unknownJob": "Unknown Job",
+    "unknownPosition": "Unknown Position"
+  },
+  "buttons": {
+    "review": "Review",
+    "close": "Close",
+    "details": "Details",
+    "reviews": "reviews",
+    "reviewSingular": "review"
+  },
+  "form": {
+    "title": "Create Review",
+    "editTitle": "Edit Review",
+    "labels": {
+      "candidate": "Candidate",
+      "position": "Position",
+      "interviewDate": "Interview Date",
+      "reviewer": "Reviewer",
+      "score": "Score (1-10)",
+      "scoreDesc": "Rate the candidate's performance",
+      "notes": "Notes",
+      "notesPlaceholder": "Enter your detailed feedback here...",
+      "strengths": "Strengths",
+      "strengthsPlaceholder": "Add strengths",
+      "weaknesses": "Weaknesses",
+      "weaknessesPlaceholder": "Add weaknesses"
+    },
+    "buttons": {
+      "submit": "Submit Review",
+      "update": "Update Review",
+      "reset": "Reset"
+    },
+    "notifications": {
+      "missingData": "Missing user or interview data",
+      "noApp": "No application found for this interview",
+      "createSuccess": "Review submitted successfully",
+      "updateSuccess": "Review updated successfully",
+      "submitError": "Failed to submit review",
+      "validationError": "Please check the form for errors",
+      "notFound": "Interview not found"
+    }
+  }
+}

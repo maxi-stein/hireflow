@@ -14,6 +14,7 @@ import type { Employee } from '../../../services/employee.service';
 import { validateWithJoi } from '../../../utils/form-validation';
 import { scheduleInterviewSchema } from '../../../schemas/interview.schema';
 import { StyledSelect } from './styled';
+import { useTranslation } from 'react-i18next';
 
 interface ScheduleInterviewModalProps {
   opened: boolean;
@@ -24,6 +25,7 @@ interface ScheduleInterviewModalProps {
 }
 
 export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, interviewToEdit, onSuccess }: ScheduleInterviewModalProps) {
+  const { t } = useTranslation(['calendar', 'profile']);
   const createMutation = useCreateInterviewMutation();
   const updateMutation = useUpdateInterviewMutation();
   const [selectedJobOfferId, setSelectedJobOfferId] = useState<string | null>(null);
@@ -109,7 +111,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
             meeting_link: values.meetingLink,
           },
         });
-        notifications.show({ title: 'Success', message: 'Interview updated successfully', color: 'green' });
+        notifications.show({ title: 'Success', message: t('modal.updateSuccess'), color: 'green' });
       } else {
         await createMutation.mutateAsync({
           application_ids: values.applicationIds,
@@ -119,7 +121,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
           meeting_link: values.meetingLink,
           status: InterviewStatus.SCHEDULED,
         });
-        notifications.show({ title: 'Success', message: 'Interview scheduled successfully', color: 'green' });
+        notifications.show({ title: 'Success', message: t('modal.success'), color: 'green' });
       }
 
       if (onSuccess) onSuccess();
@@ -130,7 +132,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
       console.error(error);
       notifications.show({
         title: 'Error',
-        message: interviewToEdit ? 'Failed to update interview' : 'Failed to schedule interview',
+        message: interviewToEdit ? t('modal.updateError') : t('modal.error'),
         color: 'red',
       });
     }
@@ -140,12 +142,12 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
   const isCompleted = interviewToEdit?.status === InterviewStatus.COMPLETED;
 
   return (
-    <Modal opened={opened} onClose={onClose} title={interviewToEdit ? "Reschedule Interview" : "Schedule Interview"}>
+    <Modal opened={opened} onClose={onClose} title={interviewToEdit ? t('modal.rescheduleTitle') : t('modal.scheduleTitle')}>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <StyledSelect
-            label="Job Offer"
-            placeholder="Select a job offer to filter candidates"
+            label={t('modal.labels.jobOffer')}
+            placeholder={t('modal.labels.jobOfferPlaceholder')}
             data={jobOffersData?.data.map(offer => ({
               value: offer.id,
               label: offer.position
@@ -161,18 +163,18 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
           />
 
           <Select
-            label="Type"
+            label={t('modal.labels.type')}
             data={[
-              { value: InterviewType.INDIVIDUAL, label: 'Individual' },
-              { value: InterviewType.GROUP, label: 'Group' },
+              { value: InterviewType.INDIVIDUAL, label: t('modal.types.individual') },
+              { value: InterviewType.GROUP, label: t('modal.types.group') },
             ]}
             {...form.getInputProps('type')}
           />
 
           {form.values.type === InterviewType.GROUP ? (
             <MultiSelect
-              label="Candidates"
-              placeholder={selectedJobOfferId ? "Select candidates" : "Select a job offer first"}
+              label={t('modal.labels.candidates')}
+              placeholder={selectedJobOfferId ? t('modal.labels.candidatePlaceholder') : t('modal.labels.jobOfferPlaceholder')}
               data={filteredApplications.map(app => ({
                 value: app.id,
                 label: `${app.candidate.user.first_name} ${app.candidate.user.last_name}`
@@ -183,8 +185,8 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
             />
           ) : (
             <Select
-              label="Candidate"
-              placeholder={selectedJobOfferId ? "Select candidate" : "Select a job offer first"}
+              label={t('modal.labels.candidate')}
+              placeholder={selectedJobOfferId ? t('modal.labels.candidatePlaceholder') : t('modal.labels.jobOfferPlaceholder')}
               data={filteredApplications.map(app => ({
                 value: app.id,
                 label: `${app.candidate.user.first_name} ${app.candidate.user.last_name}`
@@ -198,8 +200,8 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
           )}
 
           <MultiSelect
-            label="Interviewers"
-            placeholder="Select interviewers"
+            label={t('modal.labels.interviewer')}
+            placeholder={t('modal.labels.interviewerPlaceholder')}
             data={employees?.data.map((emp: Employee) => ({
               value: emp.id,
               label: `${emp.user.first_name} ${emp.user.last_name}`
@@ -209,26 +211,26 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
           />
 
           <DateTimePicker
-            label="Date and Time"
-            placeholder="Pick date and time"
+            label={t('modal.labels.dateTime')}
+            placeholder={t('modal.labels.dateTimePlaceholder')}
             minDate={new Date()}
             {...form.getInputProps('scheduledTime')}
           />
 
           <TextInput
-            label="Meeting Link"
-            placeholder="https://meet.google.com/..."
+            label={t('modal.labels.meetingLink')}
+            placeholder={t('modal.labels.meetingLinkPlaceholder')}
             {...form.getInputProps('meetingLink')}
           />
 
           {isCompleted && (
-            <Text c="red" size="sm">This interview is completed and cannot be updated.</Text>
+            <Text c="red" size="sm">{t('modal.labels.completedNote')}</Text>
           )}
 
           <Group justify="flex-end" mt="md">
-            <Button variant="default" onClick={onClose}>Cancel</Button>
+            <Button variant="default" onClick={onClose}>{t('modal.buttons.cancel')}</Button>
             <Button type="submit" loading={isSubmitting} disabled={isCompleted}>
-              {interviewToEdit ? 'Update' : 'Schedule'}
+              {interviewToEdit ? t('modal.buttons.update') : t('modal.buttons.schedule')}
             </Button>
           </Group>
         </Stack>

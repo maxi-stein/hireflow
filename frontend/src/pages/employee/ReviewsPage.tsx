@@ -10,8 +10,11 @@ import { useAppStore } from '../../store/useAppStore';
 import type { InterviewReview } from '../../services/interview-review.service';
 import type { Interview } from '../../services/interview.service';
 
+import { useTranslation } from 'react-i18next';
+
 export function ReviewsPage() {
   const { colorScheme } = useMantineColorScheme();
+  const { t } = useTranslation(['reviews', 'profile']);
   const user = useAppStore(state => state.user);
   const [selectedInterviewId, setSelectedInterviewId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -73,7 +76,7 @@ export function ReviewsPage() {
     const byJob: Record<string, Record<string, Interview[]>> = {};
 
     interviews.forEach(interview => {
-      const jobTitle = interview.applications?.[0]?.job_offer?.position || 'Unknown Job';
+      const jobTitle = interview.applications?.[0]?.job_offer?.position || t('card.unknownJob');
       const candidateId = interview.applications?.[0]?.candidate?.id || 'unknown';
 
       if (!byJob[jobTitle]) byJob[jobTitle] = {};
@@ -121,7 +124,7 @@ export function ReviewsPage() {
                           <Box>
                             <Text size="sm" fw={500}>{interview.type} Interview</Text>
                             <Text size="xs" c="dimmed">
-                              {interview.applications[0]?.job_offer?.position || 'Unknown Position'}
+                              {interview.applications[0]?.job_offer?.position || t('card.unknownPosition')}
                             </Text>
                           </Box>
                         </Group>
@@ -133,7 +136,7 @@ export function ReviewsPage() {
                             handleReviewClick(interview.id);
                           }}
                         >
-                          {selectedInterviewId === interview.id ? 'Close' : 'Review'}
+                          {selectedInterviewId === interview.id ? t('buttons.close') : t('buttons.review')}
                         </Button>
                       </Group>
                       <Collapse in={selectedInterviewId === interview.id}>
@@ -164,7 +167,7 @@ export function ReviewsPage() {
     const byJob: Record<string, Record<string, InterviewReview[]>> = {};
 
     reviews.forEach(review => {
-      const jobTitle = review.candidate_application?.job_offer?.position || 'Unknown Job';
+      const jobTitle = review.candidate_application?.job_offer?.position || t('card.unknownJob');
       const candidateId = review.candidate_application?.candidate?.id || 'unknown';
 
       if (!byJob[jobTitle]) byJob[jobTitle] = {};
@@ -197,7 +200,7 @@ export function ReviewsPage() {
                     />
                     <Text fw={600} size="sm">{candidate?.user?.first_name} {candidate?.user?.last_name}</Text>
                   </Group>
-                  <Badge variant="light">{candidateReviews.length} {candidateReviews.length > 1 ? `reviews` : 'review'}</Badge>
+                  <Badge variant="light">{candidateReviews.length} {candidateReviews.length > 1 ? t('buttons.reviews') : t('buttons.reviewSingular')}</Badge>
                 </Group>
                 <Stack gap={0} style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
                   {candidateReviews.map(review => (
@@ -205,7 +208,7 @@ export function ReviewsPage() {
                       <Group justify="space-between" align="flex-start">
                         <Box>
                           <Group gap="xs">
-                            <Text size="sm" fw={500}>By: {review.employee?.user.first_name} {review.employee?.user.last_name}</Text>
+                            <Text size="sm" fw={500}>{t('card.by')} {review.employee?.user.first_name} {review.employee?.user.last_name}</Text>
                             <ScoreBadge score={review.score} size="xs" />
                           </Group>
                           <Text size="xs" c="dimmed">
@@ -220,7 +223,7 @@ export function ReviewsPage() {
                             handleReviewClick(review.interview_id);
                           }}
                         >
-                          {selectedInterviewId === review.interview_id ? 'Close' : 'Details'}
+                          {selectedInterviewId === review.interview_id ? t('buttons.close') : t('buttons.details')}
                         </Button>
                       </Group>
                       <Collapse in={selectedInterviewId === review.interview_id} mt="xs">
@@ -246,9 +249,9 @@ export function ReviewsPage() {
   return (
     <Container size="xl" py="xl">
       <Group justify="space-between" mb="lg">
-        <Title order={2}>My Reviews</Title>
+        <Title order={2}>{t('title')}</Title>
         <TextInput
-          placeholder="Search by candidate name..."
+          placeholder={t('searchPlaceholder')}
           leftSection={<IconSearch size={16} />}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.currentTarget.value)}
@@ -260,7 +263,7 @@ export function ReviewsPage() {
         <Tabs.List mb="md">
           <Tabs.Tab value="pending" leftSection={<IconClipboardCheck size={16} />}>
             <Group gap="xs" align="center">
-              Pending Reviews
+              {t('tabs.pending')}
               {pendingReviews.length > 0 && (
                 <Badge size="xs" circle color="blue">
                   {pendingReviews.length}
@@ -269,14 +272,14 @@ export function ReviewsPage() {
             </Group>
           </Tabs.Tab>
           <Tabs.Tab value="completed" leftSection={<IconHistory size={16} />}>
-            Completed Reviews
+            {t('tabs.completed')}
           </Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="pending">
           <Paper withBorder p="md" radius="md">
             {filteredPendingReviews.length === 0 ? (
-              <Text c="dimmed" ta="center" py="xl">No pending reviews found.</Text>
+              <Text c="dimmed" ta="center" py="xl">{t('empty.pending')}</Text>
             ) : (
               renderPendingReviews(filteredPendingReviews)
             )}
@@ -287,9 +290,9 @@ export function ReviewsPage() {
           <Paper withBorder p="md" radius="md">
             <Stack gap="xl">
               <Box>
-                <Title order={4} mb="md" c="dimmed" tt="uppercase" size="sm">My Reviews</Title>
+                <Title order={4} mb="md" c="dimmed" tt="uppercase" size="sm">{t('sections.myReviews')}</Title>
                 {myCompletedReviews.length === 0 ? (
-                  <Text c="dimmed" size="sm" fs="italic">No reviews yet.</Text>
+                  <Text c="dimmed" size="sm" fs="italic">{t('empty.completed')}</Text>
                 ) : (
                   renderCompletedReviews(myCompletedReviews)
                 )}
@@ -298,7 +301,7 @@ export function ReviewsPage() {
               {otherCompletedReviews.length > 0 && (
                 <Box>
                   <Divider mb="lg" />
-                  <Title order={4} mb="md" c="dimmed" tt="uppercase" size="sm">Team Reviews</Title>
+                  <Title order={4} mb="md" c="dimmed" tt="uppercase" size="sm">{t('sections.teamReviews')}</Title>
                   {renderCompletedReviews(otherCompletedReviews)}
                 </Box>
               )}

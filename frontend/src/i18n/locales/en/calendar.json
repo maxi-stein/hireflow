@@ -9,5 +9,37 @@
   "notifications": {
     "cancelSuccess": "Interview cancelled",
     "cancelError": "Failed to cancel interview"
+  },
+  "modal": {
+    "scheduleTitle": "Schedule Interview",
+    "rescheduleTitle": "Reschedule Interview",
+    "success": "Interview scheduled successfully",
+    "updateSuccess": "Interview updated successfully",
+    "error": "Failed to schedule interview",
+    "updateError": "Failed to update interview",
+    "labels": {
+      "jobOffer": "Job Offer",
+      "jobOfferPlaceholder": "Select a job offer to filter candidates",
+      "type": "Type",
+      "candidate": "Candidate",
+      "candidates": "Candidates",
+      "candidatePlaceholder": "Select candidate",
+      "interviewer": "Interviewers",
+      "interviewerPlaceholder": "Select interviewers",
+      "dateTime": "Date and Time",
+      "dateTimePlaceholder": "Pick date and time",
+      "meetingLink": "Meeting Link",
+      "meetingLinkPlaceholder": "https://meet.google.com/...",
+      "completedNote": "This interview is completed and cannot be updated."
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "schedule": "Schedule",
+      "update": "Update"
+    },
+    "types": {
+      "individual": "Individual",
+      "group": "Group"
+    }
   }
 }

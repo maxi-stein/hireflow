@@ -1,0 +1,61 @@
+{
+  "title": "Mis Reseñas",
+  "tabs": {
+    "pending": "Reseñas Pendientes",
+    "completed": "Reseñas Completadas"
+  },
+  "searchPlaceholder": "Buscar por nombre de candidato...",
+  "empty": {
+    "pending": "No se encontraron reseñas pendientes.",
+    "completed": "Aún no hay reseñas.",
+    "team": "No se encontraron reseñas del equipo."
+  },
+  "sections": {
+    "myReviews": "Mis Reseñas",
+    "teamReviews": "Reseñas del Equipo"
+  },
+  "card": {
+    "by": "Por:",
+    "unknownJob": "Trabajo Desconocido",
+    "unknownPosition": "Puesto Desconocido"
+  },
+  "buttons": {
+    "review": "Evaluar",
+    "close": "Cerrar",
+    "details": "Detalles",
+    "reviews": "reseñas",
+    "reviewSingular": "reseña"
+  },
+  "form": {
+    "title": "Crear Reseña",
+    "editTitle": "Editar Reseña",
+    "labels": {
+      "candidate": "Candidato",
+      "position": "Puesto",
+      "interviewDate": "Fecha de Entrevista",
+      "reviewer": "Evaluador",
+      "score": "Puntaje (1-10)",
+      "scoreDesc": "Califique el desempeño del candidato",
+      "notes": "Notas",
+      "notesPlaceholder": "Ingrese sus comentarios detallados aquí...",
+      "strengths": "Fortalezas",
+      "strengthsPlaceholder": "Agregar fortalezas",
+      "weaknesses": "Debilidades",
+      "weaknessesPlaceholder": "Agregar debilidades"
+    },
+    "buttons": {
+      "submit": "Enviar Reseña",
+      "update": "Actualizar Reseña",
+      "reset": "Reiniciar"
+    },
+    "notifications": {
+      "missingData": "Datos de usuario o entrevista faltantes",
+      "noApp": "No se encontró aplicación para esta entrevista",
+      "createSuccess": "Reseña enviada exitosamente",
+      "updateSuccess": "Reseña actualizada exitosamente",
+      "submitError": "Error al enviar reseña",
+      "validationError": "Por favor verifique los errores en el formulario",
+      "notFound": "Entrevista no encontrada"
+    }
+  }
+}

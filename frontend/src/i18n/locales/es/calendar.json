@@ -9,5 +9,37 @@
   "notifications": {
     "cancelSuccess": "Entrevista cancelada",
     "cancelError": "Error al cancelar entrevista"
+  },
+  "modal": {
+    "scheduleTitle": "Agendar Entrevista",
+    "rescheduleTitle": "Reagendar Entrevista",
+    "success": "Entrevista agendada exitosamente",
+    "updateSuccess": "Entrevista actualizada exitosamente",
+    "error": "Error al agendar entrevista",
+    "updateError": "Error al actualizar entrevista",
+    "labels": {
+      "jobOffer": "Oferta de Trabajo",
+      "jobOfferPlaceholder": "Seleccione una oferta para filtrar candidatos",
+      "type": "Tipo",
+      "candidate": "Candidato",
+      "candidates": "Candidatos",
+      "candidatePlaceholder": "Seleccione candidato",
+      "interviewer": "Entrevistadores",
+      "interviewerPlaceholder": "Seleccione entrevistadores",
+      "dateTime": "Fecha y Hora",
+      "dateTimePlaceholder": "Seleccione fecha y hora",
+      "meetingLink": "Enlace de Reunión",
+      "meetingLinkPlaceholder": "https://meet.google.com/...",
+      "completedNote": "Esta entrevista ha sido completada y no puede ser actualizada."
+    },
+    "buttons": {
+      "cancel": "Cancelar",
+      "schedule": "Agendar",
+      "update": "Actualizar"
+    },
+    "types": {
+      "individual": "Individual",
+      "group": "Grupal"
+    }
   }
 }

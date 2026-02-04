@@ -20,7 +20,10 @@ interface InterviewReviewFormProps {
   onSuccess: () => void;
 }
 
+import { useTranslation } from 'react-i18next';
+
 export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewFormProps) {
+  const { t, i18n } = useTranslation('reviews');
   const user = useAppStore(state => state.user);
   const navigate = useNavigate();
 
@@ -60,13 +63,13 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
 
   const handleSubmit = async (values: typeof form.values) => {
     if (!interview || !user?.id) {
-      notifications.show({ title: 'Error', message: 'Missing user or interview data', color: 'red' });
+      notifications.show({ title: 'Error', message: t('form.notifications.missingData'), color: 'red' });
       return;
     }
 
     const applicationId = interview.applications?.[0]?.id;
     if (!applicationId) {
-      notifications.show({ title: 'Error', message: 'No application found for this interview', color: 'red' });
+      notifications.show({ title: 'Error', message: t('form.notifications.noApp'), color: 'red' });
       return;
     }
 
@@ -80,10 +83,10 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
     try {
       if (isEditMode && myReview) {
         await updateReviewMutation.mutateAsync({ id: myReview.id, data: payload });
-        notifications.show({ title: 'Success', message: 'Review updated successfully', color: 'green' });
+        notifications.show({ title: 'Success', message: t('form.notifications.updateSuccess'), color: 'green' });
       } else {
         await createReviewMutation.mutateAsync(payload);
-        notifications.show({ title: 'Success', message: 'Review submitted successfully', color: 'green' });
+        notifications.show({ title: 'Success', message: t('form.notifications.createSuccess'), color: 'green' });
       }
       onSuccess();
       // Redirect to candidate profile
@@ -91,7 +94,7 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
         navigate(`/manage/candidates/list/${candidateId}`);
       }
     } catch (error) {
-      notifications.show({ title: 'Error', message: 'Failed to submit review', color: 'red' });
+      notifications.show({ title: 'Error', message: t('form.notifications.submitError'), color: 'red' });
     }
   };
 
@@ -104,7 +107,7 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
   }
 
   if (!interview) {
-    return <Text>Interview not found</Text>;
+    return <Text>{t('form.notifications.notFound')}</Text>;
   }
 
   const candidate = interview.applications?.[0]?.candidate?.user;
@@ -113,7 +116,7 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
   return (
     <Box>
       <Title order={3}>
-        {isEditMode ? 'Edit Review' : 'Create Review'}
+        {isEditMode ? t('form.editTitle') : t('form.title')}
       </Title>
 
       <Grid gutter="lg">
@@ -122,7 +125,7 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
             <Paper withBorder p="md" radius="md">
               <Stack gap="xs">
                 <Box>
-                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>Candidate</Text>
+                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.candidate')}</Text>
                   <Group gap="xs" align="center">
                     <Text size="lg" fw={500}>{candidate?.first_name} {candidate?.last_name}</Text>
                     {isEditMode && <ScoreBadge score={form.values.score} size="xs" />}
@@ -131,19 +134,19 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
                 </Box>
                 <Divider />
                 <Box>
-                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>Position</Text>
+                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.position')}</Text>
                   <Text fw={500}>{jobOffer?.position}</Text>
                 </Box>
                 <Divider />
                 <Box>
-                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>Interview Date</Text>
-                  <Text>{new Date(interview.scheduled_time).toLocaleString()}</Text>
+                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.interviewDate')}</Text>
+                  <Text>{new Date(interview.scheduled_time).toLocaleString(i18n.language)}</Text>
                 </Box>
                 {myReview?.employee?.user && (
                   <>
                     <Divider />
                     <Box>
-                      <Text c="dimmed" size="xs" tt="uppercase" fw={700}>Reviewer</Text>
+                      <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.reviewer')}</Text>
                       <Text fw={500}>{myReview.employee.user.first_name} {myReview.employee.user.last_name}</Text>
                     </Box>
                   </>
@@ -172,15 +175,15 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
               (errors) => {
                 notifications.show({
                   title: 'Validation Error',
-                  message: 'Please check the form for errors',
+                  message: t('form.notifications.validationError'),
                   color: 'red'
                 });
               }
             )}>
               <Stack gap="lg">
                 <NumberInput
-                  label="Score (1-10)"
-                  description="Rate the candidate's performance"
+                  label={t('form.labels.score')}
+                  description={t('form.labels.scoreDesc')}
                   min={1}
                   max={10}
                   required
@@ -188,31 +191,31 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
                 />
 
                 <Textarea
-                  label="Notes"
-                  placeholder="Enter your detailed feedback here..."
+                  label={t('form.labels.notes')}
+                  placeholder={t('form.labels.notesPlaceholder')}
                   minRows={5}
                   autosize
                   {...form.getInputProps('notes')}
                 />
 
                 <TagsInput
-                  label="Strengths"
-                  placeholder="Add strengths"
+                  label={t('form.labels.strengths')}
+                  placeholder={t('form.labels.strengthsPlaceholder')}
                   {...form.getInputProps('strengths')}
                 />
 
                 <TagsInput
-                  label="Weaknesses"
-                  placeholder="Add weaknesses"
+                  label={t('form.labels.weaknesses')}
+                  placeholder={t('form.labels.weaknessesPlaceholder')}
                   {...form.getInputProps('weaknesses')}
                 />
 
                 <Group justify="flex-end" mt="xl">
                   {isEditMode && (
-                    <Button variant="default" onClick={() => form.reset()}>Reset</Button>
+                    <Button variant="default" onClick={() => form.reset()}>{t('form.buttons.reset')}</Button>
                   )}
                   <Button type="submit" leftSection={<IconDeviceFloppy size={16} />}>
-                    {isEditMode ? 'Update Review' : 'Submit Review'}
+                    {isEditMode ? t('form.buttons.update') : t('form.buttons.submit')}
                   </Button>
                 </Group>
               </Stack>
