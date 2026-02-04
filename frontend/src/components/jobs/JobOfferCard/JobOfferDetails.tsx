@@ -9,8 +9,8 @@ interface JobOfferDetailsProps {
 }
 
 export const JobOfferDetails = ({ salary, deadline, showSensitiveData }: JobOfferDetailsProps) => {
-  const { t } = useTranslation('jobs');
-  const formattedDeadline = deadline ? new Date(deadline).toLocaleDateString() : null;
+  const { t, i18n } = useTranslation('jobs');
+  const formattedDeadline = deadline ? new Date(deadline).toLocaleDateString(i18n.language) : null;
 
   return (
     <Group gap="lg">

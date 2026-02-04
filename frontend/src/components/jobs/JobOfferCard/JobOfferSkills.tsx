@@ -1,4 +1,5 @@
 import { Group, Badge, Tooltip } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import type { JobOfferSkill } from '../../../services/job-offer.service';
 
 interface JobOfferSkillsProps {
@@ -6,6 +7,8 @@ interface JobOfferSkillsProps {
 }
 
 export const JobOfferSkills = ({ skills }: JobOfferSkillsProps) => {
+  const { t } = useTranslation('jobs');
+
   if (!skills || skills.length === 0) return null;
 
   return (
@@ -26,7 +29,7 @@ export const JobOfferSkills = ({ skills }: JobOfferSkillsProps) => {
       {skills.length > 5 && (
         <Tooltip label={skills.slice(5).map(s => s.skill_name).join(', ')}>
           <Badge variant="light" radius="sm" size="sm" c="dimmed" bg="gray.1">
-            +{skills.length - 5} more
+            {t('skillsMore', { count: skills.length - 5 })}
           </Badge>
         </Tooltip>
       )}

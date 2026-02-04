@@ -89,7 +89,7 @@ export const ROUTES = {
     APPLICATIONS: {
       path: '/candidate/applications',
       element: <ApplicationsPage />,
-      label: 'navigation:applications',
+      label: 'navigation:myApplications',
       icon: <IconFileText size={20} />,
       showInNav: true,
       requiresAuth: true,
@@ -174,7 +174,7 @@ export const ROUTES = {
         {
           path: '/manage/candidates/applications',
           element: <CandidateApplicationsPage />,
-          label: 'navigation:applications',
+          label: 'navigation:candidateApplications',
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],

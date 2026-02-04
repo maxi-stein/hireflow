@@ -46,6 +46,7 @@
       "confirmReject": "Application Rejected",
       "confirmRejectMessage": "The candidate has been disqualified from this position.",
       "downloadError": "Failed to download resume.",
+      "goBack": "Go Back",
       "backToList": "Back to List",
       "notFound": "Candidate not found.",
       "rejectModalMessage": "Are you sure you want to reject <1>{{name}}</1>? This action can not be undone later.",

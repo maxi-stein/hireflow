@@ -5,6 +5,7 @@ import { IconX, IconCalendarEvent, IconCheck } from '@tabler/icons-react';
 import { ApplicationStatus, type CandidateApplication } from '../../../services/candidate-application.service';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
+import { getLocationDisplayInfo } from '../../../utils/job.utils';
 
 interface ApplicationsSectionProps {
   applications: CandidateApplication[];
@@ -47,13 +48,16 @@ export function ApplicationsSection({
           // Determine if we are in "Edit" or "Schedule" mode for the button
           const appInterviews = getApplicationInterviews(app.id);
           const upcomingInterview = appInterviews.find(i => i.status === InterviewStatus.SCHEDULED);
+          const locationInfo = getLocationDisplayInfo(app.job_offer.work_mode, app.job_offer.location);
 
           return (
             <Card key={app.id} withBorder padding="lg" radius="md">
               <Group justify="space-between" align="flex-start">
                 <Box>
                   <Title order={4}>{app.job_offer.position}</Title>
-                  <Text size="sm" c="dimmed">{app.job_offer.location} • {app.job_offer.work_mode}</Text>
+                  <Text size="sm" c="dimmed">
+                    {locationInfo.location ? `${locationInfo.location} • ` : ''}{locationInfo.workMode}
+                  </Text>
                   <Text size="xs" mt="xs" c="dimmed">
                     {t('candidate.management.applications.appliedOn', { date: new Date(app.created_at).toLocaleDateString() })}
                   </Text>

@@ -33,7 +33,7 @@ import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJo
 import { DeleteJobOfferModal } from '../../components/employee/job-postings/DeleteJobOfferModal';
 
 export function JobPostingsPage() {
-  const { t } = useTranslation('jobs');
+  const { t, i18n } = useTranslation('jobs');
   const navigate = useNavigate();
 
   // Search by position (with debounce)
@@ -193,10 +193,10 @@ export function JobPostingsPage() {
                   </Badge>
                 </Table.Td>
                 <Table.Td>
-                  {new Date(offer.created_at).toLocaleDateString()}
+                  {new Date(offer.created_at).toLocaleDateString(i18n.language)}
                 </Table.Td>
                 <Table.Td>
-                  {offer.deadline ? new Date(offer.deadline).toLocaleDateString() : '-'}
+                  {offer.deadline ? new Date(offer.deadline).toLocaleDateString(i18n.language) : '-'}
                 </Table.Td>
                 <Table.Td>
                   <Group gap={4} wrap="nowrap">

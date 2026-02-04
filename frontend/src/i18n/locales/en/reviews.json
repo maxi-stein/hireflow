@@ -57,5 +57,17 @@
       "validationError": "Please check the form for errors",
       "notFound": "Interview not found"
     }
+  },
+  "candidateDisplay": {
+    "noInterviews": "No interviews scheduled",
+    "interviewScheduled": "Interview Scheduled",
+    "interviewCompleted": "Interview Completed",
+    "interviewReview": "Interview Review",
+    "reviewPending": "Review Pending",
+    "waitingFeedback": "Interview completed. Waiting for feedback.",
+    "by": "By",
+    "score": "Score",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses"
   }
 }

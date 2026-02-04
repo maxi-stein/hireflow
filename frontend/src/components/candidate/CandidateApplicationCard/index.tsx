@@ -1,6 +1,7 @@
 import { Card, Stack, Group, Title, Button, Text, Box, ThemeIcon } from '@mantine/core';
-import { IconExternalLink, IconClock } from '@tabler/icons-react';
+import { IconExternalLink, IconClock, IconX } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import type { Interview } from '../../../services/interview.service';
 import { InterviewStatus } from '../../../services/interview.service';
@@ -14,10 +15,12 @@ interface CandidateApplicationCardProps {
 }
 
 export const CandidateApplicationCard = ({ application, interviews }: CandidateApplicationCardProps) => {
+  const { t } = useTranslation('applications');
   const { job_offer } = application;
   const navigate = useNavigate();
 
   const hasScheduledInterview = interviews.some(i => i.status === InterviewStatus.SCHEDULED);
+  const isRejected = application.status === 'REJECTED';
 
   // Determine border color based on status
   const getBorderLeftColor = () => {
@@ -71,6 +74,28 @@ export const CandidateApplicationCard = ({ application, interviews }: CandidateA
       <Stack gap="lg" mt="lg">
         {interviews.length > 0 ? (
           <ApplicationTimeline interviews={interviews} />
+        ) : isRejected ? (
+          <Box
+            mt="md"
+            p="lg"
+            bg="var(--mantine-color-red-light)"
+            style={{
+              borderRadius: '8px',
+              border: '1px solid var(--mantine-color-red-light-color)'
+            }}
+          >
+            <Group align="center" gap="md">
+              <ThemeIcon size="lg" radius="xl" variant="white" color="red">
+                <IconX size={20} />
+              </ThemeIcon>
+              <Box style={{ flex: 1 }}>
+                <Text size="sm" fw={600} c="red.9">{t('card.rejected')}</Text>
+                <Text size="sm" c="red.8" lh={1.4}>
+                  {t('card.rejectedMessage')}
+                </Text>
+              </Box>
+            </Group>
+          </Box>
         ) : (
           <Box
             mt="md"
@@ -86,9 +111,9 @@ export const CandidateApplicationCard = ({ application, interviews }: CandidateA
                 <IconClock size={20} />
               </ThemeIcon>
               <Box style={{ flex: 1 }}>
-                <Text size="sm" fw={600} c="blue.9">Application Under Review</Text>
+                <Text size="sm" fw={600} c="blue.9">{t('card.underReview')}</Text>
                 <Text size="sm" c="blue.8" lh={1.4}>
-                  Our team is currently reviewing your profile. You will be notified regarding any updates or next steps in the process.
+                  {t('card.underReviewMessage')}
                 </Text>
               </Box>
             </Group>
@@ -114,7 +139,7 @@ export const CandidateApplicationCard = ({ application, interviews }: CandidateA
             rightSection={<IconExternalLink size={16} />}
             onClick={() => navigate(`/jobs?highlight=${job_offer.id}`)}
           >
-            View Original Job Post
+            {t('card.viewOriginalJob')}
           </Button>
 
           {/* Primary action if relevant, e.g. View Messages or similar could go here */}

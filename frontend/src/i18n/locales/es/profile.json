@@ -46,6 +46,7 @@
       "confirmReject": "Solicitud Rechazada",
       "confirmRejectMessage": "El candidato ha sido descalificado de esta posición.",
       "downloadError": "Error al descargar CV.",
+      "goBack": "Volver",
       "backToList": "Volver a la Lista",
       "notFound": "Candidato no encontrado.",
       "rejectModalMessage": "¿Está seguro de que desea rechazar <1>{{name}}</1>? Esta acción no se podrá deshacer.",

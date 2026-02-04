@@ -79,5 +79,13 @@
     "office": "Presencial"
   },
   "benefits": "Beneficios",
-  "deadline": "Fecha Límite"
+  "deadline": "Fecha Límite",
+  "skillsMore": "+{{count}} más",
+  "publicList": {
+    "title": "Posiciones Disponibles",
+    "subtitle": "Encuentra tu próxima oportunidad laboral",
+    "empty": "No hay posiciones abiertas disponibles en este momento.",
+    "checking": "Verificando postulación...",
+    "viewApplication": "Ver Postulación"
+  }
 }

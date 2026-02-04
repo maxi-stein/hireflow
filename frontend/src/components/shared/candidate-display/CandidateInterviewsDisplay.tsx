@@ -1,5 +1,6 @@
 import { Box, Group, Alert, Stack, Text, Badge, SimpleGrid } from '@mantine/core';
 import { IconCalendarEvent, IconHistory, IconMessageCircle, IconClock } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { getEffectiveInterviewStatus } from '../../../utils/interview.utils';
 import { getScoreColor } from '../../../utils/score.utils';
@@ -11,11 +12,13 @@ interface CandidateInterviewsDisplayProps {
 }
 
 export function CandidateInterviewsDisplay({ interviews, applicationId }: CandidateInterviewsDisplayProps) {
+  const { t } = useTranslation('reviews');
+
   // Always render a Detail to maintain alignment
   if (!interviews || interviews.length === 0) {
     return (
       <Alert variant="light" color="gray" p="xs">
-        <Text size="sm" c="dimmed">No interviews scheduled</Text>
+        <Text size="sm" c="dimmed">{t('candidateDisplay.noInterviews')}</Text>
       </Alert>
     );
   }
@@ -32,7 +35,7 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
               key={interview.id}
               variant="light"
               color="blue"
-              title="Interview Scheduled"
+              title={t('candidateDisplay.interviewScheduled')}
               icon={<IconCalendarEvent size={16} />}
             >
               <TimeDisplay
@@ -61,7 +64,7 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
                 <Group gap="xs">
                   <IconHistory size={14} style={{ opacity: 0.7 }} />
                   <Text size="xs" fw={700} c="dimmed" tt="uppercase">
-                    Interview Completed
+                    {t('candidateDisplay.interviewCompleted')}
                   </Text>
                 </Group>
               </Group>
@@ -79,12 +82,12 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
                         <Group align="flex-start" wrap="nowrap">
                           <IconMessageCircle size={18} style={{ marginTop: 2 }} />
                           <Box>
-                            <Text fw={600} size="sm" lh={1.2}>Interview Review</Text>
+                            <Text fw={600} size="sm" lh={1.2}>{t('candidateDisplay.interviewReview')}</Text>
                             <Text size="xs" c="dimmed" mb={4}>
-                              By: {review.employee?.user?.first_name} {review.employee?.user?.last_name}
+                              {t('candidateDisplay.by')}: {review.employee?.user?.first_name} {review.employee?.user?.last_name}
                             </Text>
                             <Group gap={6}>
-                              <Text size="xs" c="dimmed">Score:</Text>
+                              <Text size="xs" c="dimmed">{t('candidateDisplay.score')}:</Text>
                               <Badge color={getScoreColor(review.score)} variant="filled" size="xs">
                                 {review.score ? `${review.score}/10` : 'N/A'}
                               </Badge>
@@ -94,7 +97,7 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
                         <Box>
                           {review.strengths && review.strengths.length > 0 && (
                             <Group gap={4} mb={4}>
-                              <Text size="xs" fw={700} c="green" style={{ width: 70 }}>Strengths:</Text>
+                              <Text size="xs" fw={700} c="green" style={{ width: 70 }}>{t('candidateDisplay.strengths')}:</Text>
                               <Group gap={4} style={{ flex: 1 }}>
                                 {review.strengths.slice(0, 3).map(s => <Badge key={s} size="xs" variant="outline" color="green" radius="sm">{s}</Badge>)}
                               </Group>
@@ -102,7 +105,7 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
                           )}
                           {review.weaknesses && review.weaknesses.length > 0 && (
                             <Group gap={4}>
-                              <Text size="xs" fw={700} c="red" style={{ width: 70 }}>Weaknesses:</Text>
+                              <Text size="xs" fw={700} c="red" style={{ width: 70 }}>{t('candidateDisplay.weaknesses')}:</Text>
                               <Group gap={4} style={{ flex: 1 }}>
                                 {review.weaknesses.slice(0, 3).map(w => <Badge key={w} size="xs" variant="outline" color="red" radius="sm">{w}</Badge>)}
                               </Group>
@@ -117,10 +120,10 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
                 <Alert
                   variant="light"
                   color="orange"
-                  title="Review Pending"
+                  title={t('candidateDisplay.reviewPending')}
                   icon={<IconClock size={16} />}
                 >
-                  <Text size="sm">Interview completed. Waiting for feedback.</Text>
+                  <Text size="sm">{t('candidateDisplay.waitingFeedback')}</Text>
                 </Alert>
               )}
             </Box>

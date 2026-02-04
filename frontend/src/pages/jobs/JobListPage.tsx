@@ -13,7 +13,7 @@ import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 import { useTranslation } from 'react-i18next';
 
 export const JobListPage = () => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'jobs']);
   const navigate = useNavigate();
   const { highlightedId, setElementRef } = useHighlightEffect();
   const user = useAppStore((state) => state.user);
@@ -79,13 +79,13 @@ export const JobListPage = () => {
     <Container size="xl" py="xl">
       <Stack gap="xl">
         <div>
-          <Title order={1}>Available Positions</Title>
-          <Text c="dimmed" size="lg">Find your next career opportunity</Text>
+          <Title order={1}>{t('jobs:publicList.title')}</Title>
+          <Text c="dimmed" size="lg">{t('jobs:publicList.subtitle')}</Text>
         </div>
 
         {!jobOffers?.data || jobOffers.data.length === 0 ? (
           <Card withBorder p="xl">
-            <Text ta="center" c="dimmed">No open positions available at this time.</Text>
+            <Text ta="center" c="dimmed">{t('jobs:publicList.empty')}</Text>
           </Card>
         ) : (
           <Stack gap="md">
@@ -137,9 +137,9 @@ export const JobListPage = () => {
                           }}
                         >
                           {isLoadingApplications
-                            ? 'Checking application...'
+                            ? t('jobs:publicList.checking')
                             : isApplied
-                              ? 'View Application'
+                              ? t('jobs:publicList.viewApplication')
                               : t('applyNow')}
                         </Button>
                       ) : undefined

@@ -79,5 +79,13 @@
     "office": "On-site"
   },
   "benefits": "Benefits",
-  "deadline": "Deadline"
+  "deadline": "Deadline",
+  "skillsMore": "+{{count}} more",
+  "publicList": {
+    "title": "Available Positions",
+    "subtitle": "Find your next career opportunity",
+    "empty": "No open positions available at this time.",
+    "checking": "Checking application...",
+    "viewApplication": "View Application"
+  }
 }

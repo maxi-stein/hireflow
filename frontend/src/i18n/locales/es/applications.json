@@ -28,5 +28,12 @@
       "noMatch": "No se encontraron candidatos que coincidan con su búsqueda.",
       "noApplications": "Aún no hay aplicaciones."
     }
+  },
+  "card": {
+    "underReview": "Aplicación en Revisión",
+    "underReviewMessage": "Nuestro equipo está revisando tu perfil. Te notificaremos sobre cualquier actualización o próximos pasos en el proceso.",
+    "rejected": "Solicitud Rechazada",
+    "rejectedMessage": "Gracias por tu interés en esta posición. Desafortunadamente, hemos decidido no avanzar con tu solicitud en este momento.",
+    "viewOriginalJob": "Ver Oferta Original"
   }
 }

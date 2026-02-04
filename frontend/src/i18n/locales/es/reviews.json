@@ -57,5 +57,17 @@
       "validationError": "Por favor verifique los errores en el formulario",
       "notFound": "Entrevista no encontrada"
     }
+  },
+  "candidateDisplay": {
+    "noInterviews": "No hay entrevistas programadas",
+    "interviewScheduled": "Entrevista Programada",
+    "interviewCompleted": "Entrevista Completada",
+    "interviewReview": "Reseña de Entrevista",
+    "reviewPending": "Reseña Pendiente",
+    "waitingFeedback": "Entrevista completada. Esperando comentarios.",
+    "by": "Por",
+    "score": "Puntaje",
+    "strengths": "Fortalezas",
+    "weaknesses": "Debilidades"
   }
 }
