@@ -19,7 +19,7 @@ interface EducationSectionProps {
 }
 
 export const EducationSection = ({ candidateId, educationList, onUpdate }: EducationSectionProps) => {
-    const { t } = useTranslation('profile');
+    const { t } = useTranslation(['profile', 'common']);
     const [opened, setOpened] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -186,7 +186,7 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
                             }}
                         />
                         <Textarea label={t('education.description')} {...form.getInputProps('description')} />
-                        <Button type="submit" loading={loading}>{t('education.save')}</Button>
+                        <Button type="submit" loading={loading}>{t('common:actions.save')}</Button>
                     </Stack>
                 </form>
             </Modal>

@@ -59,7 +59,7 @@ export function ApplicationsSection({
                   </Text>
                 </Box>
                 <Badge color={getStatusColor(app.status)} size="lg">
-                  {app.status}
+                  {t('common:applicationStatus.' + app.status)}
                 </Badge>
               </Group>
 

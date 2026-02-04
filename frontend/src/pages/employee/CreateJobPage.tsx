@@ -28,7 +28,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function CreateJobPage() {
-  const { t } = useTranslation('jobs');
+  const { t } = useTranslation(['jobs', 'common']);
   const navigate = useNavigate();
 
   // Get job offer id from url params (only when editing)
@@ -225,7 +225,7 @@ export function CreateJobPage() {
                 variant="default"
                 onClick={() => navigate(ROUTES.EMPLOYEE.JOB_POSTINGS_GROUP.children[0].path)}
               >
-                {t('create.cancel')}
+                {t('common:actions.cancel')}
               </Button>
               <Button
                 type="submit"

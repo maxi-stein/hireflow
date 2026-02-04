@@ -73,7 +73,7 @@ export function HiredCandidatesPage() {
                   </Table.Td>
                   <Table.Td>
                     <Badge color={getApplicationStatusColor(app.status)} variant="light">
-                      {t(`table.filters.${app.status === 'HIRED' ? 'hired' : app.status}`, { ns: 'applications', defaultValue: app.status })}
+                      {t('common:applicationStatus.' + app.status)}
                     </Badge>
                   </Table.Td>
                 </Table.Tr>

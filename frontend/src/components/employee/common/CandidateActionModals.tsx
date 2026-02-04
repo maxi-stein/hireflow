@@ -1,5 +1,6 @@
 import { Text } from '@mantine/core';
 import { IconX, IconCheck } from '@tabler/icons-react';
+import { useTranslation, Trans } from 'react-i18next';
 import { ConfirmActionModal } from '../../common/ConfirmActionModal';
 import type { CandidateActionTarget } from '../../../hooks/useCandidateActions';
 
@@ -35,6 +36,7 @@ export function CandidateActionModals({
   isHiring,
   hireMessage,
 }: CandidateActionModalsProps) {
+  const { t } = useTranslation('profile');
   return (
     <>
       {/* Reject Confirmation Modal */}
@@ -42,17 +44,20 @@ export function CandidateActionModals({
         opened={!!candidateToReject}
         onClose={onRejectClose}
         onConfirm={onRejectConfirm}
-        title="Reject Candidate"
+        title={t('candidate.actions.modals.rejectTitle')}
         message={
           rejectMessage || (
             <Text>
-              Are you sure you want to reject <strong>{candidateToReject?.name}</strong>?
-              <br /><br />
-              This will change their application status to REJECTED and they will be removed from the comparison.
+              <Trans
+                i18nKey="candidate.actions.modals.rejectMessage"
+                ns="profile"
+                values={{ name: candidateToReject?.name }}
+                components={{ 1: <strong />, br: <br /> }}
+              />
             </Text>
           )
         }
-        confirmLabel="Reject"
+        confirmLabel={t('candidate.actions.modals.rejectConfirm')}
         confirmColor="red"
         confirmIcon={<IconX size={16} />}
         isLoading={isRejecting}
@@ -63,17 +68,20 @@ export function CandidateActionModals({
         opened={!!candidateToHire}
         onClose={onHireClose}
         onConfirm={onHireConfirm}
-        title="Hire Candidate"
+        title={t('candidate.actions.modals.hireTitle')}
         message={
           hireMessage || (
             <Text>
-              Are you sure you want to hire <strong>{candidateToHire?.name}</strong>?
-              <br /><br />
-              This will change their application status to HIRED.
+              <Trans
+                i18nKey="candidate.actions.modals.hireMessage"
+                ns="profile"
+                values={{ name: candidateToHire?.name }}
+                components={{ 1: <strong />, br: <br /> }}
+              />
             </Text>
           )
         }
-        confirmLabel="Hire"
+        confirmLabel={t('candidate.actions.modals.hireConfirm')}
         confirmColor="green"
         confirmIcon={<IconCheck size={16} />}
         isLoading={isHiring}

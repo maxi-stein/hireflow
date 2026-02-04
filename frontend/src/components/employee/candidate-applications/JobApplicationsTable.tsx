@@ -96,7 +96,7 @@ export function JobApplicationsTable({ jobOfferId, jobTitle, deadline }: { jobOf
       </Table.Td>
       <Table.Td>
         <Badge color={getApplicationStatusColor(application.status)} variant="light">
-          {application.status}
+          {t('common:applicationStatus.' + application.status)}
         </Badge>
       </Table.Td>
       <Table.Td>

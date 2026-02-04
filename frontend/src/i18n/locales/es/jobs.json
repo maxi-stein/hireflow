@@ -6,7 +6,6 @@
     "subtitleEdit": "Actualice los detalles de la oferta de trabajo.",
     "submitNew": "Crear Vacante",
     "submitEdit": "Actualizar Vacante",
-    "cancel": "Cancelar",
     "form": {
       "position": "Título del Puesto",
       "positionPlaceholder": "ej. Ingeniero Frontend Senior",
@@ -59,7 +58,6 @@
       "title": "Eliminar Vacante",
       "message": "¿Está seguro de que desea eliminar la vacante para <1>{{position}}</1>? Esta acción no se puede deshacer.",
       "confirm": "Eliminar Vacante",
-      "cancel": "Cancelar",
       "successTitle": "Éxito",
       "successMessage": "Vacante eliminada exitosamente",
       "errorTitle": "Error",
@@ -67,7 +65,8 @@
     },
     "viewModal": {
       "title": "Detalles de la Oferta",
-      "close": "Cerrar"
+      "errorTitle": "Error al cargar la vacante",
+      "errorMessage": "Error al cargar los detalles de la vacante. Por favor intente nuevamente."
     }
   },
   "status": {

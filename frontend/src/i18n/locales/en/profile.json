@@ -47,10 +47,17 @@
       "confirmRejectMessage": "The candidate has been disqualified from this position.",
       "downloadError": "Failed to download resume.",
       "backToList": "Back to List",
-      "goBack": "Go Back",
       "notFound": "Candidate not found.",
-      "rejectModalMessage": "Are you sure you want to reject <1>{{name}}</1>? This action can be undone later if needed.",
-      "hireModalMessage": "Are you sure you want to hire <1>{{name}}</1>? This will mark the application as HIRED."
+      "rejectModalMessage": "Are you sure you want to reject <1>{{name}}</1>? This action can not be undone later.",
+      "hireModalMessage": "Are you sure you want to hire <1>{{name}}</1>? This will mark the application as HIRED.",
+      "modals": {
+        "rejectTitle": "Reject Candidate",
+        "rejectMessage": "Are you sure you want to reject <1>{{name}}</1>?<br/><br/>This will change their application status to REJECTED and they will be removed from the comparison.",
+        "rejectConfirm": "Reject",
+        "hireTitle": "Hire Candidate",
+        "hireMessage": "Are you sure you want to hire <1>{{name}}</1>?<br/><br/>This will change their application status to HIRED.",
+        "hireConfirm": "Hire"
+      }
     },
     "management": {
       "hiredTitle": "Candidate Hired",
@@ -137,7 +144,6 @@
     "endDate": "End Date",
     "current": "I currently work here",
     "present": "Present",
-    "save": "Save",
     "deleteTitle": "Delete Work Experience",
     "deleteMessage": "Are you sure you want to delete this work experience? This action cannot be undone.",
     "notifications": {

@@ -47,10 +47,17 @@
       "confirmRejectMessage": "El candidato ha sido descalificado de esta posición.",
       "downloadError": "Error al descargar CV.",
       "backToList": "Volver a la Lista",
-      "goBack": "Volver",
       "notFound": "Candidato no encontrado.",
-      "rejectModalMessage": "¿Está seguro de que desea rechazar <1>{{name}}</1>? Esta acción se puede deshacer más tarde si es necesario.",
-      "hireModalMessage": "¿Está seguro de que desea contratar <1>{{name}}</1>? Esto marcará la aplicación como CONTRATADO."
+      "rejectModalMessage": "¿Está seguro de que desea rechazar <1>{{name}}</1>? Esta acción no se podrá deshacer.",
+      "hireModalMessage": "¿Está seguro de que desea contratar <1>{{name}}</1>? Esto marcará la aplicación como CONTRATADO.",
+      "modals": {
+        "rejectTitle": "Rechazar Candidato",
+        "rejectMessage": "¿Está seguro de que desea rechazar a <1>{{name}}</1>?<br/><br/>Esto cambiará el estado de su aplicación a RECHAZADO y será eliminado de la comparación.",
+        "rejectConfirm": "Rechazar",
+        "hireTitle": "Contratar Candidato",
+        "hireMessage": "¿Está seguro de que desea contratar a <1>{{name}}</1>?<br/><br/>Esto cambiará el estado de su aplicación a CONTRATADO.",
+        "hireConfirm": "Contratar"
+      }
     },
     "management": {
       "hiredTitle": "Candidato Contratado",
@@ -137,7 +144,6 @@
     "endDate": "Fecha de Fin",
     "current": "Trabajo aquí actualmente",
     "present": "Presente",
-    "save": "Guardar",
     "deleteTitle": "Eliminar Experiencia Laboral",
     "deleteMessage": "¿Estás seguro de que quieres eliminar esta experiencia laboral? Esta acción no se puede deshacer.",
     "notifications": {
@@ -160,7 +166,6 @@
     "current": "Estudio aquí actualmente",
     "present": "Presente",
     "description": "Descripción",
-    "save": "Guardar",
     "deleteTitle": "Eliminar Educación",
     "deleteMessage": "¿Estás seguro de que quieres eliminar esta entrada de educación? Esta acción no se puede deshacer.",
     "notifications": {

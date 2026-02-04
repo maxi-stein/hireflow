@@ -1,5 +1,6 @@
 import { Modal, Stack, Text, Group, Button } from '@mantine/core';
 import { type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmActionModalProps {
   opened: boolean;
@@ -24,6 +25,8 @@ export function ConfirmActionModal({
   confirmIcon,
   isLoading
 }: ConfirmActionModalProps) {
+  const { t } = useTranslation('common');
+
   return (
     <Modal
       opened={opened}
@@ -40,7 +43,7 @@ export function ConfirmActionModal({
             onClick={onClose}
             disabled={isLoading}
           >
-            Cancel
+            {t('actions.cancel')}
           </Button>
           <Button
             color={confirmColor}
@@ -48,7 +51,7 @@ export function ConfirmActionModal({
             loading={isLoading}
             leftSection={confirmIcon}
           >
-            {confirmLabel}
+            {confirmLabel || t('actions.confirm')}
           </Button>
         </Group>
       </Stack>

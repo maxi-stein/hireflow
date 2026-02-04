@@ -6,7 +6,6 @@
     "subtitleEdit": "Update the job posting details.",
     "submitNew": "Create Job Posting",
     "submitEdit": "Update Job Posting",
-    "cancel": "Cancel",
     "form": {
       "position": "Position Title",
       "positionPlaceholder": "e.g. Senior Frontend Engineer",
@@ -59,7 +58,6 @@
       "title": "Delete Job Posting",
       "message": "Are you sure you want to delete the job posting for <1>{{position}}</1>? This action cannot be undone.",
       "confirm": "Delete Job Posting",
-      "cancel": "Cancel",
       "successTitle": "Success",
       "successMessage": "Job posting deleted successfully",
       "errorTitle": "Error",
@@ -67,7 +65,8 @@
     },
     "viewModal": {
       "title": "Job Offer Details",
-      "close": "Close"
+      "errorTitle": "Error loading job posting",
+      "errorMessage": "Failed to load job posting details. Please try again."
     }
   },
   "status": {

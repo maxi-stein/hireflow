@@ -9,5 +9,23 @@
   },
   "applyNow": "Apply Now",
   "na": "N/A",
-  "present": "Present"
+  "present": "Present",
+  "applicationStatus": {
+    "APPLIED": "Applied",
+    "IN_PROGRESS": "In Progress",
+    "REJECTED": "Rejected",
+    "HIRED": "Hired",
+    "WITHDRAWN": "Withdrawn",
+    "INTERVIEW_SCHEDULED": "Interview Scheduled"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "retry": "Retry",
+    "back": "Back",
+    "confirm": "Confirm"
+  }
 }

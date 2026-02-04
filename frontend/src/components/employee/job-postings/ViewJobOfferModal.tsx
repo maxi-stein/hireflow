@@ -11,7 +11,7 @@ interface ViewJobOfferModalProps {
 }
 
 export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferModalProps) {
-  const { t } = useTranslation('jobs');
+  const { t } = useTranslation(['jobs', 'common']);
   const { data: jobOffer, isLoading, isError, error, refetch } = useJobOfferQuery(jobOfferId || '');
 
   return (
@@ -26,17 +26,17 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferM
       {isError && (
         <Alert
           icon={<IconAlertCircle size={16} />}
-          title="Error loading job posting"
+          title={t('list.viewModal.errorTitle')}
           color="red"
           variant="light"
         >
           <Stack gap="sm">
             <Text size="sm">
-              {error?.message || 'Failed to load job posting details. Please try again.'}
+              {error?.message || t('list.viewModal.errorMessage')}
             </Text>
             <Group>
               <Button size="xs" variant="light" onClick={() => refetch()}>
-                Retry
+                {t('common:actions.retry')}
               </Button>
             </Group>
           </Stack>

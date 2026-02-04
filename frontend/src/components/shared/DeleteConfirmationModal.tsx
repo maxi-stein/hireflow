@@ -1,4 +1,5 @@
 import { Modal, Text, Group, Button } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 interface DeleteConfirmationModalProps {
     opened: boolean;
@@ -15,6 +16,7 @@ export const DeleteConfirmationModal = ({
     title,
     message,
 }: DeleteConfirmationModalProps) => {
+    const { t } = useTranslation('common');
     return (
         <Modal opened={opened} onClose={onClose} title={title} centered>
             <Text size="sm" mb="lg">
@@ -22,10 +24,10 @@ export const DeleteConfirmationModal = ({
             </Text>
             <Group justify="flex-end">
                 <Button variant="default" onClick={onClose}>
-                    Cancel
+                    {t('actions.cancel')}
                 </Button>
                 <Button color="red" onClick={onConfirm}>
-                    Delete
+                    {t('actions.delete')}
                 </Button>
             </Group>
         </Modal>

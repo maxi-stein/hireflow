@@ -18,7 +18,7 @@ export function DeleteJobOfferModal({
   onConfirm,
   isLoading
 }: DeleteJobOfferModalProps) {
-  const { t } = useTranslation('jobs');
+  const { t } = useTranslation(['jobs', 'common']);
   if (!jobOffer) return null;
 
   return (
@@ -44,7 +44,7 @@ export function DeleteJobOfferModal({
             onClick={onClose}
             disabled={isLoading}
           >
-            {t('list.deleteModal.cancel')}
+            {t('common:actions.cancel')}
           </Button>
           <Button
             color="red"

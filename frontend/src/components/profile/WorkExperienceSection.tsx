@@ -20,7 +20,7 @@ interface WorkExperienceSectionProps {
 }
 
 export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: WorkExperienceSectionProps) => {
-    const { t } = useTranslation('profile');
+    const { t } = useTranslation(['profile', 'common']);
     const [opened, setOpened] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -171,7 +171,7 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
                                 form.setFieldValue('end_date', checked ? null : new Date());
                             }}
                         />
-                        <Button type="submit" loading={loading}>{t('experience.save')}</Button>
+                        <Button type="submit" loading={loading}>{t('common:actions.save')}</Button>
                     </Stack>
                 </form>
             </Modal>

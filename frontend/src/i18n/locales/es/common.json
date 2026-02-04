@@ -8,6 +8,24 @@
     "dark": "Tema Oscuro"
   },
   "applyNow": "Aplicar Ahora",
+  "applicationStatus": {
+    "APPLIED": "Aplicado",
+    "IN_PROGRESS": "En Progreso",
+    "REJECTED": "Rechazado",
+    "HIRED": "Contratado",
+    "WITHDRAWN": "Retirado",
+    "INTERVIEW_SCHEDULED": "Entrevista Agendada"
+  },
+  "actions": {
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "retry": "Reintentar",
+    "back": "Volver",
+    "confirm": "Confirmar"
+  },
   "na": "N/A",
   "present": "Actualidad"
 }
