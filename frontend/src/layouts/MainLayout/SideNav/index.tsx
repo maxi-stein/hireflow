@@ -42,7 +42,10 @@ export function SideNav({ onNavigate }: SideNavProps) {
     <Stack gap="md" p="md" h="100%">
       <Title
         order={3}
-        onClick={() => navigate(user?.type === 'employee' ? '/manage/dashboard' : '/')}
+        onClick={() => {
+          if (!user) return navigate('/');
+          return navigate(user.type === 'employee' ? '/manage/dashboard' : '/jobs');
+        }}
         c="white"
         style={{ cursor: 'pointer', userSelect: 'none' }}
         px="xs"

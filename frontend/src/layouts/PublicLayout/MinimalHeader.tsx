@@ -1,11 +1,12 @@
-import { Group, Button, TextInput, Title, Text } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
+import { Group, Button, Title, Container } from '@mantine/core';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store/useAppStore';
 import { UserMenu } from '../../components/shared/UserMenu';
+import { LANDING_MAX_WIDTH } from '../../pages/LandingPage';
 
 export function MinimalHeader() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useAppStore((state) => state.user);
 
   const handleLogin = () => {
@@ -16,26 +17,22 @@ export function MinimalHeader() {
     navigate('/register');
   };
 
-  return (
-    <Group justify="space-between" h="100%" px="md" py="xs">
+  const isLandingPage = location.pathname === '/';
+
+  const content = (
+    <Group justify="space-between" h="100%" px={isLandingPage ? 0 : 'md'} py="xs">
       <Group gap="lg">
         <Title
           order={3}
-          onClick={() => navigate(user?.type === 'employee' ? '/manage/dashboard' : '/')}
+          onClick={() => {
+            if (!user) return navigate('/');
+            return navigate(user.type === 'employee' ? '/manage/dashboard' : '/jobs');
+          }}
           style={{ cursor: 'pointer', userSelect: 'none' }}
         >
           HireFlow
         </Title>
 
-        <Group gap="xs">
-          <Text size="sm" fw={500} c="dimmed">Explore</Text>
-          <TextInput
-            placeholder="Find Job Postings..."
-            leftSection={<IconSearch size={16} />}
-            style={{ width: '400px' }}
-            radius="xl"
-          />
-        </Group>
       </Group>
 
       <Group>
@@ -50,4 +47,14 @@ export function MinimalHeader() {
       </Group>
     </Group>
   );
+
+  if (isLandingPage) {
+    return (
+      <Container size={LANDING_MAX_WIDTH} h="100%">
+        {content}
+      </Container>
+    );
+  }
+
+  return content;
 }

@@ -87,5 +87,13 @@
     "empty": "No open positions available at this time.",
     "checking": "Checking application...",
     "viewApplication": "View Application"
+  },
+  "landing": {
+    "heroTitle": "Find your dream job",
+    "heroSubtitle": "Explore available opportunities and apply in minutes. Join our team and develop your career.",
+    "availableJobs": "Available Jobs",
+    "availableJobsSubtitle": "Discover our latest offers and find your ideal place.",
+    "noJobs": "No jobs available at the moment",
+    "noJobsSubtitle": "Please check back later."
   }
 }
