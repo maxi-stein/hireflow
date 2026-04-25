@@ -26,8 +26,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useJobOffersQuery, useDeleteJobOfferMutation } from '../../hooks/api/useJobOffers';
-import { WorkMode, JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
+import { JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
 import { ROUTES } from '../../router/routes.config';
+import { getWorkModeColor } from '../../utils/job.utils';
 import { notifications } from '@mantine/notifications';
 import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
 import { DeleteJobOfferModal } from '../../components/employee/job-postings/DeleteJobOfferModal';
@@ -177,8 +178,8 @@ export function JobPostingsPage() {
                 </Table.Td>
                 <Table.Td>{offer.location}</Table.Td>
                 <Table.Td>
-                  <Badge variant="light" color="gray">
-                    {offer.work_mode === WorkMode.HYBRID ? t('workMode.hybrid') : offer.work_mode === WorkMode.REMOTE ? t('workMode.remote') : t('workMode.office')}
+                  <Badge variant="light" color={getWorkModeColor(offer.work_mode)}>
+                    {t(`workMode.${offer.work_mode}`)}
                   </Badge>
                 </Table.Td>
                 <Table.Td>

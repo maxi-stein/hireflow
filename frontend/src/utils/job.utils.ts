@@ -17,3 +17,11 @@ export const getLocationDisplayInfo = (
 
   return { workMode, location };
 };
+
+export const getWorkModeColor = (workMode: string): string => {
+  const normalizedMode = workMode.toLowerCase();
+  if (normalizedMode === 'remote') return 'blue';
+  if (normalizedMode === 'hybrid') return 'orange';
+  if (normalizedMode === 'office') return 'green';
+  return 'gray';
+};

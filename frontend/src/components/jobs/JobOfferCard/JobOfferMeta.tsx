@@ -1,7 +1,7 @@
 import { Group, Text, ThemeIcon } from '@mantine/core';
 import { IconMapPin, IconBriefcase } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { getLocationDisplayInfo } from '../../../utils/job.utils';
+import { getLocationDisplayInfo, getWorkModeColor } from '../../../utils/job.utils';
 
 interface JobOfferMetaProps {
   location?: string;
@@ -24,7 +24,7 @@ export const JobOfferMeta = ({ location, workMode }: JobOfferMetaProps) => {
       )}
       {displayWorkMode && (
         <Group gap={6}>
-          <ThemeIcon variant="light" color="gray" size="sm" radius="xl">
+          <ThemeIcon variant="light" color={getWorkModeColor(displayWorkMode)} size="sm" radius="xl">
             <IconBriefcase size={12} />
           </ThemeIcon>
           <Text size="sm" c="dimmed" fw={500}>
