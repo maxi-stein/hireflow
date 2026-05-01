@@ -1,24 +1,28 @@
-export interface PasswordResetPayload {
-  email: string;
-  newPassword: string;
-  firstName?: string;
+export interface InterviewDateUpdatedPayload {
+  candidateName: string;
+  jobPosition: string;
+  newScheduledTime: Date;
+  meetingLink?: string;
+  type: string;
 }
 
-/**
- * Validates and generates password reset email template
- */
-export const getPasswordResetTemplate = (
-  payload: PasswordResetPayload,
+export const getInterviewDateUpdatedTemplate = (
+  payload: InterviewDateUpdatedPayload,
 ): string => {
-  // Validate required fields
-  if (!payload.email || typeof payload.email !== 'string') {
-    throw new Error('Password reset template requires a valid email');
-  }
-  if (!payload.newPassword || typeof payload.newPassword !== 'string') {
-    throw new Error('Password reset template requires a valid newPassword');
-  }
+  if (!payload.candidateName) throw new Error('Template requires candidateName');
+  if (!payload.jobPosition) throw new Error('Template requires jobPosition');
+  if (!payload.newScheduledTime) throw new Error('Template requires newScheduledTime');
+  if (!payload.type) throw new Error('Template requires type');
 
-  const firstName = payload.firstName || 'User';
+  const formattedDate = new Date(payload.newScheduledTime).toLocaleString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
 
   return `
     <!DOCTYPE html>
@@ -26,7 +30,7 @@ export const getPasswordResetTemplate = (
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Restablecer Contraseña - HireFlow</title>
+      <title>Entrevista Reprogramada - HireFlow</title>
       <style>
         body {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -63,24 +67,20 @@ export const getPasswordResetTemplate = (
           font-size: 22px;
           margin-top: 0;
         }
-        .password-box {
+        .info-box {
           background-color: #f8f9fa;
           border-left: 4px solid #667eea;
           padding: 20px;
           margin: 25px 0;
           border-radius: 4px;
         }
-        .password-box p {
+        .info-box p {
           margin: 0 0 10px 0;
-          font-size: 14px;
-          color: #666;
+          font-size: 15px;
+          color: #444;
         }
-        .password {
-          font-family: 'Courier New', monospace;
-          font-size: 24px;
-          font-weight: bold;
-          color: #667eea;
-          letter-spacing: 2px;
+        .info-box p:last-child {
+          margin-bottom: 0;
         }
         .warning {
           background-color: #fff3cd;
@@ -101,32 +101,28 @@ export const getPasswordResetTemplate = (
           color: #666;
           font-size: 12px;
         }
-        .footer a {
-          color: #667eea;
-          text-decoration: none;
-        }
       </style>
     </head>
     <body>
       <div class="container">
         <div class="header">
-          <h1>🔐 HireFlow</h1>
+          <h1>📅 HireFlow</h1>
         </div>
         <div class="content">
-          <h2>Hola ${firstName},</h2>
-          <p>Recibimos una solicitud para restablecer tu contraseña. Se ha generado tu nueva contraseña temporal:</p>
+          <h2>Hola ${payload.candidateName},</h2>
+          <p>Ten en cuenta que el horario de tu próxima entrevista para el puesto de <strong>${payload.jobPosition}</strong> ha sido actualizado.</p>
           
-          <div class="password-box">
-            <p>Tu nueva contraseña:</p>
-            <div class="password">${payload.newPassword}</div>
+          <div class="info-box">
+            <p><strong>Tipo:</strong> ${payload.type}</p>
+            <p><strong>Nueva Fecha y Hora:</strong> ${formattedDate}</p>
+            ${payload.meetingLink ? `<p><strong>Enlace a la reunión:</strong> <a href="${payload.meetingLink}">${payload.meetingLink}</a></p>` : ''}
           </div>
           
           <div class="warning">
-            <p><strong>⚠️ Aviso Importante de Seguridad:</strong></p>
-            <p>Por favor, cambia esta contraseña inmediatamente después de iniciar sesión. Por razones de seguridad, te recomendamos usar una contraseña fuerte y única.</p>
+            <p><strong>Importante:</strong> Por favor, actualiza tu calendario con este nuevo horario.</p>
           </div>
           
-          <p>Si no solicitaste un restablecimiento de contraseña, por favor contacta a nuestro equipo de soporte inmediatamente.</p>
+          <p>Si tienes alguna pregunta o este nuevo horario no te resulta conveniente, por favor contacta a nuestro equipo lo antes posible.</p>
           
           <p>Saludos cordiales,<br>El equipo de HireFlow</p>
         </div>
