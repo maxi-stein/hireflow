@@ -19,6 +19,8 @@ import { EmployeesService } from '../users/employee/employee.service';
 import { FilterInterviewsDto } from './dto/filter-interviews.dto';
 import { InterviewType } from './interfaces/interview-type.enum';
 import { ApplicationStatus } from '../candidate-application/interfaces/application-status';
+import { MailerService } from '../mailer/mailer.service';
+import { EmailTemplateType } from '../mailer/utils/email-template.factory';
 
 @Injectable()
 export class InterviewService {
@@ -29,6 +31,8 @@ export class InterviewService {
     private readonly employeeService: EmployeesService,
     @Inject(CandidateApplicationService)
     private readonly candidateApplicationService: CandidateApplicationService,
+    @Inject(MailerService)
+    private readonly mailerService: MailerService,
   ) {}
 
   async create(createDto: CreateInterviewDto): Promise<Interview> {
@@ -106,7 +110,29 @@ export class InterviewService {
       interviewers,
     });
 
-    return await this.interviewRepository.save(interview);
+    const savedInterview = await this.interviewRepository.save(interview);
+
+    for (const app of applications) {
+      await this.mailerService.sendMail(
+        EmailTemplateType.INTERVIEW_CREATED,
+        {
+          candidateName: app.candidate.user.first_name,
+          jobPosition: app.job_offer.position,
+          scheduledTime: savedInterview.scheduled_time,
+          meetingLink: savedInterview.meeting_link,
+          type: savedInterview.type,
+        },
+        [
+          {
+            address: app.candidate.user.email,
+            name: `${app.candidate.user.first_name} ${app.candidate.user.last_name}`,
+          },
+        ],
+        'Entrevista Programada',
+      );
+    }
+
+    return savedInterview;
   }
 
   async findAll(
@@ -256,6 +282,8 @@ export class InterviewService {
       interview.interviewers = interviewers;
     }
 
+    const oldScheduledTime = interview.scheduled_time;
+
     if (updateDto.type) interview.type = updateDto.type;
     if (updateDto.scheduled_time) {
       interview.scheduled_time = updateDto.scheduled_time;
@@ -264,7 +292,34 @@ export class InterviewService {
     if (updateDto.meeting_link) interview.meeting_link = updateDto.meeting_link;
     if (updateDto.status) interview.status = updateDto.status;
 
-    return await this.interviewRepository.save(interview);
+    const savedInterview = await this.interviewRepository.save(interview);
+
+    if (
+      updateDto.scheduled_time &&
+      new Date(oldScheduledTime).getTime() !== new Date(updateDto.scheduled_time).getTime()
+    ) {
+      for (const app of interview.applications) {
+        await this.mailerService.sendMail(
+          EmailTemplateType.INTERVIEW_DATE_UPDATED,
+          {
+            candidateName: app.candidate.user.first_name,
+            jobPosition: app.job_offer.position,
+            newScheduledTime: savedInterview.scheduled_time,
+            meetingLink: savedInterview.meeting_link,
+            type: savedInterview.type,
+          },
+          [
+            {
+              address: app.candidate.user.email,
+              name: `${app.candidate.user.first_name} ${app.candidate.user.last_name}`,
+            },
+          ],
+          'Entrevista Reprogramada',
+        );
+      }
+    }
+
+    return savedInterview;
   }
 
   async remove(id: string): Promise<void> {

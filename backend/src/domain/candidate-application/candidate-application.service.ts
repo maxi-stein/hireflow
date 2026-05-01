@@ -16,6 +16,8 @@ import { JobOfferSkillService } from '../job-offer/job-offer-skills/job-offer-sk
 import { CandidateSkillAnswerService } from '../job-offer/job-offer-skills/candidate-skill-answer.service';
 import { JobOfferService } from '../job-offer/job-offer/job-offer.service';
 import { CreateCandidateSkillAnswerDto } from '../job-offer/job-offer-skills/dto/create-candidate-skill-answer.dto';
+import { MailerService } from '../mailer/mailer.service';
+import { EmailTemplateType } from '../mailer/utils/email-template.factory';
 
 @Injectable()
 export class CandidateApplicationService {
@@ -28,6 +30,8 @@ export class CandidateApplicationService {
     private readonly jobOfferService: JobOfferService,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
+    @Inject(MailerService)
+    private readonly mailerService: MailerService,
   ) {}
 
   async create(
@@ -240,8 +244,28 @@ export class CandidateApplicationService {
     }
 
     const application = await this.findOne(id);
+    const oldStatus = application.status;
     const updated = this.applicationRepository.merge(application, updateDto);
-    return await this.applicationRepository.save(updated);
+    const savedApplication = await this.applicationRepository.save(updated);
+
+    if (updateDto.status && updateDto.status !== oldStatus && updateDto.status === ApplicationStatus.REJECTED) {
+      await this.mailerService.sendMail(
+        EmailTemplateType.APPLICATION_REJECTED,
+        {
+          candidateName: application.candidate.user.first_name,
+          jobPosition: application.job_offer.position,
+        },
+        [
+          {
+            address: application.candidate.user.email,
+            name: `${application.candidate.user.first_name} ${application.candidate.user.last_name}`,
+          },
+        ],
+        'Actualización sobre tu aplicación',
+      );
+    }
+
+    return savedApplication;
   }
 
   async hire(id: string): Promise<void> {
@@ -251,6 +275,7 @@ export class CandidateApplicationService {
           CandidateApplication,
           {
             where: { id },
+            relations: ['candidate', 'candidate.user', 'job_offer'],
           },
         );
 
@@ -265,6 +290,21 @@ export class CandidateApplicationService {
         // Update status to HIRED
         application.status = ApplicationStatus.HIRED;
         await transactionalEntityManager.save(application);
+
+        await this.mailerService.sendMail(
+          EmailTemplateType.APPLICATION_HIRED,
+          {
+            candidateName: application.candidate.user.first_name,
+            jobPosition: application.job_offer.position,
+          },
+          [
+            {
+              address: application.candidate.user.email,
+              name: `${application.candidate.user.first_name} ${application.candidate.user.last_name}`,
+            },
+          ],
+          '¡Felicidades! Has sido seleccionado',
+        );
 
         // Soft delete other applications for this candidate
         const otherApplications = await transactionalEntityManager.find(
