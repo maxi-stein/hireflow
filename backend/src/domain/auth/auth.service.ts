@@ -12,6 +12,8 @@ import { ChangePasswordDto } from './dto/ChangePasswordDto';
 import { MailerService } from '../mailer/mailer.service';
 import { generateRandomPassword } from 'src/domain/auth/utils/password-generator.util';
 import { EmailTemplateType } from 'src/domain/mailer/utils/email-template.factory';
+import { ConfigService } from '@nestjs/config';
+import { getAuthConfig } from './helper';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private mailerService: MailerService,
+    private configService: ConfigService,
   ) {}
 
   // Used in local strategy. Checks if password is correct and returns the entire user
@@ -37,10 +40,8 @@ export class AuthService {
     return null;
   }
 
-  /**  After the @UseGuards(LocalAuthGuard) sets the user in the request, this method is called with said user.
-   * Returns the user info + access_token
-   * */
-  async login(user: JwtUser) {
+  // Generates both access and refresh tokens for a given user.
+  async getTokens(user: JwtUser) {
     const payload = {
       email: user.email,
       sub: user.entity_id,
@@ -50,17 +51,79 @@ export class AuthService {
         user.user_type === UserType.EMPLOYEE ? user.employee_roles : undefined,
     };
 
-    const access_token = this.jwtService.sign(payload);
+    const [access_token, refresh_token] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, {
+        secret: getAuthConfig(this.configService).refreshSecret,
+        expiresIn: getAuthConfig(this.configService).refreshExpiresIn as any,
+      }),
+    ]);
+
+    return { access_token, refresh_token };
+  }
+
+  // Logs in the user, generates tokens, and saves the refresh token hash.
+  async login(user: JwtUser) {
+    const tokens = await this.getTokens(user);
+    await this.usersService.updateRefreshTokenHash(
+      user.user_id,
+      tokens.refresh_token,
+    );
 
     return {
-      access_token,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
       user: {
         id: user.entity_id,
         email: user.email,
         type: user.user_type,
-        employee_roles: payload.employee_roles,
+        employee_roles: user.employee_roles,
       },
     };
+  }
+
+  // Validates the user, generates new tokens, and updates the refresh token hash in the database.
+  async refreshTokens(userId: string) {
+    // We need to fetch the base user and convert it to JwtUser representation
+    const userForAuth = await this.usersService.findOne(
+      { id: userId },
+      undefined,
+      ['candidate', 'employee'],
+    );
+
+    let entity_id: string;
+    let employee_roles: string[] | undefined;
+
+    if (userForAuth.user_type === UserType.CANDIDATE && userForAuth.candidate) {
+      entity_id = userForAuth.candidate.id;
+    } else if (
+      userForAuth.user_type === UserType.EMPLOYEE &&
+      userForAuth.employee
+    ) {
+      entity_id = userForAuth.employee.id;
+      employee_roles = userForAuth.employee.roles;
+    }
+
+    const jwtUser: JwtUser = {
+      user_id: userForAuth.id,
+      email: userForAuth.email,
+      user_type: userForAuth.user_type,
+      entity_id,
+      employee_roles,
+    };
+
+    const tokens = await this.getTokens(jwtUser);
+    await this.usersService.updateRefreshTokenHash(
+      userForAuth.id,
+      tokens.refresh_token,
+    );
+
+    return tokens;
+  }
+
+  // Revokes the user's refresh token by setting its hash to null in the database.
+  async logout(userId: string) {
+    await this.usersService.updateRefreshTokenHash(userId, null);
   }
 
   async getProfileByEntity(entityId: string, userType: JwtUser['user_type']) {

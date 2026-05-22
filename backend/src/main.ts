@@ -3,11 +3,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from './config/app.config';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const appConfig = configService.get<AppConfig>('appConfig');
+
+  app.use(cookieParser());
 
   // CORS
   if (appConfig.cors?.enabled) {
@@ -21,6 +24,7 @@ async function bootstrap() {
         }
         return callback(new Error('CORS not allowed'), false);
       },
+      credentials: true,
     });
   }
 
