@@ -32,6 +32,9 @@ export class User {
   @Column({ enum: UserType })
   user_type: UserType;
 
+  @Column({ type: 'varchar', nullable: true })
+  hashed_refresh_token: string;
+
   @OneToOne(() => Employee, (employee) => employee.user, { nullable: true })
   employee?: Employee;
 

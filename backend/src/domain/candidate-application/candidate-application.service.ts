@@ -248,7 +248,11 @@ export class CandidateApplicationService {
     const updated = this.applicationRepository.merge(application, updateDto);
     const savedApplication = await this.applicationRepository.save(updated);
 
-    if (updateDto.status && updateDto.status !== oldStatus && updateDto.status === ApplicationStatus.REJECTED) {
+    if (
+      updateDto.status &&
+      updateDto.status !== oldStatus &&
+      updateDto.status === ApplicationStatus.REJECTED
+    ) {
       await this.mailerService.sendMail(
         EmailTemplateType.APPLICATION_REJECTED,
         {

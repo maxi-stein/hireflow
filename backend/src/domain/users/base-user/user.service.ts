@@ -99,17 +99,27 @@ export class UsersService {
   ): Promise<User> {
     const manager = entityManager || this.userRepository.manager;
 
+    const selectOptions: any = {
+      id: true,
+      email: true,
+      first_name: true,
+      last_name: true,
+      user_type: true,
+      password: selectWithPassword || false,
+      hashed_refresh_token: true,
+    };
+
+    if (relations?.includes('candidate')) {
+      selectOptions.candidate = { id: true };
+    }
+    if (relations?.includes('employee')) {
+      selectOptions.employee = { id: true, roles: true };
+    }
+
     const user = await manager.findOne(User, {
       where,
       relations,
-      select: {
-        id: true,
-        email: true,
-        first_name: true,
-        last_name: true,
-        user_type: true,
-        password: selectWithPassword || false,
-      },
+      select: selectOptions,
     });
 
     if (!user) {
@@ -262,5 +272,45 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  /**
+   * Hashes and saves the refresh token to the database.
+   * If token is null, it removes the refresh token (used for logout).
+   */
+  async updateRefreshTokenHash(
+    userId: string,
+    token: string | null,
+  ): Promise<void> {
+    let hashedToken: string | null = null;
+    if (token) {
+      hashedToken = await bcrypt.hash(token, AUTH.BCRYPT_SALT_ROUNDS);
+    }
+    await this.userRepository.update(userId, { hashed_refresh_token: hashedToken });
+  }
+
+  /**
+   * Validates the provided refresh token against the stored hash.
+   * Returns the user if the token matches, otherwise null.
+   */
+  async getUserIfRefreshTokenMatches(
+    refreshToken: string,
+    userId: string,
+  ): Promise<User | null> {
+    const user = await this.findOne({ id: userId });
+
+    if (!user || !user.hashed_refresh_token) {
+      return null;
+    }
+
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.hashed_refresh_token,
+    );
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
+    return null;
   }
 }

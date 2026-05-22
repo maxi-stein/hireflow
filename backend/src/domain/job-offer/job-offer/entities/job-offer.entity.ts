@@ -64,7 +64,10 @@ export class JobOffer {
   @JoinTable({
     name: 'job_offer_skills_relation',
     joinColumn: { name: 'job_offer_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'job_offer_skill_id', referencedColumnName: 'id' },
+    inverseJoinColumn: {
+      name: 'job_offer_skill_id',
+      referencedColumnName: 'id',
+    },
   })
   skills: JobOfferSkill[];
 

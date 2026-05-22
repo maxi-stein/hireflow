@@ -21,7 +21,7 @@ export class JobOfferService {
     private readonly jobOfferRepository: Repository<JobOffer>,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
-  ) { }
+  ) {}
 
   async create(
     createJobOfferDto: CreateJobOfferDto,
