@@ -6,6 +6,7 @@ type AppStore = {
   user: JwtUser | null;
   token: string | null;
   setAuth: (user: JwtUser, token: string) => void;
+  setToken: (token: string) => void;
   logout: () => void;
 };
 
@@ -15,6 +16,7 @@ export const useAppStore = create<AppStore>()(
       user: null,
       token: null,
       setAuth: (user, token) => set({ user, token }),
+      setToken: (token) => set({ token }),
       logout: () => set({ user: null, token: null }),
     }),
     { name: "app-store" }

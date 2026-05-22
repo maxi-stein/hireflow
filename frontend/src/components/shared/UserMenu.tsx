@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IconSun, IconMoon, IconUser, IconLogout } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
 import { useTranslation } from 'react-i18next';
+import { authService } from '../../services/auth.service';
 
 export function UserMenu() {
   const { t } = useTranslation('common');
@@ -11,9 +12,15 @@ export function UserMenu() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
 
-  const handleLogout = () => {
-    logout();
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (e) {
+      console.error('Logout failed', e);
+    } finally {
+      logout();
+      navigate('/');
+    }
   };
 
   if (!user) return null;
