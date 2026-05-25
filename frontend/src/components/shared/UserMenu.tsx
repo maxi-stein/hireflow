@@ -4,6 +4,9 @@ import { IconSun, IconMoon, IconUser, IconLogout } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../services/auth.service';
+import { useProfileQuery } from '../../hooks/api/useAuth';
+
+const capitalize = (s?: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 
 export function UserMenu() {
   const { t } = useTranslation('common');
@@ -11,6 +14,11 @@ export function UserMenu() {
   const { user, logout } = useAppStore();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
+  const { data: profile } = useProfileQuery();
+
+  const displayName = profile
+    ? `${capitalize(profile.first_name)} ${capitalize(profile.last_name)}`
+    : user?.email ?? '';
 
   const handleLogout = async () => {
     try {
@@ -36,8 +44,8 @@ export function UserMenu() {
               </Avatar>
             )}
             <div style={{ flex: 1 }}>
-              <Text size="sm" fw={500}>{user.email}</Text>
-              <Text c="dimmed" size="xs" tt="capitalize">{user.type}</Text>
+              <Text size="sm" fw={500}>{displayName}</Text>
+              <Text c="dimmed" size="xs">{user.email}</Text>
             </div>
           </Group>
         </UnstyledButton>
