@@ -21,7 +21,11 @@ export class DashboardService {
   ) {}
 
   async getMetrics(employeeId: string) {
-    const today = new Date();
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
 
     const { data: activeJobOffers } = await this.jobOfferService.findAll({
       status: JobOfferStatus.OPEN,
@@ -31,8 +35,8 @@ export class DashboardService {
 
     const { data: applicationsToday } =
       await this.candidateApplicationService.findAll({
-        start_date: today.toISOString(),
-        end_date: today.toISOString(),
+        start_date: startOfToday.toISOString(),
+        end_date: endOfToday.toISOString(),
         page: 0,
         limit: 0,
       });
