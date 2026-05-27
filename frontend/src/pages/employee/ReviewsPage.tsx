@@ -298,13 +298,14 @@ export function ReviewsPage() {
                 )}
               </Box>
 
-              {otherCompletedReviews.length > 0 && (
-                <Box>
-                  <Divider mb="lg" />
-                  <Title order={4} mb="md" c="dimmed" tt="uppercase" size="sm">{t('sections.teamReviews')}</Title>
-                  {renderCompletedReviews(otherCompletedReviews)}
-                </Box>
-              )}
+              <Box>
+                <Title order={4} mb="md" c="dimmed" tt="uppercase" size="sm">{t('sections.teamReviews')}</Title>
+                {otherCompletedReviews.length === 0 ? (
+                  <Text c="dimmed" size="sm" fs="italic">{t('empty.completed')}</Text>
+                ) : (
+                  renderCompletedReviews(otherCompletedReviews)
+                )}
+              </Box>
             </Stack>
           </Paper>
         </Tabs.Panel>
