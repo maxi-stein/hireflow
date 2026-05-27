@@ -1,5 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
+// List of Users
+// Admin: admin@hireflow.com (pass: Password1)
+// HR1: hr1@hireflow.com (pass: Password1)
+// HR2: hr2@hireflow.com (pass: Password1)
+// Manager: manager@hireflow.com (pass: Password1)
+// Candidate1: alice.dev@example.com (pass: Password1)
+// Candidate2: bob.dev@example.com (pass: Password1)
+// Candidate3: charlie.dev@example.com (pass: Password1)
+
 export class SeedData9999999999999 implements MigrationInterface {
   name = 'SeedData9999999999999';
 
@@ -21,6 +30,57 @@ export class SeedData9999999999999 implements MigrationInterface {
          '550e8400-e29b-41d4-a716-446655440000', NOW(), NOW())
     `);
 
+    // HR User 1 (pass = Password1)
+    await queryRunner.query(`
+      INSERT INTO "users" 
+        ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440080', 'John', 'Doe', 'hr1@hireflow.com', 
+         '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'employee', NOW(), NOW())
+    `);
+
+    await queryRunner.query(`
+      INSERT INTO "employees" 
+        ("id", "roles", "position", "user_id", "profile_created_at", "profile_updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440081', ARRAY['hr'], 'HR Specialist', 
+         '550e8400-e29b-41d4-a716-446655440080', NOW(), NOW())
+    `);
+
+    // HR User 2 (pass = Password1)
+    await queryRunner.query(`
+      INSERT INTO "users" 
+        ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440082', 'Jane', 'Smith', 'hr2@hireflow.com', 
+         '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'employee', NOW(), NOW())
+    `);
+
+    await queryRunner.query(`
+      INSERT INTO "employees" 
+        ("id", "roles", "position", "user_id", "profile_created_at", "profile_updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440083', ARRAY['hr'], 'Talent Acquisition Specialist', 
+         '550e8400-e29b-41d4-a716-446655440082', NOW(), NOW())
+    `);
+
+    // Manager User (pass = Password1)
+    await queryRunner.query(`
+      INSERT INTO "users" 
+        ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440084', 'Robert', 'Johnson', 'manager@hireflow.com', 
+         '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'employee', NOW(), NOW())
+    `);
+
+    await queryRunner.query(`
+      INSERT INTO "employees" 
+        ("id", "roles", "position", "user_id", "profile_created_at", "profile_updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440085', ARRAY['manager'], 'Engineering Manager', 
+         '550e8400-e29b-41d4-a716-446655440084', NOW(), NOW())
+    `);
+
     // Candidate 1 user (pass = Password1)
     await queryRunner.query(`
       INSERT INTO "users" 
@@ -36,6 +96,15 @@ export class SeedData9999999999999 implements MigrationInterface {
         ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
       VALUES 
         ('550e8400-e29b-41d4-a716-446655440003', 'Bob', 'Dev', 'bob.dev@example.com', 
+         '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'candidate', NOW(), NOW())
+    `);
+
+    // Candidate 3 user (pass = Password1)
+    await queryRunner.query(`
+      INSERT INTO "users" 
+        ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440090', 'Charlie', 'Dev', 'charlie.dev@example.com', 
          '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'candidate', NOW(), NOW())
     `);
 
@@ -73,6 +142,15 @@ export class SeedData9999999999999 implements MigrationInterface {
       VALUES 
         ('550e8400-e29b-41d4-a716-446655440005', 30, '987654321', 'Montevideo', 'Uruguay', 'https://github.com/bob', 'https://linkedin.com/in/bob', 
          '550e8400-e29b-41d4-a716-446655440003', NOW(), NOW())
+    `);
+
+    // Candidate 3
+    await queryRunner.query(`
+      INSERT INTO "candidates" 
+        ("id", "age", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440091', 25, '555123456', 'Santiago', 'Chile', 'https://github.com/charlie', 'https://linkedin.com/in/charlie', 
+         '550e8400-e29b-41d4-a716-446655440090', NOW(), NOW())
     `);
 
     // Work experiences for Candidate 2 (Bob)
@@ -155,7 +233,8 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440008', '550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440004', 'IN_PROGRESS', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440004', 'APPLIED', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-44665544000a', '550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440091', 'APPLIED', NOW(), NOW())
     `);
 
     // Candidate Skill Answers for Alice's applications
@@ -205,6 +284,18 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440037', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440015', 3, NOW()),
         ('550e8400-e29b-41d4-a716-446655440038', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440010', 2, NOW()),
         ('550e8400-e29b-41d4-a716-446655440039', '550e8400-e29b-41d4-a716-44665544000b', '550e8400-e29b-41d4-a716-446655440016', 3, NOW())
+    `);
+
+    // Charlie's answers for Job Offer 1 (Full Stack)
+    await queryRunner.query(`
+      INSERT INTO "candidate_skill_answers" 
+        ("id", "candidate_application_id", "job_offer_skill_id", "years_of_experience", "created_at")
+      VALUES 
+        ('550e8400-e29b-41d4-a716-446655440093', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440010', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440094', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440011', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440095', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440012', 1, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440096', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440013', 1, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440097', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440014', 1, NOW())
     `);
 
     // Create an interview for Alice (Application 1) with Admin as interviewer
