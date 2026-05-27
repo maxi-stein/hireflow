@@ -17,12 +17,14 @@ import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar'
 
 interface InterviewReviewFormProps {
   interviewId: string;
-  onSuccess: () => void;
+  reviewId?: string;
+  readOnly?: boolean;
+  onSuccess?: () => void;
 }
 
 import { useTranslation } from 'react-i18next';
 
-export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewFormProps) {
+export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess }: InterviewReviewFormProps) {
   const { t, i18n } = useTranslation('reviews');
   const user = useAppStore(state => state.user);
   const navigate = useNavigate();
@@ -36,8 +38,10 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
   const createReviewMutation = useCreateReviewMutation();
   const updateReviewMutation = useUpdateReviewMutation();
 
-  // Find if current user already reviewed
-  const myReview = reviews?.find(r => r.employee_id === user?.id);
+  // Find if current user already reviewed or find specific review
+  const myReview = reviewId
+    ? reviews?.find(r => r.id === reviewId)
+    : reviews?.find(r => r.employee_id === user?.id);
   const isEditMode = !!myReview;
 
   const form = useForm({
@@ -88,7 +92,7 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
         await createReviewMutation.mutateAsync(payload);
         notifications.show({ title: 'Success', message: t('form.notifications.createSuccess'), color: 'green' });
       }
-      onSuccess();
+      if (onSuccess) onSuccess();
       // Redirect to candidate profile
       if (candidateId) {
         navigate(`/manage/candidates/list/${candidateId}`);
@@ -187,6 +191,8 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
                   min={1}
                   max={10}
                   required
+                  readOnly={readOnly}
+                  variant={readOnly ? 'filled' : 'default'}
                   {...form.getInputProps('score')}
                 />
 
@@ -195,29 +201,37 @@ export function InterviewReviewForm({ interviewId, onSuccess }: InterviewReviewF
                   placeholder={t('form.labels.notesPlaceholder')}
                   minRows={5}
                   autosize
+                  readOnly={readOnly}
+                  variant={readOnly ? 'filled' : 'default'}
                   {...form.getInputProps('notes')}
                 />
 
                 <TagsInput
                   label={t('form.labels.strengths')}
                   placeholder={t('form.labels.strengthsPlaceholder')}
+                  readOnly={readOnly}
+                  variant={readOnly ? 'filled' : 'default'}
                   {...form.getInputProps('strengths')}
                 />
 
                 <TagsInput
                   label={t('form.labels.weaknesses')}
                   placeholder={t('form.labels.weaknessesPlaceholder')}
+                  readOnly={readOnly}
+                  variant={readOnly ? 'filled' : 'default'}
                   {...form.getInputProps('weaknesses')}
                 />
 
-                <Group justify="flex-end" mt="xl">
-                  {isEditMode && (
-                    <Button variant="default" onClick={() => form.reset()}>{t('form.buttons.reset')}</Button>
-                  )}
-                  <Button type="submit" leftSection={<IconDeviceFloppy size={16} />}>
-                    {isEditMode ? t('form.buttons.update') : t('form.buttons.submit')}
-                  </Button>
-                </Group>
+                {!readOnly && (
+                  <Group justify="flex-end" mt="xl">
+                    {isEditMode && (
+                      <Button variant="default" onClick={() => form.reset()}>{t('form.buttons.reset')}</Button>
+                    )}
+                    <Button type="submit" leftSection={<IconDeviceFloppy size={16} />}>
+                      {isEditMode ? t('form.buttons.update') : t('form.buttons.submit')}
+                    </Button>
+                  </Group>
+                )}
               </Stack>
             </form>
           </Paper>

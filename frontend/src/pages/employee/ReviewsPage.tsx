@@ -1,4 +1,4 @@
-import { Container, Title, Paper, Stack, Group, Box, Text, Button, Tabs, Badge, Collapse, TextInput, Divider, useMantineColorScheme } from '@mantine/core';
+import { Container, Title, Paper, Stack, Group, Box, Text, Button, Tabs, Badge, Collapse, TextInput, useMantineColorScheme } from '@mantine/core';
 import { useState, useMemo } from 'react';
 import { useMyPendingReviewsQuery, useMyCompletedReviewsQuery } from '../../hooks/api/useInterviewReviews';
 import { IconClipboardCheck, IconHistory, IconSearch, IconBriefcase } from '@tabler/icons-react'; // removed IconUser
@@ -230,6 +230,8 @@ export function ReviewsPage() {
                         {selectedInterviewId === review.interview_id && (
                           <InterviewReviewForm
                             interviewId={review.interview_id}
+                            reviewId={review.id}
+                            readOnly={!isMyReview(review)}
                             onSuccess={handleCloseReview}
                           />
                         )}

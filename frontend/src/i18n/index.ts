@@ -54,6 +54,7 @@ i18n
   .init({
     debug: false,
     fallbackLng: 'es',
+    lng: 'es',
     defaultNS,
     resources,
     interpolation: {
@@ -61,7 +62,6 @@ i18n
     },
     detection: {
       order: ['queryString', 'cookie', 'localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage'],
     },
   });
 

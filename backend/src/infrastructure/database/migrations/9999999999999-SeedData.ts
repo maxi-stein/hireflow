@@ -319,7 +319,8 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "employee_interviews"
         ("interview_id", "employee_id")
       VALUES
-        ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440001')
+        ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440001'),
+        ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440081')
     `);
   }
 
