@@ -1,5 +1,6 @@
 import { Alert, Group, Text, Badge, Stack, Button } from '@mantine/core';
 import { IconCalendarEvent, IconClock } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import type { Interview } from '../../services/interview.service';
 
 interface UpcomingInterviewsAlertProps {
@@ -7,6 +8,8 @@ interface UpcomingInterviewsAlertProps {
 }
 
 export function UpcomingInterviewsAlert({ upcomingInterviews }: UpcomingInterviewsAlertProps) {
+    const { t, i18n } = useTranslation('applications');
+
     if (upcomingInterviews.length === 0) {
         return null;
     }
@@ -24,12 +27,27 @@ export function UpcomingInterviewsAlert({ upcomingInterviews }: UpcomingIntervie
 
     let timeRemaining = '';
     if (daysUntil > 0) {
-        timeRemaining = `in ${daysUntil} ${daysUntil === 1 ? 'day' : 'days'}`;
+        timeRemaining = daysUntil === 1
+            ? t('upcomingAlert.inDay')
+            : t('upcomingAlert.inDays', { count: daysUntil });
     } else if (hoursUntil > 0) {
-        timeRemaining = `in ${hoursUntil} ${hoursUntil === 1 ? 'hour' : 'hours'}`;
+        timeRemaining = hoursUntil === 1
+            ? t('upcomingAlert.inHour')
+            : t('upcomingAlert.inHours', { count: hoursUntil });
     } else {
-        timeRemaining = 'soon';
+        timeRemaining = t('upcomingAlert.soon');
     }
+
+    const dateStr = interviewDate.toLocaleDateString(i18n.language, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const timeStr = interviewDate.toLocaleTimeString(i18n.language, {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 
     return (
         <Alert
@@ -38,7 +56,7 @@ export function UpcomingInterviewsAlert({ upcomingInterviews }: UpcomingIntervie
             title={
                 <Group gap="xs">
                     <IconCalendarEvent size={20} />
-                    <Text fw={600}>Upcoming Interview</Text>
+                    <Text fw={600}>{t('upcomingAlert.title')}</Text>
                 </Group>
             }
             styles={{
@@ -51,22 +69,12 @@ export function UpcomingInterviewsAlert({ upcomingInterviews }: UpcomingIntervie
                         {timeRemaining}
                     </Badge>
                     <Text size="sm">
-                        <strong>{nextInterview.jobPosition}</strong> - {nextInterview.interview.type} Interview
+                        <strong>{nextInterview.jobPosition}</strong> - {t(`timeline.interviewTypes.${nextInterview.interview.type}`)}
                     </Text>
                 </Group>
 
                 <Text size="sm" c="dimmed">
-                    {interviewDate.toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    })}{' '}
-                    at{' '}
-                    {interviewDate.toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })}
+                    {t('upcomingAlert.dateTimeFormat', { date: dateStr, time: timeStr })}
                 </Text>
 
                 {nextInterview.interview.meeting_link && (
@@ -80,14 +88,14 @@ export function UpcomingInterviewsAlert({ upcomingInterviews }: UpcomingIntervie
                             variant="light"
                             leftSection={<IconCalendarEvent size={16} />}
                         >
-                            Join Interview Meeting
+                            {t('upcomingAlert.joinMeeting')}
                         </Button>
                     </div>
                 )}
 
                 {sortedInterviews.length > 1 && (
                     <Text size="xs" c="dimmed">
-                        + {sortedInterviews.length - 1} more interview{sortedInterviews.length - 1 !== 1 ? 's' : ''} scheduled
+                        {t('upcomingAlert.moreInterviews', { count: sortedInterviews.length - 1 })}
                     </Text>
                 )}
             </Stack>

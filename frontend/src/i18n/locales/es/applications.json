@@ -35,5 +35,41 @@
     "rejected": "Solicitud Rechazada",
     "rejectedMessage": "Gracias por tu interés en esta posición. Desafortunadamente, hemos decidido no avanzar con tu solicitud en este momento.",
     "viewOriginalJob": "Ver Oferta Original"
+  },
+  "candidate": {
+    "title": "Mis Postulaciones",
+    "subtitle": "Sigue el estado de tus postulaciones y cronograma de entrevistas",
+    "emptyState": {
+      "title": "Aún no hay postulaciones",
+      "message": "Aún no has postulado a ninguna posición. ¡Visita la página de Ofertas para encontrar oportunidades!"
+    }
+  },
+  "upcomingAlert": {
+    "title": "Próxima Entrevista",
+    "joinMeeting": "Unirse a la Entrevista",
+    "soon": "pronto",
+    "inDay": "en 1 día",
+    "inDays": "en {{count}} días",
+    "inHour": "en 1 hora",
+    "inHours": "en {{count}} horas",
+    "moreInterviews": "+ {{count}} entrevista más programada",
+    "moreInterviews_plural": "+ {{count}} entrevistas más programadas",
+    "dateTimeFormat": "{{date}} a las {{time}}"
+  },
+  "timeline": {
+    "title": "Proceso de Entrevistas",
+    "joinMeeting": "Unirse a la Reunión",
+    "noInterviewers": "Sin entrevistadores asignados",
+    "interviewTypes": {
+      "INDIVIDUAL": "Entrevista Individual",
+      "GROUP": "Entrevista Grupal"
+    },
+    "statuses": {
+      "SCHEDULED": "Programada",
+      "COMPLETED": "Completada",
+      "CANCELLED": "Cancelada",
+      "RESCHEDULED": "Reagendada"
+    },
+    "dateTimeFormat": "{{date}} • {{time}}"
   }
 }

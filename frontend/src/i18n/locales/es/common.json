@@ -27,5 +27,22 @@
     "confirm": "Confirmar"
   },
   "na": "N/A",
-  "present": "Actualidad"
+  "present": "Actualidad",
+  "loginForm": {
+    "title": "¡Bienvenido de nuevo!",
+    "noAccount": "¿Aún no tienes una cuenta?",
+    "createAccount": "Crear cuenta",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Tu contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "signIn": "Iniciar sesión",
+    "notifications": {
+      "successTitle": "¡Bienvenido!",
+      "successMessage": "Has iniciado sesión con éxito",
+      "errorTitle": "Error al iniciar sesión",
+      "errorMessage": "Credenciales inválidas"
+    }
+  }
 }

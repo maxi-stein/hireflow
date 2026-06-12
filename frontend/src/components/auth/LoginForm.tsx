@@ -11,6 +11,7 @@ import {
   Text,
   Stack,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { loginSchema } from "../../schemas/auth.schema";
 import { useLoginMutation } from "../../hooks/api/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +28,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const navigate = useNavigate();
   const loginMutation = useLoginMutation();
   const setAuth = useAppStore((state) => state.setAuth);
+  const { t } = useTranslation('common');
 
   const form = useForm({
     initialValues: {
@@ -42,8 +44,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         setAuth(data.user, data.access_token);
         
         notifications.show({
-          title: "Welcome back!",
-          message: "You have successfully logged in",
+          title: t("loginForm.notifications.successTitle"),
+          message: t("loginForm.notifications.successMessage"),
           color: "green",
         });
         if (onSuccess) {
@@ -53,9 +55,14 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         }
       },
       onError: (error: any) => {
+        const backendMsg = error.response?.data?.message;
+        const localizedError = (backendMsg === 'Invalid credentials' || backendMsg === 'Unauthorized')
+          ? t("loginForm.notifications.errorMessage")
+          : (backendMsg || t("loginForm.notifications.errorMessage"));
+
         notifications.show({
-          title: "Login failed",
-          message: error.response?.data?.message || "Invalid credentials",
+          title: t("loginForm.notifications.errorTitle"),
+          message: localizedError,
           color: "red",
         });
       },
@@ -65,12 +72,12 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   return (
     <Container size={420} my={40}>
       <Title ta="center" className="font-greycliff">
-        Welcome back!
+        {t("loginForm.title")}
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        Do not have an account yet?{" "}
+        {t("loginForm.noAccount")}{" "}
         <Anchor size="sm" component="button" onClick={() => navigate("/register")}>
-          Create account
+          {t("loginForm.createAccount")}
         </Anchor>
       </Text>
 
@@ -78,15 +85,15 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
           <Stack>
             <TextInput
-              label="Email"
-              placeholder="you@example.com"
+              label={t("loginForm.emailLabel")}
+              placeholder={t("loginForm.emailPlaceholder")}
               required
               type="email"
               {...form.getInputProps("email")} // Binds value, onChange, and error props automatically
             />
             <PasswordInput
-              label="Password"
-              placeholder="Your password"
+              label={t("loginForm.passwordLabel")}
+              placeholder={t("loginForm.passwordPlaceholder")}
               required
               mt="md"
               {...form.getInputProps("password")} // Binds value, onChange, and error props automatically
@@ -95,7 +102,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           
           <Group justify="space-between" mt="lg">
             <Anchor component="button" size="sm">
-              Forgot password?
+              {t("loginForm.forgotPassword")}
             </Anchor>
           </Group>
           
@@ -105,7 +112,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             type="submit"
             loading={loginMutation.isPending}
           >
-            Sign in
+            {t("loginForm.signIn")}
           </Button>
         </form>
       </Paper>

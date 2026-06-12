@@ -27,5 +27,22 @@
     "retry": "Retry",
     "back": "Back",
     "confirm": "Confirm"
+  },
+  "loginForm": {
+    "title": "Welcome back!",
+    "noAccount": "Do not have an account yet?",
+    "createAccount": "Create account",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Your password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign in",
+    "notifications": {
+      "successTitle": "Welcome back!",
+      "successMessage": "You have successfully logged in",
+      "errorTitle": "Login failed",
+      "errorMessage": "Invalid credentials"
+    }
   }
 }

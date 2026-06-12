@@ -1,5 +1,6 @@
 import { Timeline, Text, Group, Badge, Stack, Box, ThemeIcon } from '@mantine/core';
 import { IconCheck, IconX, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import type { Interview, Interviewer } from '../../../services/interview.service';
 import { InterviewStatus } from '../../../services/interview.service';
 import { getInterviewStatusColor } from '../../../utils/application.utils';
@@ -19,6 +20,8 @@ const getInterviewStatusIcon = (status: InterviewStatus) => {
 };
 
 export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) => {
+  const { t, i18n } = useTranslation('applications');
+
   if (!interviews || interviews.length === 0) return null;
 
   const sortedInterviews = [...interviews].sort((a, b) =>
@@ -28,7 +31,7 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
   return (
     <Box mt="md" pl={{ base: 0, sm: 'xs' }}>
       <Text size="sm" fw={700} mb="lg" c="dimmed" tt="uppercase" style={{ letterSpacing: '0.5px' }}>
-        Interview Process
+        {t('timeline.title')}
       </Text>
 
       <Timeline active={sortedInterviews.length} bulletSize={26} lineWidth={2}>
@@ -43,23 +46,24 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
               color={getInterviewStatusColor(interview.status)}
               title={
                 <Group gap="apart" wrap="nowrap">
-                  <Text size="sm" fw={600} style={{ textTransform: 'capitalize' }}>
-                    {interview.type.toLowerCase().replace('_', ' ')} Interview
+                  <Text size="sm" fw={600}>
+                    {t(`timeline.interviewTypes.${interview.type}`)}
                   </Text>
                   <Badge size="xs" variant="light" color={getInterviewStatusColor(interview.status)}>
-                    {interview.status}
+                    {t(`timeline.statuses.${interview.status}`)}
                   </Badge>
                 </Group>
               }
             >
               <Stack gap="xs" mt={4}>
                 <Text size="xs" c="dimmed">
-                  {new Date(interview.scheduled_time).toLocaleDateString('en-US', {
-                    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
-                  })}
-                  {' • '}
-                  {new Date(interview.scheduled_time).toLocaleTimeString('en-US', {
-                    hour: '2-digit', minute: '2-digit'
+                  {t('timeline.dateTimeFormat', {
+                    date: new Date(interview.scheduled_time).toLocaleDateString(i18n.language, {
+                      weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+                    }),
+                    time: new Date(interview.scheduled_time).toLocaleTimeString(i18n.language, {
+                      hour: '2-digit', minute: '2-digit'
+                    })
                   })}
                 </Text>
 
@@ -69,7 +73,7 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
                       <IconVideo size={10} />
                     </ThemeIcon>
                     <Text size="xs" component="a" href={interview.meeting_link} target="_blank" c="blue" td="underline">
-                      Join Meeting Link
+                      {t('timeline.joinMeeting')}
                     </Text>
                   </Group>
                 )}
@@ -79,7 +83,9 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
                     <IconUsers size={10} />
                   </ThemeIcon>
                   <Text size="xs" c="dimmed" lh={1.4}>
-                    {interview.interviewers.map((i: Interviewer) => `${i.user.first_name} ${i.user.last_name}`).join(', ')}
+                    {interview.interviewers.length > 0
+                      ? interview.interviewers.map((i: Interviewer) => `${i.user.first_name} ${i.user.last_name}`).join(', ')
+                      : t('timeline.noInterviewers')}
                   </Text>
                 </Group>
               </Stack>

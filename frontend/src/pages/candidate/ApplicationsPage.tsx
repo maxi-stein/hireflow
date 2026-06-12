@@ -1,5 +1,6 @@
 import { Container, Title, Text, Stack, LoadingOverlay, Alert, Box } from '@mantine/core';
 import { IconInbox } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
 import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
 import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
@@ -10,6 +11,7 @@ import { CandidateApplicationCard } from '../../components/candidate/CandidateAp
 
 export const ApplicationsPage = () => {
     const user = useAppStore((state) => state.user);
+    const { t } = useTranslation('applications');
 
     // Fetch applications for the logged-in candidate
     const { data: applicationsResponse, isLoading: isLoadingApplications } = useAllCandidateApplicationsQuery({
@@ -58,9 +60,9 @@ export const ApplicationsPage = () => {
             <Stack gap="xl">
                 {/* Page Header */}
                 <Box>
-                    <Title order={1}>My Applications</Title>
+                    <Title order={1}>{t('candidate.title')}</Title>
                     <Text c="dimmed" size="lg" mt="xs">
-                        Track all your job applications and interview schedules
+                        {t('candidate.subtitle')}
                     </Text>
                 </Box>
 
@@ -82,10 +84,10 @@ export const ApplicationsPage = () => {
                     <Alert
                         variant="light"
                         color="blue"
-                        title="No applications yet"
+                        title={t('candidate.emptyState.title')}
                         icon={<IconInbox size={20} />}
                     >
-                        You haven't applied to any positions yet. Visit the Jobs page to find opportunities!
+                        {t('candidate.emptyState.message')}
                     </Alert>
                 )}
             </Stack>

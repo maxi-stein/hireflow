@@ -35,5 +35,41 @@
     "rejected": "Application Rejected",
     "rejectedMessage": "Thank you for your interest in this position. Unfortunately, we have decided not to proceed with your application at this time.",
     "viewOriginalJob": "View Original Job Post"
+  },
+  "candidate": {
+    "title": "My Applications",
+    "subtitle": "Track all your job applications and interview schedules",
+    "emptyState": {
+      "title": "No applications yet",
+      "message": "You haven't applied to any positions yet. Visit the Jobs page to find opportunities!"
+    }
+  },
+  "upcomingAlert": {
+    "title": "Upcoming Interview",
+    "joinMeeting": "Join Interview Meeting",
+    "soon": "soon",
+    "inDay": "in 1 day",
+    "inDays": "in {{count}} days",
+    "inHour": "in 1 hour",
+    "inHours": "in {{count}} hours",
+    "moreInterviews": "+ {{count}} more interview scheduled",
+    "moreInterviews_plural": "+ {{count}} more interviews scheduled",
+    "dateTimeFormat": "{{date}} at {{time}}"
+  },
+  "timeline": {
+    "title": "Interview Process",
+    "joinMeeting": "Join Meeting Link",
+    "noInterviewers": "No interviewers assigned",
+    "interviewTypes": {
+      "INDIVIDUAL": "Individual Interview",
+      "GROUP": "Group Interview"
+    },
+    "statuses": {
+      "SCHEDULED": "Scheduled",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "RESCHEDULED": "Rescheduled"
+    },
+    "dateTimeFormat": "{{date}} • {{time}}"
   }
 }
