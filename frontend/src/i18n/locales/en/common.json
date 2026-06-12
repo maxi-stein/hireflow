@@ -1,6 +1,7 @@
 {
   "welcome": "Welcome to HireFlow",
   "login": "Login",
+  "register": "Register",
   "logout": "Logout",
   "profile": "Profile",
   "theme": {
@@ -10,6 +11,26 @@
   "applyNow": "Apply Now",
   "na": "N/A",
   "present": "Present",
+  "registerForm": {
+    "title": "Create an account",
+    "subtitle": "Already have an account?",
+    "loginLink": "Sign in",
+    "firstNameLabel": "First name",
+    "firstNamePlaceholder": "Your first name",
+    "lastNameLabel": "Last name",
+    "lastNamePlaceholder": "Your last name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "At least 6 characters",
+    "submit": "Create account",
+    "notifications": {
+      "successTitle": "Account created!",
+      "successMessage": "Your account was created successfully. Welcome!",
+      "errorTitle": "Registration failed",
+      "errorMessage": "Could not create account. Please check your data and try again."
+    }
+  },
   "applicationStatus": {
     "APPLIED": "Applied",
     "IN_PROGRESS": "In Progress",

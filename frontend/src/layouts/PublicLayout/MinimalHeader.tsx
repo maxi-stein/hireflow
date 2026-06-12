@@ -1,5 +1,6 @@
 import { Group, Button, Title, Container } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
 import { UserMenu } from '../../components/shared/UserMenu';
 import { LANDING_MAX_WIDTH } from '../../pages/LandingPage';
@@ -8,6 +9,7 @@ export function MinimalHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAppStore((state) => state.user);
+  const { t } = useTranslation('common');
 
   const handleLogin = () => {
     navigate('/login');
@@ -40,8 +42,8 @@ export function MinimalHeader() {
           <UserMenu />
         ) : (
           <>
-            <Button variant="subtle" onClick={handleLogin}>Login</Button>
-            <Button onClick={handleRegister}>Register</Button>
+            <Button variant="subtle" onClick={handleLogin}>{t('login')}</Button>
+            <Button onClick={handleRegister}>{t('register')}</Button>
           </>
         )}
       </Group>

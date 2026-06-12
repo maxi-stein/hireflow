@@ -83,17 +83,17 @@
   "skillsMore": "+{{count}} más",
   "publicList": {
     "title": "Posiciones Disponibles",
-    "subtitle": "Encuentra tu próxima oportunidad laboral",
+    "subtitle": "Encontrá tu próxima oportunidad laboral",
     "empty": "No hay posiciones abiertas disponibles en este momento.",
     "checking": "Verificando postulación...",
     "viewApplication": "Ver Postulación"
   },
   "landing": {
-    "heroTitle": "Encuentra el trabajo de tus sueños",
-    "heroSubtitle": "Explora las oportunidades disponibles y postúlate en minutos. Únete a nuestro equipo y desarrolla tu carrera.",
+    "heroTitle": "Encontrá el trabajo de tus sueños",
+    "heroSubtitle": "Explorá las oportunidades disponibles y postulá en minutos. Unite a nuestro equipo y desarrollá tu carrera.",
     "availableJobs": "Trabajos Disponibles",
-    "availableJobsSubtitle": "Descubre nuestras últimas ofertas y encuentra tu lugar ideal.",
+    "availableJobsSubtitle": "Descubrí nuestras últimas ofertas y encontrá tu lugar ideal.",
     "noJobs": "No hay trabajos disponibles por el momento",
-    "noJobsSubtitle": "Por favor, vuelve a revisar más tarde."
+    "noJobsSubtitle": "Por favor, volvé a revisar más tarde."
   }
 }

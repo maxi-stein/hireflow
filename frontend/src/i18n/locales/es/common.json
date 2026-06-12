@@ -1,6 +1,7 @@
 {
   "welcome": "Bienvenido a HireFlow",
   "login": "Iniciar Sesión",
+  "register": "Registrarse",
   "logout": "Cerrar Sesión",
   "profile": "Perfil",
   "theme": {
@@ -28,6 +29,26 @@
   },
   "na": "N/A",
   "present": "Actualidad",
+  "registerForm": {
+    "title": "Crear una cuenta",
+    "subtitle": "¿Ya tenés una cuenta?",
+    "loginLink": "Iniciar sesión",
+    "firstNameLabel": "Nombre",
+    "firstNamePlaceholder": "Tu nombre",
+    "lastNameLabel": "Apellido",
+    "lastNamePlaceholder": "Tu apellido",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Mínimo 6 caracteres",
+    "submit": "Crear cuenta",
+    "notifications": {
+      "successTitle": "¡Cuenta creada!",
+      "successMessage": "Tu cuenta fue creada con éxito. ¡Bienvenido/a!",
+      "errorTitle": "Error al registrarse",
+      "errorMessage": "No se pudo crear la cuenta. Verificá los datos e intentá de nuevo."
+    }
+  },
   "loginForm": {
     "title": "¡Bienvenido de nuevo!",
     "noAccount": "¿Aún no tienes una cuenta?",
