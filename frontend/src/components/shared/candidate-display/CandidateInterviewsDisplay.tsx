@@ -1,6 +1,7 @@
-import { Box, Group, Alert, Stack, Text, Badge, SimpleGrid } from '@mantine/core';
+import { Box, Group, Alert, Stack, Text, Badge, SimpleGrid, Button } from '@mantine/core';
 import { IconCalendarEvent, IconHistory, IconMessageCircle, IconClock } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { getEffectiveInterviewStatus } from '../../../utils/interview.utils';
 import { getScoreColor } from '../../../utils/score.utils';
@@ -13,6 +14,7 @@ interface CandidateInterviewsDisplayProps {
 
 export function CandidateInterviewsDisplay({ interviews, applicationId }: CandidateInterviewsDisplayProps) {
   const { t } = useTranslation('reviews');
+  const navigate = useNavigate();
 
   // Always render a Detail to maintain alignment
   if (!interviews || interviews.length === 0) {
@@ -82,35 +84,25 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
                         <Group align="flex-start" wrap="nowrap">
                           <IconMessageCircle size={18} style={{ marginTop: 2 }} />
                           <Box>
-                            <Text fw={600} size="sm" lh={1.2}>{t('candidateDisplay.interviewReview')}</Text>
-                            <Text size="xs" c="dimmed" mb={4}>
-                              {t('candidateDisplay.by')}: {review.employee?.user?.first_name} {review.employee?.user?.last_name}
+                            <Text fw={600} size="sm" lh={1.2} mb={2}>{t('candidateDisplay.interviewReview')}</Text>
+                            <Text size="sm" fw={500} mb={4}>
+                              {review.employee?.user?.first_name} {review.employee?.user?.last_name}
                             </Text>
                             <Group gap={6}>
-                              <Text size="xs" c="dimmed">{t('candidateDisplay.score')}:</Text>
-                              <Badge color={getScoreColor(review.score)} variant="filled" size="xs">
+                              <Badge color={getScoreColor(review.score)} variant="filled" size="sm">
                                 {review.score ? `${review.score}/10` : 'N/A'}
                               </Badge>
                             </Group>
                           </Box>
                         </Group>
-                        <Box>
-                          {review.strengths && review.strengths.length > 0 && (
-                            <Group gap={4} mb={4}>
-                              <Text size="xs" fw={700} c="green" style={{ width: 70 }}>{t('candidateDisplay.strengths')}:</Text>
-                              <Group gap={4} style={{ flex: 1 }}>
-                                {review.strengths.slice(0, 3).map(s => <Badge key={s} size="xs" variant="outline" color="green" radius="sm">{s}</Badge>)}
-                              </Group>
-                            </Group>
-                          )}
-                          {review.weaknesses && review.weaknesses.length > 0 && (
-                            <Group gap={4}>
-                              <Text size="xs" fw={700} c="red" style={{ width: 70 }}>{t('candidateDisplay.weaknesses')}:</Text>
-                              <Group gap={4} style={{ flex: 1 }}>
-                                {review.weaknesses.slice(0, 3).map(w => <Badge key={w} size="xs" variant="outline" color="red" radius="sm">{w}</Badge>)}
-                              </Group>
-                            </Group>
-                          )}
+                        <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                          <Button 
+                            variant="light" 
+                            size="xs" 
+                            onClick={() => navigate('/manage/reviews?tab=completed')}
+                          >
+                            {t('candidateDisplay.viewDetails')}
+                          </Button>
                         </Box>
                       </SimpleGrid>
                     </Alert>

@@ -11,8 +11,10 @@ import type { InterviewReview } from '../../services/interview-review.service';
 import type { Interview } from '../../services/interview.service';
 
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 
 export function ReviewsPage() {
+  const [searchParams] = useSearchParams();
   const { colorScheme } = useMantineColorScheme();
   const { t } = useTranslation(['reviews', 'profile']);
   const user = useAppStore(state => state.user);
@@ -208,7 +210,7 @@ export function ReviewsPage() {
                       <Group justify="space-between" align="flex-start">
                         <Box>
                           <Group gap="xs">
-                            <Text size="sm" fw={500}>{t('card.by')} {review.employee?.user.first_name} {review.employee?.user.last_name}</Text>
+                            <Text size="sm" fw={500}>{review.employee?.user.first_name} {review.employee?.user.last_name}</Text>
                             <ScoreBadge score={review.score} size="xs" />
                           </Group>
                           <Text size="xs" c="dimmed">
@@ -261,7 +263,7 @@ export function ReviewsPage() {
         />
       </Group>
 
-      <Tabs defaultValue="pending" keepMounted={false}>
+      <Tabs defaultValue={searchParams.get('tab') || 'pending'} keepMounted={false}>
         <Tabs.List mb="md">
           <Tabs.Tab value="pending" leftSection={<IconClipboardCheck size={16} />}>
             <Group gap="xs" align="center">
