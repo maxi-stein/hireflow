@@ -53,7 +53,7 @@ i18n
   .use(initReactI18next)
   .init({
     debug: false,
-    fallbackLng: 'es',
+    fallbackLng: 'en',
     lng: 'es',
     defaultNS,
     resources,
