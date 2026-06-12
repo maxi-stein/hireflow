@@ -12,6 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { LandingPage } from '../pages/LandingPage';
 import { LoginPage } from '../pages/LoginPage';
+import { RegisterPage } from '../pages/RegisterPage';
 import { JobListPage } from '../pages/jobs/JobListPage';
 import { JobDetailPage } from '../pages/jobs/JobDetailPage';
 import { JobApplicationPage } from '../pages/jobs/JobApplicationPage';
@@ -55,6 +56,11 @@ export const ROUTES = {
     LOGIN: {
       path: '/login',
       element: <LoginPage />,
+      showInNav: false,
+    },
+    REGISTER: {
+      path: '/register',
+      element: <RegisterPage />,
       showInNav: false,
     },
     JOBS: {

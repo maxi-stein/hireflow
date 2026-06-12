@@ -9,7 +9,7 @@ export const authService = {
   },
 
   register: async (userData: RegisterDto): Promise<User> => {
-    const { data } = await apiClient.post<User>('/auth/register', userData);
+    const { data } = await apiClient.post<User>('/candidates/register', userData);
     return data;
   },
 

@@ -12,7 +12,12 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
-
+  // Register page - standalone without layout
+  {
+    path: ROUTES.PUBLIC.REGISTER.path,
+    element: ROUTES.PUBLIC.REGISTER.element,
+    errorElement: <ErrorPage />,
+  },
 
   // Main App Structure - DynamicLayout persists across navigation
   {

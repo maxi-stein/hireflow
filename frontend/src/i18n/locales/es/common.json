@@ -41,6 +41,8 @@
     "emailPlaceholder": "tu@ejemplo.com",
     "passwordLabel": "Contraseña",
     "passwordPlaceholder": "Mínimo 6 caracteres",
+    "confirmPasswordLabel": "Confirmar contraseña",
+    "confirmPasswordPlaceholder": "Repetí tu contraseña",
     "submit": "Crear cuenta",
     "notifications": {
       "successTitle": "¡Cuenta creada!",
