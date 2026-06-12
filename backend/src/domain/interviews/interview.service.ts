@@ -162,6 +162,10 @@ export class InterviewService {
 
     if (status && status.length > 0) {
       queryBuilder.andWhere('interview.status IN (:...status)', { status });
+    } else {
+      queryBuilder.andWhere('interview.status != :cancelledStatus', {
+        cancelledStatus: InterviewStatus.CANCELLED,
+      });
     }
 
     const applicationFilter = applicationId || candidate_application_id;
@@ -349,6 +353,9 @@ export class InterviewService {
       .innerJoinAndSelect('interview.interviewers', 'interviewer')
       .innerJoinAndSelect('interview.applications', 'application')
       .where('interviewer.id = :employeeId', { employeeId })
+      .andWhere('interview.status != :cancelledStatus', {
+        cancelledStatus: InterviewStatus.CANCELLED,
+      })
       .skip(skip)
       .take(limit)
       .getManyAndCount();
@@ -382,6 +389,9 @@ export class InterviewService {
       .leftJoinAndSelect('review.employee', 'review_employee')
       .leftJoinAndSelect('review_employee.user', 'review_user')
       .where('candidate.id = :candidateId', { candidateId })
+      .andWhere('interview.status != :cancelledStatus', {
+        cancelledStatus: InterviewStatus.CANCELLED,
+      })
       .orderBy('interview.scheduled_time', 'DESC')
       .skip(skip)
       .take(limit)
