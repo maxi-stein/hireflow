@@ -14,6 +14,7 @@ import { interviewReviewSchema } from '../../../schemas/interveiw-review.schema'
 import { useNavigate } from 'react-router-dom';
 import { ScoreBadge } from '../../shared/ScoreBadge';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
+import { normalizeText } from '../../../utils/string';
 
 interface InterviewReviewFormProps {
   interviewId: string;
@@ -82,6 +83,8 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
       interview_id: interview.id,
       candidate_application_id: applicationId,
       ...values,
+      strengths: normalizeText(values.strengths),
+      weaknesses: normalizeText(values.weaknesses),
     };
 
     try {
@@ -211,7 +214,9 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                   placeholder={t('form.labels.strengthsPlaceholder')}
                   readOnly={readOnly}
                   variant={readOnly ? 'filled' : 'default'}
-                  {...form.getInputProps('strengths')}
+                  value={form.values.strengths}
+                  onChange={(value) => form.setFieldValue('strengths', normalizeText(value))}
+                  error={form.errors.strengths}
                 />
 
                 <TagsInput
@@ -219,7 +224,9 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                   placeholder={t('form.labels.weaknessesPlaceholder')}
                   readOnly={readOnly}
                   variant={readOnly ? 'filled' : 'default'}
-                  {...form.getInputProps('weaknesses')}
+                  value={form.values.weaknesses}
+                  onChange={(value) => form.setFieldValue('weaknesses', normalizeText(value))}
+                  error={form.errors.weaknesses}
                 />
 
                 {!readOnly && (

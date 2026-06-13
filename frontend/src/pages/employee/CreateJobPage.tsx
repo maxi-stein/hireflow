@@ -26,6 +26,7 @@ import { createJobOfferSchema } from '../../schemas/job-offer.schema';
 import { validateWithJoi } from '../../utils/form-validation';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { normalizeText } from '../../utils/string';
 
 export function CreateJobPage() {
   const { t } = useTranslation(['jobs', 'common']);
@@ -82,10 +83,11 @@ export function CreateJobPage() {
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
+      const normalizedSkills = normalizeText(values.skills);
       const payload = {
         ...values,
         deadline: values.deadline ? new Date(values.deadline).toISOString() : undefined,
-        skills: values.skills.map(skill => ({ skill_name: skill })), // Map skills to objects with skill_name property
+        skills: normalizedSkills.map(skill => ({ skill_name: skill })), // Map skills to objects with skill_name property
       };
 
       if (isEditMode && id) {
@@ -194,7 +196,9 @@ export function CreateJobPage() {
               data={skillSuggestions.map(s => s.skill_name)}
               searchValue={searchValue}
               onSearchChange={setSearchValue}
-              {...form.getInputProps('skills')}
+              value={form.values.skills}
+              onChange={(value) => form.setFieldValue('skills', normalizeText(value))}
+              error={form.errors.skills}
             />
 
             <Group grow align="flex-start">
