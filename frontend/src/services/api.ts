@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { authEvents } from './auth-events';
 import { useAppStore } from '../store/useAppStore';
+import { queryClient } from './queryClient';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -55,6 +56,7 @@ apiClient.interceptors.response.use(
 
         return apiClient(originalRequest);
       } catch (refreshError) {
+        queryClient.clear();
         useAppStore.getState().logout();
         authEvents.onUnauthorized();
         return Promise.reject(refreshError);
@@ -62,6 +64,7 @@ apiClient.interceptors.response.use(
     }
 
     if (status === 401) {
+      queryClient.clear();
       useAppStore.getState().logout();
       authEvents.onUnauthorized();
     }

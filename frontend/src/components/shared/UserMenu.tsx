@@ -4,6 +4,7 @@ import { IconSun, IconMoon, IconUser, IconLogout } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../services/auth.service';
+import { queryClient } from '../../services/queryClient';
 import { useProfileQuery } from '../../hooks/api/useAuth';
 
 const capitalize = (s?: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
@@ -26,6 +27,7 @@ export function UserMenu() {
     } catch (e) {
       console.error('Logout failed', e);
     } finally {
+      queryClient.clear();
       logout();
       navigate('/');
     }
