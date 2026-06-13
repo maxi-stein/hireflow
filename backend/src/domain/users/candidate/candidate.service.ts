@@ -42,8 +42,6 @@ export class CandidateService {
         const candidate = transactionalEntityManager.create(Candidate, {
           age: null,
           phone: null,
-          resume_url: null,
-          portfolio_url: null,
           github: null,
           linkedin: null,
           city: null,

@@ -26,11 +26,11 @@ export class Candidate {
   @Column({ type: 'varchar', length: USER.PHONE_LENGTH, nullable: true })
   phone: string | null;
 
-  @Column({ type: 'varchar', length: 100 })
-  city: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  city: string | null;
 
-  @Column({ type: 'varchar', length: 100 })
-  country: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  country: string | null;
 
   @OneToMany(() => UserFile, (file) => file.candidate)
   files: UserFile[];
