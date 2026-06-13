@@ -71,5 +71,16 @@
       "RESCHEDULED": "Reagendada"
     },
     "dateTimeFormat": "{{date}} • {{time}}"
+  },
+  "modal": {
+    "title": "Postularse a {{position}}",
+    "description": "Por favor, responde las siguientes preguntas para completar tu solicitud.",
+    "yearsOfExperience": "Años de experiencia con {{skill}}",
+    "validationError": "Por favor, ingresa años de experiencia válidos",
+    "submit": "Enviar Solicitud",
+    "successTitle": "Éxito",
+    "successMessage": "¡Solicitud enviada correctamente!",
+    "errorTitle": "Error",
+    "errorMessage": "Error al enviar la solicitud"
   }
 }

@@ -71,5 +71,16 @@
       "RESCHEDULED": "Rescheduled"
     },
     "dateTimeFormat": "{{date}} • {{time}}"
+  },
+  "modal": {
+    "title": "Apply to {{position}}",
+    "description": "Please answer the following questions to complete your application.",
+    "yearsOfExperience": "Years of experience with {{skill}}",
+    "validationError": "Please enter valid years of experience",
+    "submit": "Submit Application",
+    "successTitle": "Success",
+    "successMessage": "Application submitted successfully!",
+    "errorTitle": "Error",
+    "errorMessage": "Failed to submit application"
   }
 }
