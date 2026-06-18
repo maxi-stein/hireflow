@@ -179,7 +179,7 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
           <Paper withBorder p="xl" radius="md">
             <form onSubmit={form.onSubmit(
               handleSubmit,
-              (errors) => {
+              (_errors) => {
                 notifications.show({
                   title: 'Validation Error',
                   message: t('form.notifications.validationError'),

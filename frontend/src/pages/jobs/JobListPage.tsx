@@ -1,21 +1,18 @@
-import { Container, Title, Text, Stack, Card, LoadingOverlay, Button } from '@mantine/core';
+import { Container, Title, Text, Stack, LoadingOverlay, Button } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-import { useHighlightEffect } from '../../hooks/useHighlightEffect';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { useAppStore } from '../../store/useAppStore';
 import { JobOfferStatus } from '../../services/job-offer.service';
 import type { JobOffer } from '../../services/job-offer.service';
-import { JobOfferCard } from '../../components/jobs/JobOfferCard';
 import { useEffect, useState } from 'react';
 import { candidateApplicationService } from '../../services/candidate-application.service';
 import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
-
+import { JobOfferGrid } from '../../components/jobs/JobOfferGrid';
 import { useTranslation } from 'react-i18next';
 
 export const JobListPage = () => {
   const { t } = useTranslation(['common', 'jobs']);
   const navigate = useNavigate();
-  const { highlightedId, setElementRef } = useHighlightEffect();
   const user = useAppStore((state) => state.user);
   const { data: jobOffers, isLoading } = useJobOffersQuery({
     status: JobOfferStatus.OPEN,
@@ -76,80 +73,43 @@ export const JobListPage = () => {
   }
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={1440} py={{ base: 40, md: 80 }}>
       <Stack gap="xl">
         <div>
           <Title order={1}>{t('jobs:publicList.title')}</Title>
           <Text c="dimmed" size="lg">{t('jobs:publicList.subtitle')}</Text>
         </div>
 
-        {!jobOffers?.data || jobOffers.data.length === 0 ? (
-          <Card withBorder p="xl">
-            <Text ta="center" c="dimmed">{t('jobs:publicList.empty')}</Text>
-          </Card>
-        ) : (
-          <Stack gap="md">
-            {jobOffers.data.map((job) => {
-              const isApplied = appliedJobIds.has(job.id);
-              const isLoadingApplications = applicationsLoading && user?.type === 'candidate';
-              const isHighlighted = highlightedId === job.id;
+        <JobOfferGrid
+          jobs={jobOffers?.data ?? []}
+          emptyMessage={t('jobs:publicList.empty')}
+          renderAction={(job) => {
+            const isApplied = appliedJobIds.has(job.id);
+            const isLoadingApplications = applicationsLoading && user?.type === 'candidate';
 
-              return (
-                <div
-                  id={`job-${job.id}`}
-                  key={job.id}
-                  ref={setElementRef(job.id)}
-                  style={{
-                    transition: 'all 0.3s ease',
-                    transform: isHighlighted ? 'scale(1.01)' : 'scale(1)',
-                    boxShadow: isHighlighted ? '0 8px 30px rgba(99, 102, 241, 0.4)' : 'none',
-                    borderRadius: '8px',
-                  }}
-                >
-                  <JobOfferCard
-                    job={job}
-                    action={
-                      user?.type === 'candidate' ? (
-                        <Button
-                          fullWidth
-                          loading={isLoadingApplications}
-                          disabled={isLoadingApplications}
-                          variant={
-                            isLoadingApplications
-                              ? 'light'
-                              : isApplied
-                                ? 'light'
-                                : 'filled'
-                          }
-                          color={
-                            isLoadingApplications
-                              ? 'gray'
-                              : isApplied
-                                ? 'cyan'
-                                : 'green'
-                          }
-                          onClick={() => {
-                            if (isLoadingApplications) return;
+            if (user?.type !== 'candidate') return undefined;
 
-                            isApplied
-                              ? navigate('/candidate/applications')
-                              : handleApplyClick(job);
-                          }}
-                        >
-                          {isLoadingApplications
-                            ? t('jobs:publicList.checking')
-                            : isApplied
-                              ? t('jobs:publicList.viewApplication')
-                              : t('applyNow')}
-                        </Button>
-                      ) : undefined
-                    }
-                  />
-                </div>
-              );
-            })}
-          </Stack>
-        )}
+            return (
+              <Button
+                fullWidth
+                loading={isLoadingApplications}
+                disabled={isLoadingApplications}
+                variant={isLoadingApplications ? 'light' : isApplied ? 'light' : 'filled'}
+                color={isLoadingApplications ? 'gray' : isApplied ? 'cyan' : 'green'}
+                onClick={() => {
+                  if (isLoadingApplications) return;
+                  isApplied ? navigate('/candidate/applications') : handleApplyClick(job);
+                }}
+              >
+                {isLoadingApplications
+                  ? t('jobs:publicList.checking')
+                  : isApplied
+                    ? t('jobs:publicList.viewApplication')
+                    : t('applyNow')}
+              </Button>
+            );
+          }}
+        />
 
         {selectedJob && user?.type === 'candidate' && (
           <JobApplicationModal

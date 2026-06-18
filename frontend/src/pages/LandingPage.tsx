@@ -1,21 +1,19 @@
-import { Container, Title, Text, Stack, Card, LoadingOverlay, Button, Box, Center, Badge, Group, Pagination } from '@mantine/core';
+import { Container, Title, Text, Stack, LoadingOverlay, Button, Box, Group } from '@mantine/core';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { useHighlightEffect } from '../hooks/useHighlightEffect';
 import { useJobOffersQuery } from '../hooks/api/useJobOffers';
 import { useAppStore } from '../store/useAppStore';
 import { JobOfferStatus } from '../services/job-offer.service';
 import type { JobOffer } from '../services/job-offer.service';
 import { useState } from 'react';
-import { JobOfferCard } from '../components/jobs/JobOfferCard';
 import { useTranslation } from 'react-i18next';
 import { LandingHero } from '../components/landing/LandingHero';
+import { JobOfferGrid } from '../components/jobs/JobOfferGrid';
 
 export const LANDING_MAX_WIDTH = 1440;
 
 export const LandingPage = () => {
   const { t } = useTranslation(['common', 'jobs']);
   const navigate = useNavigate();
-  const { highlightedId, setElementRef } = useHighlightEffect();
   const user = useAppStore((state) => state.user);
 
   const [page, setPage] = useState(1);
@@ -54,62 +52,24 @@ export const LandingPage = () => {
             </div>
           </Group>
 
-          {!jobOffers?.data || jobOffers.data.length === 0 ? (
-            <Card withBorder p="xl" radius="md">
-              <Center>
-                <Stack align="center" gap="xs">
-                  <Text size="lg" fw={500}>{t('jobs:landing.noJobs', 'No hay trabajos disponibles por el momento')}</Text>
-                  <Text c="dimmed">{t('jobs:landing.noJobsSubtitle', 'Por favor, vuelve a revisar más tarde.')}</Text>
-                </Stack>
-              </Center>
-            </Card>
-          ) : (
-            <Stack gap="md">
-              {jobOffers.data.map((job) => {
-                const isHighlighted = highlightedId === job.id;
-
-                return (
-                  <div
-                    id={`job-${job.id}`}
-                    key={job.id}
-                    ref={setElementRef(job.id)}
-                    style={{
-                      transition: 'all 0.3s ease',
-                      transform: isHighlighted ? 'scale(1.01)' : 'scale(1)',
-                      boxShadow: isHighlighted ? '0 8px 30px rgba(99, 102, 241, 0.4)' : 'none',
-                      borderRadius: '8px',
-                    }}
-                  >
-                    <JobOfferCard
-                      job={job}
-                      action={
-                        <Button
-                          fullWidth
-                          variant="filled"
-                          color="blue"
-                          onClick={() => handleApplyClick(job)}
-                        >
-                          {t('applyNow', 'Aplicar')}
-                        </Button>
-                      }
-                    />
-                  </div>
-                );
-              })}
-
-              {jobOffers.pagination && jobOffers.pagination.totalPages > 1 && (
-                <Center mt="xl">
-                  <Pagination
-                    value={page}
-                    onChange={setPage}
-                    total={jobOffers.pagination.totalPages}
-                    color="blue"
-                    withEdges
-                  />
-                </Center>
-              )}
-            </Stack>
-          )}
+          <JobOfferGrid
+            jobs={jobOffers?.data ?? []}
+            renderAction={(job) => (
+              <Button
+                fullWidth
+                variant="filled"
+                color="blue"
+                onClick={() => handleApplyClick(job)}
+              >
+                {t('applyNow', 'Aplicar')}
+              </Button>
+            )}
+            emptyMessage={t('jobs:landing.noJobs')}
+            emptySubtitle={t('jobs:landing.noJobsSubtitle')}
+            page={page}
+            totalPages={jobOffers?.pagination?.totalPages}
+            onPageChange={setPage}
+          />
         </Stack>
       </Container>
     </Box>
