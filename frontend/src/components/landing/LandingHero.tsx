@@ -1,34 +1,51 @@
-import { Box, Stack, Title, Text } from '@mantine/core';
+import { Stack, Title, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { APP_MAX_WIDTH } from '../../constants/layout';
+import bgGradient from '../../assets/bg-gradient.png';
+import { LandingSection } from './LandingSection';
 
 export const LandingHero = () => {
   const { t } = useTranslation(['jobs']);
 
   return (
-    <Box
-      mx="auto"
-      py={{ base: 60, md: 100 }}
-      px={{ base: 'md', md: 'xl' }}
+    <LandingSection
+      noContainer
       style={{
-        color: 'white',
-        background: 'linear-gradient(135deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%)',
-        maxWidth: APP_MAX_WIDTH,
-        borderRadius: 'var(--mantine-radius-lg)',
+        color: '#1e293b',
+        backgroundImage: `url(${bgGradient})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        marginTop: 'calc(-1 * var(--mantine-spacing-md))',
+        paddingTop: 60,
+        paddingBottom: 60,
       }}
     >
-      <Stack gap="lg" align="center" ta="center">
+      <Stack gap="lg" align="center" ta="center" py={{ base: 40, md: 80 }} px="md">
         <Title
           order={1}
           size="h1"
-          style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.1, fontWeight: 900 }}
+          style={{ 
+            fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
+            lineHeight: 1.1, 
+            fontWeight: 900,
+            color: '#0f172a'
+          }}
         >
           {t('jobs:landing.heroTitle')}
         </Title>
-        <Text size="xl" maw={600} opacity={0.9}>
+        <Text 
+          size="xl" 
+          maw={600} 
+          style={{ 
+            color: '#334155',
+            fontWeight: 500
+          }}
+        >
           {t('jobs:landing.heroSubtitle')}
         </Text>
       </Stack>
-    </Box>
+    </LandingSection>
   );
 };
+
+

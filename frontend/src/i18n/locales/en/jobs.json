@@ -89,11 +89,13 @@
     "viewApplication": "View Application"
   },
   "landing": {
-    "heroTitle": "Find your dream job",
-    "heroSubtitle": "Explore available opportunities and apply in minutes. Join our team and develop your career.",
-    "availableJobs": "Available Jobs",
+    "heroTitle": "Your next step in IT starts here.",
+    "heroSubtitle": "We connect IT professionals with impactful projects at global companies. Join our team and develop your career.",
+    "availableJobs": "Open Positions",
+    "findChallenge": "Find your next challenge",
     "availableJobsSubtitle": "Discover our latest offers and find your ideal place.",
     "noJobs": "No jobs available at the moment",
-    "noJobsSubtitle": "Please check back later."
+    "noJobsSubtitle": "Please check back later.",
+    "alliesTitle": "Technological allies"
   }
 }

@@ -50,7 +50,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
         style={{ cursor: 'pointer', userSelect: 'none' }}
         px="xs"
       >
-        HireFlow
+        Consultoría Global
       </Title>
       <Stack gap="xs">
         {navItems.map((item) => {

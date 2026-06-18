@@ -54,7 +54,7 @@ export const JobOfferGrid = ({
           return (
             <Grid.Col
               id={`job-${job.id}`}
-              span={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 6 }}
+              span={{ base: 12, sm: 6, lg: 4 }}
               key={job.id}
               ref={setElementRef(job.id)}
               style={{

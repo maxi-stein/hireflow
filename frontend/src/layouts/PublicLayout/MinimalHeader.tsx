@@ -32,7 +32,7 @@ export function MinimalHeader() {
           }}
           style={{ cursor: 'pointer', userSelect: 'none' }}
         >
-          HireFlow
+          Consultoría Global
         </Title>
 
       </Group>

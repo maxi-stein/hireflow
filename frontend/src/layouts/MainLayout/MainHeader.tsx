@@ -65,105 +65,105 @@ export function MainHeader() {
     <>
       <Container size={APP_MAX_WIDTH} h="100%" px="md">
         <Group h="100%" justify="space-between" wrap="nowrap">
-        {/* ── Left: burger (mobile) + logo + nav items ── */}
-        <Group gap={4} wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-          {/* Burger — only on mobile */}
-          {isMobile && (
-            <Burger
-              opened={drawerOpened}
-              onClick={toggleDrawer}
-              size="sm"
-              color="white"
-              mr={4}
-            />
-          )}
+          {/* ── Left: burger (mobile) + logo + nav items ── */}
+          <Group gap={4} wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+            {/* Burger — only on mobile */}
+            {isMobile && (
+              <Burger
+                opened={drawerOpened}
+                onClick={toggleDrawer}
+                size="sm"
+                color="white"
+                mr={4}
+              />
+            )}
 
-          {/* Logo */}
-          <Title
-            order={4}
-            c="white"
-            mr="lg"
-            onClick={handleLogoClick}
-            style={{ cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap' }}
-          >
-            HireFlow
-          </Title>
+            {/* Logo */}
+            <Title
+              order={4}
+              c="white"
+              mr="lg"
+              onClick={handleLogoClick}
+              style={{ cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap' }}
+            >
+              Consultoría Global
+            </Title>
 
-          {/* Nav items — hidden on mobile */}
-          {!isMobile && (
-            <Group gap={2} wrap="nowrap">
-              {navItems.map((item) => {
-                const active = isActive(item);
-                const visibleChildren = item.children?.filter((c) => c.showInNav !== false) ?? [];
-                const hasChildren = visibleChildren.length > 0;
+            {/* Nav items — hidden on mobile */}
+            {!isMobile && (
+              <Group gap={2} wrap="nowrap">
+                {navItems.map((item) => {
+                  const active = isActive(item);
+                  const visibleChildren = item.children?.filter((c) => c.showInNav !== false) ?? [];
+                  const hasChildren = visibleChildren.length > 0;
 
-                if (hasChildren) {
+                  if (hasChildren) {
+                    return (
+                      <Menu
+                        key={item.path}
+                        trigger="hover"
+                        openDelay={60}
+                        closeDelay={180}
+                        withinPortal
+                        shadow="md"
+                        radius="md"
+                        offset={4}
+                      >
+                        <Menu.Target>
+                          <NavButton $active={active}>
+                            {item.icon}
+                            <Text size="sm" fw={active ? 600 : 400} c="inherit" component="span">
+                              {item.label ? t(item.label) : ''}
+                            </Text>
+                            <IconChevronDown size={13} style={{ opacity: 0.75, marginLeft: 2 }} />
+                          </NavButton>
+                        </Menu.Target>
+
+                        <Menu.Dropdown>
+                          {visibleChildren.map((child) => {
+                            const childActive =
+                              matchPath({ path: child.path, end: false }, location.pathname) !== null;
+                            return (
+                              <Menu.Item
+                                key={child.path}
+                                onClick={() => handleNavigate(child.path)}
+                                fw={childActive ? 600 : 400}
+                                bg={childActive ? 'blue.0' : undefined}
+                                leftSection={child.icon}
+                              >
+                                {child.label ? t(child.label) : ''}
+                              </Menu.Item>
+                            );
+                          })}
+                        </Menu.Dropdown>
+                      </Menu>
+                    );
+                  }
+
+                  // Simple item (no children)
                   return (
-                    <Menu
+                    <NavButton
                       key={item.path}
-                      trigger="hover"
-                      openDelay={60}
-                      closeDelay={180}
-                      withinPortal
-                      shadow="md"
-                      radius="md"
-                      offset={4}
+                      $active={active}
+                      onClick={() => handleNavigate(item.path)}
                     >
-                      <Menu.Target>
-                        <NavButton $active={active}>
-                          {item.icon}
-                          <Text size="sm" fw={active ? 600 : 400} c="inherit" component="span">
-                            {item.label ? t(item.label) : ''}
-                          </Text>
-                          <IconChevronDown size={13} style={{ opacity: 0.75, marginLeft: 2 }} />
-                        </NavButton>
-                      </Menu.Target>
-
-                      <Menu.Dropdown>
-                        {visibleChildren.map((child) => {
-                          const childActive =
-                            matchPath({ path: child.path, end: false }, location.pathname) !== null;
-                          return (
-                            <Menu.Item
-                              key={child.path}
-                              onClick={() => handleNavigate(child.path)}
-                              fw={childActive ? 600 : 400}
-                              bg={childActive ? 'blue.0' : undefined}
-                              leftSection={child.icon}
-                            >
-                              {child.label ? t(child.label) : ''}
-                            </Menu.Item>
-                          );
-                        })}
-                      </Menu.Dropdown>
-                    </Menu>
+                      {item.icon}
+                      <Text size="sm" fw={active ? 600 : 400} c="inherit" component="span">
+                        {item.label ? t(item.label) : ''}
+                      </Text>
+                    </NavButton>
                   );
-                }
+                })}
+              </Group>
+            )}
+          </Group>
 
-                // Simple item (no children)
-                return (
-                  <NavButton
-                    key={item.path}
-                    $active={active}
-                    onClick={() => handleNavigate(item.path)}
-                  >
-                    {item.icon}
-                    <Text size="sm" fw={active ? 600 : 400} c="inherit" component="span">
-                      {item.label ? t(item.label) : ''}
-                    </Text>
-                  </NavButton>
-                );
-              })}
-            </Group>
-          )}
-        </Group>
-
-        {/* ── Right: language + user ── */}
-        <Group gap="md" wrap="nowrap">
-          <LanguageSelector />
-          <Divider orientation="vertical" h={20} my="auto" opacity={0.4} />
-          <UserMenu />
-        </Group>
+          {/* ── Right: language + user ── */}
+          <Group gap="md" wrap="nowrap">
+            <LanguageSelector />
+            <Divider orientation="vertical" h={20} my="auto" opacity={0.4} />
+            <UserMenu />
+          </Group>
         </Group>
       </Container>
 

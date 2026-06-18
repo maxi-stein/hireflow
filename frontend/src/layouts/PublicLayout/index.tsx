@@ -10,6 +10,12 @@ export function PublicLayout() {
     <AppShell
       header={{ height: 60 }}
       padding="md"
+      bg="oklch(99% .005 240)"
+      styles={{
+        main: {
+          backgroundColor: 'oklch(99% .005 240)',
+        }
+      }}
     >
       <HeaderContainer>
         <MinimalHeader />

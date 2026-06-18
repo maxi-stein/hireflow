@@ -89,11 +89,13 @@
     "viewApplication": "Ver Postulación"
   },
   "landing": {
-    "heroTitle": "Encontrá el trabajo de tus sueños",
-    "heroSubtitle": "Explorá las oportunidades disponibles y postulá en minutos. Unite a nuestro equipo y desarrollá tu carrera.",
-    "availableJobs": "Trabajos Disponibles",
+    "heroTitle": "Tu próximo paso en tecnología empieza acá.",
+    "heroSubtitle": "Conectamos profesionales IT con proyectos de impacto en empresas globales. Unite a nuestro equipo y desarrollá tu carrera.",
+    "availableJobs": "Posiciones Abiertas",
+    "findChallenge": "Encontrá tu próximo desafío",
     "availableJobsSubtitle": "Descubrí nuestras últimas ofertas y encontrá tu lugar ideal.",
     "noJobs": "No hay trabajos disponibles por el momento",
-    "noJobsSubtitle": "Por favor, volvé a revisar más tarde."
+    "noJobsSubtitle": "Por favor, volvé a revisar más tarde.",
+    "alliesTitle": "Aliados tecnológicos"
   }
 }

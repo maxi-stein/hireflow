@@ -19,17 +19,9 @@ export const JobOfferCard = ({ job, action, showSensitiveData = false }: JobOffe
       padding="lg"
       radius="md"
       withBorder
+      className="job-card-hover"
       style={{
         borderLeft: `4px solid var(--mantine-color-blue-filled)`,
-        transition: 'transform 0.2s, box-shadow 0.2s',
-      }}
-      styles={{
-        root: {
-          '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: 'var(--mantine-shadow-md)',
-          }
-        }
       }}
     >
       {/* Header Section */}

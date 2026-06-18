@@ -6,7 +6,7 @@ export function Footer() {
       <Container size="lg" py="md">
         <Group justify="space-between">
           <Text size="sm" c="dimmed">
-            © {new Date().getFullYear()} HireFlow. All rights reserved.
+            © {new Date().getFullYear()} Consultoría Global. All rights reserved.
           </Text>
           <Group gap="xs">
             <Anchor href="#" size="sm" c="dimmed">
