@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCandidatesQuery } from '../../hooks/api/useCandidates';
 import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export function CandidatesListPage() {
   const { t } = useTranslation('candidates');
@@ -95,7 +96,7 @@ export function CandidatesListPage() {
   ));
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Stack gap="lg">
         <Group justify="space-between" align="flex-end">
           <div>

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
 import { UserMenu } from '../../components/shared/UserMenu';
-import { LANDING_MAX_WIDTH } from '../../pages/LandingPage';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export function MinimalHeader() {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ export function MinimalHeader() {
 
   if (isLandingPage) {
     return (
-      <Container size={LANDING_MAX_WIDTH} h="100%">
+      <Container size={APP_MAX_WIDTH} h="100%">
         {content}
       </Container>
     );

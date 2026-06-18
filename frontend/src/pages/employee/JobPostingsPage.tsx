@@ -32,6 +32,7 @@ import { getWorkModeColor } from '../../utils/job.utils';
 import { notifications } from '@mantine/notifications';
 import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
 import { DeleteJobOfferModal } from '../../components/employee/job-postings/DeleteJobOfferModal';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export function JobPostingsPage() {
   const { t, i18n } = useTranslation('jobs');
@@ -121,7 +122,7 @@ export function JobPostingsPage() {
   };
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Group justify="space-between" mb="lg">
         <div>
           <Title order={2}>{t('list.title')}</Title>

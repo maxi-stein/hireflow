@@ -14,6 +14,8 @@ import { CancelInterviewModal } from '../../components/employee/interviews/Cance
 import { getDaysInMonth } from '../../utils/date-utils';
 import { ViewJobOfferModal } from '../../components/employee/job-postings/ViewJobOfferModal';
 import type { JobOffer } from '../../services/job-offer.service';
+import { APP_MAX_WIDTH } from '../../constants/layout';
+
 
 
 
@@ -126,7 +128,7 @@ export function CalendarPage() {
   };
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Group justify="space-between" mb="lg">
         <Title order={2}>{t('title')}</Title>
         <Button leftSection={<IconPlus size={16} />} onClick={() => setIsScheduleModalOpen(true)}>

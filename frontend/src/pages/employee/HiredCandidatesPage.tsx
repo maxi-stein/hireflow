@@ -4,8 +4,8 @@ import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateAp
 import { ApplicationStatus } from '../../services/candidate-application.service';
 import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
 import { getApplicationStatusColor } from '../../utils/application.utils';
-
 import { useTranslation } from 'react-i18next';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export function HiredCandidatesPage() {
   const { t } = useTranslation(['candidates', 'profile', 'applications']);
@@ -20,7 +20,7 @@ export function HiredCandidatesPage() {
   };
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Title order={2} mb="md">{t('hired.title', { ns: 'candidates' })}</Title>
       <Text c="dimmed" mb="xl">{t('hired.subtitle', { ns: 'candidates' })}</Text>
 

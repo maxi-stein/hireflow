@@ -8,8 +8,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LandingHero } from '../components/landing/LandingHero';
 import { JobOfferGrid } from '../components/jobs/JobOfferGrid';
-
-export const LANDING_MAX_WIDTH = 1440;
+import { APP_MAX_WIDTH } from '../constants/layout';
 
 export const LandingPage = () => {
   const { t } = useTranslation(['common', 'jobs']);
@@ -43,7 +42,7 @@ export const LandingPage = () => {
       <LandingHero />
 
       {/* Jobs List Section */}
-      <Container size={LANDING_MAX_WIDTH} py={{ base: 40, md: 80 }}>
+      <Container size={APP_MAX_WIDTH} py={{ base: 40, md: 80 }}>
         <Stack gap="xl">
           <Group justify="space-between" align="flex-end">
             <div>

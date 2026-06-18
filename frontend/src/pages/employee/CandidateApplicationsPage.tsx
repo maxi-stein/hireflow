@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { JobOfferStatus } from '../../services/job-offer.service';
 import { JobApplicationsTable } from '../../components/employee/candidate-applications/JobApplicationsTable';
+import { APP_MAX_WIDTH } from '../../constants/layout';
+
 
 export function CandidateApplicationsPage() {
   const { t } = useTranslation('applications');
@@ -28,7 +30,7 @@ export function CandidateApplicationsPage() {
   });
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Stack gap="lg">
         <Box>
           <Title order={2}>{t('title')}</Title>

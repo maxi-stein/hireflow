@@ -8,6 +8,7 @@ import { InterviewStatus } from '../../services/interview.service';
 import { DashboardListItem } from './components/DashboardListItem';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 
 export const DashboardPage = () => {
@@ -52,7 +53,7 @@ export const DashboardPage = () => {
 
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Stack gap="xl">
         <div>
           <Title order={2} mb="sm">{t('title')}</Title>

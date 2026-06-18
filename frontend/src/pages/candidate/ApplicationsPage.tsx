@@ -8,6 +8,8 @@ import { UpcomingInterviewsAlert } from '../../components/candidate/UpcomingInte
 import type { Interview } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
 import { CandidateApplicationCard } from '../../components/candidate/CandidateApplicationCard';
+import { APP_MAX_WIDTH } from '../../constants/layout';
+
 
 export const ApplicationsPage = () => {
     const user = useAppStore((state) => state.user);
@@ -56,7 +58,7 @@ export const ApplicationsPage = () => {
     }
 
     return (
-        <Container size="xl" py="xl">
+        <Container size={APP_MAX_WIDTH} py="xl">
             <Stack gap="xl">
                 {/* Page Header */}
                 <Box>

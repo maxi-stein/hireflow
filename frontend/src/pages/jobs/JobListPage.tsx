@@ -9,6 +9,7 @@ import { candidateApplicationService } from '../../services/candidate-applicatio
 import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 import { JobOfferGrid } from '../../components/jobs/JobOfferGrid';
 import { useTranslation } from 'react-i18next';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export const JobListPage = () => {
   const { t } = useTranslation(['common', 'jobs']);
@@ -73,7 +74,7 @@ export const JobListPage = () => {
   }
 
   return (
-    <Container size={1440} py={{ base: 40, md: 80 }}>
+    <Container size={APP_MAX_WIDTH} py={{ base: 40, md: 80 }}>
       <Stack gap="xl">
         <div>
           <Title order={1}>{t('jobs:publicList.title')}</Title>

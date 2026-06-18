@@ -13,6 +13,8 @@ import { CompareSelectionHeader } from '../../components/employee/compare/Compar
 import { JobOfferSearchPanel } from '../../components/employee/compare/JobOfferSearchPanel';
 import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';
 import { getApplicationStatusColor } from '../../utils/application.utils';
+import { APP_MAX_WIDTH } from '../../constants/layout';
+
 
 export function CompareCandidatesPage() {
     const [searchParams] = useSearchParams();
@@ -152,7 +154,7 @@ export function CompareCandidatesPage() {
     // ========== COMPARISON VIEW ==========
     if (showComparison) {
         return (
-            <Container size="xl" py="xl">
+            <Container size={APP_MAX_WIDTH} py="xl">
                 {/* Header with candidate count and back button */}
                 <ComparisonViewHeader
                     candidateCount={candidatesToCompare.length}
@@ -192,7 +194,7 @@ export function CompareCandidatesPage() {
 
     // ========== SELECTION VIEW ==========
     return (
-        <Container size="xl" py="xl">
+        <Container size={APP_MAX_WIDTH} py="xl">
             <Stack gap="lg">
                 {/* Header with selection count and action buttons */}
                 <CompareSelectionHeader

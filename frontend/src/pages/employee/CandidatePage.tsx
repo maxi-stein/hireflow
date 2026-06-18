@@ -20,6 +20,8 @@ import { ApplicationsSection } from '../../components/employee/candidate-details
 import { CandidateHeader } from '../../components/employee/candidate-details/CandidateHeader';
 import { CandidateLinks } from '../../components/employee/candidate-details/CandidateLinks';
 import { ScheduleInterviewModal } from '../../components/employee/interviews/ScheduleInterviewModal';
+import { APP_MAX_WIDTH } from '../../constants/layout';
+
 
 export function CandidatePage() {
   const { t } = useTranslation('profile');
@@ -115,7 +117,7 @@ export function CandidatePage() {
   }
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Button
         variant="subtle"
         leftSection={<IconChevronLeft size={16} />}

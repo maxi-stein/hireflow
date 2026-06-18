@@ -1,7 +1,7 @@
 import { Container, Title, Paper, Stack, Group, Box, Text, Button, Tabs, Badge, Collapse, TextInput, useMantineColorScheme } from '@mantine/core';
 import { useState, useMemo } from 'react';
 import { useMyPendingReviewsQuery, useMyCompletedReviewsQuery } from '../../hooks/api/useInterviewReviews';
-import { IconClipboardCheck, IconHistory, IconSearch, IconBriefcase } from '@tabler/icons-react'; // removed IconUser
+import { IconClipboardCheck, IconHistory, IconSearch, IconBriefcase } from '@tabler/icons-react';
 import { InterviewReviewForm } from '../../components/employee/reviews/InterviewReviewForm';
 import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
 import { TimeDisplay } from '../../components/shared/TimeDisplay';
@@ -9,9 +9,9 @@ import { ScoreBadge } from '../../components/shared/ScoreBadge';
 import { useAppStore } from '../../store/useAppStore';
 import type { InterviewReview } from '../../services/interview-review.service';
 import type { Interview } from '../../services/interview.service';
-
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export function ReviewsPage() {
   const [searchParams] = useSearchParams();
@@ -251,7 +251,7 @@ export function ReviewsPage() {
 
 
   return (
-    <Container size="xl" py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl">
       <Group justify="space-between" mb="lg">
         <Title order={2}>{t('title')}</Title>
         <TextInput

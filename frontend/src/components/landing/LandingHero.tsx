@@ -1,6 +1,6 @@
 import { Box, Stack, Title, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { LANDING_MAX_WIDTH } from '../../pages/LandingPage';
+import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export const LandingHero = () => {
   const { t } = useTranslation(['jobs']);
@@ -13,7 +13,7 @@ export const LandingHero = () => {
       style={{
         color: 'white',
         background: 'linear-gradient(135deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%)',
-        maxWidth: LANDING_MAX_WIDTH,
+        maxWidth: APP_MAX_WIDTH,
         borderRadius: 'var(--mantine-radius-lg)',
       }}
     >
