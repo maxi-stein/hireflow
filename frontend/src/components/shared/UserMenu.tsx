@@ -46,8 +46,8 @@ export function UserMenu() {
               </Avatar>
             )}
             <div style={{ flex: 1 }}>
-              <Text size="sm" fw={500}>{displayName}</Text>
-              <Text c="dimmed" size="xs">{user.email}</Text>
+              <Text size="sm" fw={500} c="white">{displayName}</Text>
+              <Text size="xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{user.email}</Text>
             </div>
           </Group>
         </UnstyledButton>

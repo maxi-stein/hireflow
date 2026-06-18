@@ -22,7 +22,7 @@ export function LanguageSelector() {
         <UnstyledButton>
           <Group gap="xs">
             {currentConfig.flag}
-            <Text size="xs" fw={700} style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <Text size="xs" fw={700} c="white" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               {currentConfig.code}
             </Text>
           </Group>
