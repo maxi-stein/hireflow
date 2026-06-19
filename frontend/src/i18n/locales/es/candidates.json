@@ -45,7 +45,8 @@
     },
     "card": {
       "sections": {
-        "skills": "Habilidades y Experiencia"
+        "skills": "Habilidades y Experiencia",
+        "interviewHistory": "Historial de Entrevistas"
       },
       "empty": {
         "skills": "No hay datos de habilidades",

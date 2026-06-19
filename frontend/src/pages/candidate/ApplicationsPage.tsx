@@ -1,4 +1,4 @@
-import { Title, Text, Stack, LoadingOverlay, Alert, Box, Grid } from '@mantine/core';
+import { Title, Text, Stack, LoadingOverlay, Alert, Box } from '@mantine/core';
 import { IconInbox } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';

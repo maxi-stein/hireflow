@@ -5,7 +5,7 @@ import { useForm } from '@mantine/form';
 import { useCreateInterviewMutation, useUpdateInterviewMutation } from '../../../hooks/api/useInterviews';
 import { InterviewType, InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
-import { useAllCandidateApplicationsQuery } from '../../../hooks/api/useCandidateApplications';
+import { useAllCandidateApplicationsQuery, useCandidateApplicationQuery } from '../../../hooks/api/useCandidateApplications';
 import { useEmployeesQuery } from '../../../hooks/api/useEmployees';
 import { useJobOffersQuery } from '../../../hooks/api/useJobOffers';
 import { notifications } from '@mantine/notifications';
@@ -39,14 +39,41 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
     limit: 100,
     status: [ApplicationStatus.IN_PROGRESS]
   });
+  const { data: singleApplication } = useCandidateApplicationQuery(initialApplicationId || null);
   const { data: employees } = useEmployeesQuery({ limit: 40 });
   const { data: jobOffersData } = useJobOffersQuery({ limit: 100 });
 
   // Combine both application lists
-  const allApplications = useMemo(() => [
-    ...(appliedApplications?.data || []),
-    ...(inProgressApplications?.data || [])
-  ], [appliedApplications, inProgressApplications]);
+  const allApplications = useMemo(() => {
+    const list = [
+      ...(appliedApplications?.data || []),
+      ...(inProgressApplications?.data || [])
+    ];
+    if (singleApplication) {
+      if (!list.some(app => app.id === singleApplication.id)) {
+        list.push(singleApplication);
+      }
+    }
+    return list;
+  }, [appliedApplications, inProgressApplications, singleApplication]);
+
+  const jobOffersOptions = useMemo(() => {
+    const options = jobOffersData?.data.map(offer => ({
+      value: offer.id,
+      label: offer.position
+    })) || [];
+    
+    if (selectedJobOfferId && !options.some(opt => opt.value === selectedJobOfferId)) {
+      const app = allApplications.find(a => a.job_offer.id === selectedJobOfferId);
+      if (app) {
+        options.push({
+          value: app.job_offer.id,
+          label: app.job_offer.position
+        });
+      }
+    }
+    return options;
+  }, [jobOffersData, selectedJobOfferId, allApplications]);
 
   const filteredApplications = useMemo(() => {
     if (!selectedJobOfferId) return [];
@@ -159,10 +186,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
           <StyledSelect
             label={t('modal.labels.jobOffer')}
             placeholder={t('modal.labels.jobOfferPlaceholder')}
-            data={jobOffersData?.data.map(offer => ({
-              value: offer.id,
-              label: offer.position
-            })) || []}
+            data={jobOffersOptions}
             value={selectedJobOfferId}
             onChange={(val) => {
               setSelectedJobOfferId(val);

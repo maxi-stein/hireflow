@@ -1,6 +1,5 @@
 import { Group, Text } from '@mantine/core';
 import {
-  IconMapPin,
   IconBuildingSkyscraper,
   IconHome,
 } from '@tabler/icons-react';

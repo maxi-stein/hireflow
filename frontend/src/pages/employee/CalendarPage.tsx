@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight, IconPlus } from '@tabler/icons-react';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
@@ -24,9 +25,15 @@ export function CalendarPage() {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
   const { t, i18n } = useTranslation(['calendar', 'profile']);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const applicationId = searchParams.get('applicationId') || undefined;
 
-
-  // Used to display interview details modal
+  // Open scheduling modal if applicationId is present in URL
+  useEffect(() => {
+    if (applicationId) {
+      setIsScheduleModalOpen(true);
+    }
+  }, [applicationId]);
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
 
   // Used to display job offer details modal
@@ -186,10 +193,22 @@ export function CalendarPage() {
         onClose={() => {
           setIsScheduleModalOpen(false);
           setInterviewToEdit(null);
+          if (applicationId) {
+            setSearchParams(params => {
+              params.delete('applicationId');
+              return params;
+            });
+          }
         }}
         onSuccess={() => {
-          // Refresh or close logic if needed
+          if (applicationId) {
+            setSearchParams(params => {
+              params.delete('applicationId');
+              return params;
+            });
+          }
         }}
+        initialApplicationId={applicationId}
         interviewToEdit={interviewToEdit}
       />
       <InterviewDetailsModal

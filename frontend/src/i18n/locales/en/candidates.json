@@ -45,7 +45,8 @@
     },
     "card": {
       "sections": {
-        "skills": "Skills & Experience Answers"
+        "skills": "Skills & Experience Answers",
+        "interviewHistory": "Interview History"
       },
       "empty": {
         "skills": "No skills data available",

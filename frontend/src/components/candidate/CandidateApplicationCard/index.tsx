@@ -79,8 +79,7 @@ export const CandidateApplicationCard = ({ application, interviews }: CandidateA
             <Text
               size="md"
               c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-1))"
-              lineClamp={2}
-              style={{ lineHeight: 1.6, wordBreak: 'break-word', overflowWrap: 'break-word', overflow: 'hidden' }}
+              style={{ lineHeight: 1.6, wordBreak: 'break-word' }}
             >
               {job_offer.description}
             </Text>
