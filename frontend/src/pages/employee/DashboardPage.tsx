@@ -1,4 +1,4 @@
-import { Container, Paper, Text, Title, Group, Stack, Progress, SimpleGrid, Card, LoadingOverlay, Button } from '@mantine/core';
+import { Container, Text, Title, Group, Stack, Progress, SimpleGrid, Card, LoadingOverlay, Button, RingProgress, Center, Box } from '@mantine/core';
 import { IconBriefcase, IconFileText, IconCalendarEvent, IconStar, IconExternalLink, IconVideo } from '@tabler/icons-react';
 import { useDashboardMetricsQuery } from '../../hooks/api/useDashboard';
 import { useMyPendingReviewsQuery } from '../../hooks/api/useInterviewReviews';
@@ -50,7 +50,8 @@ export const DashboardPage = () => {
   ];
 
   const maxCandidates = Math.max(...metrics.candidatesPerJob.map(c => c.count));
-
+  const totalCandidates = metrics.candidatesPerJob.reduce((acc, curr) => acc + curr.count, 0);
+  const chartColors = ['blue', 'cyan', 'teal', 'green', 'yellow', 'orange', 'red', 'pink', 'grape', 'violet'];
 
   return (
     <Container size={APP_MAX_WIDTH} py="xl">
@@ -63,7 +64,7 @@ export const DashboardPage = () => {
         {/* Row 1: Key Metrics */}
         <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }}>
           {stats.map((stat) => (
-            <Paper withBorder p="md" radius="md" key={stat.label}>
+            <Card withBorder p="md" radius="md" key={stat.label}>
               <Group>
                 <stat.icon size={28} stroke={1.5} color={`var(--mantine-color-${stat.color}-6)`} />
                 <div>
@@ -75,29 +76,54 @@ export const DashboardPage = () => {
                   </Text>
                 </div>
               </Group>
-            </Paper>
+            </Card>
           ))}
         </SimpleGrid>
 
         {/* Row 2: Candidates per Job Chart */}
         <Card withBorder radius="md" p="xl">
           <Title order={3} mb="lg">{t('candidatesPerJob.title')}</Title>
-          <Stack gap="md">
-            {metrics.candidatesPerJob.map((item) => (
-              <div key={item.jobTitle}>
-                <Group justify="space-between" mb={5}>
-                  <Text size="sm" fw={500}>{item.jobTitle}</Text>
-                  <Text size="sm" fw={500}>{item.count}</Text>
-                </Group>
-                <Progress
-                  value={(item.count / maxCandidates) * 100}
-                  size="xl"
-                  radius="xl"
-                  color="blue"
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
+            {metrics.candidatesPerJob.length > 0 && (
+              <Center>
+                <RingProgress
+                  size={250}
+                  thickness={30}
+                  sections={metrics.candidatesPerJob.map((item, index) => ({
+                    value: totalCandidates > 0 ? (item.count / totalCandidates) * 100 : 0,
+                    color: chartColors[index % chartColors.length],
+                    tooltip: `${item.jobTitle}: ${item.count}`,
+                  }))}
+                  label={
+                    <Text c="dimmed" ta="center" size="sm">
+                      <Text fw={700} size="xl" c="light-dark(var(--mantine-color-black), var(--mantine-color-white))">{totalCandidates}</Text>
+                      Total
+                    </Text>
+                  }
                 />
-              </div>
-            ))}
-          </Stack>
+              </Center>
+            )}
+
+            <Stack gap="md">
+              {metrics.candidatesPerJob.map((item, index) => (
+                <div key={item.jobTitle}>
+                  <Group justify="space-between" mb={5}>
+                    <Group gap="xs">
+                      <Box w={12} h={12} style={{ borderRadius: '50%', backgroundColor: `var(--mantine-color-${chartColors[index % chartColors.length]}-5)` }} />
+                      <Text size="sm" fw={500}>{item.jobTitle}</Text>
+                    </Group>
+                    <Text size="sm" fw={500}>{item.count}</Text>
+                  </Group>
+                  <Progress
+                    value={maxCandidates > 0 ? (item.count / maxCandidates) * 100 : 0}
+                    size="xl"
+                    radius="xl"
+                    color={chartColors[index % chartColors.length]}
+                  />
+                </div>
+              ))}
+            </Stack>
+          </SimpleGrid>
         </Card>
 
         {/* Rows 3 & 4: Reviews and Interviews */}
