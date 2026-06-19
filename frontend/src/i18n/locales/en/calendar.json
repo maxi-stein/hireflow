@@ -18,6 +18,8 @@
     "error": "Failed to schedule interview",
     "updateError": "Failed to update interview",
     "labels": {
+      "title": "Title",
+      "titlePlaceholder": "e.g., Initial HR Interview",
       "jobOffer": "Job Offer",
       "jobOfferPlaceholder": "Select a job offer to filter candidates",
       "type": "Type",

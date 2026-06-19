@@ -1,4 +1,4 @@
-import { Container, Title, Text, Stack, LoadingOverlay, Alert, Box, Grid } from '@mantine/core';
+import { Title, Text, Stack, LoadingOverlay, Alert, Box, Grid } from '@mantine/core';
 import { IconInbox } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
@@ -8,7 +8,6 @@ import { UpcomingInterviewsAlert } from '../../components/candidate/UpcomingInte
 import type { Interview } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
 import { CandidateApplicationCard } from '../../components/candidate/CandidateApplicationCard';
-import { APP_MAX_WIDTH } from '../../constants/layout';
 
 
 export const ApplicationsPage = () => {
@@ -58,45 +57,56 @@ export const ApplicationsPage = () => {
     }
 
     return (
-        <Container size={APP_MAX_WIDTH} py="xl">
-            <Stack gap="xl">
-                {/* Page Header */}
-                <Box>
-                    <Title order={1}>{t('candidate.title')}</Title>
-                    <Text c="dimmed" size="lg" mt="xs">
-                        {t('candidate.subtitle')}
-                    </Text>
-                </Box>
+        <Box py={{ base: 32, md: 56 }}>
+            <Box
+                bg="light-dark(#fff, var(--mantine-color-dark-7))"
+                style={{
+                    borderRadius: 20,
+                    boxShadow: 'var(--mantine-shadow-md)',
+                    padding: '40px 48px',
+                    maxWidth: 1600,
+                    margin: '0 auto',
+                }}
+            >
+                <Stack gap="xl">
+                    {/* Page Header */}
+                    <Box>
+                        <Title order={1}>{t('candidate.title')}</Title>
+                        <Text c="dimmed" size="lg" mt="xs">
+                            {t('candidate.subtitle')}
+                        </Text>
+                    </Box>
 
-                {/* Upcoming Interviews Alert */}
-                <UpcomingInterviewsAlert upcomingInterviews={upcomingInterviews} />
+                    {/* Upcoming Interviews Alert */}
+                    <UpcomingInterviewsAlert upcomingInterviews={upcomingInterviews} />
 
-                {/* Applications List */}
-                {sortedApplications.length > 0 ? (
-                    <Grid>
-                        {sortedApplications.map((application) => (
-                            <Grid.Col
-                                span={{ base: 12, sm: 6, lg: 4 }}
-                                key={application.id}
-                            >
-                                <CandidateApplicationCard
-                                    application={application}
-                                    interviews={getInterviewsForApplication(application.id)}
-                                />
-                            </Grid.Col>
-                        ))}
-                    </Grid>
-                ) : (
-                    <Alert
-                        variant="light"
-                        color="blue"
-                        title={t('candidate.emptyState.title')}
-                        icon={<IconInbox size={20} />}
-                    >
-                        {t('candidate.emptyState.message')}
-                    </Alert>
-                )}
-            </Stack>
-        </Container>
+                    {/* Applications List */}
+                    {sortedApplications.length > 0 ? (
+                        <Grid>
+                            {sortedApplications.map((application) => (
+                                <Grid.Col
+                                    span={{ base: 12, sm: 6, lg: 4 }}
+                                    key={application.id}
+                                >
+                                    <CandidateApplicationCard
+                                        application={application}
+                                        interviews={getInterviewsForApplication(application.id)}
+                                    />
+                                </Grid.Col>
+                            ))}
+                        </Grid>
+                    ) : (
+                        <Alert
+                            variant="light"
+                            color="blue"
+                            title={t('candidate.emptyState.title')}
+                            icon={<IconInbox size={20} />}
+                        >
+                            {t('candidate.emptyState.message')}
+                        </Alert>
+                    )}
+                </Stack>
+            </Box>
+        </Box>
     );
 };

@@ -30,6 +30,7 @@ export interface Interviewer {
 
 export interface Interview {
   id: string;
+  title: string;
   type: InterviewType;
   scheduled_time: string;
   meeting_link?: string;
@@ -40,6 +41,7 @@ export interface Interview {
 }
 
 export interface CreateInterviewDto {
+  title: string;
   type: InterviewType;
   scheduled_time: string;
   meeting_link?: string;

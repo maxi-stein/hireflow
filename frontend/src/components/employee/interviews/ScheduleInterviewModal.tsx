@@ -55,6 +55,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
 
   const form = useForm({
     initialValues: {
+      title: '',
       applicationIds: initialApplicationId ? [initialApplicationId] : [] as string[],
       interviewerIds: [] as string[],
       type: InterviewType.INDIVIDUAL as InterviewType,
@@ -72,6 +73,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
         if (jobOfferId) setSelectedJobOfferId(jobOfferId);
 
         form.setValues({
+          title: interviewToEdit.title,
           applicationIds: interviewToEdit.applications.map(app => app.id),
           interviewerIds: interviewToEdit.interviewers.map(i => i.id),
           type: interviewToEdit.type,
@@ -104,6 +106,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
         await updateMutation.mutateAsync({
           id: interviewToEdit.id,
           data: {
+            title: values.title,
             application_ids: values.applicationIds,
             interviewer_ids: values.interviewerIds,
             type: values.type,
@@ -114,6 +117,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
         notifications.show({ title: 'Success', message: t('modal.updateSuccess'), color: 'green' });
       } else {
         await createMutation.mutateAsync({
+          title: values.title,
           application_ids: values.applicationIds,
           interviewer_ids: values.interviewerIds,
           type: values.type,
@@ -145,6 +149,13 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
     <Modal opened={opened} onClose={onClose} title={interviewToEdit ? t('modal.rescheduleTitle') : t('modal.scheduleTitle')}>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
+          <TextInput
+            label={t('modal.labels.title', 'Título')}
+            placeholder={t('modal.labels.titlePlaceholder', 'Ej: Entrevista Inicial con RRHH')}
+            withAsterisk
+            {...form.getInputProps('title')}
+          />
+
           <StyledSelect
             label={t('modal.labels.jobOffer')}
             placeholder={t('modal.labels.jobOfferPlaceholder')}

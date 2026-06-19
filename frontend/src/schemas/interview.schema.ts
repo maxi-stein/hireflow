@@ -1,6 +1,10 @@
 import Joi from "joi";
 
 export const scheduleInterviewSchema = Joi.object({
+  title: Joi.string().required().messages({
+    "string.empty": "Title is required",
+    "any.required": "Title is required",
+  }),
   applicationIds: Joi.array().items(Joi.string()).min(1).required().messages({
     "array.min": "At least one application is required",
     "any.required": "Application is required",

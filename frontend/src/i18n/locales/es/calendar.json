@@ -18,6 +18,8 @@
     "error": "Error al agendar entrevista",
     "updateError": "Error al actualizar entrevista",
     "labels": {
+      "title": "Título",
+      "titlePlaceholder": "Ej: Entrevista Inicial con RRHH",
       "jobOffer": "Oferta de Trabajo",
       "jobOfferPlaceholder": "Seleccione una oferta para filtrar candidatos",
       "type": "Tipo",

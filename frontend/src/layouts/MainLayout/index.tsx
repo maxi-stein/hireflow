@@ -9,13 +9,15 @@ export function MainLayout() {
   return (
     <AppShell
       header={{ height: 64 }}
-      padding="md"
       bg={computedColorScheme === 'dark' ? 'dark.8' : 'oklch(99% .005 240)'}
       styles={{
         header: {
           backgroundColor: 'light-dark(#112240, rgb(24, 24, 24))',
           borderBottom: 'none',
         },
+        main: {
+          margin: '0px 20rem'
+        }
       }}
     >
       <HeaderContainer>

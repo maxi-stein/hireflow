@@ -47,7 +47,7 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
               title={
                 <Group gap="apart" wrap="nowrap">
                   <Text size="sm" fw={600}>
-                    {t(`timeline.interviewTypes.${interview.type}`)}
+                    {interview.title} ({t(`timeline.interviewTypes.${interview.type}`)})
                   </Text>
                   <Badge size="xs" variant="light" color={getInterviewStatusColor(interview.status)}>
                     {t(`timeline.statuses.${interview.status}`)}

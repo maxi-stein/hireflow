@@ -35,15 +35,13 @@ export const ApplicationStatusBadge = ({ status, hasScheduledInterview = false }
   const config = getStatusConfig(status, hasScheduledInterview, t);
 
   return (
-    <Tooltip label={`Current status: ${config.label}`}>
-      <Badge
-        size="lg"
-        color={config.color}
-        variant={config.variant}
-        radius="sm"
-      >
-        {config.label}
-      </Badge>
-    </Tooltip>
+    <Badge
+      size="lg"
+      color={config.color}
+      variant={config.variant}
+      radius="sm"
+    >
+      {config.label}
+    </Badge>
   );
 };

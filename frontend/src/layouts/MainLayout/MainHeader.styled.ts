@@ -11,7 +11,9 @@ export const NavButton = styled(UnstyledButton as any)<{ $active?: boolean }>`
   background-color: ${(p) => (p.$active ? 'rgba(255,255,255,0.14)' : 'transparent')};
   font-size: var(--mantine-font-size-sm);
   font-weight: ${(p) => (p.$active ? 600 : 400)};
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   white-space: nowrap;
   cursor: pointer;
 
