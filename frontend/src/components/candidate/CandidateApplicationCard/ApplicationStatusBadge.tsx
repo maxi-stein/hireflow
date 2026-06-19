@@ -1,4 +1,4 @@
-import { Badge, Tooltip } from '@mantine/core';
+import { Badge } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
 
