@@ -3,13 +3,11 @@ import {
   TextInput,
   PasswordInput,
   Button,
-  Paper,
   Title,
-  Container,
   Group,
   Anchor,
-  Text,
   Stack,
+  Box,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { loginSchema } from "../../schemas/auth.schema";
@@ -70,52 +68,55 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   };
 
   return (
-    <Container size={420} my={40}>
-      <Title ta="center" className="font-greycliff">
+    <Box w="100%" maw={420} mx="auto">
+      <Title ta="center" className="font-greycliff" mb={30}>
         {t("loginForm.title")}
       </Title>
-      <Text c="dimmed" size="sm" ta="center" mt={5}>
-        {t("loginForm.noAccount")}{" "}
-        <Anchor size="sm" component="button" onClick={() => navigate("/register")}>
-          {t("loginForm.createAccount")}
-        </Anchor>
-      </Text>
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-          <Stack>
-            <TextInput
-              label={t("loginForm.emailLabel")}
-              placeholder={t("loginForm.emailPlaceholder")}
-              required
-              type="email"
-              {...form.getInputProps("email")} // Binds value, onChange, and error props automatically
-            />
-            <PasswordInput
-              label={t("loginForm.passwordLabel")}
-              placeholder={t("loginForm.passwordPlaceholder")}
-              required
-              mt="md"
-              {...form.getInputProps("password")} // Binds value, onChange, and error props automatically
-            />
-          </Stack>
+      <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
+        <Stack>
+          <TextInput
+            label={t("loginForm.emailLabel")}
+            placeholder={t("loginForm.emailPlaceholder")}
+            required
+            type="email"
+            {...form.getInputProps("email")}
+          />
+          <PasswordInput
+            label={t("loginForm.passwordLabel")}
+            placeholder={t("loginForm.passwordPlaceholder")}
+            required
+            mt="md"
+            {...form.getInputProps("password")}
+          />
+        </Stack>
 
-          <Group justify="space-between" mt="lg">
-            <Anchor component="button" size="sm" onClick={() => { }}>
-              {t("loginForm.forgotPassword")}
-            </Anchor>
-          </Group>
+        <Group justify="space-between" mt="lg">
+          <Anchor component="button" type="button" size="sm" onClick={() => { }}>
+            {t("loginForm.forgotPassword")}
+          </Anchor>
+        </Group>
 
+        <Stack mt="xl" gap="md">
           <Button
             fullWidth
-            mt="xl"
             type="submit"
             loading={loginMutation.isPending}
           >
             {t("loginForm.signIn")}
           </Button>
-        </form>
-      </Paper>
-    </Container>
+
+          <Button
+            fullWidth
+            variant="outline"
+            color="blue"
+            type="button"
+            onClick={() => navigate("/register")}
+          >
+            {t("register")}
+          </Button>
+        </Stack>
+      </form>
+    </Box>
   );
 };

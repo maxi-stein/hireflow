@@ -53,8 +53,6 @@
   },
   "loginForm": {
     "title": "Welcome back!",
-    "noAccount": "Do not have an account yet?",
-    "createAccount": "Create account",
     "emailLabel": "Email",
     "emailPlaceholder": "you@example.com",
     "passwordLabel": "Password",
