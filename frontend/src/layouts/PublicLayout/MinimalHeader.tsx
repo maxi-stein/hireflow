@@ -1,9 +1,11 @@
-import { Group, Button, Title, Container } from '@mantine/core';
+import { Group, Container, Button } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
 import { UserMenu } from '../../components/shared/UserMenu';
 import { APP_MAX_WIDTH } from '../../constants/layout';
+import cgLogo from '../../assets/cg-logo.jpg';
+import { LogoButton, LogoImage, LogoText } from '../../components/shared/LogoButton.styled';
 
 export function MinimalHeader() {
   const navigate = useNavigate();
@@ -22,19 +24,22 @@ export function MinimalHeader() {
   const isLandingPage = location.pathname === '/';
 
   const content = (
-    <Group justify="space-between" h="100%" px={isLandingPage ? 0 : 'md'} py="xs">
-      <Group gap="lg">
-        <Title
-          order={3}
+    <Group justify="space-between" h="100%" px={isLandingPage ? 0 : 'md'} py={4} w="100%" wrap="nowrap">
+      <Group gap="lg" wrap="nowrap">
+        <LogoButton
           onClick={() => {
             if (!user) return navigate('/');
             return navigate(user.type === 'employee' ? '/manage/dashboard' : '/jobs');
           }}
-          style={{ cursor: 'pointer', userSelect: 'none' }}
         >
-          Consultoría Global
-        </Title>
-
+          {isLandingPage && (
+            <LogoImage
+              src={cgLogo}
+              alt="Consultoría Global"
+            />
+          )}
+          <LogoText>Consultoría Global</LogoText>
+        </LogoButton>
       </Group>
 
       <Group>

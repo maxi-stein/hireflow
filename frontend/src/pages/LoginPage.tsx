@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
-import { Box, Card } from "@mantine/core";
+import { AppShell, Box, Card, Group } from "@mantine/core";
 import { LoginForm } from "../components/auth/LoginForm";
 import { useAppStore } from "../store/useAppStore";
 import { ROUTES } from "../router/routes.config";
+import cgLogo from "../assets/cg-logo.jpg";
+import { LogoButton, LogoImage, LogoText } from "../components/shared/LogoButton.styled";
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,20 +27,36 @@ export const LoginPage: React.FC = () => {
   }
 
   return (
-    <Box>
-      <Card>
-        <LoginForm
-          onSuccess={(loggedInUser) => {
-            // Always redirect to previous page if it's not the home page.
-            // Otherwise, redirect to the Jobs page for candidates or the Dashboard for employees.
-            const pathToRedirect =
-              from && fromPath !== ROUTES.PUBLIC.HOME.path ? from :
-                loggedInUser.type === "candidate"
-                  ? ROUTES.PUBLIC.JOBS.path : ROUTES.EMPLOYEE.DASHBOARD.path;
-            navigate(pathToRedirect, { replace: true });
-          }}
-        />
-      </Card>
-    </Box>
+    <AppShell header={{ height: 60 }} padding="md" bg="oklch(99% .005 240)">
+      <AppShell.Header
+        withBorder={false}
+        style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', zIndex: 100 }}
+      >
+        <Group justify="center" h="100%" px="md">
+          <LogoButton onClick={() => navigate('/')}>
+            <LogoImage src={cgLogo} alt="Consultoría Global" />
+            <LogoText>Consultoría Global</LogoText>
+          </LogoButton>
+        </Group>
+      </AppShell.Header>
+
+      <AppShell.Main>
+        <Box>
+          <Card>
+            <LoginForm
+              onSuccess={(loggedInUser) => {
+                // Always redirect to previous page if it's not the home page.
+                // Otherwise, redirect to the Jobs page for candidates or the Dashboard for employees.
+                const pathToRedirect =
+                  from && fromPath !== ROUTES.PUBLIC.HOME.path ? from :
+                    loggedInUser.type === "candidate"
+                      ? ROUTES.PUBLIC.JOBS.path : ROUTES.EMPLOYEE.DASHBOARD.path;
+                navigate(pathToRedirect, { replace: true });
+              }}
+            />
+          </Card>
+        </Box>
+      </AppShell.Main>
+    </AppShell>
   );
 };

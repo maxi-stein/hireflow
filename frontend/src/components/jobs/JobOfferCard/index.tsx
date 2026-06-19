@@ -1,10 +1,10 @@
-import { Card, Stack, Group, Title, Text, Box } from '@mantine/core';
+import { Stack, Text, Box } from '@mantine/core';
 import type { ReactNode } from 'react';
 import type { JobOffer } from '../../../services/job-offer.service';
 import { JobOfferMeta } from './JobOfferMeta';
 import { JobOfferSkills } from './JobOfferSkills';
-import { JobOfferDetails } from './JobOfferDetails';
 import { useTranslation } from 'react-i18next';
+import { StyledJobCard } from './styled';
 
 interface JobOfferCardProps {
   job: JobOffer;
@@ -12,85 +12,64 @@ interface JobOfferCardProps {
   showSensitiveData?: boolean;
 }
 
-export const JobOfferCard = ({ job, action, showSensitiveData = false }: JobOfferCardProps) => {
+export const JobOfferCard = ({ job, action = false }: JobOfferCardProps) => {
   const { t } = useTranslation('jobs');
+
   return (
-    <Card
-      padding="lg"
-      radius="md"
-      withBorder
-      className="job-card-hover"
-      style={{
-        borderLeft: `4px solid var(--mantine-color-blue-filled)`,
-      }}
-    >
-      {/* Header Section */}
-      <Card.Section
-        bg="var(--mantine-color-body)"
-        withBorder
-        inheritPadding
-        py="md"
-        style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}
-      >
-        <Group justify="space-between" align="flex-start" wrap="nowrap">
-          <Stack gap={4} style={{ flex: 1 }}>
-            <Title order={3} size="h4" fw={700}>
-              {job.position}
-            </Title>
-            <JobOfferMeta location={job.location} workMode={job.work_mode} />
-          </Stack>
+    <StyledJobCard padding="lg" radius="md" withBorder>
+      <Stack gap={12}>
+        {/* Workmode */}
+        <JobOfferMeta location={job.location} workMode={job.work_mode} />
 
-          {/* Action button in header on desktop if desired, but keeping it in body for now as per design */}
-        </Group>
-      </Card.Section>
+        {/* Job Title*/}
+        <Text
+          fw={700}
+          size="xl"
+          c="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white))"
+        >
+          {job.position}
+        </Text>
 
-      <Group wrap="nowrap" align="flex-start" gap="xl" mt="md">
-        {/* Left side - Main content */}
-        <Stack gap="sm" style={{ flex: 1 }}>
+        {/* Job Description */}
+        <Text
+          size="lg"
+          c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-1))"
+          lineClamp={2}
+          style={{ lineHeight: 1.6 }}
+        >
+          {job.description}
+        </Text>
 
-          {/* Description */}
-          <Text c="dimmed" size="sm" lineClamp={2} style={{ lineHeight: 1.6 }}>
-            {job.description}
+        {/* Salary */}
+        {job.salary && (
+          <Text fw={700} size="xl" c="blue.7" style={{ marginTop: '16px', marginBottom: '16px' }}>
+            AR$ {job.salary}
+            <Text component="span" size="xl" c="dimmed" fw={400}> /mes</Text>
           </Text>
+        )}
 
-          {/* Details & Skills */}
-          <Stack gap="md" mt={4}>
-            <JobOfferDetails
-              salary={job.salary}
-              deadline={job.deadline}
-              showSensitiveData={showSensitiveData}
-            />
-            <JobOfferSkills skills={job.skills || []} />
-          </Stack>
+        {/* Skills */}
+        <JobOfferSkills skills={job.skills || []} />
 
-        </Stack>
+        {/* Benefits */}
+        {job.benefits && (
+          <Box style={{ marginTop: '16px' }}>
+            <Text size="md" fw={700} tt="uppercase" c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-5))" mb={4}>
+              {t('benefits')}
+            </Text>
+            <Text size="lg" c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-1))">
+              {job.benefits}
+            </Text>
+          </Box>
+        )}
 
-        {/* Right side - Action button */}
+        {/* Action */}
         {action && (
-          <Box style={{ minWidth: '180px', alignSelf: 'center' }}>
+          <Box mt={4}>
             {action}
           </Box>
         )}
-      </Group>
-
-      {/* Benefits Footer */}
-      {job.benefits && (
-        <Card.Section
-          inheritPadding
-          py="md"
-          mt="lg"
-          style={{
-            borderTop: '1px solid var(--mantine-color-default-border)',
-            backgroundColor: 'var(--mantine-color-gray-light)', // Uses theme light color (gray.0 in light, dark.8 in dark usually)
-          }}
-          bg="var(--mantine-color-default-hover)"
-        >
-          <Group gap={8} align="center">
-            <Text size="xs" fw={700} tt="uppercase" c="dimmed">{t('benefits')}:</Text>
-            <Text size="sm">{job.benefits}</Text>
-          </Group>
-        </Card.Section>
-      )}
-    </Card>
+      </Stack>
+    </StyledJobCard>
   );
 };

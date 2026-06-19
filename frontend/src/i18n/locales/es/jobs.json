@@ -96,6 +96,11 @@
     "availableJobsSubtitle": "Descubrí nuestras últimas ofertas y encontrá tu lugar ideal.",
     "noJobs": "No hay trabajos disponibles por el momento",
     "noJobsSubtitle": "Por favor, volvé a revisar más tarde.",
-    "alliesTitle": "Aliados tecnológicos"
+    "alliesTitle": "Nuestros Partners",
+    "cvCta": {
+      "title": "¿Todavía no encontraste tu match?",
+      "subtitle": "Dejanos tu CV y un reclutador te va a contactar cuando aparezca una posición acorde a tu perfil.",
+      "button": "Subir CV"
+    }
   }
 }

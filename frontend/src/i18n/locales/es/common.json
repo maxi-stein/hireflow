@@ -52,7 +52,7 @@
     }
   },
   "loginForm": {
-    "title": "¡Bienvenido de nuevo!",
+    "title": "¡Bienvenido/a de nuevo!",
     "noAccount": "¿Aún no tienes una cuenta?",
     "createAccount": "Crear cuenta",
     "emailLabel": "Correo electrónico",

@@ -1,4 +1,4 @@
-import { Container, Title, Text, Stack, LoadingOverlay, Button } from '@mantine/core';
+import { Container, Title, Text, Stack, LoadingOverlay, Button, Box } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { useAppStore } from '../../store/useAppStore';
@@ -9,7 +9,6 @@ import { candidateApplicationService } from '../../services/candidate-applicatio
 import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 import { JobOfferGrid } from '../../components/jobs/JobOfferGrid';
 import { useTranslation } from 'react-i18next';
-import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export const JobListPage = () => {
   const { t } = useTranslation(['common', 'jobs']);
@@ -74,55 +73,66 @@ export const JobListPage = () => {
   }
 
   return (
-    <Container size={APP_MAX_WIDTH} py={{ base: 40, md: 80 }}>
-      <Stack gap="xl">
-        <div>
-          <Title order={1}>{t('jobs:publicList.title')}</Title>
-          <Text c="dimmed" size="lg">{t('jobs:publicList.subtitle')}</Text>
-        </div>
+    <Box py={{ base: 32, md: 56 }}>
+      <Box
+        bg="light-dark(#fff, var(--mantine-color-dark-7))"
+        style={{
+          borderRadius: 20,
+          boxShadow: 'var(--mantine-shadow-md)',
+          padding: '40px 48px',
+          maxWidth: 1600,
+          margin: '0 auto',
+        }}
+      >
+        <Stack gap="xl">
+          <div>
+            <Title order={1}>{t('jobs:publicList.title')}</Title>
+            <Text c="dimmed" size="lg">{t('jobs:publicList.subtitle')}</Text>
+          </div>
 
-        <JobOfferGrid
-          jobs={jobOffers?.data ?? []}
-          emptyMessage={t('jobs:publicList.empty')}
-          renderAction={(job) => {
-            const isApplied = appliedJobIds.has(job.id);
-            const isLoadingApplications = applicationsLoading && user?.type === 'candidate';
+          <JobOfferGrid
+            jobs={jobOffers?.data ?? []}
+            emptyMessage={t('jobs:publicList.empty')}
+            renderAction={(job) => {
+              const isApplied = appliedJobIds.has(job.id);
+              const isLoadingApplications = applicationsLoading && user?.type === 'candidate';
 
-            if (user?.type !== 'candidate') return undefined;
+              if (user?.type !== 'candidate') return undefined;
 
-            return (
-              <Button
-                fullWidth
-                loading={isLoadingApplications}
-                disabled={isLoadingApplications}
-                variant={isLoadingApplications ? 'light' : isApplied ? 'light' : 'filled'}
-                color={isLoadingApplications ? 'gray' : isApplied ? 'cyan' : 'green'}
-                onClick={() => {
-                  if (isLoadingApplications) return;
-                  isApplied ? navigate('/candidate/applications') : handleApplyClick(job);
-                }}
-              >
-                {isLoadingApplications
-                  ? t('jobs:publicList.checking')
-                  : isApplied
-                    ? t('jobs:publicList.viewApplication')
-                    : t('applyNow')}
-              </Button>
-            );
-          }}
-        />
-
-        {selectedJob && user?.type === 'candidate' && (
-          <JobApplicationModal
-            key={selectedJob.id}
-            opened={modalOpen}
-            onClose={() => setModalOpen(false)}
-            jobOffer={selectedJob}
-            candidateId={user.id}
-            onSuccess={handleApplicationSuccess}
+              return (
+                <Button
+                  fullWidth
+                  loading={isLoadingApplications}
+                  disabled={isLoadingApplications}
+                  variant={isLoadingApplications ? 'light' : isApplied ? 'light' : 'filled'}
+                  color={isLoadingApplications ? 'gray' : isApplied ? 'cyan' : 'green'}
+                  onClick={() => {
+                    if (isLoadingApplications) return;
+                    isApplied ? navigate('/candidate/applications') : handleApplyClick(job);
+                  }}
+                >
+                  {isLoadingApplications
+                    ? t('jobs:publicList.checking')
+                    : isApplied
+                      ? t('jobs:publicList.viewApplication')
+                      : t('applyNow')}
+                </Button>
+              );
+            }}
           />
-        )}
-      </Stack>
-    </Container>
+
+          {selectedJob && user?.type === 'candidate' && (
+            <JobApplicationModal
+              key={selectedJob.id}
+              opened={modalOpen}
+              onClose={() => setModalOpen(false)}
+              jobOffer={selectedJob}
+              candidateId={user.id}
+              onSuccess={handleApplicationSuccess}
+            />
+          )}
+        </Stack>
+      </Box>
+    </Box>
   );
 };

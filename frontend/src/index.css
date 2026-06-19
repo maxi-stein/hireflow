@@ -2,11 +2,3 @@ html {
   scrollbar-gutter: stable;
 }
 
-.job-card-hover {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-.job-card-hover:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.1) !important;
-}

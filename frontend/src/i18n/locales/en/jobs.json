@@ -96,6 +96,11 @@
     "availableJobsSubtitle": "Discover our latest offers and find your ideal place.",
     "noJobs": "No jobs available at the moment",
     "noJobsSubtitle": "Please check back later.",
-    "alliesTitle": "Technological allies"
+    "alliesTitle": "Our Partners",
+    "cvCta": {
+      "title": "Haven't found your match yet?",
+      "subtitle": "Send us your CV and a recruiter will reach out when a position that fits your profile comes up.",
+      "button": "Upload CV"
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Stack, Title, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import bgGradient from '../../assets/bg-gradient.png';
+import bgGradient from '../../assets/bg-gradient-2.png';
 import { LandingSection } from './LandingSection';
 
 export const LandingHero = () => {
@@ -24,19 +24,19 @@ export const LandingHero = () => {
         <Title
           order={1}
           size="h1"
-          style={{ 
-            fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
-            lineHeight: 1.1, 
+          style={{
+            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+            lineHeight: 1.1,
             fontWeight: 900,
             color: '#0f172a'
           }}
         >
           {t('jobs:landing.heroTitle')}
         </Title>
-        <Text 
-          size="xl" 
-          maw={600} 
-          style={{ 
+        <Text
+          size="xl"
+          maw={600}
+          style={{
             color: '#334155',
             fontWeight: 500
           }}

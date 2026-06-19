@@ -69,7 +69,7 @@ export const LandingPage = () => {
                 color="blue"
                 onClick={() => handleApplyClick(job)}
               >
-                {t('applyNow', 'Aplicar')}
+                <Text size='xl'>{t('applyNow', 'Aplicar')}</Text>
               </Button>
             )}
             emptyMessage={t('jobs:landing.noJobs')}
@@ -81,10 +81,51 @@ export const LandingPage = () => {
         </Stack>
       </LandingSection>
 
+
+      {/* CV Upload CTA Section */}
+      <LandingSection
+        style={{
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1a5276 100%)',
+          borderBottom: 'none',
+        }}
+      >
+        <Stack gap="lg" align="center" ta="center">
+          <Title
+            order={2}
+            style={{
+              color: '#ffffff',
+              fontWeight: 800,
+              fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)',
+              lineHeight: 1.2,
+            }}
+          >
+            {t('jobs:landing.cvCta.title')}
+          </Title>
+          <Text
+            size="lg"
+            maw={560}
+            style={{ color: '#94b8d8', fontWeight: 400, lineHeight: 1.7 }}
+          >
+            {t('jobs:landing.cvCta.subtitle')}
+          </Text>
+          <Button
+            size="lg"
+            radius="xl"
+            variant="white"
+            color="dark"
+            mt="sm"
+            style={{ fontWeight: 700, paddingLeft: 32, paddingRight: 32 }}
+            onClick={() => navigate('/login', { state: { from: { pathname: '/profile' } } })}
+          >
+            {t('jobs:landing.cvCta.button')}
+          </Button>
+        </Stack>
+      </LandingSection>
+
       {/* Allies Section */}
       <LandingSection>
         <Stack gap="lg" align="center" ta="center">
-          <Title order={4} size="h3" style={{ color: '#0f172a' }}>
+          <Title order={4} size="h3" style={{ color: '#0f172a' }} tt="uppercase" c="gray.7">
             {t('jobs:landing.alliesTitle')}
           </Title>
           <Group justify="center" gap="xl" mt="md">
@@ -93,6 +134,7 @@ export const LandingPage = () => {
           </Group>
         </Stack>
       </LandingSection>
+
     </Box>
   );
 };
