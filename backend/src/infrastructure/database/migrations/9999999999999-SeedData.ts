@@ -176,7 +176,7 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "job_offers"
         ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440006', 'Desarrollador Full Stack', 'Remoto', 'remote', 'Buscamos un Full Stack Developer con experiencia en TypeScript.', '50000-70000', 'Seguro, vacaciones, capacitaciones', 'OPEN', false, NOW(), NOW(), '2026-03-01')
+        ('550e8400-e29b-41d4-a716-446655440006', 'Desarrollador Full Stack', 'Remoto', 'remote', 'Estamos buscando un Desarrollador Full Stack con sólida experiencia en TypeScript, React y Node.js para participar en el desarrollo de aplicaciones web modernas de alto impacto. La persona seleccionada trabajará en todo el ciclo de vida del producto, desde el diseño y desarrollo de nuevas funcionalidades hasta la optimización de rendimiento, escalabilidad y experiencia de usuario. Valoramos perfiles con mentalidad colaborativa, orientación a resultados y pasión por construir soluciones tecnológicas de calidad.', '50000-70000', 'Cobertura médica integral, modalidad 100% remota, horario flexible, presupuesto anual para capacitaciones y certificaciones, equipamiento para home office, días adicionales de vacaciones, programas de bienestar y oportunidades de crecimiento profesional.', 'OPEN', false, NOW(), NOW(), '2026-03-01')
     `);
 
     // Job Offer 2
@@ -184,7 +184,43 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "job_offers"
         ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440007', 'Desarrollador Backend', 'Remoto', 'remote', 'Se requiere Backend Developer con Node.js y PostgreSQL.', '45000-65000', 'Seguro dental, capacitaciones', 'OPEN', false, NOW(), NOW(), '2026-04-15')
+        ('550e8400-e29b-41d4-a716-446655440007', 'Desarrollador Backend', 'Remoto', 'remote', 'Buscamos un Desarrollador Backend con experiencia en Node.js, TypeScript y PostgreSQL para diseñar, desarrollar y mantener APIs y servicios escalables. Formará parte de un equipo ágil enfocado en arquitectura de software, buenas prácticas de desarrollo y mejora continua. Será responsable de construir soluciones robustas, optimizar procesos y colaborar con equipos multidisciplinarios para garantizar productos de alta calidad.', '45000-65000', 'Seguro médico y dental, trabajo remoto, horario flexible, capacitaciones técnicas continuas, acceso a certificaciones profesionales, bono por desempeño, licencia extendida y plan de desarrollo de carrera.', 'OPEN', false, NOW(), NOW(), '2026-04-15')
+    `);
+
+    // Job Offer 3
+    await queryRunner.query(`
+      INSERT INTO "job_offers"
+        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440098', 'Frontend Developer React', 'Remoto', 'remote',
+        'Buscamos un Frontend Developer con experiencia en React, TypeScript y desarrollo de interfaces modernas enfocadas en experiencia de usuario.',
+        '45000-65000',
+        'Seguro médico, horario flexible, capacitaciones, presupuesto para home office',
+        'OPEN', false, NOW(), NOW(), '2026-05-30')
+    `);
+
+    // Job Offer 4
+    await queryRunner.query(`
+      INSERT INTO "job_offers"
+        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440099', 'DevOps Engineer', 'Remoto', 'remote',
+        'Estamos buscando un DevOps Engineer para diseñar, automatizar y mantener pipelines de CI/CD e infraestructura cloud escalable.',
+        '60000-85000',
+        'Seguro premium, capacitaciones, certificaciones cloud, días extra de vacaciones',
+        'OPEN', false, NOW(), NOW(), '2026-06-15')
+    `);
+
+    // Job Offer 5
+    await queryRunner.query(`
+      INSERT INTO "job_offers"
+        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440100', 'QA Automation Engineer', 'Híbrido', 'hybrid',
+        'Buscamos un QA Automation Engineer con experiencia en automatización de pruebas, integración continua y aseguramiento de calidad de aplicaciones web.',
+        '50000-70000',
+        'Cobertura médica, capacitaciones técnicas, horario flexible y bonos por desempeño',
+        'OPEN', false, NOW(), NOW(), '2026-07-01')
     `);
 
     // Create unique skills
@@ -198,7 +234,13 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440013', 'postgresql', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440014', 'docker', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440015', 'express.js', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440016', 'rest apis', NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-446655440016', 'rest apis', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440101', 'javascript', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440102', 'aws', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440103', 'kubernetes', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440104', 'ci/cd', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440105', 'testing', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440106', 'cypress', NOW(), NOW())
     `);
 
     // Create relations between Job Offer 1 and its skills
@@ -224,6 +266,28 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440010'),
         ('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440016')
     `);
+
+    // Create relations between Job Offer 3,4 and 5 and skills
+    await queryRunner.query(`
+      INSERT INTO "job_offer_skills_relation"
+        ("job_offer_id", "job_offer_skill_id")
+      VALUES
+        -- Frontend Developer React
+        ('550e8400-e29b-41d4-a716-446655440098', '550e8400-e29b-41d4-a716-446655440010'),
+        ('550e8400-e29b-41d4-a716-446655440098', '550e8400-e29b-41d4-a716-446655440011'),
+        ('550e8400-e29b-41d4-a716-446655440098', '550e8400-e29b-41d4-a716-446655440101'),
+
+        -- DevOps Engineer
+        ('550e8400-e29b-41d4-a716-446655440099', '550e8400-e29b-41d4-a716-446655440014'),
+        ('550e8400-e29b-41d4-a716-446655440099', '550e8400-e29b-41d4-a716-446655440102'),
+        ('550e8400-e29b-41d4-a716-446655440099', '550e8400-e29b-41d4-a716-446655440103'),
+        ('550e8400-e29b-41d4-a716-446655440099', '550e8400-e29b-41d4-a716-446655440104'),
+
+        -- QA Automation Engineer
+        ('550e8400-e29b-41d4-a716-446655440100', '550e8400-e29b-41d4-a716-446655440105'),
+        ('550e8400-e29b-41d4-a716-446655440100', '550e8400-e29b-41d4-a716-446655440106'),
+        ('550e8400-e29b-41d4-a716-446655440100', '550e8400-e29b-41d4-a716-446655440010')
+        `);
 
     // Candidate applications
     await queryRunner.query(`
