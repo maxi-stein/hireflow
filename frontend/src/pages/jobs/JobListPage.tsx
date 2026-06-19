@@ -94,10 +94,23 @@ export const JobListPage = () => {
             jobs={jobOffers?.data ?? []}
             emptyMessage={t('jobs:publicList.empty')}
             renderAction={(job) => {
-              const isApplied = appliedJobIds.has(job.id);
-              const isLoadingApplications = applicationsLoading && user?.type === 'candidate';
+              if (user?.type === 'employee') {
+                return (
+                  <Button
+                    fullWidth
+                    variant="light"
+                    color="blue"
+                    onClick={() => navigate(`/manage/job-postings/edit/${job.id}`)}
+                  >
+                    {t('jobs:employeeList.editOffer', 'Editar oferta')}
+                  </Button>
+                );
+              }
 
               if (user?.type !== 'candidate') return undefined;
+
+              const isApplied = appliedJobIds.has(job.id);
+              const isLoadingApplications = applicationsLoading && user?.type === 'candidate';
 
               return (
                 <Button

@@ -32,7 +32,7 @@ export const JobOfferCard = ({ job, action = false }: JobOfferCardProps) => {
 
         {/* Job Description */}
         <Text
-          size="lg"
+          size="md"
           c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-1))"
           lineClamp={2}
           style={{ lineHeight: 1.6 }}
@@ -44,7 +44,7 @@ export const JobOfferCard = ({ job, action = false }: JobOfferCardProps) => {
         {job.salary && (
           <Text fw={700} size="xl" c="blue.7" style={{ marginTop: '16px', marginBottom: '16px' }}>
             AR$ {job.salary}
-            <Text component="span" size="xl" c="dimmed" fw={400}> /mes</Text>
+            <Text component="span" size="sm" c="dimmed" fw={400}> /mes</Text>
           </Text>
         )}
 
@@ -54,10 +54,10 @@ export const JobOfferCard = ({ job, action = false }: JobOfferCardProps) => {
         {/* Benefits */}
         {job.benefits && (
           <Box style={{ marginTop: '16px' }}>
-            <Text size="md" fw={700} tt="uppercase" c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-5))" mb={4}>
+            <Text size="sm" fw={700} tt="uppercase" c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-5))" mb={4}>
               {t('benefits')}
             </Text>
-            <Text size="lg" c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-1))">
+            <Text size="md" c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-1))">
               {job.benefits}
             </Text>
           </Box>

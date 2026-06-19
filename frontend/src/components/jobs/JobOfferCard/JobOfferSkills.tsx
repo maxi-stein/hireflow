@@ -13,7 +13,7 @@ export const JobOfferSkills = ({ skills }: JobOfferSkillsProps) => {
 
   return (
     <Stack gap={6}>
-      <Text size="md" fw={700} tt="uppercase" c="light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-5))">
+      <Text size="sm" fw={700} tt="uppercase" c="light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-5))">
         Stack
       </Text>
       <Group gap={10} wrap="wrap">

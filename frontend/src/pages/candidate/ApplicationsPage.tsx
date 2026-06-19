@@ -1,4 +1,4 @@
-import { Container, Title, Text, Stack, LoadingOverlay, Alert, Box } from '@mantine/core';
+import { Container, Title, Text, Stack, LoadingOverlay, Alert, Box, Grid } from '@mantine/core';
 import { IconInbox } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
@@ -73,15 +73,19 @@ export const ApplicationsPage = () => {
 
                 {/* Applications List */}
                 {sortedApplications.length > 0 ? (
-                    <Stack gap="lg">
+                    <Grid>
                         {sortedApplications.map((application) => (
-                            <CandidateApplicationCard
+                            <Grid.Col
+                                span={{ base: 12, sm: 6, lg: 4 }}
                                 key={application.id}
-                                application={application}
-                                interviews={getInterviewsForApplication(application.id)}
-                            />
+                            >
+                                <CandidateApplicationCard
+                                    application={application}
+                                    interviews={getInterviewsForApplication(application.id)}
+                                />
+                            </Grid.Col>
                         ))}
-                    </Stack>
+                    </Grid>
                 ) : (
                     <Alert
                         variant="light"

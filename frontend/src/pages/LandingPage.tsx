@@ -1,4 +1,5 @@
 import { Title, Text, Stack, LoadingOverlay, Button, Box, Group } from '@mantine/core';
+import { IconArrowRight } from '@tabler/icons-react'
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useJobOffersQuery } from '../hooks/api/useJobOffers';
 import { useAppStore } from '../store/useAppStore';
@@ -69,7 +70,8 @@ export const LandingPage = () => {
                 color="blue"
                 onClick={() => handleApplyClick(job)}
               >
-                <Text size='xl'>{t('applyNow', 'Aplicar')}</Text>
+                <Text size='sm'>{t('applyNow', 'Aplicar')}</Text>
+                <IconArrowRight size={14} style={{ marginLeft: '4px' }} />
               </Button>
             )}
             emptyMessage={t('jobs:landing.noJobs')}

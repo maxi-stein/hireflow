@@ -7,7 +7,6 @@ import {
   IconFileDescription,
   IconUsers,
   IconCalendar,
-  IconClipboardCheck,
   IconUserPlus,
 } from '@tabler/icons-react';
 import { LandingPage } from '../pages/LandingPage';
@@ -241,7 +240,6 @@ export const ROUTES = {
           showInNav: true,
           requiresAuth: true,
           allowedRoles: ['employee'],
-          icon: <IconClipboardCheck size={20} />,
           section: 'interviews',
         },
       ],
