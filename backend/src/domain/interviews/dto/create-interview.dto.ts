@@ -11,6 +11,9 @@ import { InterviewStatus } from '../interfaces/interview-status.enum';
 import { InterviewType } from '../interfaces/interview-type.enum';
 
 export class CreateInterviewDto {
+  @IsString()
+  title: string;
+
   @IsEnum(InterviewType)
   type: InterviewType;
 

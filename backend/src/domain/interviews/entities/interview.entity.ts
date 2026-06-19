@@ -20,6 +20,13 @@ export class Interview {
   id: string;
 
   @Column({
+    name: 'title',
+    type: 'varchar',
+    length: 255,
+  })
+  title: string;
+
+  @Column({
     type: 'enum',
     enum: InterviewType,
     name: 'type',
