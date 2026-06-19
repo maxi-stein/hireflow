@@ -1,4 +1,4 @@
-import { Container, Title, Text, Stack, LoadingOverlay, Button, Box } from '@mantine/core';
+import { Title, Text, Stack, LoadingOverlay, Button, Box } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { useAppStore } from '../../store/useAppStore';
