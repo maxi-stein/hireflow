@@ -395,7 +395,7 @@ export class SeedData9999999999999 implements MigrationInterface {
         (
           '550e8400-e29b-41d4-a716-446655440110',
           'Entrevista Técnica',
-          'INDIVIDUAL',
+          'GROUP',
           '2026-09-10 14:00:00',
           'https://meet.google.com/tech-alice-2026',
           'SCHEDULED',
