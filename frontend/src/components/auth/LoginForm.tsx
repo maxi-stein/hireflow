@@ -21,7 +21,7 @@ import type { JwtUser } from "../../types/api/auth.types";
 import { useAppStore } from "../../store/useAppStore";
 
 interface LoginFormProps {
-  onSuccess?: (user: JwtUser ) => void;
+  onSuccess?: (user: JwtUser) => void;
 }
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
@@ -42,7 +42,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
     loginMutation.mutate(values, {
       onSuccess: (data) => {
         setAuth(data.user, data.access_token);
-        
+
         notifications.show({
           title: t("loginForm.notifications.successTitle"),
           message: t("loginForm.notifications.successMessage"),
@@ -51,7 +51,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         if (onSuccess) {
           onSuccess(data.user);
         } else {
-            navigate("/dashboard");
+          navigate("/dashboard");
         }
       },
       onError: (error: any) => {
@@ -99,13 +99,13 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               {...form.getInputProps("password")} // Binds value, onChange, and error props automatically
             />
           </Stack>
-          
+
           <Group justify="space-between" mt="lg">
-            <Anchor component="button" size="sm">
+            <Anchor component="button" size="sm" onClick={() => { }}>
               {t("loginForm.forgotPassword")}
             </Anchor>
           </Group>
-          
+
           <Button
             fullWidth
             mt="xl"

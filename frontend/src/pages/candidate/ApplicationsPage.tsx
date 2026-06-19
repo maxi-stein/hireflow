@@ -82,19 +82,15 @@ export const ApplicationsPage = () => {
 
                     {/* Applications List */}
                     {sortedApplications.length > 0 ? (
-                        <Grid>
+                        <Stack gap="lg">
                             {sortedApplications.map((application) => (
-                                <Grid.Col
-                                    span={{ base: 12, sm: 6, lg: 4 }}
+                                <CandidateApplicationCard
                                     key={application.id}
-                                >
-                                    <CandidateApplicationCard
-                                        application={application}
-                                        interviews={getInterviewsForApplication(application.id)}
-                                    />
-                                </Grid.Col>
+                                    application={application}
+                                    interviews={getInterviewsForApplication(application.id)}
+                                />
                             ))}
-                        </Grid>
+                        </Stack>
                     ) : (
                         <Alert
                             variant="light"

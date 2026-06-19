@@ -34,7 +34,8 @@
     "underReviewMessage": "Our team is currently reviewing your profile. You will be notified regarding any updates or next steps in the process.",
     "rejected": "Application Rejected",
     "rejectedMessage": "Thank you for your interest in this position. Unfortunately, we have decided not to proceed with your application at this time.",
-    "viewOriginalJob": "View Original Job Post"
+    "viewOriginalJob": "View Original Job Post",
+    "appliedOn": "Applied on"
   },
   "candidate": {
     "title": "My Applications",
@@ -57,7 +58,7 @@
     "dateTimeFormat": "{{date}} at {{time}}"
   },
   "timeline": {
-    "title": "Interview Process",
+    "title": "Interview History",
     "joinMeeting": "Join Meeting Link",
     "noInterviewers": "No interviewers assigned",
     "interviewTypes": {

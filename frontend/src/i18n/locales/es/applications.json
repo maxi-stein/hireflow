@@ -34,7 +34,8 @@
     "underReviewMessage": "Nuestro equipo está revisando tu perfil. Te notificaremos sobre cualquier actualización o próximos pasos en el proceso.",
     "rejected": "Solicitud Rechazada",
     "rejectedMessage": "Gracias por tu interés en esta posición. Desafortunadamente, hemos decidido no avanzar con tu solicitud en este momento.",
-    "viewOriginalJob": "Ver Oferta Original"
+    "viewOriginalJob": "Ver Oferta Original",
+    "appliedOn": "Aplicaste el"
   },
   "candidate": {
     "title": "Mis Postulaciones",
@@ -57,7 +58,7 @@
     "dateTimeFormat": "{{date}} a las {{time}}"
   },
   "timeline": {
-    "title": "Proceso de Entrevistas",
+    "title": "Historial de Entrevistas",
     "joinMeeting": "Unirse a la Reunión",
     "noInterviewers": "Sin entrevistadores asignados",
     "interviewTypes": {

@@ -1,8 +1,8 @@
 import { Timeline, Text, Group, Badge, Stack, Box, ThemeIcon } from '@mantine/core';
-import { IconCheck, IconX, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
+import { IconCheck, IconX, IconClock, IconVideo, IconUsers, IconUser } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { Interview, Interviewer } from '../../../services/interview.service';
-import { InterviewStatus } from '../../../services/interview.service';
+import { InterviewStatus, InterviewType } from '../../../services/interview.service';
 import { getInterviewStatusColor } from '../../../utils/application.utils';
 
 interface ApplicationTimelineProps {
@@ -14,7 +14,7 @@ const getInterviewStatusIcon = (status: InterviewStatus) => {
     case InterviewStatus.COMPLETED: return IconCheck;
     case InterviewStatus.CANCELLED: return IconX;
     case InterviewStatus.SCHEDULED: return IconClock;
-    case InterviewStatus.RESCHEDULED: return IconClock; // Changed to Clock for Rescheduled as well
+    case InterviewStatus.RESCHEDULED: return IconClock;
     default: return IconClock;
   }
 };
@@ -29,10 +29,15 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
   );
 
   return (
-    <Box mt="md" pl={{ base: 0, sm: 'xs' }}>
-      <Text size="sm" fw={700} mb="lg" c="dimmed" tt="uppercase" style={{ letterSpacing: '0.5px' }}>
-        {t('timeline.title')}
-      </Text>
+    <Box pl={{ base: 0, sm: 'xs' }}>
+      <Group justify="space-between" align="center" mb="lg">
+        <Text size="sm" fw={700} c="dimmed" tt="uppercase" style={{ letterSpacing: '0.5px' }}>
+          {t('timeline.title')}
+        </Text>
+        <Text size="sm" fw={700} c="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white))">
+          {sortedInterviews.length}
+        </Text>
+      </Group>
 
       <Timeline active={sortedInterviews.length} bulletSize={26} lineWidth={2}>
         {sortedInterviews.map((interview) => {
@@ -47,7 +52,7 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
               title={
                 <Group gap="apart" wrap="nowrap">
                   <Text size="sm" fw={600}>
-                    {interview.title} ({t(`timeline.interviewTypes.${interview.type}`)})
+                    {interview.title}
                   </Text>
                   <Badge size="xs" variant="light" color={getInterviewStatusColor(interview.status)}>
                     {t(`timeline.statuses.${interview.status}`)}
@@ -78,16 +83,21 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
                   </Group>
                 )}
 
-                <Group gap={6} align="flex-start">
-                  <ThemeIcon size="xs" color="gray" variant="light" radius="xl" mt={2}>
-                    <IconUsers size={10} />
-                  </ThemeIcon>
-                  <Text size="xs" c="dimmed" lh={1.4}>
+                <Stack gap={4} mt={8}>
+                  <Group gap={6} align="center">
+                    <ThemeIcon size="xs" color="gray" variant="transparent">
+                      {interview.type === InterviewType.INDIVIDUAL ? <IconUser size={14} /> : <IconUsers size={14} />}
+                    </ThemeIcon>
+                    <Text size="xs" fw={600} c="dark.3">
+                      {t(`timeline.interviewTypes.${interview.type}`)}
+                    </Text>
+                  </Group>
+                  <Text size="xs" c="dimmed" lh={1.4} pl={20}>
                     {interview.interviewers.length > 0
-                      ? interview.interviewers.map((i: Interviewer) => `${i.user.first_name} ${i.user.last_name}`).join(', ')
+                      ? interview.interviewers.map((i: Interviewer) => `${i.user.first_name} ${i.user.last_name}${i.position ? ` (${i.position})` : ''}`).join(', ')
                       : t('timeline.noInterviewers')}
                   </Text>
-                </Group>
+                </Stack>
               </Stack>
             </Timeline.Item>
           );
