@@ -83,7 +83,6 @@ export function CandidateComparisonCard({
             firstName={application.candidate.user.first_name}
             lastName={application.candidate.user.last_name}
             size="lg"
-            radius="xl"
           />
           <div style={{ flex: 1 }}>
             <Text fw={700} size="lg">

@@ -1,4 +1,5 @@
-import { Group, Avatar, Text, Stack, Tooltip } from '@mantine/core';
+import { Group, Text, Stack, Tooltip } from '@mantine/core';
+import { CandidateAvatar } from '../shared/candidate-display/CandidateAvatar';
 import type { Interviewer } from '../../services/interview.service';
 
 interface InterviewersListProps {
@@ -20,9 +21,9 @@ export function InterviewersList({ interviewers, size = 'sm' }: InterviewersList
                 return (
                     <Tooltip key={interviewer.id} label={interviewer.user.email} withArrow>
                         <Group gap="xs">
-                            <Avatar size={size} color="blue" radius="xl">
+                            <CandidateAvatar size={size} color="blue">
                                 {initials}
-                            </Avatar>
+                            </CandidateAvatar>
                             <Stack gap={0}>
                                 <Text size={size} fw={500}>{fullName}</Text>
                             </Stack>

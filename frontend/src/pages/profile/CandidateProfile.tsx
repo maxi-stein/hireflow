@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Paper, Title, Grid, TextInput, Button, Group, Stack, Avatar, FileButton, Text, Divider } from '@mantine/core';
+import { Paper, Title, Grid, TextInput, Button, Group, Stack, FileButton, Text, Divider } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
@@ -11,6 +11,7 @@ import { fileService } from '../../services/file.service';
 import { WorkExperienceSection } from '../../components/profile/WorkExperienceSection';
 import { EducationSection } from '../../components/profile/EducationSection';
 import { ChangePasswordForm } from '../../components/profile/ChangePasswordForm';
+import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
 
 interface CandidateProfileProps {
     user: User;
@@ -122,14 +123,12 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                 <Group justify="space-between" align="flex-start" mb="lg">
                     <Group align="flex-start">
                         <Stack align="center" gap="xs">
-                            <Avatar
-                                src={avatarUrl}
-                                size={100}
-                                radius={100}
-                                color="blue"
-                            >
-                                {user.first_name[0]}{user.last_name[0]}
-                            </Avatar>
+                            <CandidateAvatar
+                                candidateId={user.id}
+                                firstName={user.first_name}
+                                lastName={user.last_name}
+                                src={avatarUrl || undefined}
+                            />
                             <FileButton onChange={handlePhotoUpload} accept="image/png,image/jpeg">
                                 {(props) => <Button variant="subtle" size="xs" loading={uploadingPhoto} {...props}>{t('candidate.changePhoto')}</Button>}
                             </FileButton>

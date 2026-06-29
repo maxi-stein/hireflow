@@ -1,8 +1,9 @@
 
-import { Paper, Title, Grid, TextInput, Badge, Group, Text, Avatar, Stack } from '@mantine/core';
+import { Paper, Title, Grid, TextInput, Badge, Group, Text, Stack } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { ChangePasswordForm } from '../../components/profile/ChangePasswordForm';
 import type { User } from '../../types/models/user.types';
+import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
 
 interface EmployeeProfileProps {
     user: User;
@@ -17,9 +18,10 @@ export const EmployeeProfile = ({ user }: EmployeeProfileProps) => {
             <Paper withBorder shadow="sm" p="lg" radius="md">
                 <Group justify="space-between" mb="md">
                     <Group>
-                        <Avatar size={80} color="blue" radius="xl">
-                            {user.first_name[0]}{user.last_name[0]}
-                        </Avatar>
+                        <CandidateAvatar
+                            firstName={user.first_name}
+                            lastName={user.last_name}
+                        />
                         <Stack gap={0}>
                             <Title order={2}>{user.first_name} {user.last_name}</Title>
                             <Text c="dimmed">{user.email}</Text>

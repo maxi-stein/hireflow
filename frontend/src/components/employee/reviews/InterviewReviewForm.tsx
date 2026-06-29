@@ -168,7 +168,6 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                   firstName={candidate?.first_name}
                   lastName={candidate?.last_name}
                   size={256}
-                  radius="md"
                 />
               </Stack>
             </Paper>

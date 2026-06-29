@@ -1,4 +1,4 @@
-import { Avatar, Menu, UnstyledButton, Text, Group, useMantineColorScheme } from '@mantine/core';
+import { Menu, UnstyledButton, Text, Group, useMantineColorScheme } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { IconSun, IconMoon, IconUser, IconLogout } from '@tabler/icons-react';
 import { useAppStore } from '../../store/useAppStore';
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { authService } from '../../services/auth.service';
 import { queryClient } from '../../services/queryClient';
 import { useProfileQuery } from '../../hooks/api/useAuth';
+import { CandidateAvatar } from './candidate-display/CandidateAvatar';
 
 const capitalize = (s?: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 
@@ -41,9 +42,15 @@ export function UserMenu() {
         <UnstyledButton>
           <Group gap={7}>
             {user.type === 'candidate' && (
-              <Avatar src={null} alt="User" radius="xl" size={30} color="blue">
+              <CandidateAvatar
+                candidateId={user.id}
+                firstName={profile?.first_name}
+                lastName={profile?.last_name}
+                alt="User"
+                size={30}
+              >
                 {user.email?.charAt(0).toUpperCase() || 'U'}
-              </Avatar>
+              </CandidateAvatar>
             )}
             <div style={{ flex: 1 }}>
               <Text size="sm" fw={500} c="white">{displayName}</Text>

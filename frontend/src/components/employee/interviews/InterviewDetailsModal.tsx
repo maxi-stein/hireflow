@@ -1,4 +1,4 @@
-import { Modal, Text, Group, Badge, Stack, Button, Anchor, Avatar } from '@mantine/core';
+import { Modal, Text, Group, Badge, Stack, Button, Anchor } from '@mantine/core';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
@@ -72,7 +72,11 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
           </Group>
           {interview.interviewers?.map(interviewer => (
             <Group key={interviewer.id} gap="sm" ml="lg">
-              <Avatar size="sm" radius="xl" />
+              <CandidateAvatar
+                firstName={interviewer.user?.first_name}
+                lastName={interviewer.user?.last_name}
+                size="sm"
+              />
               <Text size="sm">{interviewer.user?.first_name || 'N/A'} {interviewer.user?.last_name || ''}</Text>
             </Group>
           ))}

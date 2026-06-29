@@ -106,7 +106,6 @@ export function ReviewsPage() {
                       candidateId={candidateId}
                       firstName={candidate?.user?.first_name}
                       lastName={candidate?.user?.last_name}
-                      radius="xl"
                       size={32}
                     />
                     <Text fw={600} size="sm">{candidate?.user?.first_name} {candidate?.user?.last_name}</Text>
@@ -197,7 +196,6 @@ export function ReviewsPage() {
                       candidateId={candidateId}
                       firstName={candidate?.user?.first_name}
                       lastName={candidate?.user?.last_name}
-                      radius="xl"
                       size={32}
                     />
                     <Text fw={600} size="sm">{candidate?.user?.first_name} {candidate?.user?.last_name}</Text>

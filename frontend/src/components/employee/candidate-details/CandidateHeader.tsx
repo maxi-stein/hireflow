@@ -22,8 +22,6 @@ export function CandidateHeader({ candidate, isHired }: CandidateHeaderProps) {
             candidateId={candidate.id}
             firstName={user.first_name}
             lastName={user.last_name}
-            size={80}
-            radius={80}
           />
           <div>
             <Group gap="sm">

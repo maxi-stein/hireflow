@@ -51,7 +51,6 @@ function SelectableCandidateCardComponent({
             candidateId={application.candidate.id}
             firstName={application.candidate.user.first_name}
             lastName={application.candidate.user.last_name}
-            radius="xl"
           />
           <div>
             <Text fw={500}>

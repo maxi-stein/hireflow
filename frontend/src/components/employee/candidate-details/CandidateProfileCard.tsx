@@ -33,8 +33,6 @@ export function CandidateProfileCard({
         candidateId={candidate.id}
         firstName={user.first_name}
         lastName={user.last_name}
-        size={120}
-        radius={120}
         mx="auto"
       />
       <Title order={2} mt="md">
