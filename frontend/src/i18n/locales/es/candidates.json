@@ -28,7 +28,7 @@
   "compare": {
     "title": "Comparar Candidatos",
     "subtitle": "Seleccione candidatos de una oferta para comparar",
-    "viewTitle": "Comparación de Candidatos",
+    "viewTitle": "Comparación detallada",
     "viewSubtitle": "Comparando {{count}} candidatos",
     "buttons": {
       "clear": "Limpiar Selección",

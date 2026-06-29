@@ -28,6 +28,7 @@ export const theme = createTheme({
           borderColor:
             'light-dark(var(--mantine-color-blue-1), var(--mantine-color-default-border))',
           borderRadius: '1.2rem',
+          boxShadow: '0 8px 24px rgba(59, 130, 246, 0.12), 0 2px 8px rgba(125, 211, 252, 0.08)',
         },
       },
     },
@@ -37,6 +38,7 @@ export const theme = createTheme({
           borderColor:
             'light-dark(var(--mantine-color-blue-1), var(--mantine-color-default-border))',
           borderRadius: '1.2rem',
+          boxShadow: '0 8px 24px rgba(59, 130, 246, 0.12), 0 2px 8px rgba(125, 211, 252, 0.08)',
         },
       },
     },

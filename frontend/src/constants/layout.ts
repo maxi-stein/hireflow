@@ -9,4 +9,4 @@
  * Narrower pages (forms, detail views) intentionally use smaller sizes
  * like "sm", "md", or "lg" and should NOT use this constant.
  */
-export const APP_MAX_WIDTH = 1440;
+export const APP_MAX_WIDTH = 1340;

@@ -16,7 +16,10 @@ export function MainLayout() {
           borderBottom: 'none',
         },
         main: {
-          margin: '0px 20rem'
+          width: '100%',
+          maxWidth: '1340px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }
       }}
     >

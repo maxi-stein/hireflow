@@ -24,7 +24,7 @@ import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export function MainHeader() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  const isMobile = useMediaQuery('(max-width: 1220px)');
+  const isMobile = useMediaQuery('(max-width: 1340px)');
 
   useEffect(() => {
     if (!isMobile && drawerOpened) {
