@@ -13,6 +13,7 @@ import { CompareSelectionHeader } from '../../components/employee/compare/Compar
 import { JobOfferSearchPanel } from '../../components/employee/compare/JobOfferSearchPanel';
 import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';
 import { getApplicationStatusColor } from '../../utils/application.utils';
+import { useCandidateTechExperience } from '../../hooks/useCandidateTechExperience';
 import { APP_MAX_WIDTH } from '../../constants/layout';
 
 
@@ -81,6 +82,9 @@ export function CompareCandidatesPage() {
     const candidatesToCompare = filteredCandidates.filter(app =>
         selectedCandidates.has(app.candidate.id)
     );
+
+    // Calculate tech stats across all filtered candidates (historical max for this job offer)
+    const techStats = useCandidateTechExperience(filteredCandidates);
 
     // Handle URL parameters for deep linking (jobOfferId and candidateId)
     useEffect(() => {
@@ -173,6 +177,7 @@ export function CompareCandidatesPage() {
                             getStatusColor={getApplicationStatusColor}
                             accordionValue={accordionValue}
                             onAccordionChange={setAccordionValue}
+                            techStats={techStats}
                         />
                     ))}
                 </SimpleGrid>
