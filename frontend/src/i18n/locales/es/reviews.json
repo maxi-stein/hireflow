@@ -60,7 +60,7 @@
   },
   "candidateDisplay": {
     "noInterviews": "No hay entrevistas programadas",
-    "interviewScheduled": "Entrevista Programada",
+    "interviewScheduled": "Programada",
     "interviewCompleted": "Entrevista Completada",
     "interviewReview": "Reseña de Entrevista",
     "reviewPending": "Reseña Pendiente",
@@ -69,6 +69,17 @@
     "score": "Puntaje",
     "strengths": "Fortalezas",
     "weaknesses": "Debilidades",
-    "viewDetails": "Ver detalles"
+    "viewDetails": "Ver detalles",
+    "notHappenedYet": "Aún no sucede",
+    "noScore": "Sin puntaje",
+    "reviewPendingBadge": "Reseña pendiente",
+    "scheduledBadge": "Programada",
+    "interviewPastNoReview": "La entrevista ya sucedió, falta la reseña del entrevistador.",
+    "interviewNotHappenedYet": "Todavía no se realizó",
+    "uploadReview": "Cargar Reseña",
+    "viewSchedule": "Ver Agenda",
+    "showMore": "Ver más",
+    "showLess": "Ver menos",
+    "pendingDevelopment": "Falta desarrollar"
   }
 }

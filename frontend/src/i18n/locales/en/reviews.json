@@ -60,7 +60,7 @@
   },
   "candidateDisplay": {
     "noInterviews": "No interviews scheduled",
-    "interviewScheduled": "Interview Scheduled",
+    "interviewScheduled": "Scheduled",
     "interviewCompleted": "Interview Completed",
     "interviewReview": "Interview Review",
     "reviewPending": "Review Pending",
@@ -69,6 +69,17 @@
     "score": "Score",
     "strengths": "Strengths",
     "weaknesses": "Weaknesses",
-    "viewDetails": "View details"
+    "viewDetails": "View details",
+    "notHappenedYet": "Not happened yet",
+    "noScore": "No score",
+    "reviewPendingBadge": "Review pending",
+    "scheduledBadge": "Scheduled",
+    "interviewPastNoReview": "The interview already happened, the interviewer's review is missing.",
+    "interviewNotHappenedYet": "Not done yet.",
+    "uploadReview": "Upload Review",
+    "viewSchedule": "View Schedule",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "pendingDevelopment": "Falta desarrollar"
   }
 }
