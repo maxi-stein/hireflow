@@ -17,6 +17,7 @@
     "updateSuccess": "Entrevista actualizada exitosamente",
     "error": "Error al agendar entrevista",
     "updateError": "Error al actualizar entrevista",
+    "cancelMessage": "¿Está seguro de que desea cancelar esta entrevista? Esta acción no se puede deshacer.",
     "labels": {
       "title": "Título",
       "titlePlaceholder": "Ej: Entrevista Inicial con RRHH",
@@ -32,12 +33,15 @@
       "dateTimePlaceholder": "Seleccione fecha y hora",
       "meetingLink": "Enlace de Reunión",
       "meetingLinkPlaceholder": "https://meet.google.com/...",
-      "completedNote": "Esta entrevista ha sido completada y no puede ser actualizada."
+      "completedNote": "Esta entrevista ha sido completada y no puede ser actualizada.",
+      "noCandidates": "Sin candidatos"
     },
     "buttons": {
       "cancel": "Cancelar",
       "schedule": "Agendar",
-      "update": "Actualizar"
+      "update": "Actualizar",
+      "keepIt": "No, mantenerla",
+      "confirmCancel": "Sí, cancelar entrevista"
     },
     "types": {
       "individual": "Individual",

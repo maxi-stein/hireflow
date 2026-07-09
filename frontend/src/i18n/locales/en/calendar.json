@@ -17,6 +17,7 @@
     "updateSuccess": "Interview updated successfully",
     "error": "Failed to schedule interview",
     "updateError": "Failed to update interview",
+    "cancelMessage": "Are you sure you want to cancel this interview? This action cannot be undone.",
     "labels": {
       "title": "Title",
       "titlePlaceholder": "e.g., Initial HR Interview",
@@ -32,12 +33,15 @@
       "dateTimePlaceholder": "Pick date and time",
       "meetingLink": "Meeting Link",
       "meetingLinkPlaceholder": "https://meet.google.com/...",
-      "completedNote": "This interview is completed and cannot be updated."
+      "completedNote": "This interview is completed and cannot be updated.",
+      "noCandidates": "No candidates"
     },
     "buttons": {
       "cancel": "Cancel",
       "schedule": "Schedule",
-      "update": "Update"
+      "update": "Update",
+      "keepIt": "No, keep it",
+      "confirmCancel": "Yes, cancel interview"
     },
     "types": {
       "individual": "Individual",

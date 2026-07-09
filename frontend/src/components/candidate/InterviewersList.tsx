@@ -1,6 +1,7 @@
 import { Group, Text, Stack, Tooltip } from '@mantine/core';
 import { CandidateAvatar } from '../shared/candidate-display/CandidateAvatar';
 import type { Interviewer } from '../../services/interview.service';
+import { useTranslation } from 'react-i18next';
 
 interface InterviewersListProps {
     interviewers: Interviewer[];
@@ -8,8 +9,10 @@ interface InterviewersListProps {
 }
 
 export function InterviewersList({ interviewers, size = 'sm' }: InterviewersListProps) {
+    const { t } = useTranslation('applications');
+
     if (!interviewers || interviewers.length === 0) {
-        return <Text size={size} c="dimmed">No interviewers assigned</Text>;
+        return <Text size={size} c="dimmed">{t('timeline.noInterviewers')}</Text>;
     }
 
     return (

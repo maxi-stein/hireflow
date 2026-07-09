@@ -46,7 +46,8 @@
     "card": {
       "sections": {
         "skills": "Habilidades y Experiencia",
-        "interviewHistory": "Historial de Entrevistas"
+        "interviewHistory": "Historial de Entrevistas",
+        "yearsPerTech": "AÑOS POR TECNOLOGÍA"
       },
       "empty": {
         "skills": "No hay datos de habilidades",

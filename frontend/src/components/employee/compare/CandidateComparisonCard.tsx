@@ -235,7 +235,7 @@ export function CandidateComparisonCard({
             >
               <Accordion.Item value="skills">
                 <Accordion.Control icon={<IconStar size={15} color="var(--mantine-color-blue-filled)" />}>
-                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>AÑOS POR TECNOLOGÍA</Text>
+                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>{t('compare.card.sections.yearsPerTech')}</Text>
                 </Accordion.Control>
                 <Accordion.Panel>
                   {application.skill_answers && application.skill_answers.length > 0 ? (
@@ -335,7 +335,7 @@ export function CandidateComparisonCard({
             >
               <Accordion.Item value="education">
                 <Accordion.Control icon={<IconSchool size={15} color="var(--mantine-color-blue-filled)" />}>
-                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>ESTUDIOS</Text>
+                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>{t('education.title', { ns: 'profile' })}</Text>
                 </Accordion.Control>
                 <Accordion.Panel>
                   {candidateProfile?.educations && candidateProfile.educations.length > 0 ? (
@@ -372,7 +372,7 @@ export function CandidateComparisonCard({
             >
               <Accordion.Item value="interviews">
                 <Accordion.Control icon={<IconUsers size={15} color="var(--mantine-color-blue-filled)" />}>
-                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>ENTREVISTAS</Text>
+                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>{t('compare.card.sections.interviewHistory')}</Text>
                 </Accordion.Control>
                 <Accordion.Panel>
                   <CandidateInterviewsDisplay

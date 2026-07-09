@@ -1,5 +1,6 @@
 import { Group, Text, ThemeIcon, Tooltip } from '@mantine/core';
 import { IconMapPin, IconBriefcase, IconCalendar } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 
 interface ApplicationMetaProps {
   location: string;
@@ -8,6 +9,7 @@ interface ApplicationMetaProps {
 }
 
 export const ApplicationMeta = ({ location, workMode, appliedDate }: ApplicationMetaProps) => {
+  const { t } = useTranslation('applications');
   const formattedDate = new Date(appliedDate).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -30,12 +32,12 @@ export const ApplicationMeta = ({ location, workMode, appliedDate }: Application
         <Text size="sm" c="dimmed" fw={500} style={{ textTransform: 'capitalize' }}>{workMode}</Text>
       </Group>
 
-      <Tooltip label={`Applied on ${new Date(appliedDate).toLocaleDateString()}`}>
+      <Tooltip label={`${t('card.appliedOn')} ${new Date(appliedDate).toLocaleDateString()}`}>
         <Group gap={6}>
           <ThemeIcon variant="light" color="blue" size="sm" radius="xl">
             <IconCalendar size={12} />
           </ThemeIcon>
-          <Text size="sm" c="dimmed" fw={500}>Applied: {formattedDate}</Text>
+          <Text size="sm" c="dimmed" fw={500}>{t('card.appliedOn')} {formattedDate}</Text>
         </Group>
       </Tooltip>
     </Group>

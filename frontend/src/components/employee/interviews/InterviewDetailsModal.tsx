@@ -4,6 +4,7 @@ import { InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
 import { IconCalendar, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
 import { getInterviewStatusColor } from '../../../utils/application.utils';
+import { useTranslation } from 'react-i18next';
 
 interface InterviewDetailsModalProps {
   interview: Interview | null;
@@ -13,12 +14,14 @@ interface InterviewDetailsModalProps {
 }
 
 export function InterviewDetailsModal({ interview, onClose, onReschedule, onCancel }: InterviewDetailsModalProps) {
+  const { t } = useTranslation(['calendar', 'common', 'candidates']);
+
   if (!interview) return null;
 
   const jobOffer = interview.applications?.[0]?.job_offer;
 
   return (
-    <Modal opened={!!interview} onClose={onClose} title="Interview Details">
+    <Modal opened={!!interview} onClose={onClose} title={t('modal.labels.title', { ns: 'calendar' })}>
       <Stack gap="md">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
@@ -36,14 +39,14 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
               </Group>
             ))}
             {(!interview.applications || interview.applications.length === 0) && (
-              <Text size="lg" fw={700} c="dimmed">No candidates</Text>
+              <Text size="lg" fw={700} c="dimmed">{t('modal.labels.noCandidates', { ns: 'calendar' })}</Text>
             )}
           </Stack>
           <Badge color={getInterviewStatusColor(interview.status)}>{interview.status}</Badge>
         </Group>
 
         <Text c="dimmed" size="sm">
-          Position: <Text span fw={500} c="bright">{jobOffer?.position || 'N/A'}</Text>
+          {t('employee.position', { ns: 'profile' })}: <Text span fw={500} c="bright">{jobOffer?.position || t('na', { ns: 'common' })}</Text>
         </Text>
 
         <Group>
@@ -60,7 +63,7 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
           <Group>
             <IconVideo size={18} />
             <Anchor href={interview.meeting_link} target="_blank" rel="noopener noreferrer">
-              Join Meeting
+              {t('timeline.joinMeeting', { ns: 'applications' })}
             </Anchor>
           </Group>
         )}
@@ -68,7 +71,7 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
         <Stack gap="xs">
           <Group gap="xs">
             <IconUsers size={18} />
-            <Text fw={500}>Interviewers:</Text>
+            <Text fw={500}>{t('modal.labels.interviewer', { ns: 'calendar' })}:</Text>
           </Group>
           {interview.interviewers?.map(interviewer => (
             <Group key={interviewer.id} gap="sm" ml="lg">
@@ -83,15 +86,15 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
         </Stack>
 
         <Group justify="flex-end" mt="md">
-          <Button variant="default" onClick={onClose}>Close</Button>
+          <Button variant="default" onClick={onClose}>{t('actions.close', { ns: 'common' })}</Button>
           {onCancel && interview.status !== InterviewStatus.CANCELLED && interview.status !== InterviewStatus.COMPLETED && (
             <Button variant="outline" color="red" onClick={() => onCancel(interview)}>
-              Cancel Interview
+              {t('actions.cancel', { ns: 'calendar' })}
             </Button>
           )}
           {onReschedule && (
             <Button variant="light" onClick={() => onReschedule(interview)} disabled={interview.status !== InterviewStatus.SCHEDULED}>
-              Reschedule
+              {t('actions.reschedule', { ns: 'calendar' })}
             </Button>
           )}
         </Group>

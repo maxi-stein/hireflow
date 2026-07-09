@@ -33,10 +33,6 @@ export const router = createBrowserRouter([
         path: ROUTES.PUBLIC.JOBS.path,
         element: ROUTES.PUBLIC.JOBS.element,
       },
-      {
-        path: ROUTES.PUBLIC.JOB_DETAIL.path,
-        element: ROUTES.PUBLIC.JOB_DETAIL.element,
-      },
 
       // Protected routes
       {
@@ -55,10 +51,6 @@ export const router = createBrowserRouter([
               {
                 path: ROUTES.CANDIDATE.APPLICATIONS.path,
                 element: ROUTES.CANDIDATE.APPLICATIONS.element,
-              },
-              {
-                path: ROUTES.CANDIDATE.JOB_APPLY.path,
-                element: ROUTES.CANDIDATE.JOB_APPLY.element,
               },
             ],
           },

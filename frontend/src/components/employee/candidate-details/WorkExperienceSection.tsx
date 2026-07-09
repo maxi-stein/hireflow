@@ -2,17 +2,20 @@ import { Paper, Group, Title, Timeline, Text } from '@mantine/core';
 import { IconBriefcase } from '@tabler/icons-react';
 import { ExperienceTimelineItem } from './ExperienceTimelineItem';
 import type { WorkExperience } from '../../../services/work-experience.service';
+import { useTranslation } from 'react-i18next';
 
 interface WorkExperienceSectionProps {
   experiences: WorkExperience[];
 }
 
 export function WorkExperienceSection({ experiences }: WorkExperienceSectionProps) {
+  const { t } = useTranslation(['profile', 'candidates']);
+
   return (
     <Paper withBorder radius="md" p="lg">
       <Group mb="md">
         <IconBriefcase size={20} />
-        <Title order={4}>Work Experience</Title>
+        <Title order={4}>{t('experience.title')}</Title>
       </Group>
 
       {experiences.length > 0 ? (
@@ -30,7 +33,7 @@ export function WorkExperienceSection({ experiences }: WorkExperienceSectionProp
           ))}
         </Timeline>
       ) : (
-        <Text c="dimmed" size="sm">No work experience added.</Text>
+        <Text c="dimmed" size="sm">{t('compare.card.empty.experience', { ns: 'candidates' })}</Text>
       )}
     </Paper>
   );

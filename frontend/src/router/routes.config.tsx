@@ -13,8 +13,6 @@ import { LandingPage } from '../pages/LandingPage';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
 import { JobListPage } from '../pages/jobs/JobListPage';
-import { JobDetailPage } from '../pages/jobs/JobDetailPage';
-import { JobApplicationPage } from '../pages/jobs/JobApplicationPage';
 import { ProfilePage } from '../pages/profile/ProfilePage';
 import { ApplicationsPage } from '../pages/candidate/ApplicationsPage';
 import { DashboardPage } from '../pages/employee/DashboardPage';
@@ -69,11 +67,6 @@ export const ROUTES = {
       icon: <IconBriefcase size={20} />,
       showInNav: true,
     },
-    JOB_DETAIL: {
-      path: '/jobs/:id',
-      element: <JobDetailPage />,
-      showInNav: false,
-    },
   },
 
   // Common authenticated routes (both candidate and employee)
@@ -97,13 +90,6 @@ export const ROUTES = {
       label: 'navigation:myApplications',
       icon: <IconFileText size={20} />,
       showInNav: true,
-      requiresAuth: true,
-      allowedRoles: ['candidate'],
-    },
-    JOB_APPLY: {
-      path: '/jobs/:id/apply',
-      element: <JobApplicationPage />,
-      showInNav: false,
       requiresAuth: true,
       allowedRoles: ['candidate'],
     },
