@@ -80,6 +80,9 @@
     "viewSchedule": "Ver Agenda",
     "showMore": "Ver más",
     "showLess": "Ver menos",
-    "pendingDevelopment": "Falta desarrollar"
+    "pendingDevelopment": "Falta desarrollar",
+    "viewNotes": "Ver notas de los entrevistadores",
+    "hideNotes": "Ocultar notas",
+    "notes": "Notas"
   }
 }

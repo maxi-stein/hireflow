@@ -60,7 +60,6 @@ function JobOfferAccordionItemComponent({
           <Group justify="space-between" wrap="nowrap">
             <div>
               <Text fw={500}>{offer.position}</Text>
-              <Text size="sm" c="dimmed">{offer.location}</Text>
             </div>
             <Badge>{t('compare.searchPanel.applicants', { count: offer.applicants_count })}</Badge>
           </Group>

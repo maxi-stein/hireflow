@@ -7,11 +7,15 @@ import { InterviewStatus, type Interview } from '../../../services/interview.ser
 import { getEffectiveInterviewStatus } from '../../../utils/interview.utils';
 import { getScoreColor } from '../../../utils/score.utils';
 
+import { useAppStore } from '../../../store/useAppStore';
+
 function InterviewCard({ interview, applicationId }: { interview: Interview; applicationId: string }) {
   const { t, i18n } = useTranslation('reviews');
   const navigate = useNavigate();
+  const user = useAppStore(state => state.user);
   const [showMoreStrengths, setShowMoreStrengths] = useState(false);
   const [showMoreWeaknesses, setShowMoreWeaknesses] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
 
   const effectiveStatus = getEffectiveInterviewStatus(interview);
   const reviews = interview.reviews?.filter(r => r.candidate_application_id === applicationId) || [];
@@ -19,6 +23,10 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
   const isScheduled = effectiveStatus === InterviewStatus.SCHEDULED;
   const isPendingReview = effectiveStatus === InterviewStatus.COMPLETED && reviews.length === 0;
   const isReviewed = effectiveStatus === InterviewStatus.COMPLETED && reviews.length > 0;
+
+  const isInterviewer = interview.interviewers?.some(i => i.id === user?.id) || false;
+  const hasUserReviewed = reviews.some(r => r.employee?.id === user?.id);
+  const canUploadReview = effectiveStatus === InterviewStatus.COMPLETED && isInterviewer && !hasUserReviewed;
 
   // Colors based on status
   let mainColor = 'gray';
@@ -191,13 +199,7 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
 
       {/* Row 3 */}
       <Box mt="lg">
-        {isReviewed ? (
-          <Card withBorder style={{ borderColor: 'var(--mantine-color-gray-3)' }}>
-            <Group justify="center">
-              <Text size="sm" c="dimmed">{t('candidateDisplay.pendingDevelopment')}</Text>
-            </Group>
-          </Card>
-        ) : isPendingReview ? (
+        {canUploadReview ? (
           <Card withBorder style={{ borderColor: 'var(--mantine-color-orange-5)' }}>
             <Group justify="space-between">
               <Text size="sm">{t('candidateDisplay.interviewPastNoReview')}</Text>
@@ -205,6 +207,35 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
                 {t('candidateDisplay.uploadReview')}
               </Button>
             </Group>
+          </Card>
+        ) : isReviewed ? (
+          <Card withBorder style={{ borderColor: 'var(--mantine-color-gray-3)' }}>
+            <Group justify="space-between">
+              <Text size="sm" fw={500}>{t('candidateDisplay.notes')}</Text>
+              <Button 
+                variant="light" 
+                color="blue" 
+                size="xs" 
+                rightSection={showNotes ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+                onClick={() => setShowNotes(!showNotes)}
+              >
+                {showNotes ? t('candidateDisplay.hideNotes') : t('candidateDisplay.viewNotes')}
+              </Button>
+            </Group>
+            <Collapse in={showNotes}>
+              <Stack gap="md" mt="md">
+                {reviews.map((r, idx) => (
+                  <Box key={r.id || idx}>
+                    <Text size="xs" c="dimmed" fw={600} mb={4}>
+                      {r.employee?.user?.first_name} {r.employee?.user?.last_name}
+                    </Text>
+                    <Text size="sm">
+                      {r.notes || '-'}
+                    </Text>
+                  </Box>
+                ))}
+              </Stack>
+            </Collapse>
           </Card>
         ) : isScheduled ? (
           <Card withBorder style={{ borderColor: 'var(--mantine-color-blue-5)' }}>

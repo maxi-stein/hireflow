@@ -83,6 +83,8 @@ export function CompareCandidatesPage() {
         selectedCandidates.has(app.candidate.id)
     );
 
+    const selectedJobOffer = jobOffersData?.data?.find(job => job.id === selectedJobOfferId);
+
     // Calculate tech stats across all filtered candidates (historical max for this job offer)
     const techStats = useCandidateTechExperience(filteredCandidates);
 
@@ -163,6 +165,7 @@ export function CompareCandidatesPage() {
                 <ComparisonViewHeader
                     candidateCount={candidatesToCompare.length}
                     onBack={handleBackToSelection}
+                    title={selectedJobOffer?.position}
                 />
 
                 {/* Grid of candidate comparison cards */}
