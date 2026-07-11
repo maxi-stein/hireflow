@@ -29,12 +29,6 @@ export const DashboardListItem = ({
       <Paper p="sm" withBorder radius="md" style={{ transition: 'transform 0.2s' }}>
         <Group justify="space-between" wrap="nowrap">
           <Group gap="md">
-            <TimeDisplay
-              date={date}
-              variant="time-only"
-              color={color || 'blue'}
-              size="sm"
-            />
             <div>
               <Group gap="xs" mb={2}>
                 <CandidateAvatar
@@ -51,6 +45,12 @@ export const DashboardListItem = ({
                 {position}
               </Text>
             </div>
+            <TimeDisplay
+              date={date}
+              variant="time-only"
+              color={color || 'blue'}
+              size="sm"
+            />
           </Group>
           {action}
         </Group>

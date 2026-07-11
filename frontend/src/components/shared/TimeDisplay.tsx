@@ -1,4 +1,4 @@
-import { Paper, Text } from '@mantine/core';
+import { Paper, Text, Group } from '@mantine/core';
 
 export type TimeDisplayColor = 'blue' | 'orange' | 'grape' | 'gray';
 
@@ -22,7 +22,7 @@ export function TimeDisplay({
   const dateObj = typeof date === 'string' ? new Date(date) : date;
 
   // Format time as "2:30 PM"
-  const time = dateObj.toLocaleTimeString([], {
+  const time = dateObj.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true
@@ -38,9 +38,9 @@ export function TimeDisplay({
 
   // Size configuration
   const sizeMap = {
-    xs: { minWidth: 55, time: 'xs', label: '10px', padding: 4 },
-    sm: { minWidth: 65, time: 'sm', label: 'xs', padding: 6 },
-    md: { minWidth: 75, time: 'md', label: 'sm', padding: 8 }
+    xs: { minWidth: 70, time: 'xs', label: '10px', padding: 4 },
+    sm: { minWidth: 80, time: 'sm', label: 'xs', padding: 6 },
+    md: { minWidth: 95, time: 'md', label: 'sm', padding: 8 }
   };
 
   const config = sizeMap[size];
@@ -58,7 +58,7 @@ export function TimeDisplay({
       }}
     >
       {variant === 'date-time' && (
-        <Text size="xs" c="dimmed" lh={1} mb={2}>
+        <Text size="xs" c="dimmed" lh={1} mb={4}>
           {dateStr}
         </Text>
       )}
@@ -68,14 +68,14 @@ export function TimeDisplay({
           {dateStr}
         </Text>
       ) : (
-        <>
+        <Group gap={3} justify="center" align="baseline" wrap="nowrap" style={{ height: '100%' }}>
           <Text size={config.time as any} fw={800} c={color} lh={1}>
             {timeStr}
           </Text>
-          <Text size="xs" fw={700} lh={1} mt={2}>
+          <Text size="10px" fw={700} lh={1} c="dimmed" style={{ textTransform: 'lowercase' }}>
             {ampm}
           </Text>
-        </>
+        </Group>
       )}
     </Paper>
   );

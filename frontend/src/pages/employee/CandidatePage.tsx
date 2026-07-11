@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { getApplicationStatusColor, getInterviewStatusColor } from '../../utils/application.utils';
+import { getApplicationStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
 import { IconChevronLeft, IconX, IconCheck, IconCircleCheck } from '@tabler/icons-react';
@@ -13,7 +13,6 @@ import { ApplicationStatus } from '../../services/candidate-application.service'
 import { FileType, userFileService } from '../../services/user-file.service';
 import { notifications } from '@mantine/notifications';
 import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';
-import { InterviewHistorySection } from '../../components/employee/candidate-details/InterviewHistorySection';
 import { WorkExperienceSection } from '../../components/employee/candidate-details/WorkExperienceSection';
 import { EducationSection } from '../../components/employee/candidate-details/EducationSection';
 import { ApplicationsSection } from '../../components/employee/candidate-details/ApplicationsSection';
@@ -170,11 +169,6 @@ export function CandidatePage() {
           <EducationSection educations={candidate.educations || []} />
 
           <WorkExperienceSection experiences={candidate.work_experiences || []} />
-
-          <InterviewHistorySection
-            interviews={interviews?.data || []}
-            getStatusColor={getInterviewStatusColor}
-          />
         </Stack>
 
       </Stack>

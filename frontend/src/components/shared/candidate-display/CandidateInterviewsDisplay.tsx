@@ -209,7 +209,7 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
         ) : isScheduled ? (
           <Card withBorder style={{ borderColor: 'var(--mantine-color-blue-5)' }}>
             <Group justify="space-between">
-              <Text size="sm">{t('candidateDisplay.interviewNotHappenedYet')}</Text>
+              <Text size="sm" c="dimmed">{t('candidateDisplay.interviewNotHappenedYet')}</Text>
               <Button color="blue" size="sm" onClick={() => navigate('/manage/interviews')}>
                 {t('candidateDisplay.viewSchedule')}
               </Button>
@@ -231,7 +231,7 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
 
   if (!interviews || interviews.length === 0) {
     return (
-      <Card withBorder p="xs" style={{ backgroundColor: 'var(--mantine-color-gray-0)' }}>
+      <Card withBorder p="md" style={{ backgroundColor: 'var(--mantine-color-gray-0)' }}>
         <Text size="sm" c="dimmed">{t('candidateDisplay.noInterviews')}</Text>
       </Card>
     );
