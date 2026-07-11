@@ -1,13 +1,40 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-// List of Users
-// Admin: admin@hireflow.com (pass: Password1)
-// HR1: hr1@hireflow.com (pass: Password1)
-// HR2: hr2@hireflow.com (pass: Password1)
-// Manager: manager@hireflow.com (pass: Password1)
-// Candidate1: alice.dev@example.com (pass: Password1)
-// Candidate2: bob.dev@example.com (pass: Password1)
-// Candidate3: charlie.dev@example.com (pass: Password1)
+/*
+ * List of Important IDs for relationships
+ *
+ * --- Users & Employees ---
+ * Admin (admin@hireflow.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440000
+ *   Employee ID: 550e8400-e29b-41d4-a716-446655440001
+ * HR1 (hr1@hireflow.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440080
+ *   Employee ID: 550e8400-e29b-41d4-a716-446655440081
+ * HR2 (hr2@hireflow.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440082
+ *   Employee ID: 550e8400-e29b-41d4-a716-446655440083
+ * Manager (manager@hireflow.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440084
+ *   Employee ID: 550e8400-e29b-41d4-a716-446655440085
+ *
+ * --- Users & Candidates ---
+ * Candidate1: Alice Dev (alice.dev@example.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440002
+ *   Candidate ID: 550e8400-e29b-41d4-a716-446655440004
+ * Candidate2: Bob Dev (bob.dev@example.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440003
+ *   Candidate ID: 550e8400-e29b-41d4-a716-446655440005
+ * Candidate3: Charlie Dev (charlie.dev@example.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440090
+ *   Candidate ID: 550e8400-e29b-41d4-a716-446655440091
+ *
+ * --- Job Offers ---
+ * Job Offer 1 (Desarrollador Full Stack): 550e8400-e29b-41d4-a716-446655440006
+ * Job Offer 2 (Desarrollador Backend): 550e8400-e29b-41d4-a716-446655440007
+ * Job Offer 3 (Frontend Developer React): 550e8400-e29b-41d4-a716-446655440098
+ * Job Offer 4 (DevOps Engineer): 550e8400-e29b-41d4-a716-446655440099
+ * Job Offer 5 (QA Automation Engineer): 550e8400-e29b-41d4-a716-446655440100
+ */
 
 export class SeedData9999999999999 implements MigrationInterface {
   name = 'SeedData9999999999999';
@@ -383,7 +410,7 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "employee_interviews"
         ("interview_id", "employee_id")
       VALUES
-        ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440001'),
+        ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440083'),
         ('550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440081')
     `);
 
@@ -420,9 +447,65 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "employee_interviews"
         ("interview_id", "employee_id")
       VALUES
-        ('550e8400-e29b-41d4-a716-446655440110', '550e8400-e29b-41d4-a716-446655440001'),
+        ('550e8400-e29b-41d4-a716-446655440110', '550e8400-e29b-41d4-a716-446655440083'),
         ('550e8400-e29b-41d4-a716-446655440110', '550e8400-e29b-41d4-a716-446655440081'),
         ('550e8400-e29b-41d4-a716-446655440110', '550e8400-e29b-41d4-a716-446655440085')
+    `);
+
+    // Reviews for Alice's Initial Interview
+    await queryRunner.query(`
+      INSERT INTO "interview_reviews"
+        ("id", "interview_id", "employee_id", "candidate_application_id", "notes", "score", "strengths", "weaknesses", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440200', '550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440083', '550e8400-e29b-41d4-a716-446655440008', 'Gran capacidad de comunicación y sólidos conocimientos en React.', 4, 'Comunicación,React,Trabajo en equipo', 'Falta de experiencia en testing', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440201', '550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440081', '550e8400-e29b-41d4-a716-446655440008', 'Muy buena actitud, aunque le falta un poco de experiencia en backend.', 3, 'Proactividad', 'Backend,Node.js', NOW(), NOW())
+    `);
+    // --- BOB DEV'S INTERVIEW ---
+    await queryRunner.query(`
+      INSERT INTO "interviews"
+        ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440300', 'Entrevista Inicial', 'INDIVIDUAL', '2025-12-06 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW())
+    `);
+    await queryRunner.query(`
+      INSERT INTO "interview_applications"
+        ("interview_id", "candidate_application_id")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440300', '550e8400-e29b-41d4-a716-44665544000a')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "employee_interviews"
+        ("interview_id", "employee_id")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440300', '550e8400-e29b-41d4-a716-446655440083'),
+        ('550e8400-e29b-41d4-a716-446655440300', '550e8400-e29b-41d4-a716-446655440081')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "interview_reviews"
+        ("id", "interview_id", "employee_id", "candidate_application_id", "notes", "score", "strengths", "weaknesses", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440302', '550e8400-e29b-41d4-a716-446655440300', '550e8400-e29b-41d4-a716-446655440083', '550e8400-e29b-41d4-a716-44665544000a', 'Buen candidato, conocimientos acordes.', 3, 'Backend', 'Testing', NOW(), NOW())
+    `);
+
+    // --- CHARLIE DEV'S INTERVIEW ---
+    await queryRunner.query(`
+      INSERT INTO "interviews"
+        ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440301', 'Entrevista Inicial', 'INDIVIDUAL', '2025-12-07 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW())
+    `);
+    await queryRunner.query(`
+      INSERT INTO "interview_applications"
+        ("interview_id", "candidate_application_id")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440301', '550e8400-e29b-41d4-a716-446655440092')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "employee_interviews"
+        ("interview_id", "employee_id")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440301', '550e8400-e29b-41d4-a716-446655440083'),
+        ('550e8400-e29b-41d4-a716-446655440301', '550e8400-e29b-41d4-a716-446655440081')
     `);
   }
 
