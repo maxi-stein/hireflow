@@ -183,7 +183,7 @@ export class InterviewReviewService {
       .leftJoin(
         'interview.reviews',
         'review',
-        'review.employee_id = :employeeId',
+        'review.employee_id = :employeeId AND review.candidate_application_id = application.id',
         { employeeId },
       )
       .where('interviewer.id = :employeeId', { employeeId })

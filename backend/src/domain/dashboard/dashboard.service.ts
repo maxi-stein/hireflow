@@ -83,11 +83,16 @@ export class DashboardService {
       (a, b) => b[1] - a[1],
     );
 
+    let pendingReviewsCount = 0;
+    pendingReviews.forEach(interview => {
+      pendingReviewsCount += interview.applications.length;
+    });
+
     return {
       activeJobOffers: activeJobOffers.length,
       applicationsToday: applicationsToday.length,
       pendingInterviews: pendingInterviews.length,
-      pendingReviews: pendingReviews.length,
+      pendingReviews: pendingReviewsCount,
       candidatesPerJob: candidatesPerJobSorted.map(([jobTitle, count]) => ({
         jobTitle,
         count,
