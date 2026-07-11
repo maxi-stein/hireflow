@@ -95,8 +95,9 @@ export const DashboardPage = () => {
                     tooltip: `${item.jobTitle}: ${item.count}`,
                   }))}
                   label={
-                    <Text c="dimmed" ta="center" size="sm">
-                      <Text fw={700} size="xl" c="light-dark(var(--mantine-color-black), var(--mantine-color-white))">{totalCandidates}</Text>
+                    <Text component="div" c="dimmed" ta="center" size="sm">
+                      <Text component="span" fw={700} size="xl" c="light-dark(var(--mantine-color-black), var(--mantine-color-white))">{totalCandidates}</Text>
+                      <br />
                       Total
                     </Text>
                   }
@@ -145,22 +146,24 @@ export const DashboardPage = () => {
               <Text c="dimmed" ta="center" py="xl">{t('pendingReviews.empty')}</Text>
             ) : (
               <Stack gap="xs">
-                {pendingReviews.map((interview) => {
-                  const candidate = interview.applications?.[0]?.candidate;
-                  const jobOffer = interview.applications?.[0]?.job_offer;
+                {pendingReviews.flatMap((interview) => {
+                  return (interview.applications || []).map((app) => {
+                    const candidate = app.candidate;
+                    const jobOffer = app.job_offer;
 
-                  if (!candidate || !jobOffer) return null;
+                    if (!candidate || !jobOffer) return null;
 
-                  return (
-                    <DashboardListItem
-                      key={interview.id}
-                      date={interview.scheduled_time}
-                      candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
-                      candidateId={candidate.id}
-                      color='orange'
-                      position={jobOffer.position}
-                    />
-                  );
+                    return (
+                      <DashboardListItem
+                        key={`${interview.id}-${app.id}`}
+                        date={interview.scheduled_time}
+                        candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
+                        candidateId={candidate.id}
+                        color='orange'
+                        position={jobOffer.position}
+                      />
+                    );
+                  });
                 })}
               </Stack>
             )}
