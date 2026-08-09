@@ -94,7 +94,7 @@
     "viewResume": "Ver CV",
     "addNew": "Agregar nuevo",
     "uploadResume": "Subir CV",
-    "resumeHint": "PDF, máx 5MB",
+    "resumeHint": "PDF, máx 4MB",
     "currentResume": "Actual: {{fileName}}",
     "personalInfo": "Información Personal",
     "phone": "Teléfono",
@@ -114,7 +114,10 @@
       "updateFailed": "Error al actualizar perfil",
       "uploadPhotoFailed": "Error al subir foto",
       "uploadCvFailed": "Error al subir CV",
-      "openCvFailed": "Error al abrir CV"
+      "openCvFailed": "Error al abrir CV",
+      "fileTooLarge": "El archivo supera el tamaño máximo de 4MB",
+      "invalidPhotoType": "Formato no válido. Solo se permiten: JPEG, PNG, JPG o WEBP",
+      "invalidCvType": "Formato no válido. Solo se permite PDF"
     },
     "card": {
       "downloadResume": "Descargar CV",

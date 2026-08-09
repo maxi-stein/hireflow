@@ -94,7 +94,7 @@
     "viewResume": "View Resume",
     "addNew": "Add new",
     "uploadResume": "Upload Resume",
-    "resumeHint": "PDF, max 5MB",
+    "resumeHint": "PDF, max 4MB",
     "currentResume": "Current: {{fileName}}",
     "personalInfo": "Personal Information",
     "phone": "Phone",
@@ -114,7 +114,10 @@
       "updateFailed": "Failed to update profile",
       "uploadPhotoFailed": "Failed to upload photo",
       "uploadCvFailed": "Failed to upload CV",
-      "openCvFailed": "Failed to open CV"
+      "openCvFailed": "Failed to open CV",
+      "fileTooLarge": "The file exceeds the maximum size of 4MB",
+      "invalidPhotoType": "Invalid format. Only JPEG, PNG, JPG, or WEBP are allowed",
+      "invalidCvType": "Invalid format. Only PDF is allowed"
     },
     "card": {
       "downloadResume": "Download Resume",

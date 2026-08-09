@@ -79,6 +79,15 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
 
     const handlePhotoUpload = async (file: File | null) => {
         if (!file) return;
+
+        if (file.size > 4 * 1024 * 1024) {
+            notifications.show({
+                title: t('candidate.notifications.errorTitle'),
+                message: t('candidate.notifications.fileTooLarge'),
+                color: 'red',
+            });
+            return;
+        }
         setUploadingPhoto(true);
         try {
             await fileService.uploadProfilePicture(file);
@@ -129,7 +138,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                                 lastName={user.last_name}
                                 src={avatarUrl || undefined}
                             />
-                            <FileButton onChange={handlePhotoUpload} accept="image/png,image/jpeg">
+                            <FileButton onChange={handlePhotoUpload} accept="image/png,image/jpeg,image/jpg,image/webp" >
                                 {(props) => <Button variant="subtle" size="xs" loading={uploadingPhoto} {...props}>{t('candidate.changePhoto')}</Button>}
                             </FileButton>
                         </Stack>
