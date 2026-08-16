@@ -128,7 +128,8 @@ export function MainHeader() {
                                 key={child.path}
                                 onClick={() => handleNavigate(child.path)}
                                 fw={childActive ? 600 : 400}
-                                bg={childActive ? 'blue.0' : undefined}
+                                bg={childActive ? 'var(--mantine-color-blue-7)' : undefined}
+                                c={childActive ? 'white' : undefined}
                                 leftSection={child.icon}
                               >
                                 {child.label ? t(child.label) : ''}
