@@ -64,6 +64,8 @@
       "successMessage": "Has iniciado sesión con éxito",
       "errorTitle": "Error al iniciar sesión",
       "errorMessage": "Credenciales inválidas"
-    }
+    },
+    "completingAuth": "Completando autenticación...",
+    "continueWithGoogle": "Continuar con Google"
   }
 }

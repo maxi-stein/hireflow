@@ -14,6 +14,8 @@ import { generateRandomPassword } from 'src/domain/auth/utils/password-generator
 import { EmailTemplateType } from 'src/domain/mailer/utils/email-template.factory';
 import { ConfigService } from '@nestjs/config';
 import { getAuthConfig } from './helper';
+import { CandidateService } from '../users/candidate/candidate.service';
+import { AuthProvider } from '../users/interfaces/user.enum';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +24,7 @@ export class AuthService {
     private jwtService: JwtService,
     private mailerService: MailerService,
     private configService: ConfigService,
+    private candidateService: CandidateService,
   ) {}
 
   // Used in local strategy. Checks if password is correct and returns the entire user
@@ -38,6 +41,44 @@ export class AuthService {
       return jwtUser as JwtUser;
     }
     return null;
+  }
+
+  async validateGoogleUser(profile: { email: string; firstName: string; lastName: string; googleId: string }): Promise<JwtUser> {
+    const { email, firstName, lastName, googleId } = profile;
+    
+    // Check if user exists
+    let userForAuth = await this.usersService.findByEmailForAuthentication(email);
+    
+    if (userForAuth) {
+      // User exists, update auth_provider and google_id if needed
+      const fullUser = await this.usersService.findOne({ email: email });
+      if (!fullUser.google_id) {
+        await this.usersService.update(fullUser.id, { 
+          google_id: googleId,
+          auth_provider: AuthProvider.GOOGLE
+        });
+      }
+      
+      const { password, ...jwtUser } = userForAuth;
+      return jwtUser as JwtUser;
+    } else {
+      // Create new user as CANDIDATE
+      const newUser = await this.candidateService.registerGoogleCandidate({
+        email,
+        firstName,
+        lastName,
+        googleId
+      });
+      
+      const jwtUser: JwtUser = {
+        user_id: newUser.id,
+        email: newUser.email,
+        user_type: newUser.user_type,
+        entity_id: newUser.candidate?.id || '',
+      };
+      
+      return jwtUser;
+    }
   }
 
   // Generates both access and refresh tokens for a given user.

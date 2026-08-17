@@ -9,6 +9,7 @@ import {
   Stack,
   Box,
 } from "@mantine/core";
+import { IconBrandGoogle } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { loginSchema } from "../../schemas/auth.schema";
 import { useLoginMutation } from "../../hooks/api/useAuth";
@@ -104,6 +105,18 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             loading={loginMutation.isPending}
           >
             {t("loginForm.signIn")}
+          </Button>
+
+          <Button
+            fullWidth
+            variant="default"
+            leftSection={<IconBrandGoogle size={20} />}
+            type="button"
+            onClick={() => {
+              window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+            }}
+          >
+            {t("loginForm.continueWithGoogle")}
           </Button>
 
           <Button

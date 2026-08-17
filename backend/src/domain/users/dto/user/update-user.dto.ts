@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsEnum } from 'class-validator';
+import { AuthProvider } from '../../interfaces/user.enum';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -16,4 +17,12 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   password?: string;
+
+  @IsOptional()
+  @IsString()
+  google_id?: string;
+
+  @IsOptional()
+  @IsEnum(AuthProvider)
+  auth_provider?: AuthProvider;
 }

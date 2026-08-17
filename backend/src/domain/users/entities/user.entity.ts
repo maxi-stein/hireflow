@@ -10,7 +10,7 @@ import { Candidate } from './candidate.entity';
 import { Employee } from './employee.entity';
 import { USER } from '../../../shared/constants/user.constants';
 import { AUTH } from '../../../shared/constants/auth.constants';
-import { UserType } from '../interfaces/user.enum';
+import { UserType, AuthProvider } from '../interfaces/user.enum';
 
 @Entity('users')
 export class User {
@@ -26,11 +26,17 @@ export class User {
   @Column({ type: 'varchar', length: USER.EMAIL_LENGTH, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: AUTH.MAX_PASSWORD_LENGTH, select: false })
-  password: string;
+  @Column({ type: 'varchar', length: AUTH.MAX_PASSWORD_LENGTH, select: false, nullable: true })
+  password?: string;
 
   @Column({ enum: UserType })
   user_type: UserType;
+
+  @Column({ type: 'enum', enum: AuthProvider, default: AuthProvider.LOCAL })
+  auth_provider: AuthProvider;
+
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  google_id?: string;
 
   @Column({ type: 'varchar', nullable: true })
   hashed_refresh_token: string;

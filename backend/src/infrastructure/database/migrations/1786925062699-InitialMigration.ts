@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialMigration1781888155380 implements MigrationInterface {
-    name = 'InitialMigration1781888155380'
+export class InitialMigration1786925062699 implements MigrationInterface {
+    name = 'InitialMigration1786925062699'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."educations_degree_type_enum" AS ENUM('Licenciatura', 'Maestría', 'Doctorado', 'Técnico Superior', 'Diploma', 'Certificación', 'Otro')`);
@@ -22,7 +22,8 @@ export class InitialMigration1781888155380 implements MigrationInterface {
         await queryRunner.query(`CREATE TYPE "public"."user_files_file_type_enum" AS ENUM('profile_picture', 'cv')`);
         await queryRunner.query(`CREATE TABLE "user_files" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "file_name" character varying(256) NOT NULL, "stored_name" character varying(256) NOT NULL, "file_path" character varying(512) NOT NULL, "mime_type" character varying(64) NOT NULL, "size" integer NOT NULL, "file_type" "public"."user_files_file_type_enum" NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "candidate_id" uuid, CONSTRAINT "PK_a62f81d2afadf20a024e11b43bd" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "candidates" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "age" integer, "phone" character varying(20), "city" character varying(100), "country" character varying(100), "github" character varying(2048), "linkedin" character varying(2048), "profile_created_at" TIMESTAMP NOT NULL DEFAULT now(), "profile_updated_at" TIMESTAMP NOT NULL DEFAULT now(), "user_id" uuid, CONSTRAINT "REL_94a5fe85e7f5bd0221fa7d6f19" UNIQUE ("user_id"), CONSTRAINT "PK_140681296bf033ab1eb95288abb" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "first_name" character varying(50) NOT NULL, "last_name" character varying(50) NOT NULL, "email" character varying(254) NOT NULL, "password" character varying(128) NOT NULL, "user_type" character varying NOT NULL, "hashed_refresh_token" character varying, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."users_auth_provider_enum" AS ENUM('local', 'google')`);
+        await queryRunner.query(`CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "first_name" character varying(50) NOT NULL, "last_name" character varying(50) NOT NULL, "email" character varying(254) NOT NULL, "password" character varying(128), "user_type" character varying NOT NULL, "auth_provider" "public"."users_auth_provider_enum" NOT NULL DEFAULT 'local', "google_id" character varying, "hashed_refresh_token" character varying, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "UQ_0bd5012aeb82628e07f6a1be53b" UNIQUE ("google_id"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "interview_applications" ("interview_id" uuid NOT NULL, "candidate_application_id" uuid NOT NULL, CONSTRAINT "PK_579637c747906aafe6ea4be96a3" PRIMARY KEY ("interview_id", "candidate_application_id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_b5e5fc36393a409f7d30b50776" ON "interview_applications" ("interview_id") `);
         await queryRunner.query(`CREATE INDEX "IDX_fa5a1221ef11e0f90e84b44a0a" ON "interview_applications" ("candidate_application_id") `);
@@ -81,6 +82,7 @@ export class InitialMigration1781888155380 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX "public"."IDX_b5e5fc36393a409f7d30b50776"`);
         await queryRunner.query(`DROP TABLE "interview_applications"`);
         await queryRunner.query(`DROP TABLE "users"`);
+        await queryRunner.query(`DROP TYPE "public"."users_auth_provider_enum"`);
         await queryRunner.query(`DROP TABLE "candidates"`);
         await queryRunner.query(`DROP TABLE "user_files"`);
         await queryRunner.query(`DROP TYPE "public"."user_files_file_type_enum"`);

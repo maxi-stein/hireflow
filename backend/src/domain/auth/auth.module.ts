@@ -6,6 +6,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
 import { AuthService } from './auth.service';
 import { getAuthConfig } from './helper';
 import { UsersService } from '../users/base-user/user.service';
@@ -42,7 +43,7 @@ import { MailerModule } from '../mailer/mailer.module';
     ConfigModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersService, JwtStrategy, LocalStrategy, JwtRefreshStrategy],
+  providers: [AuthService, UsersService, JwtStrategy, LocalStrategy, JwtRefreshStrategy, GoogleStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

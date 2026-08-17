@@ -6,6 +6,9 @@ export interface AuthConfig {
   refreshSecret: string;
   refreshExpiresIn: string;
   refreshCookieMaxAge: number;
+  googleClientId: string;
+  googleClientSecret: string;
+  googleCallbackUrl: string;
 }
 
 export default registerAs(
@@ -16,5 +19,8 @@ export default registerAs(
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME,
     refreshCookieMaxAge: parseInt(process.env.JWT_REFRESH_COOKIE_MAX_AGE, 10),
+    googleClientId: process.env.GOOGLE_CLIENT_ID,
+    googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
   }),
 );

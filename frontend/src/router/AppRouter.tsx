@@ -19,6 +19,13 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
+  // OAuth callback - standalone without layout
+  {
+    path: ROUTES.PUBLIC.OAUTH_CALLBACK.path,
+    element: ROUTES.PUBLIC.OAUTH_CALLBACK.element,
+    errorElement: <ErrorPage />,
+  },
+
   // Main App Structure - DynamicLayout persists across navigation
   {
     element: <DynamicLayout />,

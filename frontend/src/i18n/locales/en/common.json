@@ -64,6 +64,8 @@
       "successMessage": "You have successfully logged in",
       "errorTitle": "Login failed",
       "errorMessage": "Invalid credentials"
-    }
+    },
+    "completingAuth": "Completing authentication...",
+    "continueWithGoogle": "Continue with Google"
   }
 }

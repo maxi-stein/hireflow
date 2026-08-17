@@ -16,7 +16,7 @@ import {
   PaginatedResponse,
   PaginationDto,
 } from '../../../shared/dto/pagination/pagination.dto';
-import { UserType } from '../interfaces/user.enum';
+import { UserType, AuthProvider } from '../interfaces/user.enum';
 import { JwtUser } from '../interfaces/jwt.user';
 import * as bcrypt from 'bcrypt';
 import { AUTH } from '../../../shared/constants/auth.constants';
@@ -31,9 +31,11 @@ export class UsersService {
   async create(
     userData: {
       email: string;
-      password: string;
+      password?: string;
       first_name: string;
       last_name: string;
+      auth_provider?: AuthProvider;
+      google_id?: string;
     },
     userType: UserType,
     entityManager: EntityManager,
@@ -48,11 +50,14 @@ export class UsersService {
       throw new BadRequestException('User with this email already exists');
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(
-      userData.password,
-      AUTH.BCRYPT_SALT_ROUNDS,
-    );
+    // Hash password if provided
+    let hashedPassword = undefined;
+    if (userData.password) {
+      hashedPassword = await bcrypt.hash(
+        userData.password,
+        AUTH.BCRYPT_SALT_ROUNDS,
+      );
+    }
 
     // Create the user
     const user = entityManager.create(User, {
@@ -137,7 +142,7 @@ export class UsersService {
    */
   async findByEmailForAuthentication(
     email: string,
-  ): Promise<(JwtUser & { password: string }) | null> {
+  ): Promise<(JwtUser & { password?: string }) | null> {
     const user = await this.userRepository.findOne({
       where: { email },
       relations: ['candidate', 'employee'],
@@ -156,7 +161,7 @@ export class UsersService {
       },
     });
 
-    if (!user || !user.password) {
+    if (!user) {
       return null;
     }
 
@@ -172,7 +177,7 @@ export class UsersService {
       return null; // Entity not found
     }
 
-    const jwtUser: JwtUser & { password: string } = {
+    const jwtUser: JwtUser & { password?: string } = {
       user_id: user.id,
       email: user.email,
       user_type: user.user_type,

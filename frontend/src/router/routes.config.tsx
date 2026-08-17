@@ -12,6 +12,7 @@ import {
 import { LandingPage } from '../pages/LandingPage';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
+import { OAuthCallbackPage } from '../pages/OAuthCallbackPage';
 import { JobListPage } from '../pages/jobs/JobListPage';
 import { ProfilePage } from '../pages/profile/ProfilePage';
 import { ApplicationsPage } from '../pages/candidate/ApplicationsPage';
@@ -58,6 +59,11 @@ export const ROUTES = {
     REGISTER: {
       path: '/register',
       element: <RegisterPage />,
+      showInNav: false,
+    },
+    OAUTH_CALLBACK: {
+      path: '/oauth-callback',
+      element: <OAuthCallbackPage />,
       showInNav: false,
     },
     JOBS: {

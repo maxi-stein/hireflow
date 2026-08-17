@@ -10,7 +10,7 @@ import {
   CandidateFilterDto,
   CandidateSortBy,
 } from '../dto/candidate/candidate-filter.dto';
-import { UserType } from '../interfaces/user.enum';
+import { UserType, AuthProvider } from '../interfaces/user.enum';
 import { RegisterCandidateDto } from '../dto/user/create-user.dto';
 import { UsersService } from '../base-user/user.service';
 
@@ -51,6 +51,47 @@ export class CandidateService {
         await transactionalEntityManager.save(candidate);
 
         // Return user with candidate relation (excluding password)
+        const userWithCandidate = await this.usersService.findOne(
+          { id: userSaved.id },
+          transactionalEntityManager,
+          ['candidate', 'employee'],
+        );
+
+        const { password, ...result } = userWithCandidate;
+        return result as User;
+      },
+    );
+  }
+
+  async registerGoogleCandidate(profile: { email: string; firstName: string; lastName: string; googleId: string }): Promise<User> {
+    return this.candidateRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        // Create user using UserService
+        const userSaved = await this.usersService.create(
+          {
+            first_name: profile.firstName,
+            last_name: profile.lastName,
+            email: profile.email,
+            auth_provider: AuthProvider.GOOGLE,
+            google_id: profile.googleId,
+          },
+          UserType.CANDIDATE,
+          transactionalEntityManager,
+        );
+
+        // Create the candidate profile with default empty fields
+        const candidate = transactionalEntityManager.create(Candidate, {
+          age: null,
+          phone: null,
+          github: null,
+          linkedin: null,
+          city: null,
+          country: null,
+          user: { id: userSaved.id },
+        });
+        await transactionalEntityManager.save(candidate);
+
+        // Return user with candidate relation
         const userWithCandidate = await this.usersService.findOne(
           { id: userSaved.id },
           transactionalEntityManager,
