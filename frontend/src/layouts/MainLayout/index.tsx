@@ -12,8 +12,7 @@ export function MainLayout() {
       bg={computedColorScheme === 'dark' ? 'dark.8' : 'oklch(99% .005 240)'}
       styles={{
         header: {
-          backgroundColor: 'light-dark(#112240, rgb(24, 24, 24))',
-          borderBottom: 'none',
+          backgroundColor: 'light-dark(#112240, rgb(24, 24, 24))'
         },
         main: {
           width: '100%',

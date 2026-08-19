@@ -20,11 +20,10 @@ import { UserMenu } from '../../components/shared/UserMenu';
 import { LanguageSelector } from '../../components/shared/LanguageSelector';
 import { SideNav } from './SideNav';
 import { NavButton } from './MainHeader.styled';
-import { APP_MAX_WIDTH } from '../../constants/layout';
 
 export function MainHeader() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  const isMobile = useMediaQuery('(max-width: 1340px)');
+  const isMobile = useMediaQuery('(max-width: 1885px)');
 
   useEffect(() => {
     if (!isMobile && drawerOpened) {
@@ -63,7 +62,7 @@ export function MainHeader() {
 
   return (
     <>
-      <Container size={APP_MAX_WIDTH} h="100%" px="md">
+      <Container fluid h="100%" px="md" mx={isMobile ? 0 : 190} >
         <Group h="100%" justify="space-between" wrap="nowrap">
           {/* ── Left: burger (mobile) + logo + nav items ── */}
           <Group gap={4} wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
@@ -78,7 +77,6 @@ export function MainHeader() {
               />
             )}
 
-            {/* Logo */}
             <Title
               order={4}
               c="white"
@@ -91,7 +89,7 @@ export function MainHeader() {
 
             {/* Nav items — hidden on mobile */}
             {!isMobile && (
-              <Group gap={2} wrap="nowrap">
+              <Group gap={4} wrap="nowrap">
                 {navItems.map((item) => {
                   const active = isActive(item);
                   const visibleChildren = item.children?.filter((c) => c.showInNav !== false) ?? [];

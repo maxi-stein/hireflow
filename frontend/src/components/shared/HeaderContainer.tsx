@@ -9,9 +9,9 @@ export function HeaderContainer({ children }: HeaderContainerProps) {
   return (
     <AppShell.Header
       withBorder={false}
-      style={{ 
+      style={{
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        zIndex: 100 
+        zIndex: 100
       }}
     >
       {children}

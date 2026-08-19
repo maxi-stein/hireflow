@@ -5,20 +5,20 @@ export const theme = createTheme({
   defaultRadius: 'md',
   fontFamily: '"Space Grotesk", ui-sans-serif, system-ui, sans-serif',
   fontSizes: {
-    xs: '0.75rem', // 12px
-    sm: '0.875rem', // 14px
-    md: '1rem', // 16px
-    lg: '1.125rem', // 18px
-    xl: '1.25rem', // 20px
+    xs: '0.9375rem', // 15px
+    sm: '1.0625rem',  // 17px
+    md: '1.1875rem',  // 19px
+    lg: '1.25rem',    // 20px
+    xl: '1.5rem',     // 24px
   },
   headings: {
     sizes: {
-      h1: { fontSize: '1.625rem' }, // 26px
-      h2: { fontSize: '1.375rem' }, // 22px
-      h3: { fontSize: '1.125rem' }, // 18px
-      h4: { fontSize: '1rem' }, // 16px
-      h5: { fontSize: '0.875rem' }, // 14px
-      h6: { fontSize: '0.8125rem' }, // 13px
+      h1: { fontSize: '1.75rem' }, // 28px
+      h2: { fontSize: '1.5rem' }, // 24px
+      h3: { fontSize: '1.25rem' }, // 20px
+      h4: { fontSize: '1.0625rem' }, // 17px
+      h5: { fontSize: '0.9375rem' }, // 15px
+      h6: { fontSize: '0.875rem' }, // 14px
     },
   },
   components: {
