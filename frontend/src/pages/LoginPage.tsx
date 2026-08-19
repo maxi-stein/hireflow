@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
-import { Box, Button, Image, Stack } from "@mantine/core";
+import { Box, Button, Stack } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { LoginForm } from "../components/auth/LoginForm";
 import { useAppStore } from "../store/useAppStore";
 import { ROUTES } from "../router/routes.config";
-import cgLogo from "../assets/cg-logo.jpg";
+import { AppLogo } from "../components/shared/AppLogo";
 import styled from "styled-components";
 
 const Background = styled.div`
@@ -115,13 +115,7 @@ export const LoginPage: React.FC = () => {
             borderRadius: '1rem',
           }}
         >
-          <Image
-            src={cgLogo}
-            alt="Consultoría Global"
-            w="auto"
-            h={180}
-            fit="contain"
-          />
+          <AppLogo h={180} />
 
           <Button
             variant="subtle"

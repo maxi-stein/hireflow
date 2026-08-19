@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
 import { UserMenu } from '../../components/shared/UserMenu';
 import { APP_MAX_WIDTH } from '../../constants/layout';
-import cgLogo from '../../assets/cg-logo.jpg';
-import { LogoButton, LogoImage, LogoText } from '../../components/shared/LogoButton.styled';
+import { LogoButton } from '../../components/shared/LogoButton.styled';
+import { AppLogo } from '../../components/shared/AppLogo';
 
 export function MinimalHeader() {
   const navigate = useNavigate();
@@ -33,12 +33,8 @@ export function MinimalHeader() {
           }}
         >
           {isLandingPage && (
-            <LogoImage
-              src={cgLogo}
-              alt="Consultoría Global"
-            />
+            <AppLogo />
           )}
-          <LogoText>Consultoría Global</LogoText>
         </LogoButton>
       </Group>
 

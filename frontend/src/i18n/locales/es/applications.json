@@ -39,7 +39,12 @@
   },
   "candidate": {
     "title": "Mis Postulaciones",
-    "subtitle": "Sigue el estado de tus postulaciones y cronograma de entrevistas",
+    "subtitle": "Seguí el estado de tus postulaciones y cronograma de entrevistas",
+    "stats": {
+      "applications": "Postulaciones",
+      "inProgress": "En Progreso",
+      "rejected": "Rechazadas"
+    },
     "emptyState": {
       "title": "Aún no hay postulaciones",
       "message": "Aún no has postulado a ninguna posición. ¡Visita la página de Ofertas para encontrar oportunidades!"

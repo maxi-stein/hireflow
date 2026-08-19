@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useInterviewsQuery } from '../../hooks/api/useInterviews';
 import { InterviewStatus } from '../../services/interview.service';
 import { DashboardListItem } from './components/DashboardListItem';
+import { StatsGrid } from '../../components/shared/StatsGrid';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { APP_MAX_WIDTH } from '../../constants/layout';
@@ -62,23 +63,7 @@ export const DashboardPage = () => {
         </div>
 
         {/* Row 1: Key Metrics */}
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }}>
-          {stats.map((stat) => (
-            <Card withBorder p="md" radius="md" key={stat.label}>
-              <Group>
-                <stat.icon size={28} stroke={1.5} color={`var(--mantine-color-${stat.color}-6)`} />
-                <div>
-                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
-                    {stat.label}
-                  </Text>
-                  <Text fw={700} size="xl">
-                    {stat.value}
-                  </Text>
-                </div>
-              </Group>
-            </Card>
-          ))}
-        </SimpleGrid>
+        <StatsGrid stats={stats} />
 
         {/* Row 2: Candidates per Job Chart */}
         <Card withBorder radius="md" p="xl">

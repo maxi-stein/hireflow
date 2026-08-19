@@ -40,6 +40,11 @@
   "candidate": {
     "title": "My Applications",
     "subtitle": "Track all your job applications and interview schedules",
+    "stats": {
+      "applications": "Applications",
+      "inProgress": "In Progress",
+      "rejected": "Rejected"
+    },
     "emptyState": {
       "title": "No applications yet",
       "message": "You haven't applied to any positions yet. Visit the Jobs page to find opportunities!"

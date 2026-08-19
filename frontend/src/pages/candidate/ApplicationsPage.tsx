@@ -1,5 +1,5 @@
 import { Title, Text, Stack, LoadingOverlay, Alert, Box } from '@mantine/core';
-import { IconInbox } from '@tabler/icons-react';
+import { IconInbox, IconFileText, IconClock, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../store/useAppStore';
 import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
@@ -7,7 +7,9 @@ import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { UpcomingInterviewsAlert } from '../../components/candidate/UpcomingInterviewsAlert';
 import type { Interview } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
+import { ApplicationStatus } from '../../types/models/application.types';
 import { CandidateApplicationCard } from '../../components/candidate/CandidateApplicationCard';
+import { StatsGrid } from '../../components/shared/StatsGrid';
 
 
 export const ApplicationsPage = () => {
@@ -52,6 +54,12 @@ export const ApplicationsPage = () => {
 
     const isLoading = isLoadingApplications || isLoadingInterviews;
 
+    const candidateStats = [
+        { label: t('candidate.stats.applications'), value: sortedApplications.length, icon: IconFileText, color: 'blue' },
+        { label: t('candidate.stats.inProgress'), value: sortedApplications.filter(a => a.status === 'IN_PROGRESS').length, icon: IconClock, color: 'orange' },
+        { label: t('candidate.stats.rejected'), value: sortedApplications.filter(a => a.status === 'REJECTED').length, icon: IconX, color: 'red' },
+    ];
+
     if (isLoading) {
         return <LoadingOverlay visible={true} />;
     }
@@ -79,6 +87,9 @@ export const ApplicationsPage = () => {
 
                     {/* Upcoming Interviews Alert */}
                     <UpcomingInterviewsAlert upcomingInterviews={upcomingInterviews} />
+
+                    {/* Stats Grid */}
+                    <StatsGrid stats={candidateStats} />
 
                     {/* Applications List */}
                     {sortedApplications.length > 0 ? (
