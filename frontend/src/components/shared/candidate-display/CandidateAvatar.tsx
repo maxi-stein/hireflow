@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
 import { Avatar, type AvatarProps } from '@mantine/core';
-import { useCandidateFilesQuery } from '../../../hooks/api/useUserFiles';
-import { FileType, userFileService } from '../../../services/user-file.service';
+import { useProfilePictureDataUrl } from '../../../hooks/api/useUserFiles';
 
 interface CandidateAvatarProps extends AvatarProps {
   candidateId?: string;
@@ -15,43 +13,26 @@ export function CandidateAvatar({
   lastName,
   radius = 'md',
   size = 71,
+  src: externalSrc,
   ...props
 }: CandidateAvatarProps) {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const { data: files } = useCandidateFilesQuery(candidateId || '');
+  const { data: profilePictureDataUrl } = useProfilePictureDataUrl(candidateId);
 
-  useEffect(() => {
-    if (!candidateId) {
-      setImageUrl(null);
-      return;
-    }
-
-    const profilePicture = files?.find(f => f.file_type === FileType.PROFILE_PICTURE);
-    let objectUrl: string | null = null;
-
-    const fetchImage = async () => {
-      if (profilePicture) {
-        try {
-          const blob = await userFileService.downloadFile(profilePicture.id);
-          objectUrl = URL.createObjectURL(blob);
-          setImageUrl(objectUrl);
-        } catch {
-          setImageUrl(null);
-        }
-      } else {
-        setImageUrl(null);
-      }
-    };
-
-    fetchImage();
-
-    return () => {
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
-  }, [files, candidateId]);
+  // Internal query URL takes priority, then external src
+  const resolvedSrc = profilePictureDataUrl || externalSrc || null;
 
   return (
-    <Avatar src={imageUrl || props.src} color="blue" radius={radius} size={size} {...props}>
+    <Avatar
+      // Force browser repaint when src changes — blob URLs inside
+      // fixed-position compositing layers (header) may not paint
+      // until a visibility change otherwise.
+      key={resolvedSrc || 'no-src'}
+      src={resolvedSrc}
+      color="blue"
+      radius={radius}
+      size={size}
+      {...props}
+    >
       {props.children || `${firstName?.charAt(0) || ''}${lastName?.charAt(0) || ''}`}
     </Avatar>
   );

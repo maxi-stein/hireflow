@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Paper, Title, Grid, TextInput, Button, Group, Stack, FileButton, Text, Divider } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
@@ -8,6 +8,8 @@ import { IconUpload, IconBrandGithub, IconBrandLinkedin, IconMapPin, IconPhone, 
 import type { User } from '../../types/models/user.types';
 import { candidateService } from '../../services/candidate.service';
 import { fileService } from '../../services/file.service';
+import { queryClient } from '../../services/queryClient';
+import { FILES_QUERY_KEY } from '../../hooks/api/useUserFiles';
 import { WorkExperienceSection } from '../../components/profile/WorkExperienceSection';
 import { EducationSection } from '../../components/profile/EducationSection';
 import { ChangePasswordForm } from '../../components/profile/ChangePasswordForm';
@@ -24,7 +26,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const [uploadingCV, setUploadingCV] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
 
     const form = useForm({
         initialValues: {
@@ -54,28 +56,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
         }
     };
 
-    const profilePicture = candidate?.files?.find(f => f.file_type === 'profile_picture');
     const cvFile = candidate?.files?.find(f => f.file_type === 'cv');
-
-    // We download the profile image as a Blob to bypass authentication issues with simple <img> tags.
-    // The Backend requires a Bearer token which isn't sent with standard img src requests.
-    // URL.createObjectURL creates a temporary local URL for the Blob.
-    useEffect(() => {
-        let objectUrl: string | null = null;
-        if (profilePicture) {
-            fileService.downloadFile(profilePicture.id).then(blob => {
-                objectUrl = URL.createObjectURL(blob);
-                setAvatarUrl(objectUrl);
-            }).catch(() => {
-                setAvatarUrl(null);
-            });
-        } else {
-            setAvatarUrl(null);
-        }
-        return () => {
-            if (objectUrl) URL.revokeObjectURL(objectUrl);
-        };
-    }, [profilePicture?.id]);
 
     const handlePhotoUpload = async (file: File | null) => {
         if (!file) return;
@@ -91,6 +72,8 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
         setUploadingPhoto(true);
         try {
             await fileService.uploadProfilePicture(file);
+            // Invalidate the files query so CandidateAvatar refetches the new photo
+            queryClient.invalidateQueries({ queryKey: [...FILES_QUERY_KEY, 'candidate', candidate?.id] });
             notifications.show({ title: t('candidate.notifications.successTitle'), message: t('candidate.notifications.picitureUploaded'), color: 'green' });
             refreshProfile();
         } catch (error) {
@@ -133,10 +116,9 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                     <Group align="flex-start">
                         <Stack align="center" gap="xs">
                             <CandidateAvatar
-                                candidateId={user.id}
+                                candidateId={candidate?.id}
                                 firstName={user.first_name}
                                 lastName={user.last_name}
-                                src={avatarUrl || undefined}
                             />
                             <FileButton onChange={handlePhotoUpload} accept="image/png,image/jpeg,image/jpg,image/webp" >
                                 {(props) => <Button variant="subtle" size="xs" loading={uploadingPhoto} {...props}>{t('candidate.changePhoto')}</Button>}
