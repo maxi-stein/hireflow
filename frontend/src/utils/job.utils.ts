@@ -7,10 +7,16 @@ export const getLocationDisplayInfo = (
   if (!location) return { workMode, location: null };
 
   const normalizedLocation = location.toLowerCase().trim();
-  // Don't show location if it's redundant with remote work mode
+  // Don't show location if it's redundant with remote or hybrid work mode
   if (
     workMode === WorkMode.REMOTE &&
     (normalizedLocation === 'remote' || normalizedLocation === 'remoto')
+  ) {
+    return { workMode, location: null };
+  }
+  if (
+    workMode === WorkMode.HYBRID &&
+    (normalizedLocation === 'hybrid' || normalizedLocation === 'hibrido' || normalizedLocation === 'híbrido')
   ) {
     return { workMode, location: null };
   }

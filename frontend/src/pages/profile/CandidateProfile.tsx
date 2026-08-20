@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Paper, Title, Grid, TextInput, Button, Group, Stack, FileButton, Text, Divider } from '@mantine/core';
+import { Paper, Title, Grid, TextInput, Button, Group, Stack, FileButton, Text, Divider, NumberInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
@@ -178,61 +178,70 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                     </Stack>
                 </Group>
 
-                <Divider my="md" label={t('candidate.personalInfo')} labelPosition="center" />
-
-                <form onSubmit={form.onSubmit(handleUpdateProfile)}>
-                    <Grid>
-                        <Grid.Col span={{ base: 12, sm: 6 }}>
-                            <TextInput
-                                label={t('candidate.phone')}
-                                leftSection={<IconPhone size={16} />}
-                                {...form.getInputProps('phone')}
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={{ base: 12, sm: 6 }}>
-                            <TextInput
-                                label={t('candidate.age')}
-                                type="number"
-                                {...form.getInputProps('age')}
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={{ base: 12, sm: 6 }}>
-                            <TextInput
-                                label={t('candidate.city')}
-                                leftSection={<IconWorld size={16} />}
-                                {...form.getInputProps('city')}
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={{ base: 12, sm: 6 }}>
-                            <TextInput
-                                label={t('candidate.country')}
-                                leftSection={<IconWorld size={16} />}
-                                {...form.getInputProps('country')}
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={{ base: 12, sm: 6 }}>
-                            <TextInput
-                                label={t('candidate.github')}
-                                leftSection={<IconBrandGithub size={16} />}
-                                placeholder="https://github.com/username"
-                                {...form.getInputProps('github')}
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={{ base: 12, sm: 6 }}>
-                            <TextInput
-                                label={t('candidate.linkedin')}
-                                leftSection={<IconBrandLinkedin size={16} />}
-                                placeholder="https://linkedin.com/in/username"
-                                {...form.getInputProps('linkedin')}
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={12}>
-                            <Group justify="flex-end">
-                                <Button type="submit" loading={loading}>{t('candidate.saveChanges')}</Button>
-                            </Group>
-                        </Grid.Col>
-                    </Grid>
-                </form>
+                <Grid>
+                    <Grid.Col span={{ base: 12, md: 8 }}>
+                        <Divider mb="md" label={t('candidate.personalInfo')} labelPosition="center" />
+                        <form onSubmit={form.onSubmit(handleUpdateProfile)}>
+                            <Grid>
+                                <Grid.Col span={{ base: 12, sm: 6 }}>
+                                    <TextInput
+                                        label={t('candidate.phone')}
+                                        leftSection={<IconPhone size={16} />}
+                                        {...form.getInputProps('phone')}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={{ base: 12, sm: 3 }}>
+                                    <NumberInput
+                                        label={t('candidate.age')}
+                                        min={16}
+                                        max={120}
+                                        clampBehavior="strict"
+                                        {...form.getInputProps('age')}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={{ base: 12, sm: 6 }}>
+                                    <TextInput
+                                        label={t('candidate.city')}
+                                        leftSection={<IconWorld size={16} />}
+                                        {...form.getInputProps('city')}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={{ base: 12, sm: 6 }}>
+                                    <TextInput
+                                        label={t('candidate.country')}
+                                        leftSection={<IconWorld size={16} />}
+                                        {...form.getInputProps('country')}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={{ base: 12, sm: 6 }}>
+                                    <TextInput
+                                        label={t('candidate.github')}
+                                        leftSection={<IconBrandGithub size={16} />}
+                                        placeholder="https://github.com/username"
+                                        {...form.getInputProps('github')}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={{ base: 12, sm: 6 }}>
+                                    <TextInput
+                                        label={t('candidate.linkedin')}
+                                        leftSection={<IconBrandLinkedin size={16} />}
+                                        placeholder="https://linkedin.com/in/username"
+                                        {...form.getInputProps('linkedin')}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={12}>
+                                    <Group justify="flex-end">
+                                        <Button type="submit" loading={loading}>{t('candidate.saveChanges')}</Button>
+                                    </Group>
+                                </Grid.Col>
+                            </Grid>
+                        </form>
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 4 }} pl={{ md: 'xl' }}>
+                        <Divider mb="md" label={t('password.title', 'Cambiar Contraseña')} labelPosition="center" />
+                        <ChangePasswordForm withPaper={false} />
+                    </Grid.Col>
+                </Grid>
             </Paper>
 
             {/* Work Experience */}
@@ -253,7 +262,6 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                 />
             )}
 
-            <ChangePasswordForm />
         </Stack>
     );
 };

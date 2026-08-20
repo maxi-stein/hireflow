@@ -1,5 +1,5 @@
-
-import { Button, PasswordInput, Stack, Paper, Title } from '@mantine/core';
+import { Button, PasswordInput, Stack, Paper, Title, Text, Group, ThemeIcon } from '@mantine/core';
+import { IconLockPassword } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
@@ -7,8 +7,13 @@ import { authService } from '../../services/auth.service';
 import { validateWithJoi } from '../../utils/form-validation';
 import { changePasswordSchema } from '../../schemas/profile.schema';
 
-export const ChangePasswordForm = () => {
+interface ChangePasswordFormProps {
+    withPaper?: boolean;
+}
+
+export const ChangePasswordForm = ({ withPaper = true }: ChangePasswordFormProps) => {
     const { t } = useTranslation('profile');
+
     const form = useForm({
         initialValues: {
             oldPassword: '',
@@ -24,20 +29,21 @@ export const ChangePasswordForm = () => {
                 oldPassword: values.oldPassword,
                 newPassword: values.newPassword,
             });
+
             notifications.show({
                 title: t('candidate.notifications.successTitle'),
                 message: t('password.success'),
                 color: 'green',
             });
+
             form.reset();
         } catch (error: any) {
             let errorMessage = t('password.failed');
 
             if (error.response?.data?.message) {
-                errorMessage = error.response.data.message;
-                if (Array.isArray(errorMessage)) {
-                    errorMessage = errorMessage.join(', ');
-                }
+                errorMessage = Array.isArray(error.response.data.message)
+                    ? error.response.data.message.join(', ')
+                    : error.response.data.message;
             } else if (error.message) {
                 errorMessage = error.message;
             }
@@ -50,34 +56,49 @@ export const ChangePasswordForm = () => {
         }
     };
 
-    return (
-        <Paper withBorder shadow="md" p="md" radius="md">
-            <Title order={4} mb="md">{t('password.title')}</Title>
+    const content = (
+        <Stack gap="lg">
             <form onSubmit={form.onSubmit(handleSubmit)}>
-                <Stack>
+                <Stack gap="sm">
                     <PasswordInput
                         label={t('password.current')}
                         placeholder={t('password.currentPlaceholder')}
+                        size="sm"
                         required
                         {...form.getInputProps('oldPassword')}
                     />
+
                     <PasswordInput
                         label={t('password.new')}
                         placeholder={t('password.newPlaceholder')}
+                        size="sm"
                         required
                         {...form.getInputProps('newPassword')}
                     />
+
                     <PasswordInput
                         label={t('password.confirm')}
                         placeholder={t('password.confirmPlaceholder')}
+                        size="sm"
                         required
                         {...form.getInputProps('confirmPassword')}
                     />
-                    <Button type="submit" loading={false}>
+
+                    <Button type="submit" fullWidth mt="xs">
                         {t('password.update')}
                     </Button>
                 </Stack>
             </form>
+        </Stack>
+    );
+
+    if (!withPaper) {
+        return content;
+    }
+
+    return (
+        <Paper withBorder p="lg" radius="md">
+            {content}
         </Paper>
     );
 };

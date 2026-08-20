@@ -1,4 +1,4 @@
-import { Grid, Stack, Group, Button, Text, Box, ThemeIcon, Card } from '@mantine/core';
+import { Grid, Stack, Group, Button, Text, Box, ThemeIcon, Card, Divider, Badge } from '@mantine/core';
 import { IconExternalLink, IconClock, IconX, IconCalendarEvent } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -12,11 +12,7 @@ import { JobOfferMeta } from '../../jobs/JobOfferCard/JobOfferMeta';
 import { JobOfferSkills } from '../../jobs/JobOfferCard/JobOfferSkills';
 
 const StyledApplicationCard = styled(Card as any)`
-  background: #000000;
-
-  [data-mantine-color-scheme='light'] & {
-    background: #ffffff;
-  }
+  background: light-dark(#ffffff, var(--mantine-color-dark-6));
   border: 1px solid light-dark(#dce8f5, var(--mantine-color-dark-4)) !important;
   transition:
     transform 0.2s ease,
@@ -146,24 +142,47 @@ export const CandidateApplicationCard = ({ application, interviews }: CandidateA
             ) : (
               <Box
                 p="lg"
-                bg="var(--mantine-color-blue-light)"
+                bg="var(--mantine-color-body)"
                 style={{
-                  borderRadius: '8px',
-                  border: '1px solid var(--mantine-color-blue-light-color)',
-                  height: '100%'
+                  borderRadius: '12px',
+                  border: '1px solid var(--mantine-color-gray-3)',
+                  height: '100%',
                 }}
               >
-                <Group align="flex-start" gap="md">
-                  <ThemeIcon size="lg" radius="xl" variant="white" color="blue">
-                    <IconClock size={20} />
-                  </ThemeIcon>
-                  <Box style={{ flex: 1, justifyContent: 'center' }}>
-                    <Text size="sm" fw={600} c="blue.9">{t('card.underReview')}</Text>
-                    <Text size="sm" c="blue.8" lh={1.4}>
-                      {t('card.underReviewMessage')}
-                    </Text>
+                <Stack gap="lg" justify="space-between" h="100%">
+                  <Group gap="sm" wrap="nowrap" align="center">
+                    <ThemeIcon size={42} radius="xl" color="blue" variant="light">
+                      <IconClock size={21} />
+                    </ThemeIcon>
+
+                    <Box>
+                      <Badge color="blue" variant="light" size="sm" mb={4}>
+                        EN REVISIÓN
+                      </Badge>
+
+                      <Text size="sm" fw={700} c="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white-7))">
+                        {t('card.underReview')}
+                      </Text>
+                    </Box>
+                  </Group>
+
+                  <Text size="sm" c="dimmed" lh={1.6}>
+                    {t('card.underReviewMessage')}
+                  </Text>
+
+                  <Box>
+                    <Divider mb="sm" />
+
+                    <Group gap={7} c="dimmed" wrap="nowrap">
+                      <ThemeIcon size="sm" radius="xl" color="gray" variant="light">
+                        <IconClock size={11} />
+                      </ThemeIcon>
+                      <Text size="xs">
+                        Te notificaremos por email cuando haya novedades.
+                      </Text>
+                    </Group>
                   </Box>
-                </Group>
+                </Stack>
               </Box>
             )}
           </Stack>

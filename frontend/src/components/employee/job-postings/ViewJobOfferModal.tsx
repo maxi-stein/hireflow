@@ -48,6 +48,7 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferM
           <JobOfferCard
             job={jobOffer}
             showSensitiveData
+            isModal
           />
         </Stack>
       )}
