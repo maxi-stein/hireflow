@@ -37,12 +37,14 @@ export const workExperienceSchema = Joi.object({
 });
 
 export const changePasswordSchema = Joi.object({
-  oldPassword: Joi.string().min(8).required().messages({
+  oldPassword: Joi.string().min(8).max(128).required().messages({
     'string.min': 'Password must be at least 8 characters',
+    'string.max': 'Password cannot exceed 128 characters',
     'string.empty': 'Old password is required',
   }),
-  newPassword: Joi.string().min(8).required().messages({
+  newPassword: Joi.string().min(8).max(128).required().messages({
     'string.min': 'Password must be at least 8 characters',
+    'string.max': 'Password cannot exceed 128 characters',
     'string.empty': 'New password is required',
   }),
   confirmPassword: Joi.string().valid(Joi.ref('newPassword')).required().messages({

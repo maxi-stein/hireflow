@@ -32,8 +32,9 @@ export const registerSchema = Joi.object({
       "string.empty": "El email es requerido",
       "any.required": "El email es requerido",
     }),
-  password: Joi.string().min(6).required().messages({
-    "string.min": "La contraseña debe tener al menos 6 caracteres",
+  password: Joi.string().min(8).max(128).required().messages({
+    "string.min": "La contraseña debe tener al menos 8 caracteres",
+    "string.max": "La contraseña no puede exceder los 128 caracteres",
     "string.empty": "La contraseña es requerida",
     "any.required": "La contraseña es requerida",
   }),
