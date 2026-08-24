@@ -1,10 +1,10 @@
 // update-candidate.dto.ts
-import { IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsDateString, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UpdateCandidateDto {
   @IsOptional()
-  @IsInt()
-  age?: number;
+  @IsDateString()
+  date_of_birth?: Date;
 
   @IsOptional()
   @IsString()

@@ -1,17 +1,17 @@
 import { Type } from 'class-transformer';
 import {
   IsString,
-  IsInt,
   IsUrl,
   IsOptional,
   ValidateNested,
+  IsDateString,
 } from 'class-validator';
 import { CreateEducationDto } from '../education/create-education.dto';
 import { CreateWorkExperienceDto } from '../work-experience/create-work-experience.dto';
 
 export class CreateCandidateDto {
-  @IsInt()
-  age: number;
+  @IsDateString()
+  date_of_birth: Date;
 
   @IsString()
   phone: string;

@@ -40,7 +40,7 @@ export class CandidateService {
 
         // Create the candidate profile with default empty fields
         const candidate = transactionalEntityManager.create(Candidate, {
-          age: null,
+          date_of_birth: null,
           phone: null,
           github: null,
           linkedin: null,
@@ -81,7 +81,7 @@ export class CandidateService {
 
         // Create the candidate profile with default empty fields
         const candidate = transactionalEntityManager.create(Candidate, {
-          age: null,
+          date_of_birth: null,
           phone: null,
           github: null,
           linkedin: null,
@@ -219,7 +219,7 @@ export class CandidateService {
   private mapToResponseDto(candidate: Candidate): CandidateResponseDto {
     return {
       id: candidate.id,
-      age: candidate.age,
+      date_of_birth: candidate.date_of_birth,
       phone: candidate.phone,
       city: candidate.city,
       country: candidate.country,

@@ -20,8 +20,8 @@ export class Candidate {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'int', nullable: true })
-  age: number | null;
+  @Column({ type: 'date', nullable: true })
+  date_of_birth: Date | null;
 
   @Column({ type: 'varchar', length: USER.PHONE_LENGTH, nullable: true })
   phone: string | null;
