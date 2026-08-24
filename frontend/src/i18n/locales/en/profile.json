@@ -98,7 +98,7 @@
     "currentResume": "Current: {{fileName}}",
     "personalInfo": "Personal Information",
     "phone": "Phone",
-    "age": "Age",
+    "dateOfBirth": "Date of Birth",
     "github": "GitHub URL",
     "linkedin": "LinkedIn URL",
     "saveChanges": "Save Changes",

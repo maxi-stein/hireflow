@@ -27,7 +27,7 @@ export interface UserFile {
 export interface Candidate {
   id: string;
   user_id: string;
-  age: number | null;
+  date_of_birth: string | null;
   phone: string | null;
   city: string;
   country: string;

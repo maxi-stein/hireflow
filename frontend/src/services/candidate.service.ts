@@ -6,7 +6,7 @@ import type { WorkExperience } from './work-experience.service';
 export interface CandidateProfile {
   id: string; // candidate id
   user_id: string; // user entity id
-  age?: number;
+  date_of_birth?: string;
   phone?: string;
   city?: string;
   country?: string;
@@ -23,7 +23,7 @@ export interface CandidateProfile {
 }
 
 export interface UpdateCandidateDto {
-  age?: number;
+  date_of_birth?: string;
   phone?: string;
   city?: string;
   country?: string;

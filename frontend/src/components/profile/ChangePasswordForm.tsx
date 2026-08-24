@@ -1,5 +1,4 @@
-import { Button, PasswordInput, Stack, Paper, Title, Text, Group, ThemeIcon } from '@mantine/core';
-import { IconLockPassword } from '@tabler/icons-react';
+import { Button, PasswordInput, Stack, Paper } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';

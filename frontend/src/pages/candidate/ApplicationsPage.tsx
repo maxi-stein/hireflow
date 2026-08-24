@@ -7,7 +7,6 @@ import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { UpcomingInterviewsAlert } from '../../components/candidate/UpcomingInterviewsAlert';
 import type { Interview } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
-import { ApplicationStatus } from '../../types/models/application.types';
 import { CandidateApplicationCard } from '../../components/candidate/CandidateApplicationCard';
 import { StatsGrid } from '../../components/shared/StatsGrid';
 
