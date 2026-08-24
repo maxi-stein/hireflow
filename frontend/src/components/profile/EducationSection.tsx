@@ -123,7 +123,7 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
     };
 
     return (
-        <Paper withBorder shadow="sm" p="lg" radius="md">
+        <Paper withBorder shadow="sm" p="xl" radius="md">
             <Group justify="space-between" mb="md">
                 <Title order={3}>{t('education.title')}</Title>
                 <Button leftSection={<IconPlus size={16} />} variant="light" onClick={() => handleOpen()}>

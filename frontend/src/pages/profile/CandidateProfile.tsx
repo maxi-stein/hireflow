@@ -14,6 +14,7 @@ import { WorkExperienceSection } from '../../components/profile/WorkExperienceSe
 import { EducationSection } from '../../components/profile/EducationSection';
 import { ChangePasswordForm } from '../../components/profile/ChangePasswordForm';
 import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
+import { ProfileTwoColumnLayout } from '../../components/profile/ProfileTwoColumnLayout';
 
 interface CandidateProfileProps {
     user: User;
@@ -178,9 +179,9 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                     </Stack>
                 </Group>
 
-                <Grid>
-                    <Grid.Col span={{ base: 12, md: 8 }}>
-                        <Divider mb="md" label={t('candidate.personalInfo')} labelPosition="center" />
+                <ProfileTwoColumnLayout
+                    leftTitle={t('candidate.personalInfo')}
+                    leftContent={
                         <form onSubmit={form.onSubmit(handleUpdateProfile)}>
                             <Grid>
                                 <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -236,12 +237,10 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
                                 </Grid.Col>
                             </Grid>
                         </form>
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, md: 4 }} pl={{ md: 'xl' }}>
-                        <Divider mb="md" label={t('password.title', 'Cambiar Contraseña')} labelPosition="center" />
-                        <ChangePasswordForm withPaper={false} />
-                    </Grid.Col>
-                </Grid>
+                    }
+                    rightTitle={t('password.title', 'Cambiar Contraseña')}
+                    rightContent={<ChangePasswordForm withPaper={false} />}
+                />
             </Paper>
 
             {/* Work Experience */}
