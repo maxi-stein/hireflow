@@ -1,9 +1,10 @@
-// update-candidate.dto.ts
-import { IsDateString, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsDate, IsOptional, IsString, IsUrl } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class UpdateCandidateDto {
   @IsOptional()
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   date_of_birth?: Date;
 
   @IsOptional()

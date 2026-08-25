@@ -4,13 +4,14 @@ import {
   IsUrl,
   IsOptional,
   ValidateNested,
-  IsDateString,
+  IsDate,
 } from 'class-validator';
 import { CreateEducationDto } from '../education/create-education.dto';
 import { CreateWorkExperienceDto } from '../work-experience/create-work-experience.dto';
 
 export class CreateCandidateDto {
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   date_of_birth: Date;
 
   @IsString()
