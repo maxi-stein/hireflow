@@ -1,3 +1,7 @@
+// Force Node.js to use UTC for all Date operations, preventing timezone-related
+// off-by-one errors when TypeORM serializes Date objects to Postgres 'date' columns.
+process.env.TZ = 'UTC';
+
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app/app.module';

@@ -63,7 +63,12 @@ export class CandidateService {
     );
   }
 
-  async registerGoogleCandidate(profile: { email: string; firstName: string; lastName: string; googleId: string }): Promise<User> {
+  async registerGoogleCandidate(profile: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    googleId: string;
+  }): Promise<User> {
     return this.candidateRepository.manager.transaction(
       async (transactionalEntityManager) => {
         // Create user using UserService
