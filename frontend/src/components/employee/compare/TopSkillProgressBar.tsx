@@ -1,10 +1,6 @@
 import { Progress } from '@mantine/core';
 
-interface TopSkillProgressBarProps {
-  value: number;
-}
-
-export function TopSkillProgressBar({ value }: TopSkillProgressBarProps) {
+export function TopSkillProgressBar() {
   // Divide total value in 3 parts to create a gradient effect
   const part1 = 46;
   const part2 = 5;

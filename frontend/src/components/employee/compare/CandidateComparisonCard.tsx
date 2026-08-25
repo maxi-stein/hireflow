@@ -269,7 +269,7 @@ export function CandidateComparisonCard({
                               </Text>
                             </Group>
                             {isTop ? (
-                              <TopSkillProgressBar value={progressValue} />
+                              <TopSkillProgressBar />
                             ) : (
                               <Progress
                                 value={progressValue}
