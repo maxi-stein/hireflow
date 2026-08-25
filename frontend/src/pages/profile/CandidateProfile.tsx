@@ -22,13 +22,36 @@ interface CandidateProfileProps {
   refreshProfile: () => void;
 }
 
+const parseLocalDate = (dateString?: string | null) => {
+  if (!dateString) return null;
+  const parts = dateString.split('T')[0].split('-');
+  if (parts.length === 3) {
+    const [year, month, day] = parts.map(Number);
+    // Use local midnight so Mantine's DatePickerInput displays the correct day
+    return new Date(year, month - 1, day);
+  }
+  return new Date(dateString);
+};
+
+const formatLocalDate = (dateValue?: any) => {
+  if (!dateValue) return undefined;
+
+  const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
+
+  if (!(date instanceof Date) || isNaN(date.getTime())) return undefined;
+
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}T12:00:00.000Z`;
+};
+
 export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps) => {
   const { t } = useTranslation('profile');
   const { candidate } = user;
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingCV, setUploadingCV] = useState(false);
   const [loading, setLoading] = useState(false);
-
 
   const form = useForm({
     initialValues: {
@@ -37,7 +60,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
       country: candidate?.country || '',
       github: candidate?.github || '',
       linkedin: candidate?.linkedin || '',
-      date_of_birth: candidate?.date_of_birth ? new Date(candidate.date_of_birth) : null,
+      date_of_birth: parseLocalDate(candidate?.date_of_birth),
     },
   });
 
@@ -46,12 +69,17 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
     setLoading(true);
     try {
       await candidateService.update(candidate.id, {
-        ...values,
-        date_of_birth: values.date_of_birth ? values.date_of_birth.toISOString() : undefined,
+        phone: values.phone?.trim() || undefined,
+        city: values.city?.trim() || undefined,
+        country: values.country?.trim() || undefined,
+        github: values.github?.trim() || undefined,
+        linkedin: values.linkedin?.trim() || undefined,
+        date_of_birth: formatLocalDate(values.date_of_birth),
       });
       notifications.show({ title: t('candidate.notifications.successTitle'), message: t('candidate.notifications.profileUpdated'), color: 'green' });
       refreshProfile();
     } catch (error) {
+      console.error('Error updating profile:', error);
       notifications.show({ title: t('candidate.notifications.errorTitle'), message: t('candidate.notifications.updateFailed'), color: 'red' });
     } finally {
       setLoading(false);
