@@ -25,7 +25,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
   // Shared configuration for the HTTP-only refresh token cookie.
   private get cookieOptions() {
@@ -91,7 +91,8 @@ export class AuthController {
     res.cookie('Refresh', authData.refresh_token, this.cookieOptions);
 
     // Redirect to frontend with access token
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
     const redirectUrl = `${frontendUrl}/oauth-callback?access_token=${authData.access_token}`;
 
     return res.redirect(redirectUrl);
