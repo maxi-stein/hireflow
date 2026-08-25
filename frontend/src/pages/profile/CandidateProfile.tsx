@@ -47,7 +47,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
     try {
       await candidateService.update(candidate.id, {
         ...values,
-        date_of_birth: values.date_of_birth ? values.date_of_birth.toISOString().split('T')[0] : undefined,
+        date_of_birth: values.date_of_birth ? values.date_of_birth.toISOString() : undefined,
       });
       notifications.show({ title: t('candidate.notifications.successTitle'), message: t('candidate.notifications.profileUpdated'), color: 'green' });
       refreshProfile();
