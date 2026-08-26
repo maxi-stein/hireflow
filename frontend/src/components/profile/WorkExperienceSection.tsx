@@ -11,6 +11,7 @@ import { workExperienceService } from '../../services/work-experience.service';
 import dayjs from 'dayjs';
 import { validateWithJoi } from '../../utils/form-validation';
 import { workExperienceSchema } from '../../schemas/profile.schema';
+import { parseLocalDate, formatLocalDate } from '../../utils/dateUtils';
 import { DeleteConfirmationModal } from '../shared/DeleteConfirmationModal';
 
 interface WorkExperienceSectionProps {
@@ -47,8 +48,8 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
                 company: experience.company_name,
                 position: experience.position,
                 description: experience.description,
-                start_date: experience.start_date ? new Date(experience.start_date) : null,
-                end_date: experience.end_date ? new Date(experience.end_date) : null,
+                start_date: parseLocalDate(experience.start_date),
+                end_date: parseLocalDate(experience.end_date),
             });
         } else {
             setEditingId(null);
@@ -60,20 +61,16 @@ export const WorkExperienceSection = ({ candidateId, experiences, onUpdate }: Wo
     const handleSubmit = async (values: typeof form.values) => {
         setLoading(true);
         try {
-            // Ensure dates are Date objects
             if (!values.start_date) {
                 throw new Error('Start date is required');
             }
-
-            const startDate = values.start_date instanceof Date ? values.start_date : new Date(values.start_date);
-            const endDate = values.end_date ? (values.end_date instanceof Date ? values.end_date : new Date(values.end_date)) : null;
 
             const payload = {
                 company_name: values.company,
                 position: values.position,
                 description: values.description,
-                start_date: startDate.toISOString(),
-                end_date: endDate?.toISOString() || null,
+                start_date: formatLocalDate(values.start_date)!,
+                end_date: formatLocalDate(values.end_date) || null,
             };
 
             if (editingId) {

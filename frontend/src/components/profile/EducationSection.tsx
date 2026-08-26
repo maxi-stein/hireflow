@@ -10,6 +10,7 @@ import { educationService, DegreeType } from '../../services/education.service';
 import dayjs from 'dayjs';
 import { validateWithJoi } from '../../utils/form-validation';
 import { educationSchema } from '../../schemas/profile.schema';
+import { parseLocalDate, formatLocalDate } from '../../utils/dateUtils';
 import { DeleteConfirmationModal } from '../shared/DeleteConfirmationModal';
 
 interface EducationSectionProps {
@@ -49,8 +50,8 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
                 institution: education.institution,
                 degree_type: education.degree_type,
                 field_of_study: education.field_of_study,
-                start_date: education.start_date ? new Date(education.start_date) : null,
-                end_date: education.end_date ? new Date(education.end_date) : null,
+                start_date: parseLocalDate(education.start_date),
+                end_date: parseLocalDate(education.end_date),
                 description: education.description || '',
             });
         } else {
@@ -65,20 +66,16 @@ export const EducationSection = ({ candidateId, educationList, onUpdate }: Educa
     const handleSubmit = async (values: typeof form.values) => {
         setLoading(true);
         try {
-            // Ensure dates are Date objects
             if (!values.start_date) {
                 throw new Error('Start date is required');
             }
-
-            const startDate = values.start_date instanceof Date ? values.start_date : new Date(values.start_date);
-            const endDate = values.end_date ? (values.end_date instanceof Date ? values.end_date : new Date(values.end_date)) : null;
 
             const payload = {
                 institution: values.institution,
                 degree_type: values.degree_type as DegreeType,
                 field_of_study: values.field_of_study,
-                start_date: startDate.toISOString(),
-                end_date: endDate?.toISOString() || null,
+                start_date: formatLocalDate(values.start_date)!,
+                end_date: formatLocalDate(values.end_date) || null,
                 description: values.description,
             }
 

@@ -22,29 +22,7 @@ interface CandidateProfileProps {
   refreshProfile: () => void;
 }
 
-const parseLocalDate = (dateString?: string | null) => {
-  if (!dateString) return null;
-  const parts = dateString.split('T')[0].split('-');
-  if (parts.length === 3) {
-    const [year, month, day] = parts.map(Number);
-    // Use local midnight so Mantine's DatePickerInput displays the correct day
-    return new Date(year, month - 1, day);
-  }
-  return new Date(dateString);
-};
-
-const formatLocalDate = (dateValue?: any) => {
-  if (!dateValue) return undefined;
-
-  const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
-
-  if (!(date instanceof Date) || isNaN(date.getTime())) return undefined;
-
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  return `${year}-${month}-${day}T12:00:00.000Z`;
-};
+import { parseLocalDate, formatLocalDate } from '../../utils/dateUtils';
 
 export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps) => {
   const { t } = useTranslation('profile');

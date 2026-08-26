@@ -39,6 +39,7 @@ import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar'
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
 import type { TechExperienceStats } from '../../../hooks/useCandidateTechExperience';
 import { TopSkillProgressBar } from './TopSkillProgressBar';
+import { parseLocalDate } from '../../../utils/dateUtils';
 import styled from 'styled-components';
 
 const StyledActionButton = styled(Button as any)`
@@ -309,7 +310,7 @@ export function CandidateComparisonCard({
                         <Timeline.Item key={exp.id} title={<Text fw={600} size="sm">{exp.position}</Text>}>
                           <Text size="xs" c="dimmed">{exp.company_name}</Text>
                           <Text size="xs" c="dimmed" mt={4}>
-                            {new Date(exp.start_date).toLocaleDateString()} - {exp.end_date ? new Date(exp.end_date).toLocaleDateString() : t('present', { ns: 'common' })}
+                            {parseLocalDate(exp.start_date)?.toLocaleDateString()} - {exp.end_date ? parseLocalDate(exp.end_date)?.toLocaleDateString() : t('present', { ns: 'common' })}
                           </Text>
                           {exp.description && (
                             <Text size="xs" mt={4} c="dimmed">{exp.description}</Text>
@@ -345,7 +346,7 @@ export function CandidateComparisonCard({
                           <Text fw={600} size="sm">{edu.degree_type} - {edu.field_of_study}</Text>
                           <Text size="xs" c="dimmed">{edu.institution}</Text>
                           <Text size="xs" c="dimmed" mt={4}>
-                            {new Date(edu.start_date).toLocaleDateString()} - {edu.end_date ? new Date(edu.end_date).toLocaleDateString() : t('present', { ns: 'common' })}
+                            {parseLocalDate(edu.start_date)?.toLocaleDateString()} - {edu.end_date ? parseLocalDate(edu.end_date)?.toLocaleDateString() : t('present', { ns: 'common' })}
                           </Text>
                           {edu.description && (
                             <Text size="xs" mt={4}>{edu.description}</Text>
