@@ -10,6 +10,11 @@
   "candidatesPerJob": {
     "title": "Candidatos por Trabajo Activo"
   },
+  "applicationsPerWeek": {
+    "title": "Postulaciones Recibidas",
+    "label": "Postulaciones",
+    "empty": "No hay datos suficientes"
+  },
   "pendingReviews": {
     "title": "Reseñas Pendientes",
     "viewAll": "Ver Todo",

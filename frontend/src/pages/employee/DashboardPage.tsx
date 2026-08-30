@@ -76,7 +76,7 @@ export const DashboardPage = () => {
         <SimpleGrid cols={{ base: 1, lg: 2 }} spacing="xl">
           {/* Applications Per Week Chart */}
           <Card withBorder radius="md" p="xl">
-            <Title order={3} mb="lg">Postulaciones Recibidas</Title>
+            <Title order={3} mb="lg">{t('applicationsPerWeek.title')}</Title>
             {metrics.applicationsPerWeek && metrics.applicationsPerWeek.length > 0 ? (
               <LineChart
                 h={250}
@@ -85,11 +85,11 @@ export const DashboardPage = () => {
                 withDots
                 curveType="monotone"
                 series={[
-                  { name: 'count', color: 'blue.6', label: 'Postulaciones' },
+                  { name: 'count', color: 'blue.6', label: t('applicationsPerWeek.label') },
                 ]}
               />
             ) : (
-              <Text c="dimmed" ta="center" py="xl">No hay datos suficientes</Text>
+              <Text c="dimmed" ta="center" py="xl">{t('applicationsPerWeek.empty')}</Text>
             )}
           </Card>
 

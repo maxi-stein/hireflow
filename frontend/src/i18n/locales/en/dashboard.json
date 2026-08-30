@@ -10,6 +10,11 @@
   "candidatesPerJob": {
     "title": "Candidates per Active Job"
   },
+  "applicationsPerWeek": {
+    "title": "Applications Received",
+    "label": "Applications",
+    "empty": "Not enough data"
+  },
   "pendingReviews": {
     "title": "Pending Reviews",
     "viewAll": "View All",
