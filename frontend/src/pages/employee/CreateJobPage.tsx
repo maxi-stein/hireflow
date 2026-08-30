@@ -237,9 +237,10 @@ export function CreateJobPage() {
               error={form.errors.skills}
             />
 
-            <Group grow align="flex-start">
-              <Group grow align="flex-start" style={{ flex: 1.5 }}>
+            <Group align="flex-start" justify="space-between">
+              <Group align="flex-start" gap="sm">
                 <Select
+                  w={100}
                   label={t('create.form.currency')}
                   data={[
                     { value: 'ARS', label: 'ARS' },
@@ -248,6 +249,7 @@ export function CreateJobPage() {
                   {...form.getInputProps('salaryCurrency')}
                 />
                 <NumberInput
+                  w={140}
                   label={t('create.form.salaryMin')}
                   placeholder="100000"
                   min={0}
@@ -257,6 +259,7 @@ export function CreateJobPage() {
                   {...form.getInputProps('salaryMin')}
                 />
                 <NumberInput
+                  w={140}
                   label={t('create.form.salaryMax')}
                   placeholder="200000"
                   min={0}
@@ -267,11 +270,13 @@ export function CreateJobPage() {
                 />
               </Group>
               <DateInput
+                w={200}
                 label={t('create.form.deadline')}
                 placeholder={t('create.form.deadlinePlaceholder')}
                 minDate={new Date()}
                 clearable
                 {...form.getInputProps('deadline')}
+                style={{ marginRight: '200px' }}
               />
             </Group>
 
