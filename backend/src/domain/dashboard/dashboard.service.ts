@@ -64,6 +64,12 @@ export class DashboardService {
         limit: 0,
       });
 
+    const { data: allApplications } =
+      await this.candidateApplicationService.findAll({
+        page: 0,
+        limit: 0,
+      });
+
     const candidatesPerJob = activeJobOffers.reduce(
       (acc, job) => {
         acc[job.position] = 0;
@@ -88,6 +94,38 @@ export class DashboardService {
       pendingReviewsCount += interview.applications.length;
     });
 
+    // Calculate applications per week for the last 8 weeks
+    const weeksCount = 8;
+    const applicationsPerWeek = [];
+    const now = new Date();
+    
+    // Normalize to start of current week (Monday)
+    const currentWeekStart = new Date(now);
+    currentWeekStart.setHours(0, 0, 0, 0);
+    const day = currentWeekStart.getDay();
+    const diff = currentWeekStart.getDate() - day + (day === 0 ? -6 : 1);
+    currentWeekStart.setDate(diff);
+
+    for (let i = weeksCount - 1; i >= 0; i--) {
+      const weekStart = new Date(currentWeekStart);
+      weekStart.setDate(weekStart.getDate() - (i * 7));
+      
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
+      weekEnd.setHours(23, 59, 59, 999);
+
+      const count = allApplications.filter(app => {
+        const appDate = new Date(app.created_at);
+        return appDate >= weekStart && appDate <= weekEnd;
+      }).length;
+
+      const label = `${weekStart.getDate().toString().padStart(2, '0')}/${(weekStart.getMonth() + 1).toString().padStart(2, '0')}`;
+      applicationsPerWeek.push({
+        date: label,
+        count
+      });
+    }
+
     return {
       activeJobOffers: activeJobOffers.length,
       applicationsToday: applicationsToday.length,
@@ -97,6 +135,7 @@ export class DashboardService {
         jobTitle,
         count,
       })),
+      applicationsPerWeek,
     };
   }
 }
