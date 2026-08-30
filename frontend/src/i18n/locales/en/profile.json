@@ -88,6 +88,8 @@
         "empty": "No interviews scheduled or completed."
       }
     },
+    "headline": "Headline",
+    "noHeadline": "No Headline",
     "changePhoto": "Change Photo",
     "city": "City",
     "country": "Country",

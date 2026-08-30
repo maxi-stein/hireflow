@@ -88,6 +88,8 @@
         "empty": "No hay entrevistas programadas o completadas."
       }
     },
+    "headline": "Titular",
+    "noHeadline": "Sin Titular",
     "changePhoto": "Cambiar Foto",
     "city": "Ciudad",
     "country": "País",

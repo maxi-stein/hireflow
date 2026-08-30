@@ -5,7 +5,7 @@ import { DatePickerInput } from '@mantine/dates';
 import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { IconUpload, IconBrandGithub, IconBrandLinkedin, IconMapPin, IconPhone, IconWorld, IconEye, IconCalendarEvent } from '@tabler/icons-react';
+import { IconUpload, IconBrandGithub, IconBrandLinkedin, IconMail, IconPhone, IconWorld, IconEye, IconCalendarEvent, IconIdBadge2 } from '@tabler/icons-react';
 import type { User } from '../../types/models/user.types';
 import { candidateService } from '../../services/candidate.service';
 import { fileService } from '../../services/file.service';
@@ -33,6 +33,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
 
   const form = useForm({
     initialValues: {
+      headline: candidate?.headline || '',
       phone: candidate?.phone || '',
       city: candidate?.city || '',
       country: candidate?.country || '',
@@ -47,6 +48,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
     setLoading(true);
     try {
       await candidateService.update(candidate.id, {
+        headline: values.headline?.trim() || undefined,
         phone: values.phone?.trim() || undefined,
         city: values.city?.trim() || undefined,
         country: values.country?.trim() || undefined,
@@ -122,11 +124,12 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
       <Paper withBorder shadow="sm" p="lg" radius="md">
         <Group justify="space-between" align="flex-start" mb="lg">
           <Group align="flex-start">
-            <Stack align="center" gap="xs">
+            <Stack align="center" justify='flex-start' gap="xs">
               <CandidateAvatar
                 candidateId={candidate?.id}
                 firstName={user.first_name}
                 lastName={user.last_name}
+                size={120}
               />
               <FileButton onChange={handlePhotoUpload} accept="image/png,image/jpeg,image/jpg,image/webp" >
                 {(props) => <Button variant="subtle" size="xs" loading={uploadingPhoto} {...props}>{t('candidate.changePhoto')}</Button>}
@@ -134,14 +137,12 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
             </Stack>
             <Stack gap={0}>
               <Title order={2}>{user.first_name} {user.last_name}</Title>
-              <Text c="dimmed">{user.email}</Text>
+              <Text c="dimmed">{candidate?.headline || t('candidate.noHeadline', 'Candidate')}</Text>
               <Group gap="xs" mt="xs">
-                {candidate?.city && candidate?.country && (
-                  <Group gap={4}>
-                    <IconMapPin size={16} color="gray" />
-                    <Text size="sm" c="gray">{candidate.city}, {candidate.country}</Text>
-                  </Group>
-                )}
+                <Group gap={4}>
+                  <IconMail size={16} color="gray" />
+                  <Text size="sm" c="gray">{user.email}</Text>
+                </Group>
               </Group>
             </Stack>
           </Group>
@@ -191,6 +192,15 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
           leftContent={
             <form onSubmit={form.onSubmit(handleUpdateProfile)}>
               <Grid>
+                <Grid.Col span={12}>
+                  <TextInput
+                    label={t('candidate.headline', 'Headline')}
+                    placeholder="ej. Python Fullstack Developer"
+                    leftSection={<IconIdBadge2 size={16} />}
+                    {...form.getInputProps('headline')}
+                    maxLength={120}
+                  />
+                </Grid.Col>
                 <Grid.Col span={{ base: 12, sm: 6 }}>
                   <TextInput
                     label={t('candidate.phone')}

@@ -316,15 +316,6 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440100', '550e8400-e29b-41d4-a716-446655440010')
         `);
 
-    // Profile Pictures for Alice and Bob
-    await queryRunner.query(`
-      INSERT INTO "user_files" 
-        ("id", "file_name", "stored_name", "file_path", "mime_type", "size", "file_type", "candidate_id", "created_at", "updated_at")
-      VALUES 
-        ('550e8400-e29b-41d4-a716-44665544001a', '550e8400-e29b-41d4-a716-446655440004.jpg', '550e8400-e29b-41d4-a716-446655440004.jpg', 'uploads/profile_pictures/550e8400-e29b-41d4-a716-446655440004.jpg', 'image/jpeg', 29728, 'profile_picture', '550e8400-e29b-41d4-a716-446655440004', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-44665544001c', '550e8400-e29b-41d4-a716-446655440005.jpg', '550e8400-e29b-41d4-a716-446655440005.jpg', 'uploads/profile_pictures/550e8400-e29b-41d4-a716-446655440005.jpg', 'image/jpeg', 42405, 'profile_picture', '550e8400-e29b-41d4-a716-446655440005', NOW(), NOW())
-    `);
-
     // Candidate applications
     await queryRunner.query(`
       INSERT INTO "candidate_applications" 
