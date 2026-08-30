@@ -18,7 +18,9 @@ export const createJobOfferSchema = Joi.object({
     'string.min': 'Description must be at least 10 characters',
     'string.empty': 'Description is required',
   }),
-  salary: Joi.string().allow('').optional(),
+  salaryCurrency: Joi.string().valid('ARS', 'USD').optional(),
+  salaryMin: Joi.number().allow(null, '').optional(),
+  salaryMax: Joi.number().allow(null, '').optional(),
   benefits: Joi.string().allow('').optional(),
   skills: Joi.array().items(Joi.string()).optional(),
   deadline: Joi.date().allow(null).optional().messages({

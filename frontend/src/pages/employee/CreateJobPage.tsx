@@ -11,7 +11,8 @@ import {
   LoadingOverlay,
   Text,
   Stack,
-  Box
+  Box,
+  NumberInput
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -55,7 +56,9 @@ export function CreateJobPage() {
       location: '',
       work_mode: WorkMode.HYBRID,
       description: '',
-      salary: '',
+      salaryCurrency: 'ARS',
+      salaryMin: '' as number | '',
+      salaryMax: '' as number | '',
       benefits: '',
       deadline: null as Date | null,
       skills: [] as string[],
@@ -67,12 +70,31 @@ export function CreateJobPage() {
   // Load job offer data if editing
   useEffect(() => {
     if (isEditMode && jobOffer) {
+      let parsedCurrency = 'ARS';
+      let parsedMin: number | '' = '';
+      let parsedMax: number | '' = '';
+
+      if (jobOffer.salary) {
+        if (jobOffer.salary.includes('USD')) {
+          parsedCurrency = 'USD';
+        }
+        const numbers = jobOffer.salary.match(/\d+/g);
+        if (numbers && numbers.length > 0) {
+          parsedMin = parseInt(numbers[0], 10);
+          if (numbers.length > 1) {
+            parsedMax = parseInt(numbers[1], 10);
+          }
+        }
+      }
+
       form.setValues({
         position: jobOffer.position,
         location: jobOffer.location,
         work_mode: jobOffer.work_mode as any,
         description: jobOffer.description,
-        salary: jobOffer.salary || '',
+        salaryCurrency: parsedCurrency,
+        salaryMin: parsedMin,
+        salaryMax: parsedMax,
         benefits: jobOffer.benefits || '',
         deadline: jobOffer.deadline ? new Date(jobOffer.deadline) : null,
         skills: jobOffer.skills.map(s => s.skill_name),
@@ -84,11 +106,25 @@ export function CreateJobPage() {
   const handleSubmit = async (values: typeof form.values) => {
     try {
       const normalizedSkills = normalizeText(values.skills);
+
+      let salaryString = '';
+      if (values.salaryMin !== '') {
+        salaryString = `${values.salaryCurrency} ${values.salaryMin}`;
+        if (values.salaryMax !== '') {
+          salaryString += ` - ${values.salaryMax}`;
+        }
+      }
+
       const payload = {
         ...values,
+        salary: salaryString,
         deadline: values.deadline ? new Date(values.deadline).toISOString() : undefined,
-        skills: normalizedSkills.map(skill => ({ skill_name: skill })), // Map skills to objects with skill_name property
+        skills: normalizedSkills.map(skill => ({ skill_name: skill })),
       };
+
+      delete (payload as any).salaryCurrency;
+      delete (payload as any).salaryMin;
+      delete (payload as any).salaryMax;
 
       if (isEditMode && id) {
         await updateMutation.mutateAsync({ id, data: payload });
@@ -202,11 +238,34 @@ export function CreateJobPage() {
             />
 
             <Group grow align="flex-start">
-              <TextInput
-                label={t('create.form.salary')}
-                placeholder={t('create.form.salaryPlaceholder')}
-                {...form.getInputProps('salary')}
-              />
+              <Group grow align="flex-start" style={{ flex: 1.5 }}>
+                <Select
+                  label={t('create.form.currency')}
+                  data={[
+                    { value: 'ARS', label: 'ARS' },
+                    { value: 'USD', label: 'USD' }
+                  ]}
+                  {...form.getInputProps('salaryCurrency')}
+                />
+                <NumberInput
+                  label={t('create.form.salaryMin')}
+                  placeholder="100000"
+                  min={0}
+                  hideControls
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  {...form.getInputProps('salaryMin')}
+                />
+                <NumberInput
+                  label={t('create.form.salaryMax')}
+                  placeholder="200000"
+                  min={0}
+                  hideControls
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  {...form.getInputProps('salaryMax')}
+                />
+              </Group>
               <DateInput
                 label={t('create.form.deadline')}
                 placeholder={t('create.form.deadlinePlaceholder')}
