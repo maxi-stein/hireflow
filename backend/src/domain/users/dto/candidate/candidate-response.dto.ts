@@ -3,6 +3,7 @@ import { WorkExperienceResponseDto } from '../work-experience/work-experience-re
 
 export class CandidateResponseDto {
   id: string;
+  headline: string | null;
   date_of_birth: Date | null;
   phone: string | null;
   city: string | null;

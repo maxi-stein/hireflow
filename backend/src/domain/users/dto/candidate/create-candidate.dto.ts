@@ -5,11 +5,17 @@ import {
   IsOptional,
   ValidateNested,
   IsDate,
+  MaxLength,
 } from 'class-validator';
 import { CreateEducationDto } from '../education/create-education.dto';
 import { CreateWorkExperienceDto } from '../work-experience/create-work-experience.dto';
 
 export class CreateCandidateDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  headline?: string;
+
   @IsDate()
   @Type(() => Date)
   date_of_birth: Date;

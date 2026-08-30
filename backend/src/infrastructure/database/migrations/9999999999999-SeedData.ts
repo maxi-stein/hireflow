@@ -138,9 +138,9 @@ export class SeedData9999999999999 implements MigrationInterface {
     // Candidate 1
     await queryRunner.query(`
       INSERT INTO "candidates" 
-        ("id", "date_of_birth", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "headline", "date_of_birth", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440004', '1996-05-15', '123456789', 'Buenos Aires', 'Argentina', 'https://github.com/alice', 'https://linkedin.com/in/alice', 
+        ('550e8400-e29b-41d4-a716-446655440004', 'Full Stack Developer', '1996-05-15', '123456789', 'Buenos Aires', 'Argentina', 'https://github.com/alice', 'https://linkedin.com/in/alice', 
          '550e8400-e29b-41d4-a716-446655440002', NOW(), NOW())
     `);
 
@@ -165,18 +165,18 @@ export class SeedData9999999999999 implements MigrationInterface {
     // Candidate 2
     await queryRunner.query(`
       INSERT INTO "candidates" 
-        ("id", "date_of_birth", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "headline", "date_of_birth", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440005', '1994-08-22', '987654321', 'Montevideo', 'Uruguay', 'https://github.com/bob', 'https://linkedin.com/in/bob', 
+        ('550e8400-e29b-41d4-a716-446655440005', 'Senior Backend Developer', '1994-08-22', '987654321', 'Montevideo', 'Uruguay', 'https://github.com/bob', 'https://linkedin.com/in/bob', 
          '550e8400-e29b-41d4-a716-446655440003', NOW(), NOW())
     `);
 
     // Candidate 3
     await queryRunner.query(`
       INSERT INTO "candidates" 
-        ("id", "date_of_birth", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+        ("id", "headline", "date_of_birth", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440091', '1999-11-03', '555123456', 'Santiago', 'Chile', 'https://github.com/charlie', 'https://linkedin.com/in/charlie', 
+        ('550e8400-e29b-41d4-a716-446655440091', 'Junior Frontend Developer', '1999-11-03', '555123456', 'Santiago', 'Chile', 'https://github.com/charlie', 'https://linkedin.com/in/charlie', 
          '550e8400-e29b-41d4-a716-446655440090', NOW(), NOW())
     `);
 

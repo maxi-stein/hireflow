@@ -50,14 +50,14 @@ export function CandidatesListPage() {
   };
 
   const rows = candidatesData?.data.map((candidate) => (
-    <Table.Tr key={candidate.id}>
+    <Table.Tr key={candidate.id} >
       <Table.Td>
-        <Group gap="sm">
+        <Group gap="sm" style={{ margin: '10px 5px' }}>
           <CandidateAvatar
             candidateId={candidate.id}
             firstName={candidate.user.first_name}
             lastName={candidate.user.last_name}
-            size="md"
+            size="lg"
           />
           <div>
             <Text fw={500}>
@@ -92,7 +92,7 @@ export function CandidatesListPage() {
           </Tooltip>
         </Group>
       </Table.Td>
-    </Table.Tr>
+    </Table.Tr >
   ));
 
   return (

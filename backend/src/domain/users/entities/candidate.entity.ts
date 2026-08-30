@@ -20,6 +20,9 @@ export class Candidate {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'varchar', length: 120, nullable: true })
+  headline: string | null;
+
   @Column({ type: 'date', nullable: true })
   date_of_birth: Date | null;
 

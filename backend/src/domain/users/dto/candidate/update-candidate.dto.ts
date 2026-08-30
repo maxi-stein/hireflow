@@ -1,7 +1,12 @@
-import { IsDate, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsDate, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateCandidateDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  headline?: string;
+
   @IsOptional()
   @IsDate()
   @Type(() => Date)
