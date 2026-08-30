@@ -120,7 +120,7 @@ export function MainHeader() {
                         <Menu.Dropdown>
                           {visibleChildren.map((child) => {
                             const childActive =
-                              matchPath({ path: child.path, end: false }, location.pathname) !== null;
+                              matchPath({ path: child.path, end: true }, location.pathname) !== null;
                             return (
                               <Menu.Item
                                 key={child.path}
