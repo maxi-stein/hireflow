@@ -31,15 +31,19 @@ export const DashboardPage = () => {
   });
 
   const pendingReviews = useMemo(() => {
-    return [...(pendingReviewsData?.data || [])].sort((a, b) =>
-      new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime()
-    );
+    return [...(pendingReviewsData?.data || [])]
+      .filter((interview) => interview.applications?.some(app => app.candidate && app.job_offer))
+      .sort((a, b) =>
+        new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime()
+      );
   }, [pendingReviewsData]);
 
   const upcomingInterviews = useMemo(() => {
-    return [...(upcomingInterviewsData?.data || [])].sort((a, b) =>
-      new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime()
-    );
+    return [...(upcomingInterviewsData?.data || [])]
+      .filter((interview) => interview.applications?.[0]?.candidate && interview.applications?.[0]?.job_offer)
+      .sort((a, b) =>
+        new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime()
+      );
   }, [upcomingInterviewsData]);
 
   if (isLoading || !metrics) {
