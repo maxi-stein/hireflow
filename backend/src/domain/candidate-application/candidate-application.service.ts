@@ -153,9 +153,10 @@ export class CandidateApplicationService {
       .createQueryBuilder('application')
       .leftJoinAndSelect('application.candidate', 'candidate')
       .leftJoinAndSelect('candidate.user', 'user')
-      .leftJoinAndSelect('application.job_offer', 'job_offer')
+      .innerJoinAndSelect('application.job_offer', 'job_offer')
       .leftJoinAndSelect('application.skill_answers', 'skill_answers')
       .leftJoinAndSelect('skill_answers.job_offer_skill', 'job_offer_skill')
+      .where('job_offer.status = :jobOfferStatus', { jobOfferStatus: 'OPEN' })
       .orderBy('application.created_at', 'DESC')
       .skip(skip)
       .take(limit);
