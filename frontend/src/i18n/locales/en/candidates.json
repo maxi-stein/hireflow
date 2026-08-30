@@ -12,7 +12,7 @@
     "table": {
       "candidate": "Candidate",
       "location": "Location",
-      "lastActive": "Last Active",
+      "lastUpdated": "Last Updated",
       "actions": "Actions",
       "empty": "No candidates found matching your criteria."
     }

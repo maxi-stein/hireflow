@@ -75,7 +75,7 @@ export function CandidatesListPage() {
         )}
       </Table.Td>
       <Table.Td>
-        {/* Display latest experience or education as quick info? Or just Update date */}
+        {/* Update date */}
         <Text size="sm">{new Date(candidate.profile_updated_at).toLocaleDateString()}</Text>
       </Table.Td>
       <Table.Td>
@@ -139,7 +139,7 @@ export function CandidatesListPage() {
                 <Table.Tr>
                   <Table.Th>{t('list.table.candidate')}</Table.Th>
                   <Table.Th>{t('candidate.city', { ns: 'profile' })}/{t('candidate.country', { ns: 'profile' })}</Table.Th>
-                  <Table.Th>{t('list.table.lastActive')}</Table.Th>
+                  <Table.Th>{t('list.table.lastUpdated')}</Table.Th>
                   <Table.Th style={{ textAlign: 'right' }}>{t('list.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
