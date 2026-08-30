@@ -40,7 +40,7 @@ export function ApplicationsSection({
   };
 
   return (
-    <Paper withBorder radius="md" p="lg">
+    <Paper withBorder radius="md" p="lg" bg="light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-8))">
       <Title order={3} mb="lg">{t('candidate.management.applications.title')}</Title>
 
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">

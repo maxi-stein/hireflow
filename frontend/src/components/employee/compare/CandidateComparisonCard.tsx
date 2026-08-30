@@ -7,7 +7,6 @@ import {
   Accordion,
   LoadingOverlay,
   Paper,
-  Grid,
   Box,
   Progress,
   Timeline,
@@ -23,7 +22,6 @@ import {
   IconBriefcase,
   IconMapPin,
   IconUsers,
-  IconFlame,
   IconBrandLinkedin,
   IconBrandGithub
 } from '@tabler/icons-react';
@@ -67,7 +65,6 @@ export function CandidateComparisonCard({
   onReject,
   onScheduleInterview,
   onHire,
-  getStatusColor,
   accordionValue,
   onAccordionChange,
   techStats
