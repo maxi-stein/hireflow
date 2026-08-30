@@ -9,6 +9,10 @@ export interface DashboardMetrics {
     jobTitle: string;
     count: number;
   }>;
+  applicationsPerWeek: Array<{
+    date: string;
+    count: number;
+  }>;
 }
 
 export const dashboardService = {

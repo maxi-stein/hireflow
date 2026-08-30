@@ -1,4 +1,6 @@
 import { Container, Text, Title, Group, Stack, Progress, SimpleGrid, Card, LoadingOverlay, Button, RingProgress, Center, Box } from '@mantine/core';
+import { LineChart } from '@mantine/charts';
+import '@mantine/charts/styles.css';
 import { IconBriefcase, IconFileText, IconCalendarEvent, IconStar, IconExternalLink } from '@tabler/icons-react';
 import { useDashboardMetricsQuery } from '../../hooks/api/useDashboard';
 import { useMyPendingReviewsQuery } from '../../hooks/api/useInterviewReviews';
@@ -66,52 +68,53 @@ export const DashboardPage = () => {
         {/* Row 1: Key Metrics */}
         <StatsGrid stats={stats} />
 
-        {/* Row 2: Candidates per Job Chart */}
-        <Card withBorder radius="md" p="xl">
-          <Title order={3} mb="lg">{t('candidatesPerJob.title')}</Title>
-          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
-            {metrics.candidatesPerJob.length > 0 && (
-              <Center>
-                <RingProgress
-                  size={250}
-                  thickness={30}
-                  sections={metrics.candidatesPerJob.map((item, index) => ({
-                    value: totalCandidates > 0 ? (item.count / totalCandidates) * 100 : 0,
-                    color: chartColors[index % chartColors.length],
-                    tooltip: `${item.jobTitle}: ${item.count}`,
-                  }))}
-                  label={
-                    <Text component="div" c="dimmed" ta="center" size="sm">
-                      <Text component="span" fw={700} size="xl" c="light-dark(var(--mantine-color-black), var(--mantine-color-white))">{totalCandidates}</Text>
-                      <br />
-                      Total
-                    </Text>
-                  }
-                />
-              </Center>
+        {/* Row 2: Charts */}
+        <SimpleGrid cols={{ base: 1, lg: 2 }} spacing="xl">
+          {/* Applications Per Week Chart */}
+          <Card withBorder radius="md" p="xl">
+            <Title order={3} mb="lg">Postulaciones Recibidas</Title>
+            {metrics.applicationsPerWeek && metrics.applicationsPerWeek.length > 0 ? (
+              <LineChart
+                h={250}
+                data={metrics.applicationsPerWeek}
+                dataKey="date"
+                withDots
+                curveType="monotone"
+                series={[
+                  { name: 'count', color: 'blue.6', label: 'Postulaciones' },
+                ]}
+              />
+            ) : (
+              <Text c="dimmed" ta="center" py="xl">No hay datos suficientes</Text>
             )}
+          </Card>
 
-            <Stack gap="md">
-              {metrics.candidatesPerJob.map((item, index) => (
+          {/* Candidates per Job Chart */}
+          <Card withBorder radius="md" p="xl">
+            <Title order={3} mb="lg">{t('candidatesPerJob.title')}</Title>
+            <Stack gap="sm" justify="center" h="100%">
+              {metrics.candidatesPerJob.length > 0 ? metrics.candidatesPerJob.map((item) => (
                 <div key={item.jobTitle}>
                   <Group justify="space-between" mb={5}>
                     <Group gap="xs">
-                      <Box w={12} h={12} style={{ borderRadius: '50%', backgroundColor: `var(--mantine-color-${chartColors[index % chartColors.length]}-5)` }} />
-                      <Text size="sm" fw={500}>{item.jobTitle}</Text>
+                      <Box w={12} h={12} style={{ borderRadius: '50%', backgroundColor: 'var(--mantine-color-blue-6)' }} />
+                      <Text size="xs" fw={500} lineClamp={1} style={{ maxWidth: 200 }} title={item.jobTitle}>{item.jobTitle}</Text>
                     </Group>
-                    <Text size="sm" fw={500}>{item.count}</Text>
+                    <Text size="xs" fw={500}>{item.count}</Text>
                   </Group>
                   <Progress
                     value={maxCandidates > 0 ? (item.count / maxCandidates) * 100 : 0}
-                    size="xl"
+                    size="md"
                     radius="xl"
-                    color={chartColors[index % chartColors.length]}
+                    color="blue.6"
                   />
                 </div>
-              ))}
+              )) : (
+                <Text c="dimmed" ta="center">No hay datos suficientes</Text>
+              )}
             </Stack>
-          </SimpleGrid>
-        </Card>
+          </Card>
+        </SimpleGrid>
 
         {/* Rows 3 & 4: Reviews and Interviews */}
         <SimpleGrid cols={{ base: 1, md: 2 }}>
