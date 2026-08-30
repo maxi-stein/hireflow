@@ -3,7 +3,6 @@ import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar'
 import { InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
 import { IconCalendar, IconClock, IconUsers } from '@tabler/icons-react';
-import { getInterviewStatusColor } from '../../../utils/application.utils';
 import { JoinMeetingButton } from '../../shared/JoinMeetingButton';
 import { useTranslation } from 'react-i18next';
 
@@ -22,8 +21,8 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
   const jobOffer = interview.applications?.[0]?.job_offer;
 
   return (
-    <Modal opened={!!interview} onClose={onClose} title={t('modal.labels.title', { ns: 'calendar' })}>
-      <Stack gap="md">
+    <Modal opened={!!interview} onClose={onClose} title={<h3 style={{ color: "var(--mantine-color-blue-filled)" }}> {jobOffer?.position || ''}</h3>}>
+      <Stack gap="md" style={{ padding: "0px 3px 20px 3px" }}>
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             {interview.applications?.map(app => (
@@ -43,27 +42,20 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
               <Text size="lg" fw={700} c="dimmed">{t('modal.labels.noCandidates', { ns: 'calendar' })}</Text>
             )}
           </Stack>
-          <Badge color={getInterviewStatusColor(interview.status)}>{interview.status}</Badge>
-        </Group>
-
-        <Text c="dimmed" size="sm">
-          {t('employee.position', { ns: 'profile' })}: <Text span fw={500} c="bright">{jobOffer?.position || t('na', { ns: 'common' })}</Text>
-        </Text>
-
-        <Group>
-          <IconCalendar size={18} />
-          <Text>{new Date(interview.scheduled_time).toLocaleDateString()}</Text>
-        </Group>
-
-        <Group>
-          <IconClock size={18} />
-          <Text>{new Date(interview.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</Text>
+          <Stack gap={4} align="flex-end">
+            <Group gap="xs">
+              <IconCalendar size={18} />
+              <Text>{new Date(interview.scheduled_time).toLocaleDateString()}</Text>
+            </Group>
+            <Group gap="xs">
+              <IconClock size={18} />
+              <Text>{new Date(interview.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</Text>
+            </Group>
+          </Stack>
         </Group>
 
         {interview.meeting_link && (
-          <Group>
-            <JoinMeetingButton meetingLink={interview.meeting_link} size="sm" />
-          </Group>
+          <JoinMeetingButton meetingLink={interview.meeting_link} size="md" fullWidth />
         )}
 
         <Stack gap="xs">
@@ -97,6 +89,6 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
           )}
         </Group>
       </Stack>
-    </Modal>
+    </Modal >
   );
 }

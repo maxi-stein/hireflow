@@ -27,6 +27,8 @@ export function CalendarPage() {
   const { t, i18n } = useTranslation(['calendar', 'profile']);
   const [searchParams, setSearchParams] = useSearchParams();
   const applicationId = searchParams.get('applicationId') || undefined;
+  const dateParam = searchParams.get('date');
+  const interviewIdParam = searchParams.get('interviewId');
 
   // Open scheduling modal if applicationId is present in URL
   useEffect(() => {
@@ -34,6 +36,15 @@ export function CalendarPage() {
       setIsScheduleModalOpen(true);
     }
   }, [applicationId]);
+
+  // Navigate calendar to the date specified in the URL
+  useEffect(() => {
+    if (dateParam) {
+      const parsed = new Date(dateParam);
+      if (!isNaN(parsed.getTime())) setCurrentDate(parsed);
+    }
+  }, [dateParam]);
+
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
 
   // Used to display job offer details modal
@@ -69,6 +80,14 @@ export function CalendarPage() {
 
   const interviews = interviewsData?.data || [];
   const jobOffers = jobOffersData?.data || [];
+
+  // Auto-open interview details modal when navigating from a deep link
+  useEffect(() => {
+    if (interviewIdParam && interviews.length > 0) {
+      const match = interviews.find(i => i.id === interviewIdParam);
+      if (match) setSelectedInterview(match);
+    }
+  }, [interviewIdParam, interviews]);
 
   const days = getDaysInMonth(currentDate);
 

@@ -212,10 +212,10 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
           <Card withBorder style={{ borderColor: 'var(--mantine-color-gray-3)' }}>
             <Group justify="space-between">
               <Text size="sm" fw={500}>{t('candidateDisplay.notes')}</Text>
-              <Button 
-                variant="light" 
-                color="blue" 
-                size="xs" 
+              <Button
+                variant="light"
+                color="blue"
+                size="xs"
                 rightSection={showNotes ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
                 onClick={() => setShowNotes(!showNotes)}
               >
@@ -241,7 +241,10 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
           <Card withBorder style={{ borderColor: 'var(--mantine-color-blue-5)' }}>
             <Group justify="space-between">
               <Text size="sm" c="dimmed">{t('candidateDisplay.interviewNotHappenedYet')}</Text>
-              <Button color="blue" size="sm" onClick={() => navigate('/manage/interviews')}>
+              <Button color="blue" size="sm" onClick={() => {
+                const date = new Date(interview.scheduled_time).toISOString().split('T')[0];
+                navigate(`/manage/interviews?date=${date}&interviewId=${interview.id}`);
+              }}>
                 {t('candidateDisplay.viewSchedule')}
               </Button>
             </Group>

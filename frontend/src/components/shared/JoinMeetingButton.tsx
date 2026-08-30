@@ -7,6 +7,7 @@ interface JoinMeetingButtonProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'light' | 'filled' | 'outline' | 'subtle';
   color?: string;
+  fullWidth?: boolean;
 }
 
 export function JoinMeetingButton({
@@ -14,6 +15,7 @@ export function JoinMeetingButton({
   size = 'xs',
   variant = 'light',
   color = 'blue',
+  fullWidth,
 }: JoinMeetingButtonProps) {
   const { t } = useTranslation('dashboard');
 
@@ -27,6 +29,7 @@ export function JoinMeetingButton({
       color={color}
       size={size}
       radius="md"
+      fullWidth={fullWidth}
       leftSection={<IconVideo size={14} />}
     >
       {t('upcomingInterviews.join')}

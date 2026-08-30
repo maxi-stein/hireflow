@@ -1,5 +1,5 @@
 import { Container, Text, Title, Group, Stack, Progress, SimpleGrid, Card, LoadingOverlay, Button, RingProgress, Center, Box } from '@mantine/core';
-import { IconBriefcase, IconFileText, IconCalendarEvent, IconStar, IconExternalLink, IconVideo } from '@tabler/icons-react';
+import { IconBriefcase, IconFileText, IconCalendarEvent, IconStar, IconExternalLink } from '@tabler/icons-react';
 import { useDashboardMetricsQuery } from '../../hooks/api/useDashboard';
 import { useMyPendingReviewsQuery } from '../../hooks/api/useInterviewReviews';
 import { useNavigate } from 'react-router-dom';
@@ -184,7 +184,7 @@ export const DashboardPage = () => {
                       candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
                       candidateId={candidate.id}
                       position={jobOffer.position}
-                    action={
+                      action={
                         interview.meeting_link ? (
                           <JoinMeetingButton meetingLink={interview.meeting_link} />
                         ) : undefined
