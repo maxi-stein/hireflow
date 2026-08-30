@@ -18,6 +18,7 @@
   "upcomingInterviews": {
     "title": "Próximas Entrevistas",
     "empty": "No hay entrevistas próximas",
-    "join": "Unirse"
+    "join": "Unirse",
+    "viewCalendar": "Ver Calendario"
   }
 }

@@ -1,9 +1,10 @@
 import { Timeline, Text, Group, Badge, Stack, Box, ThemeIcon } from '@mantine/core';
-import { IconCheck, IconX, IconClock, IconVideo, IconUsers, IconUser } from '@tabler/icons-react';
+import { IconCheck, IconX, IconClock, IconUsers, IconUser } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { Interview, Interviewer } from '../../../services/interview.service';
 import { InterviewStatus, InterviewType } from '../../../services/interview.service';
 import { getInterviewStatusColor } from '../../../utils/application.utils';
+import { JoinMeetingButton } from '../../shared/JoinMeetingButton';
 
 interface ApplicationTimelineProps {
   interviews: Interview[];
@@ -73,14 +74,7 @@ export const ApplicationTimeline = ({ interviews }: ApplicationTimelineProps) =>
                 </Text>
 
                 {interview.meeting_link && isUpcoming && interview.status === InterviewStatus.SCHEDULED && (
-                  <Group gap={6}>
-                    <ThemeIcon size="xs" color="blue" variant="light" radius="xl">
-                      <IconVideo size={10} />
-                    </ThemeIcon>
-                    <Text size="xs" component="a" href={interview.meeting_link} target="_blank" c="blue" td="underline">
-                      {t('timeline.joinMeeting')}
-                    </Text>
-                  </Group>
+                  <JoinMeetingButton meetingLink={interview.meeting_link} />
                 )}
 
                 <Stack gap={4} mt={8}>

@@ -7,6 +7,7 @@ import { useInterviewsQuery } from '../../hooks/api/useInterviews';
 import { InterviewStatus } from '../../services/interview.service';
 import { DashboardListItem } from './components/DashboardListItem';
 import { StatsGrid } from '../../components/shared/StatsGrid';
+import { JoinMeetingButton } from '../../components/shared/JoinMeetingButton';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { APP_MAX_WIDTH } from '../../constants/layout';
@@ -157,6 +158,14 @@ export const DashboardPage = () => {
           <Card withBorder radius="md" p="xl">
             <Group justify="space-between" mb="md">
               <Title order={3}>{t('upcomingInterviews.title')}</Title>
+              <Button
+                variant="light"
+                size="xs"
+                rightSection={<IconCalendarEvent size={14} />}
+                onClick={() => navigate('/manage/interviews')}
+              >
+                {t('upcomingInterviews.viewCalendar')}
+              </Button>
             </Group>
 
             {upcomingInterviews.length === 0 ? (
@@ -175,17 +184,10 @@ export const DashboardPage = () => {
                       candidateName={`${candidate.user?.first_name} ${candidate.user?.last_name}`}
                       candidateId={candidate.id}
                       position={jobOffer.position}
-                      action={
-                        <Button
-                          variant="light"
-                          color="blue"
-                          size="xs"
-                          radius="md"
-                          leftSection={<IconVideo size={14} />}
-                          onClick={() => window.open(interview.meeting_link, '_blank')}
-                        >
-                          {t('upcomingInterviews.join')}
-                        </Button>
+                    action={
+                        interview.meeting_link ? (
+                          <JoinMeetingButton meetingLink={interview.meeting_link} />
+                        ) : undefined
                       }
                     />
                   );

@@ -1,7 +1,8 @@
-import { Alert, Group, Text, Stack, Button, Box } from '@mantine/core';
-import { IconCalendarEvent, IconExternalLink } from '@tabler/icons-react';
+import { Alert, Group, Text, Stack, Box } from '@mantine/core';
+import { IconCalendarEvent } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { Interview } from '../../services/interview.service';
+import { JoinMeetingButton } from '../shared/JoinMeetingButton';
 
 interface UpcomingInterviewsAlertProps {
 	upcomingInterviews: Array<{ interview: Interview; jobPosition: string }>;
@@ -122,16 +123,11 @@ export function UpcomingInterviewsAlert({ upcomingInterviews }: UpcomingIntervie
 				</Group>
 
 				{nextInterview.interview.meeting_link && (
-					<Button
-						component="a"
-						href={nextInterview.interview.meeting_link}
-						target="_blank"
-						color="blue"
+					<JoinMeetingButton
+						meetingLink={nextInterview.interview.meeting_link}
+						size="sm"
 						variant="filled"
-						leftSection={<IconExternalLink size={16} />}
-					>
-						{t('upcomingAlert.joinMeeting')}
-					</Button>
+					/>
 				)}
 			</Group>
 		</Alert>

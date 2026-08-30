@@ -18,6 +18,7 @@
   "upcomingInterviews": {
     "title": "Upcoming Interviews",
     "empty": "No upcoming interviews",
-    "join": "Join"
+    "join": "Join",
+    "viewCalendar": "View Calendar"
   }
 }

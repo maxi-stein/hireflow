@@ -1,9 +1,10 @@
-import { Modal, Text, Group, Badge, Stack, Button, Anchor } from '@mantine/core';
+import { Modal, Text, Group, Badge, Stack, Button } from '@mantine/core';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { InterviewStatus } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
-import { IconCalendar, IconClock, IconVideo, IconUsers } from '@tabler/icons-react';
+import { IconCalendar, IconClock, IconUsers } from '@tabler/icons-react';
 import { getInterviewStatusColor } from '../../../utils/application.utils';
+import { JoinMeetingButton } from '../../shared/JoinMeetingButton';
 import { useTranslation } from 'react-i18next';
 
 interface InterviewDetailsModalProps {
@@ -61,10 +62,7 @@ export function InterviewDetailsModal({ interview, onClose, onReschedule, onCanc
 
         {interview.meeting_link && (
           <Group>
-            <IconVideo size={18} />
-            <Anchor href={interview.meeting_link} target="_blank" rel="noopener noreferrer">
-              {t('timeline.joinMeeting', { ns: 'applications' })}
-            </Anchor>
+            <JoinMeetingButton meetingLink={interview.meeting_link} size="sm" />
           </Group>
         )}
 
