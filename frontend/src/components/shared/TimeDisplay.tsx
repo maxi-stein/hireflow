@@ -54,7 +54,8 @@ export function TimeDisplay({
         textAlign: 'center',
         minWidth: config.minWidth,
         backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))',
-        flexShrink: 0
+        flexShrink: 0,
+        boxShadow: 'none'
       }}
     >
       {variant === 'date-time' && (

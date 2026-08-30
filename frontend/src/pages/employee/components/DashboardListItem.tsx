@@ -26,33 +26,36 @@ export const DashboardListItem = ({
       <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb="xs" mt="sm">
         {getDateHeader(date)}
       </Text>
-      <Paper p="sm" withBorder radius="md" style={{ transition: 'transform 0.2s' }}>
+      <Paper p="md" withBorder radius="md" style={{ transition: 'transform 0.2s' }}>
         <Group justify="space-between" wrap="nowrap">
-          <Group gap="md">
-            <div>
-              <Group gap="xs" mb={2}>
-                <CandidateAvatar
-                  candidateId={candidateId}
-                  firstName={candidateName.split(' ')[0]}
-                  lastName={candidateName.split(' ')[1] || ''}
-                  size={24}
-                />
-                <Text size="sm" fw={600}>
-                  {candidateName}
-                </Text>
-              </Group>
-              <Text size="xs" c="dimmed">
+          {/* Left: Avatar + Details */}
+          <Group gap="md" style={{ flex: 1, minWidth: 0 }} wrap="nowrap">
+            <CandidateAvatar
+              candidateId={candidateId}
+              firstName={candidateName.split(' ')[0]}
+              lastName={candidateName.split(' ')[1] || ''}
+              size={42}
+            />
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <Text size="sm" fw={600} truncate="end">
+                {candidateName}
+              </Text>
+              <Text size="xs" c="dimmed" truncate="end" mt={2}>
                 {position}
               </Text>
             </div>
+          </Group>
+
+          {/* Right: Time + Action */}
+          <Group gap="md" wrap="nowrap" style={{ flexShrink: 0 }}>
             <TimeDisplay
               date={date}
               variant="time-only"
               color={color || 'blue'}
               size="sm"
             />
+            {action}
           </Group>
-          {action}
         </Group>
       </Paper>
     </div>
