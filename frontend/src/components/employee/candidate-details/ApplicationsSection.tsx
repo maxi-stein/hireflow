@@ -28,16 +28,36 @@ export function ApplicationsSection({
   const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 4;
 
-  const paginatedApplications = applications.slice(
-    (activePage - 1) * itemsPerPage,
-    activePage * itemsPerPage
-  );
-
   const getApplicationInterviews = (applicationId: string) => {
     return interviews.filter(i =>
       i.applications.some(app => app.id === applicationId)
     ).sort((a, b) => new Date(a.scheduled_time).getTime() - new Date(b.scheduled_time).getTime());
   };
+
+  const getLatestInterviewTime = (app: CandidateApplication) => {
+    const appInterviews = getApplicationInterviews(app.id);
+    if (appInterviews.length === 0) return 0;
+    const relevantInterviews = appInterviews.filter(i => 
+      i.status !== InterviewStatus.CANCELLED
+    );
+    if (relevantInterviews.length === 0) return 0;
+    
+    return Math.max(...relevantInterviews.map(i => new Date(i.scheduled_time).getTime()));
+  };
+
+  const sortedApplications = [...applications].sort((a, b) => {
+    const timeA = getLatestInterviewTime(a);
+    const timeB = getLatestInterviewTime(b);
+    if (timeA !== timeB) {
+      return timeB - timeA; // Descending order
+    }
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+
+  const paginatedApplications = sortedApplications.slice(
+    (activePage - 1) * itemsPerPage,
+    activePage * itemsPerPage
+  );
 
   return (
     <Paper withBorder radius="md" p="lg" bg="light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-8))">
