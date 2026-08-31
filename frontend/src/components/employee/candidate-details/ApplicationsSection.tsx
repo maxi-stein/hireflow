@@ -24,7 +24,7 @@ export function ApplicationsSection({
   onHire,
   onSchedule
 }: ApplicationsSectionProps) {
-  const { t } = useTranslation('profile');
+  const { t } = useTranslation(['profile', 'jobs', 'common']);
   const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 4;
 
@@ -82,7 +82,7 @@ export function ApplicationsSection({
                 <Box>
                   <Title order={3} c="light-dark(var(--mantine-color-blue-7), var(--mantine-color-white))">{app.job_offer.position}</Title>
                   <Text size="sm" c="dimmed">
-                    {locationInfo.location ? `${locationInfo.location} • ` : ''}{locationInfo.workMode}
+                    {locationInfo.location ? `${locationInfo.location} • ` : ''}{t(`jobs:workMode.${String(locationInfo.workMode).toLowerCase()}`)}
                   </Text>
                   <Text size="xs" mt="xs" c="dimmed">
                     {t('candidate.management.applications.appliedOn', { date: new Date(app.created_at).toLocaleDateString() })}
