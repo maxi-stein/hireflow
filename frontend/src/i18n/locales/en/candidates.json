@@ -11,9 +11,12 @@
     },
     "table": {
       "candidate": "Candidate",
+      "profile": "Profile",
+      "applications": "Applications",
       "location": "Location",
       "lastUpdated": "Last Updated",
       "actions": "Actions",
+      "viewProfile": "View Profile",
       "empty": "No candidates found matching your criteria."
     }
   },

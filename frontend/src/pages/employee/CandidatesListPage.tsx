@@ -9,9 +9,9 @@ import {
   TextInput,
   Select,
   Table,
-  ActionIcon,
   Tooltip,
-  LoadingOverlay
+  LoadingOverlay,
+  Button
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
@@ -68,11 +68,14 @@ export function CandidatesListPage() {
         </Group>
       </Table.Td>
       <Table.Td>
-        {candidate.city && candidate.country ? (
-          <Text size="sm">{candidate.city}, {candidate.country}</Text>
+        {candidate.headline ? (
+          <Text size="sm">{candidate.headline}</Text>
         ) : (
           <Text size="sm" c="dimmed">{t('na', { ns: 'common' })}</Text>
         )}
+      </Table.Td>
+      <Table.Td>
+        <Text size="sm">-</Text>
       </Table.Td>
       <Table.Td>
         {/* Update date */}
@@ -81,14 +84,15 @@ export function CandidatesListPage() {
       <Table.Td>
         <Group gap="xs" justify="flex-end">
           <Tooltip label={t('table.tooltips.viewCandidate', { ns: 'applications' })}>
-            <ActionIcon
+            <Button
               variant="light"
               color="blue"
               onClick={() => navigate(`/manage/candidates/list/${candidate.id}`)}
-              aria-label={t('table.tooltips.viewCandidate', { ns: 'applications' })}
+              leftSection={<IconEye size={18} />}
+              size="xs"
             >
-              <IconEye size={18} />
-            </ActionIcon>
+              {t('list.table.viewProfile')}
+            </Button>
           </Tooltip>
         </Group>
       </Table.Td>
@@ -137,17 +141,18 @@ export function CandidatesListPage() {
             <Table horizontalSpacing="md" verticalSpacing="sm" highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>{t('list.table.candidate')}</Table.Th>
-                  <Table.Th>{t('candidate.city', { ns: 'profile' })}/{t('candidate.country', { ns: 'profile' })}</Table.Th>
-                  <Table.Th>{t('list.table.lastUpdated')}</Table.Th>
-                  <Table.Th style={{ textAlign: 'right' }}>{t('list.table.actions')}</Table.Th>
+                  <Table.Th w="30%">{t('list.table.candidate')}</Table.Th>
+                  <Table.Th w="30%">{t('list.table.profile')}</Table.Th>
+                  <Table.Th w="15%">{t('list.table.applications')}</Table.Th>
+                  <Table.Th w="15%">{t('list.table.lastUpdated')}</Table.Th>
+                  <Table.Th w="10%" style={{ textAlign: 'right' }}>{t('list.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
                 {rows}
                 {!isLoading && candidatesData?.data.length === 0 && (
                   <Table.Tr>
-                    <Table.Td colSpan={4}>
+                    <Table.Td colSpan={5}>
                       <Stack align="center" py="xl" gap="xs">
                         <IconUser size={40} color="gray" style={{ opacity: 0.5 }} />
                         <Text c="dimmed">{t('list.table.empty')}</Text>

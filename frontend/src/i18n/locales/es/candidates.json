@@ -11,9 +11,12 @@
     },
     "table": {
       "candidate": "Candidato",
+      "profile": "Perfil",
+      "applications": "Postulaciones",
       "location": "Ubicación",
       "lastUpdated": "Última Actualización",
       "actions": "Acciones",
+      "viewProfile": "Ver Perfil",
       "empty": "No se encontraron candidatos con esos criterios."
     }
   },

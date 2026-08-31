@@ -27,10 +27,11 @@ export interface UserFile {
 export interface Candidate {
   id: string;
   user_id: string;
+  headline: string | null;
   date_of_birth: string | null;
   phone: string | null;
-  city: string;
-  country: string;
+  city: string | null;
+  country: string | null;
   github: string | null;
   linkedin: string | null;
   educations: Education[];
