@@ -106,36 +106,40 @@ export function ApplicationsSection({
                   {t('candidate.management.applications.rejectedStatus')}
                 </Alert>
               ) : (
-                <Group justify="flex-end">
-                  {app.status !== ApplicationStatus.HIRED && (
-                    <Button
-                      variant="light"
-                      color="red"
-                      size="xs"
-                      leftSection={<IconX size={14} />}
-                      onClick={() => onReject(app.id, app.job_offer.position)}
-                    >
-                      {t('candidate.management.applications.reject')}
-                    </Button>
-                  )}
+                <Group justify="space-between" align="center">
+                  <Group gap="xs">
+                    {app.status !== ApplicationStatus.HIRED && (
+                      <Button
+                        variant="light"
+                        color="red"
+                        size="xs"
+                        leftSection={<IconX size={14} />}
+                        onClick={() => onReject(app.id, app.job_offer.position)}
+                      >
+                        {t('candidate.management.applications.reject')}
+                      </Button>
+                    )}
 
-                  {app.status !== ApplicationStatus.HIRED && (
-                    <Button
-                      variant="outline"
-                      color="green"
-                      size="xs"
-                      leftSection={<IconCheck size={14} />}
-                      onClick={() => onHire(app.id, app.job_offer.position)}
-                    >
-                      {t('candidate.management.applications.hire')}
-                    </Button>
-                  )}
+                    {app.status !== ApplicationStatus.HIRED && (
+                      <Button
+                        variant="light"
+                        color="green"
+                        size="xs"
+                        leftSection={<IconCheck size={14} />}
+                        onClick={() => onHire(app.id, app.job_offer.position)}
+                      >
+                        {t('candidate.management.applications.hire')}
+                      </Button>
+                    )}
+                  </Group>
 
                   {!upcomingInterview && (
                     <Button
                       variant="light"
                       color="blue"
                       size="xs"
+                      ml="auto"
+                      bd="1px solid var(--mantine-color-blue-outline)"
                       leftSection={<IconCalendarEvent size={14} />}
                       onClick={() => onSchedule(app.id)}
                     >
