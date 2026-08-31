@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Paper, Title, Card, Group, Box, Text, Badge, Divider, Button, SimpleGrid, Pagination } from '@mantine/core';
-import { IconX, IconCalendarEvent, IconCheck } from '@tabler/icons-react';
+import { Paper, Title, Card, Group, Box, Text, Badge, Divider, Button, SimpleGrid, Pagination, Alert } from '@mantine/core';
+import { IconX, IconCalendarEvent, IconCheck, IconCircleX } from '@tabler/icons-react';
 import { ApplicationStatus, type CandidateApplication } from '../../../services/candidate-application.service';
 import { InterviewStatus, type Interview } from '../../../services/interview.service';
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
@@ -71,10 +71,16 @@ export function ApplicationsSection({
           const locationInfo = getLocationDisplayInfo(app.job_offer.work_mode, app.job_offer.location);
 
           return (
-            <Card key={app.id} withBorder padding="lg" radius="md">
+            <Card 
+              key={app.id} 
+              withBorder={app.status !== ApplicationStatus.REJECTED}
+              bd={app.status === ApplicationStatus.REJECTED ? '1px solid var(--mantine-color-red-6)' : undefined}
+              padding="lg" 
+              radius="md"
+            >
               <Group justify="space-between" align="flex-start">
                 <Box>
-                  <Title order={4}>{app.job_offer.position}</Title>
+                  <Title order={3} c="light-dark(var(--mantine-color-blue-7), var(--mantine-color-white))">{app.job_offer.position}</Title>
                   <Text size="sm" c="dimmed">
                     {locationInfo.location ? `${locationInfo.location} • ` : ''}{locationInfo.workMode}
                   </Text>
@@ -95,47 +101,49 @@ export function ApplicationsSection({
 
               <Divider my="md" />
 
-              <Group justify="flex-end">
-                {app.status !== ApplicationStatus.REJECTED && app.status !== ApplicationStatus.HIRED && (
-                  <Button
-                    variant="light"
-                    color="red"
-                    size="xs"
-                    leftSection={<IconX size={14} />}
-                    onClick={() => onReject(app.id, app.job_offer.position)}
-                  >
-                    {t('candidate.management.applications.reject')}
-                  </Button>
-                )}
+              {app.status === ApplicationStatus.REJECTED ? (
+                <Alert variant="light" color="red" icon={<IconCircleX size={16} />} p="sm">
+                  {t('candidate.management.applications.rejectedStatus')}
+                </Alert>
+              ) : (
+                <Group justify="flex-end">
+                  {app.status !== ApplicationStatus.HIRED && (
+                    <Button
+                      variant="light"
+                      color="red"
+                      size="xs"
+                      leftSection={<IconX size={14} />}
+                      onClick={() => onReject(app.id, app.job_offer.position)}
+                    >
+                      {t('candidate.management.applications.reject')}
+                    </Button>
+                  )}
 
-                {app.status !== ApplicationStatus.REJECTED && app.status !== ApplicationStatus.HIRED && (
-                  <Button
-                    variant="outline"
-                    color="green"
-                    size="xs"
-                    leftSection={<IconCheck size={14} />}
-                    onClick={() => onHire(app.id, app.job_offer.position)}
-                  >
-                    {t('candidate.management.applications.hire')}
-                  </Button>
-                )}
+                  {app.status !== ApplicationStatus.HIRED && (
+                    <Button
+                      variant="outline"
+                      color="green"
+                      size="xs"
+                      leftSection={<IconCheck size={14} />}
+                      onClick={() => onHire(app.id, app.job_offer.position)}
+                    >
+                      {t('candidate.management.applications.hire')}
+                    </Button>
+                  )}
 
-                {app.status !== ApplicationStatus.REJECTED && !upcomingInterview && (
-                  <Button
-                    variant="light"
-                    color="blue"
-                    size="xs"
-                    leftSection={<IconCalendarEvent size={14} />}
-                    onClick={() => onSchedule(app.id)}
-                  >
-                    {t('candidate.management.applications.schedule')}
-                  </Button>
-                )}
-
-                {app.status === ApplicationStatus.REJECTED && (
-                  <Text size="sm" c="dimmed" fs="italic">{t('candidate.management.applications.rejectedStatus')}</Text>
-                )}
-              </Group>
+                  {!upcomingInterview && (
+                    <Button
+                      variant="light"
+                      color="blue"
+                      size="xs"
+                      leftSection={<IconCalendarEvent size={14} />}
+                      onClick={() => onSchedule(app.id)}
+                    >
+                      {t('candidate.management.applications.schedule')}
+                    </Button>
+                  )}
+                </Group>
+              )}
             </Card>
           );
         })}

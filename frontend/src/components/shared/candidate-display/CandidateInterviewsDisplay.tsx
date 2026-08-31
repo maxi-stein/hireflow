@@ -45,7 +45,7 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
       <Group justify="space-between" align="flex-start" wrap="nowrap">
         <Box>
           <Group gap="xs" mb={4}>
-            <Title order={5}>{interview.title}</Title>
+            <Title order={4} c="light-dark(var(--mantine-color-blue-7), var(--mantine-color-white))">{interview.title}</Title>
             {isPendingReview && (
               <Badge color="orange" variant="light" leftSection={<IconClock size={12} />}>
                 {t('candidateDisplay.reviewPendingBadge')}
@@ -57,7 +57,7 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
               </Badge>
             )}
           </Group>
-          <Text size="sm" c="dimmed" mb={8}>
+          <Text size="md" c="dimmed" mb={8}>
             {interviewersText}
           </Text>
           <Group gap="xs">
@@ -99,13 +99,13 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
         <Stack gap="md" mt="md">
           {/* Strengths section */}
           <Box>
-            <Text c="green.8" fw={700} size="xs" mb="xs">{t('candidateDisplay.strengths').toUpperCase()}</Text>
-            <Text size="xs" c="dimmed" fw={600} mb={4}>
+            <Text c="green.8" fw={700} size="sm" mb="xs">{t('candidateDisplay.strengths').toUpperCase()}</Text>
+            <Text size="sm" c="dimmed" fw={600} mb={4}>
               {reviews[0].employee?.user?.first_name} {reviews[0].employee?.user?.last_name}
             </Text>
             <Group gap="xs">
               {reviews[0].strengths?.map((s, idx) => (
-                <Badge key={idx} size="sm" color="green" variant="light" style={{ borderColor: 'var(--mantine-color-green-filled)', backgroundColor: 'var(--mantine-color-green-0)', color: 'var(--mantine-color-green-filled)' }}>
+                <Badge key={idx} size="md" color="green" variant="light" bd="1px solid var(--mantine-color-green-filled)">
                   {s}
                 </Badge>
               ))}
@@ -117,12 +117,12 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
                 <Collapse in={showMoreStrengths}>
                   {reviews.slice(1).map((r) => (
                     <Box key={r.id} mt="sm">
-                      <Text size="xs" c="dimmed" fw={600} mb={4}>
+                      <Text size="sm" c="dimmed" fw={600} mb={4}>
                         {r.employee?.user?.first_name} {r.employee?.user?.last_name}
                       </Text>
                       <Group gap="xs">
                         {r.strengths?.map((s, idx) => (
-                          <Badge key={idx} size="sm" color="green" variant="light" style={{ borderColor: 'var(--mantine-color-green-filled)', backgroundColor: 'var(--mantine-color-green-0)', color: 'var(--mantine-color-green-filled)' }}>
+                          <Badge key={idx} size="md" color="green" variant="light" bd="1px solid var(--mantine-color-green-filled)">
                             {s}
                           </Badge>
                         ))}
@@ -148,13 +148,13 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
 
           {/* Weaknesses section */}
           <Box>
-            <Text c="red.8" fw={700} size="xs" mb="xs">{t('candidateDisplay.weaknesses').toUpperCase()}</Text>
-            <Text size="xs" c="dimmed" fw={600} mb={4}>
+            <Text c="red.8" fw={700} size="sm" mb="xs">{t('candidateDisplay.weaknesses').toUpperCase()}</Text>
+            <Text size="sm" c="dimmed" fw={600} mb={4}>
               {reviews[0].employee?.user?.first_name} {reviews[0].employee?.user?.last_name}
             </Text>
             <Group gap="xs">
               {reviews[0].weaknesses?.map((w, idx) => (
-                <Badge key={idx} size="sm" color="red" variant="light" style={{ borderColor: 'var(--mantine-color-red-filled)', backgroundColor: 'var(--mantine-color-red-0)', color: 'var(--mantine-color-red-filled)' }}>
+                <Badge key={idx} size="md" color="red" variant="light" bd="1px solid var(--mantine-color-red-filled)">
                   {w}
                 </Badge>
               ))}
@@ -166,12 +166,12 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
                 <Collapse in={showMoreWeaknesses}>
                   {reviews.slice(1).map((r) => (
                     <Box key={r.id} mt="sm">
-                      <Text size="xs" c="dimmed" fw={600} mb={4}>
+                      <Text size="sm" c="dimmed" fw={600} mb={4}>
                         {r.employee?.user?.first_name} {r.employee?.user?.last_name}
                       </Text>
                       <Group gap="xs">
                         {r.weaknesses?.map((w, idx) => (
-                          <Badge key={idx} size="sm" color="red" variant="light" style={{ borderColor: 'var(--mantine-color-red-filled)', backgroundColor: 'var(--mantine-color-red-0)', color: 'var(--mantine-color-red-filled)' }}>
+                          <Badge key={idx} size="md" color="red" variant="light" bd="1px solid var(--mantine-color-red-filled)">
                             {w}
                           </Badge>
                         ))}
@@ -226,7 +226,7 @@ function InterviewCard({ interview, applicationId }: { interview: Interview; app
               <Stack gap="md" mt="md">
                 {reviews.map((r, idx) => (
                   <Box key={r.id || idx}>
-                    <Text size="xs" c="dimmed" fw={600} mb={4}>
+                    <Text size="sm" c="dimmed" fw={600} mb={4}>
                       {r.employee?.user?.first_name} {r.employee?.user?.last_name}
                     </Text>
                     <Text size="sm">
