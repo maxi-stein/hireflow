@@ -17,7 +17,12 @@
       "lastUpdated": "Última Actualización",
       "actions": "Acciones",
       "viewProfile": "Ver Perfil",
-      "empty": "No se encontraron candidatos con esos criterios."
+      "empty": "No se encontraron candidatos con esos criterios.",
+      "applicationsCount": "{{count}} Postulación",
+      "applicationsCount_plural": "{{count}} Postulaciones",
+      "moreApplications": "+ {{count}} postulación más",
+      "moreApplications_plural": "+ {{count}} postulaciones más",
+      "noApplications": "Sin postulaciones"
     }
   },
   "hired": {

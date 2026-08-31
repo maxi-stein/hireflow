@@ -21,6 +21,19 @@ export interface CandidateProfile {
   profile_created_at: string;
   profile_updated_at: string;
   files?: any[]; // simplified for now
+  applications?: {
+    id: string;
+    status: string;
+    job_offer: {
+      id: string;
+      position: string;
+    };
+    interviews: {
+      id: string;
+      title: string;
+      scheduled_time: string;
+    }[];
+  }[];
 }
 
 export interface UpdateCandidateDto {

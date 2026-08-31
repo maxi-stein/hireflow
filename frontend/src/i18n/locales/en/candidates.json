@@ -17,7 +17,12 @@
       "lastUpdated": "Last Updated",
       "actions": "Actions",
       "viewProfile": "View Profile",
-      "empty": "No candidates found matching your criteria."
+      "empty": "No candidates found matching your criteria.",
+      "applicationsCount": "{{count}} Application",
+      "applicationsCount_plural": "{{count}} Applications",
+      "moreApplications": "+ {{count}} more application",
+      "moreApplications_plural": "+ {{count}} more applications",
+      "noApplications": "No applications"
     }
   },
   "hired": {

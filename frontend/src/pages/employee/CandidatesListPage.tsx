@@ -75,7 +75,54 @@ export function CandidatesListPage() {
         )}
       </Table.Td>
       <Table.Td>
-        <Text size="sm">-</Text>
+        {(() => {
+          const applications = (candidate.applications || []).filter((app: any) => app.status !== 'REJECTED');
+          if (applications.length === 0) {
+            return (
+              <Paper p="xs" radius="sm" bg="var(--mantine-color-gray-light)" c="var(--mantine-color-gray-light-color)" bd="1px solid var(--mantine-color-gray-light-color)" shadow="none">
+                <Text size="sm" fw={500}>{t('list.table.noApplications')}</Text>
+              </Paper>
+            );
+          }
+
+          let latestInterview: any = null;
+          let jobOfferForInterview: any = null;
+
+          for (const app of applications) {
+            if (app.interviews && app.interviews.length > 0) {
+              const sortedInterviews = [...app.interviews].sort((a: any, b: any) => new Date(b.scheduled_time).getTime() - new Date(a.scheduled_time).getTime());
+              if (!latestInterview || new Date(sortedInterviews[0].scheduled_time) > new Date(latestInterview.scheduled_time)) {
+                latestInterview = sortedInterviews[0];
+                jobOfferForInterview = app.job_offer;
+              }
+            }
+          }
+
+          const remainingAppsCount = applications.length - 1;
+
+          if (latestInterview) {
+            return (
+              <Paper p="xs" radius="sm" bg="var(--mantine-color-blue-light)" c="var(--mantine-color-blue-light-color)" bd="1px solid var(--mantine-color-blue-light-color)" shadow="none">
+                <Text size="sm" fw={600}>{latestInterview.title}</Text>
+                <Text size="xs" mt={2} opacity={0.8}>
+                  {jobOfferForInterview?.position}
+                  {remainingAppsCount > 0 && ` ${t('list.table.moreApplications', { count: remainingAppsCount })}`}
+                </Text>
+              </Paper>
+            );
+          }
+
+          const latestApp = applications[applications.length - 1];
+          return (
+            <Paper p="xs" radius="sm" bg="var(--mantine-color-green-light)" c="var(--mantine-color-green-light-color)" bd="1px solid var(--mantine-color-green-light-color)" shadow="none">
+              <Text size="sm" fw={600}>{t('list.table.applicationsCount', { count: applications.length })}</Text>
+              <Text size="xs" mt={2} opacity={0.8}>
+                {latestApp.job_offer?.position}
+                {remainingAppsCount > 0 && ` ${t('list.table.moreApplications', { count: remainingAppsCount })}`}
+              </Text>
+            </Paper>
+          );
+        })()}
       </Table.Td>
       <Table.Td>
         {/* Update date */}
@@ -142,9 +189,9 @@ export function CandidatesListPage() {
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th w="30%">{t('list.table.candidate')}</Table.Th>
-                  <Table.Th w="30%">{t('list.table.profile')}</Table.Th>
-                  <Table.Th w="15%">{t('list.table.applications')}</Table.Th>
-                  <Table.Th w="15%">{t('list.table.lastUpdated')}</Table.Th>
+                  <Table.Th w="20%">{t('list.table.profile')}</Table.Th>
+                  <Table.Th w="30%">{t('list.table.applications')}</Table.Th>
+                  <Table.Th w="10%">{t('list.table.lastUpdated')}</Table.Th>
                   <Table.Th w="10%" style={{ textAlign: 'right' }}>{t('list.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
