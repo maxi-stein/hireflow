@@ -80,7 +80,7 @@ export function ApplicationsSection({
             >
               <Group justify="space-between" align="flex-start">
                 <Box>
-                  <Title order={3} c="light-dark(var(--mantine-color-blue-7), var(--mantine-color-white))">{app.job_offer.position}</Title>
+                  <Title order={3} c="light-dark(var(--mantine-color-blue-9), var(--mantine-color-white))">{app.job_offer.position}</Title>
                   <Text size="sm" c="dimmed">
                     {locationInfo.location ? `${locationInfo.location} • ` : ''}{t(`jobs:workMode.${String(locationInfo.workMode).toLowerCase()}`)}
                   </Text>

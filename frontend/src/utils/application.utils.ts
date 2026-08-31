@@ -8,7 +8,7 @@ export const getApplicationStatusColor = (status: ApplicationStatus): MantineCol
     case ApplicationStatus.APPLIED:
       return 'cyan';
     case ApplicationStatus.IN_PROGRESS:
-      return 'blue';
+      return 'blue.9';
     case ApplicationStatus.HIRED:
       return 'green';
     case ApplicationStatus.REJECTED:
