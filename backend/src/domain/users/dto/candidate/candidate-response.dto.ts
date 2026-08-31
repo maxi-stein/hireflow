@@ -20,6 +20,19 @@ export class CandidateResponseDto {
   };
   educations: EducationResponseDto[];
   work_experiences: WorkExperienceResponseDto[];
+  applications?: {
+    id: string;
+    status: string;
+    job_offer: {
+      id: string;
+      position: string;
+    };
+    interviews: {
+      id: string;
+      title: string;
+      scheduled_time: Date;
+    }[];
+  }[];
   profile_created_at: Date;
   profile_updated_at: Date;
 }

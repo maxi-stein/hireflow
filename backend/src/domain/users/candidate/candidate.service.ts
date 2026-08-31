@@ -121,7 +121,10 @@ export class CandidateService {
     queryBuilder
       .leftJoinAndSelect('candidate.user', 'user')
       .leftJoinAndSelect('candidate.educations', 'educations')
-      .leftJoinAndSelect('candidate.work_experiences', 'work_experiences');
+      .leftJoinAndSelect('candidate.work_experiences', 'work_experiences')
+      .leftJoinAndSelect('candidate.applications', 'applications')
+      .leftJoinAndSelect('applications.job_offer', 'job_offer')
+      .leftJoinAndSelect('applications.interviews', 'interviews');
 
     if (search) {
       queryBuilder.andWhere(
@@ -263,6 +266,19 @@ export class CandidateService {
         description: exp.description,
         created_at: exp.created_at,
         updated_at: exp.updated_at,
+      })),
+      applications: candidate.applications?.map((app) => ({
+        id: app.id,
+        status: app.status,
+        job_offer: {
+          id: app.job_offer?.id,
+          position: app.job_offer?.position,
+        },
+        interviews: app.interviews?.map((int) => ({
+          id: int.id,
+          title: int.title,
+          scheduled_time: int.scheduled_time,
+        })),
       })),
       profile_created_at: candidate.profile_created_at,
       profile_updated_at: candidate.profile_updated_at,
