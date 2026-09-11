@@ -45,6 +45,12 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
     : reviews?.find(r => r.employee_id === user?.id);
   const isEditMode = !!myReview;
 
+  // A review is read-only if explicitly told so via prop, OR if the logged-in
+  // user is not the author of this specific review (checked via employee_id).
+  const isOwner = !!myReview && !!user?.id && myReview.employee_id === user.id;
+  const isReadOnly = readOnly || (isEditMode && !isOwner);
+
+
   const form = useForm({
     initialValues: {
       score: 5,
@@ -193,8 +199,8 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                   min={1}
                   max={10}
                   required
-                  readOnly={readOnly}
-                  variant={readOnly ? 'filled' : 'default'}
+                  readOnly={isReadOnly}
+                  variant={isReadOnly ? 'filled' : 'default'}
                   {...form.getInputProps('score')}
                 />
 
@@ -203,16 +209,16 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                   placeholder={t('form.labels.notesPlaceholder')}
                   minRows={5}
                   autosize
-                  readOnly={readOnly}
-                  variant={readOnly ? 'filled' : 'default'}
+                  readOnly={isReadOnly}
+                  variant={isReadOnly ? 'filled' : 'default'}
                   {...form.getInputProps('notes')}
                 />
 
                 <TagsInput
                   label={t('form.labels.strengths')}
                   placeholder={t('form.labels.strengthsPlaceholder')}
-                  readOnly={readOnly}
-                  variant={readOnly ? 'filled' : 'default'}
+                  readOnly={isReadOnly}
+                  variant={isReadOnly ? 'filled' : 'default'}
                   value={form.values.strengths}
                   onChange={(value) => form.setFieldValue('strengths', normalizeText(value))}
                   error={form.errors.strengths}
@@ -221,14 +227,14 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                 <TagsInput
                   label={t('form.labels.weaknesses')}
                   placeholder={t('form.labels.weaknessesPlaceholder')}
-                  readOnly={readOnly}
-                  variant={readOnly ? 'filled' : 'default'}
+                  readOnly={isReadOnly}
+                  variant={isReadOnly ? 'filled' : 'default'}
                   value={form.values.weaknesses}
                   onChange={(value) => form.setFieldValue('weaknesses', normalizeText(value))}
                   error={form.errors.weaknesses}
                 />
 
-                {!readOnly && (
+                {!isReadOnly && (
                   <Group justify="flex-end" mt="xl">
                     {isEditMode && (
                       <Button variant="default" onClick={() => form.reset()}>{t('form.buttons.reset')}</Button>

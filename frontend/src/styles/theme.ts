@@ -13,12 +13,12 @@ export const theme = createTheme({
   },
   headings: {
     sizes: {
-      h1: { fontSize: '1.75rem' }, // 28px
-      h2: { fontSize: '1.5rem' }, // 24px
-      h3: { fontSize: '1.25rem' }, // 20px
-      h4: { fontSize: '1.0625rem' }, // 17px
-      h5: { fontSize: '0.9375rem' }, // 15px
-      h6: { fontSize: '0.875rem' }, // 14px
+      "h1": { "fontSize": "2.25rem" },
+      "h2": { "fontSize": "2rem" },
+      "h3": { "fontSize": "1.625rem" },
+      "h4": { "fontSize": "1.3125rem" },
+      "h5": { "fontSize": "1.125rem" },
+      "h6": { "fontSize": "1rem" }
     },
   },
   components: {
