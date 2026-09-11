@@ -34,13 +34,13 @@ export const DashboardListItem = ({
               candidateId={candidateId}
               firstName={candidateName.split(' ')[0]}
               lastName={candidateName.split(' ')[1] || ''}
-              size={42}
+              size={64}
             />
             <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-              <Text size="sm" fw={600} truncate="end">
+              <Text size="md" fw={600} truncate="end">
                 {candidateName}
               </Text>
-              <Text size="xs" c="dimmed" truncate="end" mt={2}>
+              <Text size="sm" c="dimmed" truncate="end" mt={2}>
                 {position}
               </Text>
             </div>
@@ -52,7 +52,7 @@ export const DashboardListItem = ({
               date={date}
               variant="time-only"
               color={color || 'blue'}
-              size="sm"
+              size="lg"
             />
             {action}
           </Group>

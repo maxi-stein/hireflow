@@ -6,7 +6,7 @@ export interface TimeDisplayProps {
   date: Date | string;
   variant?: 'time-only' | 'date-time' | 'date-only';
   color?: TimeDisplayColor;
-  size?: 'xs' | 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 /**
@@ -38,9 +38,9 @@ export function TimeDisplay({
 
   // Size configuration
   const sizeMap = {
-    xs: { minWidth: 70, time: 'xs', label: '10px', padding: 4 },
     sm: { minWidth: 80, time: 'sm', label: 'xs', padding: 6 },
-    md: { minWidth: 95, time: 'md', label: 'sm', padding: 8 }
+    md: { minWidth: 95, time: 'md', label: 'sm', padding: 8 },
+    lg: { minWidth: 105, time: 'lg', label: 'md', padding: 8 }
   };
 
   const config = sizeMap[size];
@@ -69,11 +69,11 @@ export function TimeDisplay({
           {dateStr}
         </Text>
       ) : (
-        <Group gap={3} justify="center" align="baseline" wrap="nowrap" style={{ height: '100%' }}>
+        <Group gap={10} justify="center" align="center" wrap="nowrap" style={{ height: '100%' }}>
           <Text size={config.time as any} fw={800} c={color} lh={1}>
             {timeStr}
           </Text>
-          <Text size="10px" fw={700} lh={1} c="dimmed" style={{ textTransform: 'lowercase' }}>
+          <Text size="18px" fw={700} lh={1} c="dimmed" style={{ textTransform: 'lowercase' }}>
             {ampm}
           </Text>
         </Group>
