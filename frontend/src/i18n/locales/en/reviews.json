@@ -17,7 +17,9 @@
   "card": {
     "by": "By:",
     "unknownJob": "Unknown Job",
-    "unknownPosition": "Unknown Position"
+    "unknownPosition": "Unknown Position",
+    "candidateSingular": "Candidate",
+    "candidatePlural": "Candidates"
   },
   "buttons": {
     "review": "Review",

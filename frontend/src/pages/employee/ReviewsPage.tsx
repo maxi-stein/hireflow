@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { APP_MAX_WIDTH } from '../../constants/layout';
 import { useReviews } from '../../hooks/useReviews';
-import { groupByJob, pendingExtractor, completedExtractor } from '../../components/employee/reviews/groupByJob';
-import { ReviewJobGroup } from '../../components/employee/reviews/ReviewJobGroup';
+import { groupPendingReviewsByDate } from '../../components/employee/reviews/groupPendingReviewsByDate';
+import { ReviewDateGroup } from '../../components/employee/reviews/ReviewDateGroup';
 import { PendingReviewCard } from '../../components/employee/reviews/PendingReviewCard';
-import { CompletedReviewCard } from '../../components/employee/reviews/CompletedReviewCard';
+import { groupCompletedReviews } from '../../components/employee/reviews/groupCompletedReviews';
+import { CompletedReviewsAccordion } from '../../components/employee/reviews/CompletedReviewsAccordion';
 
 export function ReviewsPage() {
   const [searchParams] = useSearchParams();
@@ -26,9 +27,9 @@ export function ReviewsPage() {
     isMyReview,
   } = useReviews();
 
-  const pendingGroups = groupByJob(filteredPendingReviews, pendingExtractor, t('card.unknownJob'));
-  const myCompletedGroups = groupByJob(myCompletedReviews, completedExtractor, t('card.unknownJob'));
-  const otherCompletedGroups = groupByJob(otherCompletedReviews, completedExtractor, t('card.unknownJob'));
+  const pendingGroups = groupPendingReviewsByDate(filteredPendingReviews);
+  const myCompletedGroups = groupCompletedReviews(myCompletedReviews);
+  const otherCompletedGroups = groupCompletedReviews(otherCompletedReviews);
 
   return (
     <Container size={APP_MAX_WIDTH} py="xl">
@@ -44,12 +45,12 @@ export function ReviewsPage() {
       </Group>
 
       <Tabs defaultValue={searchParams.get('tab') || 'pending'} keepMounted={false}>
-        <Tabs.List mb="md">
+        <Tabs.List mb="lg">
           <Tabs.Tab value="pending" leftSection={<IconClipboardCheck size={16} />}>
-            <Group gap="xs" align="center">
+            <Group gap="md" align="center">
               {t('tabs.pending')}
               {pendingReviews.length > 0 && (
-                <Badge size="xs" circle color="blue">
+                <Badge size="lg" circle color="blue">
                   {pendingReviews.length}
                 </Badge>
               )}
@@ -66,18 +67,18 @@ export function ReviewsPage() {
               <Text c="dimmed" ta="center" py="xl">{t('empty.pending')}</Text>
             ) : (
               pendingGroups.map(group => (
-                <ReviewJobGroup key={group.jobTitle} jobTitle={group.jobTitle}>
-                  {group.candidates.map(({ candidateId, items }) => (
+                <ReviewDateGroup key={group.dateKey} dateKey={group.dateKey}>
+                  {group.candidates.map(({ candidateId, interviews }) => (
                     <PendingReviewCard
                       key={candidateId}
                       candidateId={candidateId}
-                      interviews={items}
+                      interviews={interviews}
                       selectedInterviewId={selectedInterviewId}
                       onReviewClick={handleReviewClick}
                       onCloseReview={handleCloseReview}
                     />
                   ))}
-                </ReviewJobGroup>
+                </ReviewDateGroup>
               ))
             )}
           </Paper>
@@ -91,21 +92,13 @@ export function ReviewsPage() {
                 {myCompletedReviews.length === 0 ? (
                   <Text c="dimmed" size="sm" fs="italic">{t('empty.completed')}</Text>
                 ) : (
-                  myCompletedGroups.map(group => (
-                    <ReviewJobGroup key={group.jobTitle} jobTitle={group.jobTitle}>
-                      {group.candidates.map(({ candidateId, items }) => (
-                        <CompletedReviewCard
-                          key={candidateId}
-                          candidateId={candidateId}
-                          reviews={items}
-                          selectedInterviewId={selectedInterviewId}
-                          onReviewClick={handleReviewClick}
-                          onCloseReview={handleCloseReview}
-                          isMyReview={isMyReview}
-                        />
-                      ))}
-                    </ReviewJobGroup>
-                  ))
+                  <CompletedReviewsAccordion
+                    groups={myCompletedGroups}
+                    selectedInterviewId={selectedInterviewId}
+                    onReviewClick={handleReviewClick}
+                    onCloseReview={handleCloseReview}
+                    isMyReview={isMyReview}
+                  />
                 )}
               </Box>
 
@@ -114,21 +107,13 @@ export function ReviewsPage() {
                 {otherCompletedReviews.length === 0 ? (
                   <Text c="dimmed" size="sm" fs="italic">{t('empty.completed')}</Text>
                 ) : (
-                  otherCompletedGroups.map(group => (
-                    <ReviewJobGroup key={group.jobTitle} jobTitle={group.jobTitle}>
-                      {group.candidates.map(({ candidateId, items }) => (
-                        <CompletedReviewCard
-                          key={candidateId}
-                          candidateId={candidateId}
-                          reviews={items}
-                          selectedInterviewId={selectedInterviewId}
-                          onReviewClick={handleReviewClick}
-                          onCloseReview={handleCloseReview}
-                          isMyReview={isMyReview}
-                        />
-                      ))}
-                    </ReviewJobGroup>
-                  ))
+                  <CompletedReviewsAccordion
+                    groups={otherCompletedGroups}
+                    selectedInterviewId={selectedInterviewId}
+                    onReviewClick={handleReviewClick}
+                    onCloseReview={handleCloseReview}
+                    isMyReview={isMyReview}
+                  />
                 )}
               </Box>
             </Stack>

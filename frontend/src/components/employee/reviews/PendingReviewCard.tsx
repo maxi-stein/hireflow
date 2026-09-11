@@ -1,6 +1,5 @@
-import { Paper, Group, Box, Text, Button, Stack, Collapse, useMantineColorScheme } from '@mantine/core';
+import { Paper, Group, Box, Text, Button, Badge, Stack, Collapse, useMantineColorScheme } from '@mantine/core';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
-import { TimeDisplay } from '../../shared/TimeDisplay';
 import { InterviewReviewForm } from './InterviewReviewForm';
 import type { Interview } from '../../../services/interview.service';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +14,7 @@ interface PendingReviewCardProps {
 
 /**
  * Renders a candidate card with their pending interview reviews.
- * Shows candidate info, interview list with dates, and expandable review forms.
+ * Shows candidate info, interview title, job position, and expandable review forms.
  */
 export function PendingReviewCard({
   candidateId,
@@ -31,39 +30,33 @@ export function PendingReviewCard({
   const candidate = firstInterview.applications[0].candidate;
 
   return (
-    <Paper withBorder radius="md" bg={colorScheme === 'dark' ? 'dark.6' : 'gray.0'} p="sm">
-      <Group justify="space-between" mb="xs" style={{ cursor: 'default' }}>
-        <Group gap="sm">
+    <Paper withBorder radius="md" bg={colorScheme === 'dark' ? 'dark.7' : 'white'} p="md">
+      <Group justify="space-between" mb="md" style={{ cursor: 'default' }}>
+        <Group gap="md">
           <CandidateAvatar
             candidateId={candidateId}
             firstName={candidate?.user?.first_name}
             lastName={candidate?.user?.last_name}
-            size={32}
+            size={48}
           />
-          <Text fw={600} size="sm">{candidate?.user?.first_name} {candidate?.user?.last_name}</Text>
+          <Text fw={600} size="md">{candidate?.user?.first_name} {candidate?.user?.last_name}</Text>
         </Group>
       </Group>
-      <Stack gap={0} style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
+      <Stack gap="md">
         {interviews.map(interview => (
-          <Box key={interview.id} p="sm" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
-            <Group justify="space-between">
-              <Group gap="sm">
-                <TimeDisplay
-                  date={interview.scheduled_time}
-                  variant="date-time"
-                  color="orange"
-                  size="sm"
-                />
-                <Box>
-                  <Text size="sm" fw={500}>{interview.type} Interview</Text>
-                  <Text size="xs" c="dimmed">
-                    {interview.applications[0]?.job_offer?.position || t('card.unknownPosition')}
-                  </Text>
-                </Box>
-              </Group>
+          <Paper key={interview.id} withBorder radius="md" p="lg" bg={colorScheme === 'dark' ? 'dark.6' : 'gray.0'}>
+            <Group justify="space-between" align="center">
+              <Box>
+                <Badge variant="filled" color="blue" size='lg' mb="md">
+                  {interview.title || interview.applications[0]?.job_offer?.position || t('card.unknownPosition')}
+                </Badge>
+                <Text size="md">
+                  {interview.applications[0]?.job_offer?.position || t('card.unknownPosition')}
+                </Text>
+              </Box>
               <Button
                 variant={selectedInterviewId === interview.id ? "filled" : "light"}
-                size="xs"
+                size="compact-md"
                 onClick={(e) => {
                   e.stopPropagation();
                   onReviewClick(interview.id);
@@ -73,7 +66,7 @@ export function PendingReviewCard({
               </Button>
             </Group>
             <Collapse in={selectedInterviewId === interview.id}>
-              <Box p="md">
+              <Box pt="md">
                 {selectedInterviewId === interview.id && (
                   <InterviewReviewForm
                     interviewId={interview.id}
@@ -82,7 +75,7 @@ export function PendingReviewCard({
                 )}
               </Box>
             </Collapse>
-          </Box>
+          </Paper>
         ))}
       </Stack>
     </Paper>
