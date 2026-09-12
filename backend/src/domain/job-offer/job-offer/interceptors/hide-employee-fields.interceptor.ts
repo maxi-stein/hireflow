@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 export class HideEmployeeFieldsInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const isEmployee = request.user?.type === 'employee';
+    const isEmployee = request.user?.user_type === 'employee';
 
     return next.handle().pipe(
       map((data) => {
