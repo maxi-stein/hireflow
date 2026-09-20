@@ -507,7 +507,107 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440301', '550e8400-e29b-41d4-a716-446655440083'),
         ('550e8400-e29b-41d4-a716-446655440301', '550e8400-e29b-41d4-a716-446655440081')
     `);
-  }
+  
+    // --- NEW JOB OFFER ---
+    await queryRunner.query(`
+      INSERT INTO "job_offers"
+        ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440404', 'Junior Node Dev', 'Remoto', 'remote', 'Desarrollador Junior Node.js.', '30000-40000', 'Seguro médico', 'OPEN', false, NOW(), NOW(), '2026-12-31')
+    `);
+
+    // --- NEW USERS AND CANDIDATES ---
+    await queryRunner.query(`
+      INSERT INTO "users"
+        ("id", "first_name", "last_name", "email", "password", "user_type", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440400', 'George', 'Martin', 'george@example.com', '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'candidate', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440402', 'Fiona', 'Gallagher', 'fiona@example.com', '$2a$10$jiAFi1FhyXfpfAojltsQ8u1p8akSuXkT2ZIxW3ovcQ75bqnekQ5/2', 'candidate', NOW(), NOW())
+    `);
+
+    await queryRunner.query(`
+      INSERT INTO "candidates"
+        ("id", "headline", "date_of_birth", "phone", "city", "country", "github", "linkedin", "user_id", "profile_created_at", "profile_updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440401', 'Node Dev', '2000-01-01', '111111111', 'Madrid', 'Spain', '', '', '550e8400-e29b-41d4-a716-446655440400', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440403', 'Node Dev', '1998-05-05', '222222222', 'Chicago', 'USA', '', '', '550e8400-e29b-41d4-a716-446655440402', NOW(), NOW())
+    `);
+
+    // --- NEW APPLICATIONS ---
+    await queryRunner.query(`
+      INSERT INTO "candidate_applications"
+        ("id", "job_offer_id", "candidate_id", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440405', '550e8400-e29b-41d4-a716-446655440404', '550e8400-e29b-41d4-a716-446655440401', 'APPLIED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440406', '550e8400-e29b-41d4-a716-446655440404', '550e8400-e29b-41d4-a716-446655440403', 'APPLIED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-44665544040b', '550e8400-e29b-41d4-a716-446655440100', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW())
+    `);
+
+    // --- NEW INTERVIEWS (PENDING REVIEWS) ---
+    // George Interview (2026-08-29)
+    await queryRunner.query(`
+      INSERT INTO "interviews"
+        ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440407', 'Entrevista HR (George)', 'INDIVIDUAL', '2026-08-29 10:00:00', 'https://meet.google.com/george', 'COMPLETED', NOW(), NOW())
+    `);
+    await queryRunner.query(`
+      INSERT INTO "interview_applications" ("interview_id", "candidate_application_id")
+      VALUES ('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440405')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "employee_interviews" ("interview_id", "employee_id")
+      VALUES ('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440001'), ('550e8400-e29b-41d4-a716-446655440407', '550e8400-e29b-41d4-a716-446655440081')
+    `);
+
+    // Fiona Interview (2026-08-31)
+    await queryRunner.query(`
+      INSERT INTO "interviews"
+        ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440408', 'Entrevista HR (Fiona)', 'INDIVIDUAL', '2026-08-31 10:00:00', 'https://meet.google.com/fiona', 'COMPLETED', NOW(), NOW())
+    `);
+    await queryRunner.query(`
+      INSERT INTO "interview_applications" ("interview_id", "candidate_application_id")
+      VALUES ('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440406')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "employee_interviews" ("interview_id", "employee_id")
+      VALUES ('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440001'), ('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440081')
+    `);
+
+    // Bob Interview (2026-09-18) Panel QA Automation
+    await queryRunner.query(`
+      INSERT INTO "interviews"
+        ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-446655440409', 'Panel QA Automation (Bob)', 'GROUP', '2026-09-18 10:00:00', 'https://meet.google.com/bob', 'COMPLETED', NOW(), NOW())
+    `);
+    await queryRunner.query(`
+      INSERT INTO "interview_applications" ("interview_id", "candidate_application_id")
+      VALUES ('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-44665544040b')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "employee_interviews" ("interview_id", "employee_id")
+      VALUES ('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440001'), ('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440081')
+    `);
+
+    // Charlie Interview (2026-09-18) Entrevista Inicial Full Stack
+    await queryRunner.query(`
+      INSERT INTO "interviews"
+        ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
+      VALUES
+        ('550e8400-e29b-41d4-a716-44665544040a', 'Entrevista Inicial Full Stack (Charlie)', 'INDIVIDUAL', '2026-09-18 10:00:00', 'https://meet.google.com/charlie', 'COMPLETED', NOW(), NOW())
+    `);
+    await queryRunner.query(`
+      INSERT INTO "interview_applications" ("interview_id", "candidate_application_id")
+      VALUES ('550e8400-e29b-41d4-a716-44665544040a', '550e8400-e29b-41d4-a716-446655440092')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "employee_interviews" ("interview_id", "employee_id")
+      VALUES ('550e8400-e29b-41d4-a716-44665544040a', '550e8400-e29b-41d4-a716-446655440001'), ('550e8400-e29b-41d4-a716-44665544040a', '550e8400-e29b-41d4-a716-446655440081')
+    `);
+}
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DELETE FROM "work_experiences"`);
