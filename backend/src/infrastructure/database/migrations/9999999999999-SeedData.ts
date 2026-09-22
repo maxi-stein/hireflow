@@ -27,6 +27,12 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  * Candidate3: Charlie Dev (charlie.dev@example.com / Password1)
  *   User ID: 550e8400-e29b-41d4-a716-446655440090
  *   Candidate ID: 550e8400-e29b-41d4-a716-446655440091
+ * Candidate4: George Martin (george@example.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440400
+ *   Candidate ID: 550e8400-e29b-41d4-a716-446655440401
+ * Candidate5: Fiona Gallagher (fiona@example.com / Password1)
+ *   User ID: 550e8400-e29b-41d4-a716-446655440402
+ *   Candidate ID: 550e8400-e29b-41d4-a716-446655440403
  *
  * --- Job Offers ---
  * Job Offer 1 (Desarrollador Full Stack): 550e8400-e29b-41d4-a716-446655440006
@@ -34,6 +40,26 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  * Job Offer 3 (Frontend Developer React): 550e8400-e29b-41d4-a716-446655440098
  * Job Offer 4 (DevOps Engineer): 550e8400-e29b-41d4-a716-446655440099
  * Job Offer 5 (QA Automation Engineer): 550e8400-e29b-41d4-a716-446655440100
+ * Job Offer 6 (Junior Node Dev): 550e8400-e29b-41d4-a716-446655440404
+ *
+ * --- Candidate Applications ---
+ * Alice Dev (Candidate ID: 550e8400-e29b-41d4-a716-446655440004)
+ *   - App ID: 550e8400-e29b-41d4-a716-446655440008 (Job Offer 1)
+ *   - App ID: 550e8400-e29b-41d4-a716-446655440009 (Job Offer 2)
+ *
+ * Bob Dev (Candidate ID: 550e8400-e29b-41d4-a716-446655440005)
+ *   - App ID: 550e8400-e29b-41d4-a716-44665544000a (Job Offer 1)
+ *   - App ID: 550e8400-e29b-41d4-a716-44665544000b (Job Offer 2)
+ *   - App ID: 550e8400-e29b-41d4-a716-44665544040b (Job Offer 5)
+ *
+ * Charlie Dev (Candidate ID: 550e8400-e29b-41d4-a716-446655440091)
+ *   - App ID: 550e8400-e29b-41d4-a716-446655440092 (Job Offer 1)
+ *
+ * George Martin (Candidate ID: 550e8400-e29b-41d4-a716-446655440401)
+ *   - App ID: 550e8400-e29b-41d4-a716-446655440405 (Job Offer 6)
+ *
+ * Fiona Gallagher (Candidate ID: 550e8400-e29b-41d4-a716-446655440403)
+ *   - App ID: 550e8400-e29b-41d4-a716-446655440406 (Job Offer 6)
  */
 
 export class SeedData9999999999999 implements MigrationInterface {
