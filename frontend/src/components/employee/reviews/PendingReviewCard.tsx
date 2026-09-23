@@ -30,29 +30,26 @@ export function PendingReviewCard({
   const candidate = firstInterview.applications[0].candidate;
 
   return (
-    <Paper withBorder radius="md" bg={colorScheme === 'dark' ? 'dark.7' : 'white'} p="md">
+    <Paper withBorder radius="md" bg={colorScheme === 'dark' ? 'dark.6' : 'gray.0'} p="md">
       <Group justify="space-between" mb="md" style={{ cursor: 'default' }}>
         <Group gap="md">
           <CandidateAvatar
             candidateId={candidateId}
             firstName={candidate?.user?.first_name}
             lastName={candidate?.user?.last_name}
-            size={48}
+            size="xl"
           />
           <Text fw={600} size="md">{candidate?.user?.first_name} {candidate?.user?.last_name}</Text>
         </Group>
       </Group>
       <Stack gap="md">
         {interviews.map(interview => (
-          <Paper key={interview.id} withBorder radius="md" p="lg" bg={colorScheme === 'dark' ? 'dark.6' : 'gray.0'}>
+          <Paper key={interview.id} withBorder radius="md" p="lg" bg={colorScheme === 'dark' ? 'dark.7' : 'white'}>
             <Group justify="space-between" align="center">
               <Box>
-                <Badge variant="filled" color="blue" size='lg' mb="md">
-                  {interview.title || interview.applications[0]?.job_offer?.position || t('card.unknownPosition')}
+                <Badge variant="filled" color="blue" size='lg'>
+                  {interview.title || t('card.unknownPosition')}
                 </Badge>
-                <Text size="md">
-                  {interview.applications[0]?.job_offer?.position || t('card.unknownPosition')}
-                </Text>
               </Box>
               <Button
                 variant={selectedInterviewId === interview.id ? "filled" : "light"}

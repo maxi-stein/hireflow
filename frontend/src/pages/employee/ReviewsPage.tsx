@@ -68,15 +68,26 @@ export function ReviewsPage() {
             ) : (
               pendingGroups.map(group => (
                 <ReviewDateGroup key={group.dateKey} dateKey={group.dateKey}>
-                  {group.candidates.map(({ candidateId, interviews }) => (
-                    <PendingReviewCard
-                      key={candidateId}
-                      candidateId={candidateId}
-                      interviews={interviews}
-                      selectedInterviewId={selectedInterviewId}
-                      onReviewClick={handleReviewClick}
-                      onCloseReview={handleCloseReview}
-                    />
+                  {group.positions.map(({ position, candidates }) => (
+                    <Box key={position} mb="md">
+                      <Group gap="xs" mb="sm" pl="xs">
+                        <Badge variant="light" color="teal" size="xl" radius="md">
+                          {position}
+                        </Badge>
+                      </Group>
+                      <Stack gap="sm">
+                        {candidates.map(({ candidateId, interviews }) => (
+                          <PendingReviewCard
+                            key={candidateId}
+                            candidateId={candidateId}
+                            interviews={interviews}
+                            selectedInterviewId={selectedInterviewId}
+                            onReviewClick={handleReviewClick}
+                            onCloseReview={handleCloseReview}
+                          />
+                        ))}
+                      </Stack>
+                    </Box>
                   ))}
                 </ReviewDateGroup>
               ))
