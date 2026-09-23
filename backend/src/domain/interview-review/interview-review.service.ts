@@ -189,7 +189,7 @@ export class InterviewReviewService {
       .where('interviewer.id = :employeeId', { employeeId })
       .andWhere('interview.scheduled_time <= :now', { now: new Date() })
       .andWhere('review.id IS NULL')
-      .orderBy('interview.scheduled_time', 'DESC')
+      .orderBy('interview.scheduled_time', 'ASC')
       .skip(skip)
       .take(limit)
       .getManyAndCount();
