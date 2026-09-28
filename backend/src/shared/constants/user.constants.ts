@@ -11,6 +11,6 @@ export const EMPLOYEE = {
 };
 
 export const EMPLOYEE_ROLES = {
-  ROLES: ['admin', 'hr', 'manager'],
+  ROLES: ['hr', 'manager', 'technical_leader'],
   LENGTH: 32,
 };

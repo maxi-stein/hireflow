@@ -54,12 +54,15 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  *
  * Charlie Dev (Candidate ID: 550e8400-e29b-41d4-a716-446655440091)
  *   - App ID: 550e8400-e29b-41d4-a716-446655440092 (Job Offer 1)
+ *   - App ID: 550e8400-e29b-41d4-a716-44665544009a (Job Offer 3)
  *
  * George Martin (Candidate ID: 550e8400-e29b-41d4-a716-446655440401)
  *   - App ID: 550e8400-e29b-41d4-a716-446655440405 (Job Offer 6)
+ *   - App ID: 550e8400-e29b-41d4-a716-44665544040c (Job Offer 2)
  *
  * Fiona Gallagher (Candidate ID: 550e8400-e29b-41d4-a716-446655440403)
  *   - App ID: 550e8400-e29b-41d4-a716-446655440406 (Job Offer 6)
+ *   - App ID: 550e8400-e29b-41d4-a716-44665544040d (Job Offer 2)
  */
 
 export class SeedData9999999999999 implements MigrationInterface {
@@ -92,13 +95,13 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "employees" 
         ("id", "roles", "position", "user_id", "profile_created_at", "profile_updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440001', ARRAY['admin'], 'System Administrator', 
+        ('550e8400-e29b-41d4-a716-446655440001', ARRAY['manager'], 'System Administrator', 
          '550e8400-e29b-41d4-a716-446655440000', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440081', ARRAY['hr'], 'HR Specialist', 
+        ('550e8400-e29b-41d4-a716-446655440081', ARRAY['manager'], 'HR Specialist', 
          '550e8400-e29b-41d4-a716-446655440080', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440083', ARRAY['hr'], 'Talent Acquisition Specialist', 
          '550e8400-e29b-41d4-a716-446655440082', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440085', ARRAY['manager'], 'Engineering Manager', 
+        ('550e8400-e29b-41d4-a716-446655440085', ARRAY['technical_leader'], 'Technical Leader', 
          '550e8400-e29b-41d4-a716-446655440084', NOW(), NOW())
     `);
 
@@ -221,7 +224,10 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440091', 'APPLIED', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440405', '550e8400-e29b-41d4-a716-446655440404', '550e8400-e29b-41d4-a716-446655440401', 'APPLIED', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440406', '550e8400-e29b-41d4-a716-446655440404', '550e8400-e29b-41d4-a716-446655440403', 'APPLIED', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-44665544040b', '550e8400-e29b-41d4-a716-446655440100', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-44665544040b', '550e8400-e29b-41d4-a716-446655440100', '550e8400-e29b-41d4-a716-446655440005', 'APPLIED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-44665544009a', '550e8400-e29b-41d4-a716-446655440098', '550e8400-e29b-41d4-a716-446655440091', 'APPLIED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-44665544040c', '550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440401', 'APPLIED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-44665544040d', '550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440403', 'APPLIED', NOW(), NOW())
     `);
 
     await queryRunner.query(`
@@ -252,14 +258,27 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440094', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440011', 2, NOW()),
         ('550e8400-e29b-41d4-a716-446655440095', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440012', 1, NOW()),
         ('550e8400-e29b-41d4-a716-446655440096', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440013', 1, NOW()),
-        ('550e8400-e29b-41d4-a716-446655440097', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440014', 1, NOW())
+        ('550e8400-e29b-41d4-a716-446655440097', '550e8400-e29b-41d4-a716-446655440092', '550e8400-e29b-41d4-a716-446655440014', 1, NOW()),
+        ('550e8400-e29b-41d4-a716-44665544009b', '550e8400-e29b-41d4-a716-44665544009a', '550e8400-e29b-41d4-a716-446655440010', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-44665544009c', '550e8400-e29b-41d4-a716-44665544009a', '550e8400-e29b-41d4-a716-446655440011', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-44665544009d', '550e8400-e29b-41d4-a716-44665544009a', '550e8400-e29b-41d4-a716-446655440101', 1, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440410', '550e8400-e29b-41d4-a716-44665544040c', '550e8400-e29b-41d4-a716-446655440012', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440411', '550e8400-e29b-41d4-a716-44665544040c', '550e8400-e29b-41d4-a716-446655440013', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440412', '550e8400-e29b-41d4-a716-44665544040c', '550e8400-e29b-41d4-a716-446655440015', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440413', '550e8400-e29b-41d4-a716-44665544040c', '550e8400-e29b-41d4-a716-446655440010', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440414', '550e8400-e29b-41d4-a716-44665544040c', '550e8400-e29b-41d4-a716-446655440016', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440420', '550e8400-e29b-41d4-a716-44665544040d', '550e8400-e29b-41d4-a716-446655440012', 4, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440421', '550e8400-e29b-41d4-a716-44665544040d', '550e8400-e29b-41d4-a716-446655440013', 2, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440422', '550e8400-e29b-41d4-a716-44665544040d', '550e8400-e29b-41d4-a716-446655440015', 3, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440423', '550e8400-e29b-41d4-a716-44665544040d', '550e8400-e29b-41d4-a716-446655440010', 4, NOW()),
+        ('550e8400-e29b-41d4-a716-446655440424', '550e8400-e29b-41d4-a716-44665544040d', '550e8400-e29b-41d4-a716-446655440016', 2, NOW())
     `);
 
     await queryRunner.query(`
       INSERT INTO "interviews" 
         ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440050', 'Entrevista Inicial', 'INDIVIDUAL', '2025-12-05 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440050', 'Entrevista Inicial', 'INDIVIDUAL', '2026-09-07 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW()),
         (
           '550e8400-e29b-41d4-a716-446655440110',
           'Entrevista Técnica',
@@ -270,12 +289,12 @@ export class SeedData9999999999999 implements MigrationInterface {
           NOW(),
           NOW()
         ),
-        ('550e8400-e29b-41d4-a716-446655440300', 'Entrevista Inicial', 'INDIVIDUAL', '2025-12-06 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440301', 'Entrevista Inicial', 'INDIVIDUAL', '2025-12-07 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440407', 'Entrevista HR (George)', 'INDIVIDUAL', '2026-08-29 10:00:00', 'https://meet.google.com/george', 'COMPLETED', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440408', 'Entrevista HR (Fiona)', 'INDIVIDUAL', '2026-08-31 10:00:00', 'https://meet.google.com/fiona', 'COMPLETED', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-446655440409', 'Panel QA Automation (Bob)', 'GROUP', '2026-09-18 10:00:00', 'https://meet.google.com/bob', 'COMPLETED', NOW(), NOW()),
-        ('550e8400-e29b-41d4-a716-44665544040a', 'Entrevista Inicial Full Stack (Charlie)', 'INDIVIDUAL', '2026-09-18 10:00:00', 'https://meet.google.com/charlie', 'COMPLETED', NOW(), NOW())
+        ('550e8400-e29b-41d4-a716-446655440300', 'Entrevista Inicial', 'INDIVIDUAL', '2026-09-10 17:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440301', 'Entrevista Inicial', 'INDIVIDUAL', '2026-09-10 17:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440407', 'Entrevista HR', 'INDIVIDUAL', '2026-08-29 10:00:00', 'https://meet.google.com/george', 'COMPLETED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440408', 'Entrevista HR', 'INDIVIDUAL', '2026-08-31 10:00:00', 'https://meet.google.com/fiona', 'COMPLETED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-446655440409', 'Panel QA Automation', 'GROUP', '2026-09-18 10:00:00', 'https://meet.google.com/bob', 'COMPLETED', NOW(), NOW()),
+        ('550e8400-e29b-41d4-a716-44665544040a', 'Entrevista Inicial Full Stack', 'INDIVIDUAL', '2026-09-18 10:00:00', 'https://meet.google.com/charlie', 'COMPLETED', NOW(), NOW())
     `);
 
     await queryRunner.query(`
@@ -325,7 +344,7 @@ export class SeedData9999999999999 implements MigrationInterface {
 
   }
 
-public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DELETE FROM "work_experiences"`);
     await queryRunner.query(`DELETE FROM "interview_reviews"`);
     await queryRunner.query(`DELETE FROM "interviews"`);
