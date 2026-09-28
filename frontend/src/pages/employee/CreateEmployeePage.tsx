@@ -14,7 +14,7 @@ export const CreateEmployeePage = () => {
 
   const EMPLOYEE_ROLES = [
     { value: 'hr', label: t('employee.rolesList.hr') },
-    { value: 'admin', label: t('employee.rolesList.admin') },
+    { value: 'technical_leader', label: t('employee.rolesList.technical_leader') },
     { value: 'manager', label: t('employee.rolesList.manager') },
   ];
   const form = useForm({
