@@ -10,7 +10,7 @@
     "na": "N/A",
     "rolesList": {
       "hr": "Human Resources",
-      "admin": "Admin",
+      "technical_leader": "Technical Leader",
       "manager": "Manager"
     },
     "create": {

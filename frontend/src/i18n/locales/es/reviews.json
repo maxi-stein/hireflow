@@ -19,10 +19,17 @@
     "unknownJob": "Trabajo Desconocido",
     "unknownPosition": "Puesto Desconocido",
     "candidateSingular": "Candidato",
-    "candidatePlural": "Candidatos"
+    "candidatePlural": "Candidatos",
+    "daysWithoutReview": "{{count}} día sin reseña",
+    "daysWithoutReview_plural": "{{count}} días sin reseña",
+    "interviewDate": "Entrevista: {{date}}",
+    "interviewedBy": "Entrevistó:",
+    "priorityWarning": "Esta reseña supera los {{count}} días de espera — priorizala.",
+    "googleMeet": "Google Meet",
+    "meetingLink": "Enlace de reunión"
   },
   "buttons": {
-    "review": "Evaluar",
+    "review": "Cargar reseña",
     "close": "Cerrar",
     "details": "Detalles",
     "reviews": "reseñas",

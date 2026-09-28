@@ -19,10 +19,17 @@
     "unknownJob": "Unknown Job",
     "unknownPosition": "Unknown Position",
     "candidateSingular": "Candidate",
-    "candidatePlural": "Candidates"
+    "candidatePlural": "Candidates",
+    "daysWithoutReview": "{{count}} day without review",
+    "daysWithoutReview_plural": "{{count}} days without review",
+    "interviewDate": "Interview: {{date}}",
+    "interviewedBy": "Interviewed by:",
+    "priorityWarning": "This review has been pending for over {{count}} days — prioritize it.",
+    "googleMeet": "Google Meet",
+    "meetingLink": "Meeting link"
   },
   "buttons": {
-    "review": "Review",
+    "review": "Upload review",
     "close": "Close",
     "details": "Details",
     "reviews": "reviews",

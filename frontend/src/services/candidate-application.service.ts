@@ -20,6 +20,7 @@ export interface CandidateUser {
 
 export interface Candidate {
   id: string;
+  headline?: string | null;
   user: CandidateUser;
 }
 
