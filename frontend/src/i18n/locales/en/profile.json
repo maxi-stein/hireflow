@@ -117,7 +117,7 @@
       "uploadPhotoFailed": "Failed to upload photo",
       "uploadCvFailed": "Failed to upload CV",
       "openCvFailed": "Failed to open CV",
-      "fileTooLarge": "The file exceeds the maximum size of 4MB",
+      "fileTooLarge": "The file exceeds the maximum size of 5MB",
       "invalidPhotoType": "Invalid format. Only JPEG, PNG, JPG, or WEBP are allowed",
       "invalidCvType": "Invalid format. Only PDF is allowed"
     },
@@ -125,7 +125,8 @@
       "downloadResume": "Download Resume",
       "noResume": "No resume uploaded",
       "joined": "Joined {{date}}"
-    }
+    },
+    "photoMaxSize": "Max. 5MB (JPEG, PNG, WEBP)"
   },
   "password": {
     "title": "Change Password",

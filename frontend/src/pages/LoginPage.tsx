@@ -6,6 +6,7 @@ import { LoginForm } from "../components/auth/LoginForm";
 import { useAppStore } from "../store/useAppStore";
 import { ROUTES } from "../router/routes.config";
 import { AppLogo } from "../components/shared/AppLogo";
+import { candidateService } from "../services/candidate.service";
 import styled from "styled-components";
 
 const Background = styled.div`
@@ -142,9 +143,24 @@ export const LoginPage: React.FC = () => {
       >
         <Box w="100%" maw={420}>
           <LoginForm
-            onSuccess={(loggedInUser) => {
-              // Always redirect to previous page if it's not the home page.
-              // Otherwise, redirect to the Jobs page for candidates or the Dashboard for employees.
+            onSuccess={async (loggedInUser) => {
+              // Check if candidate has an incomplete profile (no work exp AND no education)
+              if (loggedInUser.type === 'candidate') {
+                try {
+                  const profile = await candidateService.getById(loggedInUser.id);
+                  const hasWorkExp = profile.work_experiences && profile.work_experiences.length > 0;
+                  const hasEdu = profile.educations && profile.educations.length > 0;
+
+                  if (!hasWorkExp && !hasEdu) {
+                    navigate(ROUTES.COMMON.PROFILE.path, { replace: true });
+                    return;
+                  }
+                } catch {
+                  // If the check fails, proceed with default redirect
+                }
+              }
+
+              // Default redirect logic
               const pathToRedirect =
                 from && fromPath !== ROUTES.PUBLIC.HOME.path ? from :
                   loggedInUser.type === "candidate"

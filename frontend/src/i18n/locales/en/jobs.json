@@ -105,5 +105,11 @@
       "subtitle": "Send us your CV and a recruiter will reach out when a position that fits your profile comes up.",
       "button": "Upload CV"
     }
+  },
+  "incompleteProfile": {
+    "title": "Incomplete Profile",
+    "message": "We noticed there are incomplete sections in your profile. We recommend adding work experience or education before applying.",
+    "applyAnyway": "Apply anyway",
+    "completeProfile": "Complete profile"
   }
 }

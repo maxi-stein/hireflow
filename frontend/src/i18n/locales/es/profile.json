@@ -117,7 +117,7 @@
       "uploadPhotoFailed": "Error al subir foto",
       "uploadCvFailed": "Error al subir CV",
       "openCvFailed": "Error al abrir CV",
-      "fileTooLarge": "El archivo supera el tamaño máximo de 4MB",
+      "fileTooLarge": "El archivo supera el tamaño máximo de 5MB",
       "invalidPhotoType": "Formato no válido. Solo se permiten: JPEG, PNG, JPG o WEBP",
       "invalidCvType": "Formato no válido. Solo se permite PDF"
     },
@@ -125,7 +125,8 @@
       "downloadResume": "Descargar CV",
       "noResume": "No hay CV subido",
       "joined": "Se unió el {{date}}"
-    }
+    },
+    "photoMaxSize": "Máx. 5MB (JPEG, PNG, WEBP)"
   },
   "password": {
     "title": "Cambiar Contraseña",

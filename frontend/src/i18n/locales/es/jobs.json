@@ -105,5 +105,11 @@
       "subtitle": "Dejanos tu CV y un reclutador te va a contactar cuando aparezca una posición acorde a tu perfil.",
       "button": "Subir CV"
     }
+  },
+  "incompleteProfile": {
+    "title": "Perfil Incompleto",
+    "message": "Notamos que hay secciones de tu perfil sin completar. Te recomendamos agregar experiencia laboral o estudios antes de postularte.",
+    "applyAnyway": "Aplicar de todos modos",
+    "completeProfile": "Completar perfil"
   }
 }

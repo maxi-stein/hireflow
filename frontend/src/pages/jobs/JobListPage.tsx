@@ -1,12 +1,14 @@
 import { Title, Text, Stack, LoadingOverlay, Button, Box } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
+import { useIncompleteProfile } from '../../hooks/useIncompleteProfile';
 import { useAppStore } from '../../store/useAppStore';
 import { JobOfferStatus } from '../../services/job-offer.service';
 import type { JobOffer } from '../../services/job-offer.service';
 import { useEffect, useState } from 'react';
 import { candidateApplicationService } from '../../services/candidate-application.service';
 import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
+import { IncompleteProfileModal } from '../../components/jobs/IncompleteProfileModal';
 import { JobOfferGrid } from '../../components/jobs/JobOfferGrid';
 import { useTranslation } from 'react-i18next';
 
@@ -19,10 +21,13 @@ export const JobListPage = () => {
     candidateId: user?.type === 'candidate' ? user.id : undefined,
   });
 
+  const { isProfileIncomplete } = useIncompleteProfile(user?.type === 'candidate' ? user.id : '');
+
   const [appliedJobIds, setAppliedJobIds] = useState<Set<string>>(new Set());
   const [applicationsLoading, setApplicationsLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState<JobOffer | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
 
   const fetchApplications = async () => {
     if (user?.type === 'candidate' && user.id) {
@@ -56,6 +61,12 @@ export const JobListPage = () => {
 
     if (user.type === 'employee') {
       navigate('/manage/dashboard');
+      return;
+    }
+
+    if (isProfileIncomplete) {
+      setSelectedJob(job);
+      setWarningModalOpen(true);
       return;
     }
 
@@ -144,6 +155,15 @@ export const JobListPage = () => {
               onSuccess={handleApplicationSuccess}
             />
           )}
+
+          <IncompleteProfileModal
+            opened={warningModalOpen}
+            onClose={() => setWarningModalOpen(false)}
+            onApplyAnyway={() => {
+              setWarningModalOpen(false);
+              setModalOpen(true);
+            }}
+          />
         </Stack>
       </Box>
     </Box>

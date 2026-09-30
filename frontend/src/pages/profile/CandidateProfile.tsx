@@ -71,7 +71,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
   const handlePhotoUpload = async (file: File | null) => {
     if (!file) return;
 
-    if (file.size > 4 * 1024 * 1024) {
+    if (file.size > 5 * 1024 * 1024) {
       notifications.show({
         title: t('candidate.notifications.errorTitle'),
         message: t('candidate.notifications.fileTooLarge'),
@@ -134,6 +134,7 @@ export const CandidateProfile = ({ user, refreshProfile }: CandidateProfileProps
               <FileButton onChange={handlePhotoUpload} accept="image/png,image/jpeg,image/jpg,image/webp" >
                 {(props) => <Button variant="subtle" size="xs" loading={uploadingPhoto} {...props}>{t('candidate.changePhoto')}</Button>}
               </FileButton>
+              <Text size="xs" c="dimmed">{t('candidate.photoMaxSize')}</Text>
             </Stack>
             <Stack gap={0}>
               <Title order={2}>{user.first_name} {user.last_name}</Title>
