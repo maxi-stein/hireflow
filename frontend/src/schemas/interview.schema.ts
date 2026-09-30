@@ -22,7 +22,9 @@ export const scheduleInterviewSchema = Joi.object({
     "date.min": "Interview date cannot be in the past",
     "any.required": "Date and time is required",
   }),
-  meetingLink: Joi.string().uri().allow("").optional().messages({
+  meetingLink: Joi.string().uri().required().messages({
     "string.uri": "Meeting link must be a valid URL",
+    "any.required": "Meeting link is required",
+    "string.empty": "Meeting link is required",
   }),
 });

@@ -194,6 +194,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
             }}
             searchable
             clearable
+            withAsterisk
             disabled={!!initialApplicationId || !!interviewToEdit} // Lock job offer if context is fixed
           />
 
@@ -203,6 +204,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
               { value: InterviewType.INDIVIDUAL, label: t('modal.types.individual') },
               { value: InterviewType.GROUP, label: t('modal.types.group') },
             ]}
+            withAsterisk
             {...form.getInputProps('type')}
           />
 
@@ -215,6 +217,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
                 label: `${app.candidate.user.first_name} ${app.candidate.user.last_name}`
               }))}
               searchable
+              withAsterisk
               {...form.getInputProps('applicationIds')}
               disabled={!selectedJobOfferId}
             />
@@ -227,6 +230,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
                 label: `${app.candidate.user.first_name} ${app.candidate.user.last_name}`
               }))}
               searchable
+              withAsterisk
               value={form.values.applicationIds[0] || ''}
               onChange={(val) => form.setFieldValue('applicationIds', val ? [val] : [])}
               error={form.errors.applicationIds}
@@ -242,6 +246,7 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
               label: `${emp.user.first_name} ${emp.user.last_name}`
             })) || []}
             searchable
+            withAsterisk
             {...form.getInputProps('interviewerIds')}
           />
 
@@ -249,12 +254,14 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
             label={t('modal.labels.dateTime')}
             placeholder={t('modal.labels.dateTimePlaceholder')}
             minDate={new Date()}
+            withAsterisk
             {...form.getInputProps('scheduledTime')}
           />
 
           <TextInput
             label={t('modal.labels.meetingLink')}
             placeholder={t('modal.labels.meetingLinkPlaceholder')}
+            withAsterisk
             {...form.getInputProps('meetingLink')}
           />
 
