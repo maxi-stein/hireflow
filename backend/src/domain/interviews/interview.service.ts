@@ -102,6 +102,7 @@ export class InterviewService {
 
     // Creating the interview
     const interview = this.interviewRepository.create({
+      title: createDto.title,
       type: createDto.type,
       scheduled_time: createDto.scheduled_time,
       meeting_link: createDto.meeting_link,
@@ -288,6 +289,7 @@ export class InterviewService {
 
     const oldScheduledTime = interview.scheduled_time;
 
+    if (updateDto.title) interview.title = updateDto.title;
     if (updateDto.type) interview.type = updateDto.type;
     if (updateDto.scheduled_time) {
       interview.scheduled_time = updateDto.scheduled_time;
