@@ -16,9 +16,6 @@ export function MainLayout() {
         },
         main: {
           width: '100%',
-          maxWidth: '1340px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
         }
       }}
     >
