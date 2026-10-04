@@ -16,7 +16,9 @@ import {
 } from '../../../shared/dto/pagination/pagination.dto';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-
+import { JwtUser } from '../interfaces/jwt.user';
+import { UserType } from '../interfaces/user.enum';
+import { ForbiddenException } from '@nestjs/common';
 @Injectable()
 export class EducationService {
   constructor(
@@ -26,7 +28,12 @@ export class EducationService {
 
   async create(
     createEducationDto: CreateEducationDto,
+    user: JwtUser,
   ): Promise<EducationResponseDto> {
+    if (user.user_type === UserType.CANDIDATE && createEducationDto.candidate_id !== user.entity_id) {
+      throw new ForbiddenException('Cannot create education for another candidate');
+    }
+
     return this.educationRepository.manager.transaction(
       async (transactionalEntityManager) => {
         // Validate if the candidate exists
@@ -77,7 +84,7 @@ export class EducationService {
     };
   }
 
-  async findOne(id: string): Promise<EducationResponseDto> {
+  async findOne(id: string, user?: JwtUser): Promise<EducationResponseDto> {
     const education = await this.educationRepository.findOne({
       where: { id },
       relations: ['candidate'],
@@ -88,12 +95,17 @@ export class EducationService {
       throw new NotFoundException(`Education with ID ${id} not found`);
     }
 
+    if (user && user.user_type === UserType.CANDIDATE && education.candidate.id !== user.entity_id) {
+      throw new ForbiddenException('You do not have access to this education');
+    }
+
     return this.mapToResponseDto(education);
   }
 
   async update(
     id: string,
     updateEducationDto: UpdateEducationDto,
+    user: JwtUser,
     manager?: EntityManager,
   ): Promise<EducationResponseDto> {
     const entityManager = manager || this.educationRepository.manager;
@@ -106,6 +118,10 @@ export class EducationService {
 
       if (!education) {
         throw new NotFoundException(`Education with ID ${id} not found`);
+      }
+
+      if (user.user_type === UserType.CANDIDATE && education.candidate.id !== user.entity_id) {
+        throw new ForbiddenException('You do not have access to update this education');
       }
 
       if (updateEducationDto.institution) {
@@ -168,7 +184,17 @@ export class EducationService {
     return null;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, user: JwtUser): Promise<void> {
+    const education = await this.educationRepository.findOne({ where: { id }, relations: ['candidate'] });
+    
+    if (!education) {
+      throw new NotFoundException(`Education with ID ${id} not found`);
+    }
+
+    if (user.user_type === UserType.CANDIDATE && education.candidate.id !== user.entity_id) {
+      throw new ForbiddenException('You do not have access to delete this education');
+    }
+
     const result = await this.educationRepository.delete(id);
 
     if (result.affected === 0) {

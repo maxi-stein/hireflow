@@ -22,6 +22,9 @@ import { NotEmptyDtoPipe, UuidValidationPipe } from 'src/shared/pipes';
 import { FilterJobOfferDto } from './dto/filter-job-offer-dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { HideEmployeeFieldsInterceptor } from './interceptors/hide-employee-fields.interceptor';
+import { RequireUserType } from '../auth/decorators/roles.decorator';
+import { UserTypeGuard } from '../auth/guards/roles.guard';
+import { UserType } from '../users/interfaces/user.enum';
 
 @Controller('job-offers')
 @UseGuards(JwtAuthGuard)
@@ -30,6 +33,8 @@ export class JobOfferController {
   constructor(private readonly jobOfferService: JobOfferService) { }
 
   @Post()
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   async create(@Body() createJobOfferDto: CreateJobOfferDto) {
     return await this.jobOfferService.create(createJobOfferDto);
   }
@@ -49,6 +54,8 @@ export class JobOfferController {
   }
 
   @Patch(':id')
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   async update(
     @Param('id', UuidValidationPipe) id: string,
     @Body(NotEmptyDtoPipe) updateJobOfferDto: UpdateJobOfferDto,
@@ -57,6 +64,8 @@ export class JobOfferController {
   }
 
   @Delete(':id')
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   async remove(@Param('id', UuidValidationPipe) id: string) {
     return await this.jobOfferService.softDelete(id);
   }

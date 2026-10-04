@@ -36,16 +36,22 @@ export class EmployeesController {
   }
 
   @Get()
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   findAll(@Query() paginationDto: PaginationDto) {
     return this.employeesService.findAll(paginationDto);
   }
 
   @Get(':id')
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   findOne(@Param('id', UuidValidationPipe) id: string) {
     return this.employeesService.findOne(id);
   }
 
   @Patch(':id')
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   update(
     @Param('id', UuidValidationPipe) id: string,
     @Body(NotEmptyDtoPipe) updateEmployeeDto: UpdateEmployeeDto,
@@ -54,6 +60,8 @@ export class EmployeesController {
   }
 
   @Delete(':id')
+  @UseGuards(UserTypeGuard)
+  @RequireUserType(UserType.EMPLOYEE)
   remove(@Param('id', UuidValidationPipe) id: string) {
     return this.employeesService.remove(id);
   }

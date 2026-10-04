@@ -8,7 +8,9 @@ import { EntityManager, Repository } from 'typeorm';
 import { WorkExperience } from '../entities/work-experience.entity';
 import { CreateWorkExperienceDto } from '../dto/work-experience/create-work-experience.dto';
 import { UpdateWorkExperienceDto } from '../dto/work-experience/update-work-experience.dto';
-
+import { JwtUser } from '../interfaces/jwt.user';
+import { UserType } from '../interfaces/user.enum';
+import { ForbiddenException } from '@nestjs/common';
 @Injectable()
 export class WorkExperienceService {
   constructor(
@@ -19,7 +21,12 @@ export class WorkExperienceService {
   async create(
     candidateId: string,
     createDto: CreateWorkExperienceDto,
+    user: JwtUser,
   ): Promise<WorkExperience> {
+    if (user.user_type === UserType.CANDIDATE && candidateId !== user.entity_id) {
+      throw new ForbiddenException('Cannot create work experience for another candidate');
+    }
+
     // Validate dates
     this.validateWorkExperienceDates(createDto);
 
@@ -38,7 +45,7 @@ export class WorkExperienceService {
     });
   }
 
-  async findOne(id: string): Promise<WorkExperience> {
+  async findOne(id: string, user?: JwtUser): Promise<WorkExperience> {
     const workExperience = await this.workExperienceRepository.findOne({
       where: { id },
       relations: ['candidate'],
@@ -48,14 +55,19 @@ export class WorkExperienceService {
       throw new NotFoundException(`Work experience with ID ${id} not found`);
     }
 
+    if (user && user.user_type === UserType.CANDIDATE && workExperience.candidate.id !== user.entity_id) {
+      throw new ForbiddenException('You do not have access to this work experience');
+    }
+
     return workExperience;
   }
 
   async update(
     id: string,
     updateDto: UpdateWorkExperienceDto,
+    user: JwtUser,
   ): Promise<WorkExperience> {
-    const workExperience = await this.findOne(id);
+    const workExperience = await this.findOne(id, user);
 
     // Validate if dates are updating
     if (updateDto.start_date || updateDto.end_date) {
@@ -67,8 +79,8 @@ export class WorkExperienceService {
     return await this.workExperienceRepository.save(workExperience);
   }
 
-  async remove(id: string): Promise<void> {
-    const workExperience = await this.findOne(id);
+  async remove(id: string, user: JwtUser): Promise<void> {
+    const workExperience = await this.findOne(id, user);
     await this.workExperienceRepository.remove(workExperience);
   }
 
