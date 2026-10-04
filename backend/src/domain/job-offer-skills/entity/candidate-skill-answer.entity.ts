@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { JobOfferSkill } from './job-offer-skill.entity';
-import { CandidateApplication } from '../../../candidate-application/entities/candidate-application.entity';
+import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
 
 @Entity('candidate_skill_answers')
 export class CandidateSkillAnswer {

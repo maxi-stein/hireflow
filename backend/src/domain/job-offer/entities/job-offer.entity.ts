@@ -12,7 +12,7 @@ import {
 import { JobOfferStatus } from '../interfaces/job-offer-status.enum';
 import { WorkMode } from '../interfaces/work-mode.enum';
 import { JobOfferSkill } from '../../job-offer-skills/entity/job-offer-skill.entity';
-import { CandidateApplication } from '../../../candidate-application/entities/candidate-application.entity';
+import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
 
 @Entity('job_offers')
 export class JobOffer {

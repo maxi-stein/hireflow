@@ -9,9 +9,9 @@ import { Education } from '../../domain/users/entities/education.entity';
 import { CandidateApplication } from '../../domain/candidate-application/entities/candidate-application.entity';
 import { Interview } from '../../domain/interviews/entities/interview.entity';
 import { InterviewReview } from '../../domain/interview-review/entity/interview-review.entity';
-import { JobOffer } from '../../domain/job-offer/job-offer/entities/job-offer.entity';
-import { JobOfferSkill } from '../../domain/job-offer/job-offer-skills/entity/job-offer-skill.entity';
-import { CandidateSkillAnswer } from '../../domain/job-offer/job-offer-skills/entity/candidate-skill-answer.entity';
+import { JobOffer } from '../../domain/job-offer/entities/job-offer.entity';
+import { JobOfferSkill } from '../../domain/job-offer-skills/entity/job-offer-skill.entity';
+import { CandidateSkillAnswer } from '../../domain/job-offer-skills/entity/candidate-skill-answer.entity';
 import { WorkExperience } from '../../domain/users/entities/work-experience.entity';
 import { UserFile } from '../../domain/users/entities/user-files.entity';
 

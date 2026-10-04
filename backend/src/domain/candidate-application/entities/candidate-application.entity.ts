@@ -15,8 +15,8 @@ import { ApplicationStatus } from '../interfaces/application-status';
 import { Candidate } from '../../users/entities';
 import { Interview } from '../../interviews/entities/interview.entity';
 import { InterviewReview } from '../../interview-review/entity/interview-review.entity';
-import { CandidateSkillAnswer } from '../../job-offer/job-offer-skills/entity/candidate-skill-answer.entity';
-import { JobOffer } from '../../job-offer/job-offer/entities/job-offer.entity';
+import { CandidateSkillAnswer } from '../../job-offer-skills/entity/candidate-skill-answer.entity';
+import { JobOffer } from '../../job-offer/entities/job-offer.entity';
 
 @Entity('candidate_applications')
 @Unique(['job_offer_id', 'candidate_id'])

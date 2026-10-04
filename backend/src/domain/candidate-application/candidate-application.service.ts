@@ -12,10 +12,10 @@ import { PaginatedResponse } from '../../shared/dto/pagination/pagination.dto';
 import { CandidateApplication } from './entities/candidate-application.entity';
 import { ApplicationStatus } from './interfaces/application-status';
 import { FilterApplicationsDto } from './dto/filter-applications.dto';
-import { JobOfferSkillService } from '../job-offer/job-offer-skills/job-offer-skill.service';
-import { CandidateSkillAnswerService } from '../job-offer/job-offer-skills/candidate-skill-answer.service';
-import { JobOfferService } from '../job-offer/job-offer/job-offer.service';
-import { CreateCandidateSkillAnswerDto } from '../job-offer/job-offer-skills/dto/create-candidate-skill-answer.dto';
+import { JobOfferSkillService } from '../job-offer-skills/job-offer-skill.service';
+import { CandidateSkillAnswerService } from '../job-offer-skills/candidate-skill-answer.service';
+import { JobOfferService } from '../job-offer/job-offer.service';
+import { CreateCandidateSkillAnswerDto } from '../job-offer-skills/dto/create-candidate-skill-answer.dto';
 import { MailerService } from '../mailer/mailer.service';
 import { EmailTemplateType } from '../mailer/utils/email-template.factory';
 
@@ -32,7 +32,7 @@ export class CandidateApplicationService {
     private readonly jobOfferSkillService: JobOfferSkillService,
     @Inject(MailerService)
     private readonly mailerService: MailerService,
-  ) {}
+  ) { }
 
   async create(
     createDto: CreateCandidateApplicationDto,

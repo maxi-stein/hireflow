@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, IsUUID, ValidateNested } from 'class-validator';
-import { CreateCandidateSkillAnswerDto } from '../../job-offer/job-offer-skills/dto/create-candidate-skill-answer.dto';
+import { CreateCandidateSkillAnswerDto } from '../../job-offer-skills/dto/create-candidate-skill-answer.dto';
 
 export class CreateCandidateApplicationDto {
   @IsUUID()

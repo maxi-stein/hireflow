@@ -10,9 +10,9 @@ import {
 import { FilterJobOfferDto } from './dto/filter-job-offer-dto';
 import { JobOfferStatus } from './interfaces';
 import { JobOfferSkillService } from '../job-offer-skills/job-offer-skill.service';
-import { PaginatedResponse } from '../../../shared/dto/pagination/pagination.dto';
-import { CandidateApplication } from '../../candidate-application/entities/candidate-application.entity';
-import { ApplicationStatus } from '../../candidate-application/interfaces/application-status';
+import { PaginatedResponse } from '../../shared/dto/pagination/pagination.dto';
+import { CandidateApplication } from '../candidate-application/entities/candidate-application.entity';
+import { ApplicationStatus } from '../candidate-application/interfaces/application-status';
 
 @Injectable()
 export class JobOfferService {
@@ -21,7 +21,7 @@ export class JobOfferService {
     private readonly jobOfferRepository: Repository<JobOffer>,
     @Inject(JobOfferSkillService)
     private readonly jobOfferSkillService: JobOfferSkillService,
-  ) {}
+  ) { }
 
   async create(
     createJobOfferDto: CreateJobOfferDto,

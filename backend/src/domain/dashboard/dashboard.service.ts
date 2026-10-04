@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { JobOfferService } from '../job-offer/job-offer/job-offer.service';
-import { JobOfferStatus } from '../job-offer/job-offer/interfaces';
+import { JobOfferService } from '../job-offer/job-offer.service';
+import { JobOfferStatus } from '../job-offer/interfaces';
 import { CandidateApplicationService } from '../candidate-application/candidate-application.service';
 import { InterviewService } from '../interviews/interview.service';
 import { InterviewStatus } from '../interviews/interfaces/interview-status.enum';
@@ -18,7 +18,7 @@ export class DashboardService {
     private readonly interviewService: InterviewService,
     @Inject(InterviewReviewService)
     private readonly interviewReviewService: InterviewReviewService,
-  ) {}
+  ) { }
 
   async getMetrics(employeeId: string) {
     const startOfToday = new Date();
@@ -98,7 +98,7 @@ export class DashboardService {
     const weeksCount = 8;
     const applicationsPerWeek = [];
     const now = new Date();
-    
+
     // Normalize to start of current week (Monday)
     const currentWeekStart = new Date(now);
     currentWeekStart.setHours(0, 0, 0, 0);
@@ -109,7 +109,7 @@ export class DashboardService {
     for (let i = weeksCount - 1; i >= 0; i--) {
       const weekStart = new Date(currentWeekStart);
       weekStart.setDate(weekStart.getDate() - (i * 7));
-      
+
       const weekEnd = new Date(weekStart);
       weekEnd.setDate(weekEnd.getDate() + 6);
       weekEnd.setHours(23, 59, 59, 999);

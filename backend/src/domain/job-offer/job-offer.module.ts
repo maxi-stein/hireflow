@@ -16,4 +16,4 @@ import { CandidateSkillAnswer } from '../job-offer-skills/entity/candidate-skill
   providers: [JobOfferService, JobOfferSkillService],
   exports: [JobOfferService, JobOfferSkillService],
 })
-export class JobOfferModule {}
+export class JobOfferModule { }

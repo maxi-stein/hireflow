@@ -17,7 +17,7 @@ import { EmployeesModule } from 'src/domain/users/employee/employee.module';
 import { CandidateApplicationModule } from '../domain/candidate-application/candidate-application.module';
 import { InterviewModule } from '../domain/interviews/interview.module';
 import { InterviewReviewModule } from '../domain/interview-review/interview-review.module';
-import { JobOfferModule } from '../domain/job-offer/job-offer/job-offer.module';
+import { JobOfferModule } from '../domain/job-offer/job-offer.module';
 import { UserFileModule } from '../domain/users/user-file/user-file.module';
 import { DashboardModule } from 'src/domain/dashboard/dashboard.module';
 import { WorkExperienceModule } from '../domain/users/work-experience/work-experience.module';
@@ -75,4 +75,4 @@ import { mailerConfig } from 'src/config/mailer.config';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

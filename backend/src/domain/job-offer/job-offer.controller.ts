@@ -10,7 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Public } from '../../auth/decorators/public.decorator';
+import { Public } from '../auth/decorators/public.decorator';
 import { JobOfferService } from './job-offer.service';
 import {
   CreateJobOfferDto,
@@ -20,14 +20,14 @@ import {
 import { PaginatedResponse } from 'src/shared/dto/pagination/pagination.dto';
 import { NotEmptyDtoPipe, UuidValidationPipe } from 'src/shared/pipes';
 import { FilterJobOfferDto } from './dto/filter-job-offer-dto';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { HideEmployeeFieldsInterceptor } from './interceptors/hide-employee-fields.interceptor';
 
 @Controller('job-offers')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(HideEmployeeFieldsInterceptor)
 export class JobOfferController {
-  constructor(private readonly jobOfferService: JobOfferService) {}
+  constructor(private readonly jobOfferService: JobOfferService) { }
 
   @Post()
   async create(@Body() createJobOfferDto: CreateJobOfferDto) {
