@@ -1,18 +1,18 @@
 {
-  "title": "Mis Reseñas",
+  "title": "Mis Evaluaciones",
   "tabs": {
-    "pending": "Reseñas Pendientes",
-    "completed": "Reseñas Completadas"
+    "pending": "Evaluaciones Pendientes",
+    "completed": "Evaluaciones Completadas"
   },
   "searchPlaceholder": "Buscar por nombre de candidato...",
   "empty": {
-    "pending": "No se encontraron reseñas pendientes.",
-    "completed": "Aún no hay reseñas.",
-    "team": "No se encontraron reseñas del equipo."
+    "pending": "No se encontraron evaluaciones pendientes.",
+    "completed": "Aún no hay evaluaciones.",
+    "team": "No se encontraron evaluaciones del equipo."
   },
   "sections": {
-    "myReviews": "Mis Reseñas",
-    "teamReviews": "Reseñas del Equipo"
+    "myReviews": "Mis Evaluaciones",
+    "teamReviews": "Evaluaciones del Equipo"
   },
   "card": {
     "by": "Por:",
@@ -20,24 +20,24 @@
     "unknownPosition": "Puesto Desconocido",
     "candidateSingular": "Candidato",
     "candidatePlural": "Candidatos",
-    "daysWithoutReview": "{{count}} día sin reseña",
-    "daysWithoutReview_plural": "{{count}} días sin reseña",
+    "daysWithoutReview": "{{count}} día sin evaluación",
+    "daysWithoutReview_plural": "{{count}} días sin evaluación",
     "interviewDate": "Entrevista: {{date}}",
     "interviewedBy": "Entrevistó:",
-    "priorityWarning": "Esta reseña supera los {{count}} días de espera — priorizala.",
+    "priorityWarning": "Esta evaluación supera los {{count}} días de espera — priorizala.",
     "googleMeet": "Google Meet",
     "meetingLink": "Enlace de reunión"
   },
   "buttons": {
-    "review": "Cargar reseña",
+    "review": "Cargar evaluación",
     "close": "Cerrar",
     "details": "Detalles",
-    "reviews": "reseñas",
-    "reviewSingular": "reseña"
+    "reviews": "evaluaciones",
+    "reviewSingular": "evaluación"
   },
   "form": {
-    "title": "Crear Reseña",
-    "editTitle": "Editar Reseña",
+    "title": "Crear Evaluación",
+    "editTitle": "Editar Evaluación",
     "labels": {
       "candidate": "Candidato",
       "position": "Puesto",
@@ -53,16 +53,16 @@
       "weaknessesPlaceholder": "Agregar debilidades"
     },
     "buttons": {
-      "submit": "Enviar Reseña",
-      "update": "Actualizar Reseña",
+      "submit": "Enviar Evaluación",
+      "update": "Actualizar Evaluación",
       "reset": "Reiniciar"
     },
     "notifications": {
       "missingData": "Datos de usuario o entrevista faltantes",
       "noApp": "No se encontró aplicación para esta entrevista",
-      "createSuccess": "Reseña enviada exitosamente",
-      "updateSuccess": "Reseña actualizada exitosamente",
-      "submitError": "Error al enviar reseña",
+      "createSuccess": "Evaluación enviada exitosamente",
+      "updateSuccess": "Evaluación actualizada exitosamente",
+      "submitError": "Error al enviar evaluación",
       "validationError": "Por favor verifique los errores en el formulario",
       "notFound": "Entrevista no encontrada"
     }
@@ -71,8 +71,8 @@
     "noInterviews": "No hay entrevistas programadas",
     "interviewScheduled": "Programada",
     "interviewCompleted": "Entrevista Completada",
-    "interviewReview": "Reseña de Entrevista",
-    "reviewPending": "Reseña Pendiente",
+    "interviewReview": "Evaluación de Entrevista",
+    "reviewPending": "Evaluación Pendiente",
     "waitingFeedback": "Entrevista completada. Esperando comentarios.",
     "by": "Por",
     "score": "Puntaje",
@@ -81,11 +81,11 @@
     "viewDetails": "Ver detalles",
     "notHappenedYet": "Aún no sucede",
     "noScore": "Sin puntaje",
-    "reviewPendingBadge": "Reseña pendiente",
+    "reviewPendingBadge": "Evaluación pendiente",
     "scheduledBadge": "Programada",
-    "interviewPastNoReview": "La entrevista ya sucedió, falta la reseña del entrevistador.",
+    "interviewPastNoReview": "La entrevista ya sucedió, falta la evaluación del entrevistador.",
     "interviewNotHappenedYet": "Todavía no se realizó",
-    "uploadReview": "Cargar Reseña",
+    "uploadReview": "Cargar Evaluación",
     "viewSchedule": "Ver Agenda",
     "showMore": "Ver más",
     "showLess": "Ver menos",

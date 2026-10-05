@@ -5,7 +5,7 @@
     "activeJobOffers": "Ofertas de Trabajo Activas",
     "applicationsToday": "Aplicaciones Hoy",
     "pendingInterviews": "Entrevistas Pendientes",
-    "pendingReviews": "Reseñas Pendientes"
+    "pendingReviews": "Evaluaciones Pendientes"
   },
   "candidatesPerJob": {
     "title": "Candidatos por Trabajo Activo"
@@ -16,9 +16,9 @@
     "empty": "No hay datos suficientes"
   },
   "pendingReviews": {
-    "title": "Reseñas Pendientes",
+    "title": "Evaluaciones Pendientes",
     "viewAll": "Ver Todo",
-    "empty": "No hay reseñas pendientes"
+    "empty": "No hay evaluaciones pendientes"
   },
   "upcomingInterviews": {
     "title": "Próximas Entrevistas",
