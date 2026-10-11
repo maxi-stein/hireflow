@@ -29,7 +29,7 @@ export function JobPostingsPage() {
 
   // Search by position (with debounce)
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 1000);
+  const [debouncedSearch] = useDebouncedValue(search, 300);
 
   // Filter by status
   const [filter, setFilter] = useState<string | null>(null);
