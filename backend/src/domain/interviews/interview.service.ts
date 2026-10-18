@@ -302,7 +302,8 @@ export class InterviewService {
 
     if (
       updateDto.scheduled_time &&
-      new Date(oldScheduledTime).getTime() !== new Date(updateDto.scheduled_time).getTime()
+      new Date(oldScheduledTime).getTime() !==
+        new Date(updateDto.scheduled_time).getTime()
     ) {
       for (const app of interview.applications) {
         await this.mailerService.sendMail(
