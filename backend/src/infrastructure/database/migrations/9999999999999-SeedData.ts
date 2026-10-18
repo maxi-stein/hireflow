@@ -159,7 +159,7 @@ export class SeedData9999999999999 implements MigrationInterface {
         'Buscamos un QA Automation Engineer con experiencia en automatización de pruebas, integración continua y aseguramiento de calidad de aplicaciones web.',
         '50000-70000',
         'Cobertura médica, capacitaciones técnicas, horario flexible y bonos por desempeño',
-        'OPEN', false, NOW(), NOW(), '2026-07-01'),
+        'OPEN', false, NOW(), NOW(), '2026-09-21'),
         ('550e8400-e29b-41d4-a716-446655440404', 'Junior Node Dev', 'Remoto', 'remote', 'Desarrollador Junior Node.js.', '30000-40000', 'Seguro médico', 'OPEN', false, NOW(), NOW(), '2026-12-31')
     `);
 
@@ -341,7 +341,6 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440201', '550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440081', '550e8400-e29b-41d4-a716-446655440008', 'Muy buena actitud, aunque le falta un poco de experiencia en backend.', 3, 'Proactividad', 'Backend,Node.js', NOW(), NOW()),
         ('550e8400-e29b-41d4-a716-446655440302', '550e8400-e29b-41d4-a716-446655440300', '550e8400-e29b-41d4-a716-446655440083', '550e8400-e29b-41d4-a716-44665544000a', 'Buen candidato, conocimientos acordes.', 3, 'Backend', 'Testing', NOW(), NOW())
     `);
-
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
