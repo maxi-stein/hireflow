@@ -46,5 +46,7 @@ async function bootstrap() {
 
   // set port
   await app.listen(appConfig.port);
+
+  console.info(`Server running on http://localhost:${appConfig.port}`);
 }
 bootstrap();
