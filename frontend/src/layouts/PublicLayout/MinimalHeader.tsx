@@ -6,6 +6,7 @@ import { UserMenu } from '../../components/shared/UserMenu';
 import { APP_MAX_WIDTH } from '../../constants/layout';
 import { LogoButton } from '../../components/shared/LogoButton.styled';
 import { AppLogo } from '../../components/shared/AppLogo';
+import { LanguageSelector } from '../../components/shared/LanguageSelector';
 
 export function MinimalHeader() {
   const navigate = useNavigate();
@@ -38,14 +39,15 @@ export function MinimalHeader() {
         </LogoButton>
       </Group>
 
-      <Group>
+      <Group gap="sm" align="center" wrap="nowrap">
+        <LanguageSelector />
         {user ? (
           <UserMenu />
         ) : (
-          <>
-            <Button variant="subtle" onClick={handleLogin}>{t('login')}</Button>
-            <Button onClick={handleRegister}>{t('register')}</Button>
-          </>
+          <Group gap="xs" wrap="nowrap">
+            <Button variant="subtle" size="sm" onClick={handleLogin}>{t('login', 'Ingresar')}</Button>
+            <Button size="sm" radius="md" color="blue" onClick={handleRegister}>{t('register', 'Registrarse')}</Button>
+          </Group>
         )}
       </Group>
     </Group>

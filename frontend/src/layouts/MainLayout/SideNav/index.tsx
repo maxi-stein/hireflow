@@ -1,9 +1,10 @@
-import { Stack, Title } from '@mantine/core';
+import { Stack, Title, Divider, Group, Button } from '@mantine/core';
 import { useLocation, useNavigate, matchPath } from 'react-router-dom';
 import { useAppStore } from '../../../store/useAppStore';
 import { getNavItemsForUser, getAllRoutes, type RouteConfig } from '../../../router/routes.config';
 import { StyledNavLink } from './styled';
 import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from '../../../components/shared/LanguageSelector';
 
 interface SideNavProps {
   onNavigate?: () => void;
@@ -86,6 +87,30 @@ export function SideNav({ onNavigate }: SideNavProps) {
           )
         })}
       </Stack>
+
+      <Divider color="rgba(255, 255, 255, 0.15)" my="sm" />
+      <Group justify="space-between" align="center" px="xs">
+        <LanguageSelector color="white" />
+        {!user && (
+          <Group gap="xs">
+            <Button
+              variant="subtle"
+              size="xs"
+              c="white"
+              onClick={() => handleNavigate('/login')}
+            >
+              {t('login', 'Ingresar')}
+            </Button>
+            <Button
+              size="xs"
+              color="blue"
+              onClick={() => handleNavigate('/register')}
+            >
+              {t('register', 'Registrarse')}
+            </Button>
+          </Group>
+        )}
+      </Group>
     </Stack>
   );
 }

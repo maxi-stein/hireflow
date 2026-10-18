@@ -8,6 +8,7 @@ import {
   Drawer,
   ScrollArea,
   Container,
+  Button,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { useEffect } from 'react';
@@ -158,10 +159,37 @@ export function MainHeader() {
           </Group>
 
           {/* ── Right: language + user ── */}
-          <Group gap="md" wrap="nowrap">
-            <LanguageSelector />
-            <Divider orientation="vertical" h={20} my="auto" opacity={0.4} />
-            <UserMenu />
+          <Group gap="sm" wrap="nowrap" align="center">
+            <LanguageSelector color="white" />
+            {user ? (
+              <>
+                <Divider orientation="vertical" h={20} my="auto" opacity={0.4} />
+                <UserMenu />
+              </>
+            ) : (
+              <Group gap="xs" wrap="nowrap">
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  size="xs"
+                  c="white"
+                  onClick={() => navigate('/login')}
+                  style={{ fontWeight: 600 }}
+                >
+                  {t('login', 'Ingresar')}
+                </Button>
+                <Button
+                  variant="filled"
+                  color="blue"
+                  size="xs"
+                  radius="md"
+                  onClick={() => navigate('/register')}
+                  style={{ fontWeight: 600 }}
+                >
+                  {t('register', 'Registrarse')}
+                </Button>
+              </Group>
+            )}
           </Group>
         </Group>
       </Container>

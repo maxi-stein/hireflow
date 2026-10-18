@@ -9,7 +9,7 @@ export function MainLayout() {
   return (
     <AppShell
       header={{ height: 64 }}
-      bg={computedColorScheme === 'dark' ? 'dark.8' : 'oklch(99% .005 240)'}
+      bg={computedColorScheme === 'dark' ? '#0b1120' : '#f8fafc'}
       styles={{
         header: {
           backgroundColor: 'light-dark(#112240, rgb(24, 24, 24))'
