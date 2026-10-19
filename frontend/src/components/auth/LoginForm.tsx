@@ -8,8 +8,10 @@ import {
   Anchor,
   Stack,
   Box,
+  Divider,
+  Text,
 } from "@mantine/core";
-import { IconBrandGoogle } from "@tabler/icons-react";
+import { IconBrandGoogle, IconMail, IconLock, IconArrowRight } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { loginSchema } from "../../schemas/auth.schema";
 import { useLoginMutation } from "../../hooks/api/useAuth";
@@ -43,8 +45,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         setAuth(data.user, data.access_token);
 
         notifications.show({
-          title: t("loginForm.notifications.successTitle"),
-          message: t("loginForm.notifications.successMessage"),
+          title: t("loginForm.notifications.successTitle", "Sesión iniciada"),
+          message: t("loginForm.notifications.successMessage", "¡Bienvenido de nuevo a HireFlow!"),
           color: "green",
         });
         if (onSuccess) {
@@ -56,11 +58,11 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
       onError: (error: any) => {
         const backendMsg = error.response?.data?.message;
         const localizedError = (backendMsg === 'Invalid credentials' || backendMsg === 'Unauthorized')
-          ? t("loginForm.notifications.errorMessage")
-          : (backendMsg || t("loginForm.notifications.errorMessage"));
+          ? t("loginForm.notifications.errorMessage", "Credenciales incorrectas")
+          : (backendMsg || t("loginForm.notifications.errorMessage", "Error al iniciar sesión"));
 
         notifications.show({
-          title: t("loginForm.notifications.errorTitle"),
+          title: t("loginForm.notifications.errorTitle", "Error"),
           message: localizedError,
           color: "red",
         });
@@ -70,64 +72,101 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
   return (
     <Box w="100%" maw={420} mx="auto">
-      <Title ta="center" className="font-greycliff" mb={30}>
-        {t("loginForm.title")}
-      </Title>
+      <Stack gap={6} mb="xl">
+        <Title order={1} size="h2" c="light-dark(#0f172a, #f8fafc)" style={{ fontWeight: 800 }}>
+          {t("loginForm.title", "Iniciar sesión")}
+        </Title>
+        <Text c="dimmed" size="sm">
+          {t("loginForm.subtitle", "Ingresá tus credenciales para acceder a tus postulaciones y perfil.")}
+        </Text>
+      </Stack>
+
+      {/* Google OAuth Button */}
+      <Button
+        fullWidth
+        size="md"
+        variant="default"
+        leftSection={<IconBrandGoogle size={20} />}
+        type="button"
+        style={{
+          borderColor: 'light-dark(#cbd5e1, #334155)',
+          fontWeight: 600,
+          color: 'light-dark(#334155, #f1f5f9)',
+          backgroundColor: 'light-dark(#ffffff, #1e293b)',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+        }}
+        onClick={() => {
+          window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+        }}
+      >
+        {t("loginForm.continueWithGoogle", "Continuar con Google")}
+      </Button>
+
+      <Divider
+        my="lg"
+        label={t("loginForm.orEmail", "o continuar con email")}
+        labelPosition="center"
+        styles={{ label: { color: '#94a3b8', fontSize: '0.8125rem' } }}
+      />
 
       <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-        <Stack>
+        <Stack gap="md">
           <TextInput
-            label={t("loginForm.emailLabel")}
-            placeholder={t("loginForm.emailPlaceholder")}
+            label={t("loginForm.emailLabel", "Correo electrónico")}
+            placeholder={t("loginForm.emailPlaceholder", "tu@email.com")}
             required
+            size="md"
             type="email"
+            leftSection={<IconMail size={18} color="#94a3b8" />}
             {...form.getInputProps("email")}
           />
+
           <PasswordInput
-            label={t("loginForm.passwordLabel")}
-            placeholder={t("loginForm.passwordPlaceholder")}
+            label={t("loginForm.passwordLabel", "Contraseña")}
+            placeholder={t("loginForm.passwordPlaceholder", "••••••••")}
             required
-            mt="md"
+            size="md"
+            leftSection={<IconLock size={18} color="#94a3b8" />}
             {...form.getInputProps("password")}
           />
-        </Stack>
 
-        <Group justify="space-between" mt="lg">
-          <Anchor component="button" type="button" size="sm" onClick={() => { }}>
-            {t("loginForm.forgotPassword")}
-          </Anchor>
-        </Group>
+          <Group justify="flex-end" mt={-4}>
+            <Anchor component="button" type="button" size="xs" c="blue.6" fw={500} onClick={() => { }}>
+              {t("loginForm.forgotPassword", "¿Olvidaste tu contraseña?")}
+            </Anchor>
+          </Group>
 
-        <Stack mt="xl" gap="md">
           <Button
             fullWidth
+            size="md"
             type="submit"
+            color="blue"
             loading={loginMutation.isPending}
-          >
-            {t("loginForm.signIn")}
-          </Button>
-
-          <Button
-            fullWidth
-            variant="default"
-            leftSection={<IconBrandGoogle size={20} />}
-            type="button"
-            onClick={() => {
-              window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+            rightSection={<IconArrowRight size={18} />}
+            style={{
+              fontWeight: 700,
+              marginTop: '8px',
+              boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)',
             }}
           >
-            {t("loginForm.continueWithGoogle")}
+            {t("loginForm.signIn", "Ingresar")}
           </Button>
 
-          <Button
-            fullWidth
-            variant="outline"
-            color="blue"
-            type="button"
-            onClick={() => navigate("/register")}
-          >
-            {t("register")}
-          </Button>
+          <Group justify="center" gap={6} mt="md">
+            <Text size="sm" c="dimmed">
+              {t("loginForm.noAccount", "¿Todavía no tenés cuenta?")}
+            </Text>
+            <Anchor
+              component="button"
+              type="button"
+              size="sm"
+              fw={700}
+              c="blue.6"
+              onClick={() => navigate("/register")}
+            >
+              {t("loginForm.registerFree", "Registrate gratis")}
+            </Anchor>
+          </Group>
         </Stack>
       </form>
     </Box>

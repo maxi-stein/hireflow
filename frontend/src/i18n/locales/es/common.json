@@ -29,10 +29,30 @@
   },
   "na": "N/A",
   "present": "Actualidad",
+  "loginPage": {
+    "backToHome": "Volver al inicio",
+    "showcaseBadge": "Talento Tech & Consultoría",
+    "showcaseTitle": "Tu próximo gran desafío profesional está en Consultoría Global.",
+    "copyright": "© {{year}} HireFlow · Consultoría Global. Todos los derechos reservados."
+  },
+  "registerPage": {
+    "backToHome": "Volver al inicio",
+    "showcaseBadge": "Registro de Candidato",
+    "showcaseTitle": "Sumate al equipo de Consultoría Global.",
+    "perk1Title": "Perfil profesional unificado",
+    "perk1Desc": "Cargá tus datos personales, foto y CV en un solo lugar para el equipo de Consultoría Global.",
+    "perk2Title": "Evaluación justa y transparente",
+    "perk2Desc": "Completás tus años reales de experiencia por cada habilidad requerida por el puesto.",
+    "perk3Title": "Seguimiento en tiempo real",
+    "perk3Desc": "Conocé el avance de cada proceso y recibí enlaces directos a tus entrevistas programadas.",
+    "copyright": "© {{year}} HireFlow · Consultoría Global. Todos los derechos reservados.",
+    "hasAccount": "¿Ya tenés una cuenta?",
+    "loginLink": "Iniciá sesión"
+  },
   "registerForm": {
-    "title": "Crear una cuenta",
-    "subtitle": "¿Ya tenés una cuenta?",
-    "loginLink": "Iniciar sesión",
+    "title": "Crear cuenta",
+    "subtitle": "Completá tus datos para acceder a las ofertas de empleo.",
+    "loginLink": "Iniciá sesión",
     "firstNameLabel": "Nombre",
     "firstNamePlaceholder": "Tu nombre",
     "lastNameLabel": "Apellido",
@@ -43,29 +63,38 @@
     "passwordPlaceholder": "Mínimo 6 caracteres",
     "confirmPasswordLabel": "Confirmar contraseña",
     "confirmPasswordPlaceholder": "Repetí tu contraseña",
-    "submit": "Crear cuenta",
+    "submit": "Registrarme",
     "notifications": {
-      "successTitle": "¡Cuenta creada!",
-      "successMessage": "Tu cuenta fue creada con éxito. ¡Bienvenido/a!",
+      "successTitle": "¡Cuenta creada exitosamente!",
+      "successMessage": "Completá tu perfil para potenciar tus postulaciones.",
       "errorTitle": "Error al registrarse",
       "errorMessage": "No se pudo crear la cuenta. Verificá los datos e intentá de nuevo."
     }
   },
   "loginForm": {
-    "title": "¡Bienvenido/a de nuevo!",
+    "title": "Iniciar sesión",
+    "subtitle": "Ingresá tus credenciales para acceder a tus postulaciones y perfil.",
+    "orEmail": "o continuar con email",
+    "noAccount": "¿Todavía no tenés cuenta?",
+    "registerFree": "Registrate gratis",
     "emailLabel": "Correo electrónico",
     "emailPlaceholder": "tu@ejemplo.com",
     "passwordLabel": "Contraseña",
     "passwordPlaceholder": "Tu contraseña",
     "forgotPassword": "¿Olvidaste tu contraseña?",
-    "signIn": "Iniciar sesión",
+    "signIn": "Ingresar",
     "notifications": {
-      "successTitle": "¡Bienvenido!",
-      "successMessage": "Has iniciado sesión con éxito",
+      "successTitle": "Sesión iniciada",
+      "successMessage": "¡Bienvenido de nuevo a HireFlow!",
       "errorTitle": "Error al iniciar sesión",
       "errorMessage": "Credenciales inválidas"
     },
     "completingAuth": "Completando autenticación...",
     "continueWithGoogle": "Continuar con Google"
+  },
+  "footer": {
+    "copyright": "© {{year}} Consultoría Global. Todos los derechos reservados.",
+    "terms": "Términos y condiciones",
+    "privacy": "Política de privacidad"
   }
 }

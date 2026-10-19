@@ -11,9 +11,29 @@
   "applyNow": "Apply now",
   "na": "N/A",
   "present": "Present",
+  "loginPage": {
+    "backToHome": "Back to home",
+    "showcaseBadge": "Tech Talent & Consulting",
+    "showcaseTitle": "Your next major career milestone is at Consultoría Global.",
+    "copyright": "© {{year}} HireFlow · Consultoría Global. All rights reserved."
+  },
+  "registerPage": {
+    "backToHome": "Back to home",
+    "showcaseBadge": "Candidate Registration",
+    "showcaseTitle": "Join the team at Consultoría Global.",
+    "perk1Title": "Unified professional profile",
+    "perk1Desc": "Upload your personal details, photo, and resume in a single place for the Consultoría Global team.",
+    "perk2Title": "Fair and transparent evaluation",
+    "perk2Desc": "State your real years of experience for each skill required by the position.",
+    "perk3Title": "Real-time tracking",
+    "perk3Desc": "Track the progress of each application and get direct links to your scheduled interviews.",
+    "copyright": "© {{year}} HireFlow · Consultoría Global. All rights reserved.",
+    "hasAccount": "Already have an account?",
+    "loginLink": "Sign in"
+  },
   "registerForm": {
-    "title": "Create an account",
-    "subtitle": "Already have an account?",
+    "title": "Create account",
+    "subtitle": "Fill in your details to access career opportunities.",
     "loginLink": "Sign in",
     "firstNameLabel": "First name",
     "firstNamePlaceholder": "Your first name",
@@ -25,34 +45,20 @@
     "passwordPlaceholder": "At least 6 characters",
     "confirmPasswordLabel": "Confirm password",
     "confirmPasswordPlaceholder": "Repeat your password",
-    "submit": "Create account",
+    "submit": "Register",
     "notifications": {
-      "successTitle": "Account created!",
-      "successMessage": "Your account was created successfully. Welcome!",
+      "successTitle": "Account created successfully!",
+      "successMessage": "Complete your profile to boost your applications.",
       "errorTitle": "Registration failed",
       "errorMessage": "Could not create account. Please check your data and try again."
     }
   },
-  "applicationStatus": {
-    "APPLIED": "Applied",
-    "IN_PROGRESS": "In Progress",
-    "REJECTED": "Rejected",
-    "HIRED": "Hired",
-    "WITHDRAWN": "Withdrawn",
-    "INTERVIEW_SCHEDULED": "Interview Scheduled"
-  },
-  "actions": {
-    "cancel": "Cancel",
-    "close": "Close",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "retry": "Retry",
-    "back": "Back",
-    "confirm": "Confirm"
-  },
   "loginForm": {
-    "title": "Welcome back!",
+    "title": "Sign in",
+    "subtitle": "Enter your credentials to access your applications and profile.",
+    "orEmail": "or continue with email",
+    "noAccount": "Don't have an account yet?",
+    "registerFree": "Register for free",
     "emailLabel": "Email",
     "emailPlaceholder": "you@example.com",
     "passwordLabel": "Password",
@@ -60,12 +66,17 @@
     "forgotPassword": "Forgot password?",
     "signIn": "Sign in",
     "notifications": {
-      "successTitle": "Welcome back!",
-      "successMessage": "You have successfully logged in",
+      "successTitle": "Signed in successfully",
+      "successMessage": "Welcome back to HireFlow!",
       "errorTitle": "Login failed",
       "errorMessage": "Invalid credentials"
     },
     "completingAuth": "Completing authentication...",
     "continueWithGoogle": "Continue with Google"
+  },
+  "footer": {
+    "copyright": "© {{year}} Consultoría Global. All rights reserved.",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy"
   }
 }
