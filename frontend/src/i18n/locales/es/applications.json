@@ -8,6 +8,7 @@
       "candidate": "Candidato",
       "appliedDate": "Fecha de Aplicación",
       "status": "Estado",
+      "skills": "Habilidades y Experiencia",
       "actions": "Acciones"
     },
     "filters": {
@@ -26,20 +27,44 @@
     },
     "emptyStates": {
       "noMatch": "No se encontraron candidatos que coincidan con su búsqueda.",
-      "noApplications": "Aún no hay aplicaciones."
+      "noApplications": "Aún no hay aplicaciones.",
+      "noSkills": "Sin habilidades registradas"
     }
   },
   "card": {
     "underReview": "Aplicación en Revisión",
-    "underReviewMessage": "Nuestro equipo está revisando tu perfil. Te notificaremos sobre cualquier actualización o próximos pasos en el proceso.",
-    "rejected": "Solicitud Rechazada",
-    "rejectedMessage": "Gracias por tu interés en esta posición. Desafortunadamente, hemos decidido no avanzar con tu solicitud en este momento.",
-    "viewOriginalJob": "Ver Oferta Original",
-    "appliedOn": "Aplicaste el"
+    "underReviewMessage": "Tu perfil y años de experiencia en las tecnologías requeridas están siendo evaluados por los reclutadores.",
+    "rejected": "Proceso finalizado",
+    "rejectedMessage": "Agradecemos tu tiempo y postulación. En esta oportunidad el equipo avanzó con otros perfiles, pero mantendremos tus datos para futuras búsquedas.",
+    "viewOriginalJob": "Ver detalles de la oferta",
+    "appliedOn": "Postulado el",
+    "hiredTitle": "¡Felicitaciones! Has sido seleccionado",
+    "hiredMessage": "El equipo de Consultoría Global te contactará a la brevedad para coordinar los próximos pasos.",
+    "underReviewBadge": "Revisión en curso",
+    "activeApplication": "Postulación activa",
+    "emailNotificationNotice": "Te notificaremos por email cuando haya novedades."
   },
   "candidate": {
     "title": "Mis Postulaciones",
-    "subtitle": "Seguí el estado de tus postulaciones y cronograma de entrevistas",
+    "subtitle": "Seguí el estado de tus candidaturas, agendas de entrevistas y respuestas de selección en tiempo real.",
+    "badge": "Panel del Candidato",
+    "applicationsCount": "{{count}} postulaciones",
+    "exploreButton": "Explorar nuevas ofertas",
+    "statsTotal": "Total Postulaciones",
+    "statsInProgress": "En Revisión",
+    "statsInterviews": "Entrevistas",
+    "statsFinished": "Finalizadas",
+    "tabs": {
+      "all": "Todas las postulaciones",
+      "inProgress": "En revisión",
+      "interviews": "Con entrevista",
+      "finished": "Finalizadas"
+    },
+    "emptyFilterTitle": "No hay postulaciones en este estado",
+    "emptyFilterDesc": "Cambiá el filtro o explorá nuevas vacantes para postularte.",
+    "emptyAllTitle": "Aún no tenés postulaciones activas",
+    "emptyAllDesc": "Explorá las ofertas disponibles en HireFlow y postulá con tu perfil técnico.",
+    "exploreJobs": "Explorar ofertas laborales",
     "stats": {
       "applications": "Postulaciones",
       "inProgress": "En Progreso",
@@ -80,13 +105,25 @@
   },
   "modal": {
     "title": "Postularse a {{position}}",
-    "description": "Por favor, responde las siguientes preguntas para completar tu solicitud.",
+    "description": "Indica tus años de experiencia comprobable en cada tecnología solicitada.",
+    "completeExperience": "Completar experiencia requerida",
     "yearsOfExperience": "Años de experiencia con {{skill}}",
     "validationError": "Por favor, ingresa años de experiencia válidos",
-    "submit": "Enviar Solicitud",
-    "successTitle": "Éxito",
-    "successMessage": "¡Solicitud enviada correctamente!",
-    "errorTitle": "Error",
-    "errorMessage": "Error al enviar la solicitud"
+    "submit": "Confirmar postulación",
+    "disclaimer": "* Podrás actualizar tu perfil en cualquier momento.",
+    "quickPresets": "Accesos rápidos:",
+    "yearsZero": "0 años",
+    "yearsSingle": "{{count}} año",
+    "yearsPlural": "{{count}} años",
+    "levelZero": "Sin experiencia previa",
+    "levelJunior": "1 año · Junior inicial",
+    "levelJuniorAdv": "2 años · Junior avanzado",
+    "levelSemiSenior": "{{count}} años · Semi-Senior",
+    "levelSenior": "{{count}} años · Senior",
+    "levelSpecialist": "{{count}} años · Especialista / Lead",
+    "successTitle": "¡Postulación enviada con éxito!",
+    "successMessage": "Recibimos tus respuestas. Podrás seguir el avance desde tu panel de postulaciones.",
+    "errorTitle": "Error al postular",
+    "errorMessage": "Ocurrió un error al registrar la postulación"
   }
 }

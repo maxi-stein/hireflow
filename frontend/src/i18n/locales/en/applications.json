@@ -8,6 +8,7 @@
       "candidate": "Candidate",
       "appliedDate": "Applied Date",
       "status": "Status",
+      "skills": "Skills & Experience",
       "actions": "Actions"
     },
     "filters": {
@@ -26,20 +27,44 @@
     },
     "emptyStates": {
       "noMatch": "No candidates found matching your search.",
-      "noApplications": "No applications yet."
+      "noApplications": "No applications yet.",
+      "noSkills": "No skills reported"
     }
   },
   "card": {
     "underReview": "Application Under Review",
-    "underReviewMessage": "Our team is currently reviewing your profile. You will be notified regarding any updates or next steps in the process.",
-    "rejected": "Application Rejected",
-    "rejectedMessage": "Thank you for your interest in this position. Unfortunately, we have decided not to proceed with your application at this time.",
-    "viewOriginalJob": "View Original Job Post",
-    "appliedOn": "Applied on"
+    "underReviewMessage": "Your profile and years of experience with the required technologies are being reviewed by recruiters.",
+    "rejected": "Process finalized",
+    "rejectedMessage": "Thank you for your interest and application. On this occasion the team proceeded with other profiles, but we will keep your data on file for future openings.",
+    "viewOriginalJob": "View offer details",
+    "appliedOn": "Applied on",
+    "hiredTitle": "Congratulations! You have been selected",
+    "hiredMessage": "The Global Consulting team will contact you shortly to coordinate next steps.",
+    "underReviewBadge": "Review in progress",
+    "activeApplication": "Active application",
+    "emailNotificationNotice": "We will notify you by email when there are updates."
   },
   "candidate": {
     "title": "My Applications",
-    "subtitle": "Track all your job applications and interview schedules",
+    "subtitle": "Track the status of your candidacies, interview schedule and recruitment feedback in real time.",
+    "badge": "Candidate Dashboard",
+    "applicationsCount": "{{count}} applications",
+    "exploreButton": "Explore new job offers",
+    "statsTotal": "Total Applications",
+    "statsInProgress": "Under Review",
+    "statsInterviews": "Interviews",
+    "statsFinished": "Finalized",
+    "tabs": {
+      "all": "All applications",
+      "inProgress": "Under review",
+      "interviews": "With interview",
+      "finished": "Finalized"
+    },
+    "emptyFilterTitle": "No applications in this status",
+    "emptyFilterDesc": "Change the filter or explore new openings to apply.",
+    "emptyAllTitle": "You do not have any active applications yet",
+    "emptyAllDesc": "Explore available openings on HireFlow and apply with your technical profile.",
+    "exploreJobs": "Explore job offers",
     "stats": {
       "applications": "Applications",
       "inProgress": "In Progress",
@@ -80,13 +105,25 @@
   },
   "modal": {
     "title": "Apply to {{position}}",
-    "description": "Please answer the following questions to complete your application.",
+    "description": "Please state your verifiable years of experience in each requested technology.",
+    "completeExperience": "Complete required experience",
     "yearsOfExperience": "Years of experience with {{skill}}",
     "validationError": "Please enter valid years of experience",
-    "submit": "Submit Application",
-    "successTitle": "Success",
-    "successMessage": "Application submitted successfully!",
-    "errorTitle": "Error",
+    "submit": "Confirm application",
+    "disclaimer": "* You can update your profile at any time.",
+    "quickPresets": "Quick presets:",
+    "yearsZero": "0 years",
+    "yearsSingle": "{{count}} year",
+    "yearsPlural": "{{count}} years",
+    "levelZero": "No prior experience",
+    "levelJunior": "1 year · Entry Junior",
+    "levelJuniorAdv": "2 years · Advanced Junior",
+    "levelSemiSenior": "{{count}} years · Mid-Level",
+    "levelSenior": "{{count}} years · Senior",
+    "levelSpecialist": "{{count}} years · Specialist / Lead",
+    "successTitle": "Application submitted successfully!",
+    "successMessage": "We received your answers. You can follow progress from your applications dashboard.",
+    "errorTitle": "Error applying",
     "errorMessage": "Failed to submit application"
   }
 }

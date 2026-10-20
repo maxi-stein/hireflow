@@ -1,5 +1,25 @@
-import { Grid, Stack, Group, Button, Text, Box, ThemeIcon, Card, Divider, Badge } from '@mantine/core';
-import { IconExternalLink, IconClock, IconX, IconCalendarEvent } from '@tabler/icons-react';
+import {
+  Grid,
+  Stack,
+  Group,
+  Button,
+  Text,
+  Box,
+  ThemeIcon,
+  Card,
+  Badge,
+  Paper,
+  Title,
+} from '@mantine/core';
+import {
+  IconExternalLink,
+  IconClock,
+  IconX,
+  IconCalendarEvent,
+  IconCurrencyDollar,
+  IconCheck,
+  IconSend,
+} from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -12,18 +32,22 @@ import { JobOfferMeta } from '../../jobs/JobOfferCard/JobOfferMeta';
 import { JobOfferSkills } from '../../jobs/JobOfferCard/JobOfferSkills';
 
 const StyledApplicationCard = styled(Card as any)`
-  background: light-dark(#ffffff, var(--mantine-color-dark-6));
-  border: 1px solid light-dark(#dce8f5, var(--mantine-color-dark-4)) !important;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease !important;
+  background: #ffffff;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02) !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
   overflow: hidden !important;
 
+  [data-mantine-color-scheme='dark'] & {
+    background: #1e293b;
+    border-color: #334155 !important;
+  }
+
   &:hover {
-    transform: translateY(-4px) !important;
-    box-shadow:
-      0 12px 24px -10px rgba(0, 0, 0, 0.15),
-      0 8px 16px -8px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-3px) !important;
+    border-color: #93c5fd !important;
+    box-shadow: 0 16px 30px -10px rgba(37, 99, 235, 0.1), 0 6px 12px -4px rgba(15, 23, 42, 0.04) !important;
   }
 `;
 
@@ -32,158 +56,213 @@ interface CandidateApplicationCardProps {
   interviews: Interview[];
 }
 
-export const CandidateApplicationCard = ({ application, interviews }: CandidateApplicationCardProps) => {
+export const CandidateApplicationCard = ({
+  application,
+  interviews,
+}: CandidateApplicationCardProps) => {
   const { t, i18n } = useTranslation('applications');
   const { job_offer } = application;
   const navigate = useNavigate();
 
-  const hasScheduledInterview = interviews.some(i => i.status === InterviewStatus.SCHEDULED);
+  const hasScheduledInterview = interviews.some((i) => i.status === InterviewStatus.SCHEDULED);
   const isRejected = application.status === 'REJECTED';
+  const isHired = application.status === 'HIRED';
 
   const formattedDate = new Date(application.created_at).toLocaleDateString(i18n.language, {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
   });
 
   return (
-    <StyledApplicationCard
-      padding="xl"
-      radius="md"
-      withBorder
-    >
+    <StyledApplicationCard padding="xl">
       <Grid gutter="xl">
-        {/* Left Column (70%) */}
-        <Grid.Col span={{ base: 12, md: 8 }} style={{ display: 'flex', flexDirection: 'column' }}>
-          <Stack gap={12} style={{ flexGrow: 1 }}>
-            {/* Header row: Workmode & Status badge */}
-            <Group justify="space-between" align="flex-start" style={{ width: '100%' }}>
+        {/* Left Column (Job info & skills) */}
+        <Grid.Col span={{ base: 12, md: 7 }} style={{ display: 'flex', flexDirection: 'column' }}>
+          <Stack gap="md" style={{ flexGrow: 1 }}>
+            {/* Header row: Workmode, location & status badge */}
+            <Group justify="space-between" align="flex-start" wrap="wrap" gap="sm">
               <JobOfferMeta location={job_offer.location} workMode={job_offer.work_mode} />
-              <ApplicationStatusBadge status={application.status} hasScheduledInterview={hasScheduledInterview} />
+              <ApplicationStatusBadge
+                status={application.status}
+                hasScheduledInterview={hasScheduledInterview}
+              />
             </Group>
 
             {/* Job Title */}
-            <Text
-              fw={700}
-              size="xl"
-              c="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white))"
+            <Title
+              order={2}
+              size="h3"
+              style={{
+                color: 'light-dark(#0f172a, #f8fafc)',
+                fontWeight: 800,
+                lineHeight: 1.3,
+                cursor: 'pointer',
+              }}
+              onClick={() => navigate(`/jobs?search=${encodeURIComponent(job_offer.position)}`)}
             >
               {job_offer.position}
-            </Text>
+            </Title>
 
-            {/* Job Description */}
-            <Text
-              size="md"
-              c="light-dark(var(--mantine-color-dimmed), var(--mantine-color-gray-1))"
-              style={{ lineHeight: 1.6, wordBreak: 'break-word' }}
-            >
+            {/* Description Snippet */}
+            <Text size="sm" c="light-dark(#475569, #94a3b8)" lineClamp={2} style={{ lineHeight: 1.6 }}>
               {job_offer.description}
             </Text>
 
-            {/* Salary & Applied Date */}
-            <Group gap="xl" align="center" style={{ marginTop: '8px', marginBottom: '8px' }}>
+            {/* Salary & Application date */}
+            <Group gap="md" align="center" wrap="wrap">
               {job_offer.salary && (
-                <Text fw={700} size="xl" c="blue.7">
+                <Badge
+                  size="md"
+                  radius="md"
+                  variant="light"
+                  color="blue"
+                  leftSection={<IconCurrencyDollar size={14} />}
+                  style={{ fontWeight: 700 }}
+                >
                   AR$ {job_offer.salary}
-                  <Text component="span" size="sm" c="dimmed" fw={400}> /mes</Text>
-                </Text>
+                  <Text component="span" size="xs" c="dimmed" fw={400} ml={4}>
+                    /mes
+                  </Text>
+                </Badge>
               )}
-              <Group gap="xs">
-                <IconCalendarEvent size={20} color="var(--mantine-color-gray-5)" />
-                <Text size="sm" c="dimmed">{t('card.appliedOn')} <Text component="span" fw={700} c="dark">{formattedDate}</Text></Text>
+
+              <Group gap={6} c="dimmed">
+                <IconCalendarEvent size={16} />
+                <Text size="xs">
+                  {t('card.appliedOn', 'Postulado el')} <Text component="span" fw={700} c="light-dark(#0f172a, #f8fafc)">{formattedDate}</Text>
+                </Text>
               </Group>
             </Group>
 
             {/* Skills */}
             <JobOfferSkills skills={job_offer.skills || []} />
 
-            {/* Action (Pushed to bottom) */}
-            <Box mt="auto" pt="md">
+            {/* Action button */}
+            <Box mt="auto" pt="sm">
               <Button
-                variant="light"
+                variant="subtle"
                 color="blue"
-                size="md"
-                rightSection={<IconExternalLink size={18} />}
-                onClick={() => navigate(`/jobs?highlight=${job_offer.id}`)}
+                size="sm"
+                rightSection={<IconExternalLink size={16} />}
+                onClick={() => navigate(`/jobs?search=${encodeURIComponent(job_offer.position)}`)}
+                style={{ paddingLeft: 0, fontWeight: 600 }}
               >
-                {t('card.viewOriginalJob')}
+                {t('card.viewOriginalJob', 'Ver detalles de la oferta')}
               </Button>
             </Box>
           </Stack>
         </Grid.Col>
 
-        {/* Right Column (30%) */}
-        <Grid.Col span={{ base: 12, md: 4 }} style={{ borderLeft: '1px solid var(--mantine-color-gray-2)' }}>
-          <Stack gap="lg" h="100%">
+        {/* Right Column (Interview timeline / Process Status) */}
+        <Grid.Col
+          span={{ base: 12, md: 5 }}
+          style={{
+            borderLeft: '1px solid light-dark(#f1f5f9, #334155)',
+            paddingLeft: '1.5rem',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Stack gap="md" style={{ height: '100%', justifyContent: 'space-between' }}>
+            {/* Dynamic Process Status & Timeline */}
             {interviews.length > 0 ? (
-              <ApplicationTimeline interviews={interviews} />
-            ) : isRejected ? (
-              <Box
-                p="lg"
-                bg="var(--mantine-color-red-light)"
-                style={{
-                  borderRadius: '8px',
-                  border: '1px solid var(--mantine-color-red-light-color)',
-                  height: '100%'
-                }}
-              >
-                <Group align="center" gap="md">
-                  <ThemeIcon size="lg" radius="xl" variant="white" color="red">
-                    <IconX size={20} />
+              <Box style={{ flex: 1 }}>
+                <ApplicationTimeline interviews={interviews} />
+                {isHired && (
+                  <Paper p="sm" radius="md" bg="light-dark(#ecfdf5, rgba(16, 185, 129, 0.1))" mt="md" style={{ border: '1px solid light-dark(#a7f3d0, rgba(16, 185, 129, 0.3))' }}>
+                    <Group align="center" gap="xs">
+                      <ThemeIcon size="md" radius="xl" color="teal" variant="filled">
+                        <IconCheck size={14} />
+                      </ThemeIcon>
+                      <Text size="xs" fw={700} c="teal.9">
+                        {t('card.hiredTitle', '¡Felicitaciones! Has sido seleccionado')}
+                      </Text>
+                    </Group>
+                  </Paper>
+                )}
+                {isRejected && (
+                  <Paper p="sm" radius="md" bg="light-dark(#fef2f2, rgba(239, 68, 68, 0.1))" mt="md" style={{ border: '1px solid light-dark(#fecaca, rgba(239, 68, 68, 0.3))' }}>
+                    <Group align="center" gap="xs">
+                      <ThemeIcon size="md" radius="xl" color="red" variant="light">
+                        <IconX size={14} />
+                      </ThemeIcon>
+                      <Text size="xs" fw={700} c="red.9">
+                        {t('card.rejected', 'Proceso finalizado')}
+                      </Text>
+                    </Group>
+                  </Paper>
+                )}
+              </Box>
+            ) : isHired ? (
+              <Paper p="md" radius="md" bg="light-dark(#ecfdf5, rgba(16, 185, 129, 0.1))" style={{ border: '1px solid light-dark(#a7f3d0, rgba(16, 185, 129, 0.3))' }}>
+                <Group align="flex-start" gap="sm">
+                  <ThemeIcon size="lg" radius="xl" color="teal" variant="filled">
+                    <IconCheck size={18} />
                   </ThemeIcon>
                   <Box style={{ flex: 1 }}>
-                    <Text size="sm" fw={600} c="red.9">{t('card.rejected')}</Text>
-                    <Text size="sm" c="red.8" lh={1.4}>
-                      {t('card.rejectedMessage')}
+                    <Text size="sm" fw={700} c="teal.9">
+                      {t('card.hiredTitle', '¡Felicitaciones! Has sido seleccionado')}
+                    </Text>
+                    <Text size="xs" c="teal.8" mt={2} lh={1.5}>
+                      {t('card.hiredMessage', 'El equipo de Consultoría Global te contactará a la brevedad para coordinar los próximos pasos.')}
                     </Text>
                   </Box>
                 </Group>
-              </Box>
+              </Paper>
+            ) : isRejected ? (
+              <Paper p="md" radius="md" bg="light-dark(#fef2f2, rgba(239, 68, 68, 0.1))" style={{ border: '1px solid light-dark(#fecaca, rgba(239, 68, 68, 0.3))' }}>
+                <Group align="flex-start" gap="sm">
+                  <ThemeIcon size="lg" radius="xl" color="red" variant="light">
+                    <IconX size={18} />
+                  </ThemeIcon>
+                  <Box style={{ flex: 1 }}>
+                    <Text size="sm" fw={700} c="red.9">
+                      {t('card.rejected', 'Proceso finalizado')}
+                    </Text>
+                    <Text size="xs" c="red.8" mt={2} lh={1.5}>
+                      {t(
+                        'card.rejectedMessage',
+                        'Agradecemos tu tiempo y postulación. En esta oportunidad el equipo avanzó con otros perfiles, pero mantendremos tus datos para futuras búsquedas.'
+                      )}
+                    </Text>
+                  </Box>
+                </Group>
+              </Paper>
             ) : (
-              <Box
-                p="lg"
-                bg="var(--mantine-color-body)"
-                style={{
-                  borderRadius: '12px',
-                  border: '1px solid var(--mantine-color-gray-3)',
-                  height: '100%',
-                }}
-              >
-                <Stack gap="lg" justify="space-between" h="100%">
-                  <Group gap="sm" wrap="nowrap" align="center">
-                    <ThemeIcon size={42} radius="xl" color="blue" variant="light">
-                      <IconClock size={21} />
+              <Paper p="md" radius="md" bg="light-dark(#f8fafc, #0f172a)" withBorder style={{ flex: 1, borderColor: 'light-dark(#e2e8f0, #334155)' }}>
+                <Stack justify="space-between" h="100%" gap="sm">
+                  <Group gap="sm" align="center">
+                    <ThemeIcon size={38} radius="xl" color="blue" variant="light">
+                      <IconClock size={18} />
                     </ThemeIcon>
-
                     <Box>
-                      <Badge color="blue" variant="light" size="sm" mb={4}>
-                        EN REVISIÓN
-                      </Badge>
-
-                      <Text size="sm" fw={700} c="light-dark(var(--mantine-color-dark-9), var(--mantine-color-white-7))">
-                        {t('card.underReview')}
+                      <Text size="xs" fw={700} c="blue.7" tt="uppercase">
+                        {t('card.underReviewBadge', 'Revisión en curso')}
+                      </Text>
+                      <Text size="sm" fw={700} c="light-dark(#0f172a, #f8fafc)">
+                        {t('card.underReview', 'Postulación activa')}
                       </Text>
                     </Box>
                   </Group>
 
-                  <Text size="sm" c="dimmed" lh={1.6}>
-                    {t('card.underReviewMessage')}
+                  <Text size="xs" c="dimmed" lh={1.6}>
+                    {t(
+                      'card.underReviewMessage',
+                      'Tu perfil y años de experiencia en las tecnologías requeridas están siendo evaluados por los reclutadores.'
+                    )}
                   </Text>
 
-                  <Box>
-                    <Divider mb="sm" />
-
-                    <Group gap={7} c="dimmed" wrap="nowrap">
-                      <ThemeIcon size="sm" radius="xl" color="gray" variant="light">
-                        <IconClock size={11} />
-                      </ThemeIcon>
+                  <Box pt="xs" style={{ borderTop: '1px solid light-dark(#e2e8f0, #334155)' }}>
+                    <Group gap={6} c="dimmed">
+                      <IconSend size={13} />
                       <Text size="xs">
-                        Te notificaremos por email cuando haya novedades.
+                        {t('card.emailNotificationNotice', 'Te notificaremos por email cuando haya novedades.')}
                       </Text>
                     </Group>
                   </Box>
                 </Stack>
-              </Box>
+              </Paper>
             )}
           </Stack>
         </Grid.Col>
