@@ -2,24 +2,23 @@ import { Card } from '@mantine/core';
 import styled from 'styled-components';
 
 export const StyledJobCard = styled(Card as any)`
-  background: var(--mantine-color-dark-6);
+  background: #ffffff;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02) !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-  [data-mantine-color-scheme='light'] & {
-    background: linear-gradient(
-      to bottom,
-      var(--mantine-color-white) 10%,
-      var(--mantine-color-blue-0) 100%
-    );
+  [data-mantine-color-scheme='dark'] & {
+    background: #1e293b;
+    border-color: #334155 !important;
   }
-  border: 1px solid light-dark(#dce8f5, var(--mantine-color-dark-4)) !important;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease !important;
 
   &:hover {
     transform: translateY(-4px) !important;
-    box-shadow:
-      0 12px 24px -10px rgba(0, 0, 0, 0.15),
-      0 8px 16px -8px rgba(0, 0, 0, 0.1) !important;
+    border-color: #93c5fd !important;
+    box-shadow: 0 16px 30px -10px rgba(37, 99, 235, 0.12), 0 8px 16px -6px rgba(15, 23, 42, 0.06) !important;
   }
 `;

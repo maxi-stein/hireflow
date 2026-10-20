@@ -1,7 +1,8 @@
-import { Group, Text } from '@mantine/core';
+import { Group, Badge } from '@mantine/core';
 import {
   IconBuildingSkyscraper,
   IconHome,
+  IconMapPin,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { WorkMode } from '../../../services/job-offer.service';
@@ -12,14 +13,6 @@ interface JobOfferMetaProps {
   workMode?: string;
 }
 
-const getWorkModeIcon = (workMode: string) => {
-  const normalized = workMode?.toLowerCase();
-  if (normalized === WorkMode.REMOTE) return <IconHome size={13} />;
-  if (normalized === WorkMode.HYBRID) return <IconBuildingSkyscraper size={13} />;
-  // office / presencial
-  return <IconBuildingSkyscraper size={13} />;
-};
-
 export const JobOfferMeta = ({ location, workMode }: JobOfferMetaProps) => {
   const { t } = useTranslation('jobs');
   const { location: displayLocation, workMode: displayWorkMode } = getLocationDisplayInfo(
@@ -27,26 +20,40 @@ export const JobOfferMeta = ({ location, workMode }: JobOfferMetaProps) => {
     location || '',
   );
 
-  const parts: string[] = [];
-  if (displayWorkMode) {
-    parts.push(t(`workMode.${displayWorkMode === 'remote' ? 'remote' : displayWorkMode}`));
-  }
-  if (displayLocation) {
-    parts.push(displayLocation);
-  }
+  const normalizedMode = workMode?.toLowerCase();
+  const isRemote = normalizedMode === WorkMode.REMOTE || normalizedMode === 'remote';
+  const isHybrid = normalizedMode === WorkMode.HYBRID || normalizedMode === 'hybrid';
 
-  if (parts.length === 0) return null;
-
-  const icon = getWorkModeIcon(workMode || '');
+  const modeBadgeColor = isRemote ? 'teal' : isHybrid ? 'blue' : 'gray';
+  const modeIcon = isRemote ? <IconHome size={13} /> : <IconBuildingSkyscraper size={13} />;
 
   return (
-    <Group gap={5} align="center">
-      <Text c="blue.6" size="md" style={{ display: 'flex', alignItems: 'center' }}>
-        {icon}
-      </Text>
-      <Text size="md" fw={500} c="blue.6">
-        {parts.join(' · ')}
-      </Text>
+    <Group gap="xs" wrap="wrap" align="center">
+      {displayWorkMode && (
+        <Badge
+          color={modeBadgeColor}
+          variant="light"
+          size="sm"
+          radius="md"
+          leftSection={modeIcon}
+          style={{ textTransform: 'capitalize', fontWeight: 600 }}
+        >
+          {t(`workMode.${displayWorkMode === 'remote' ? 'remote' : displayWorkMode}`, displayWorkMode)}
+        </Badge>
+      )}
+
+      {displayLocation && (
+        <Badge
+          color="gray"
+          variant="light"
+          size="sm"
+          radius="md"
+          leftSection={<IconMapPin size={13} />}
+          style={{ fontWeight: 500 }}
+        >
+          {displayLocation}
+        </Badge>
+      )}
     </Group>
   );
 };

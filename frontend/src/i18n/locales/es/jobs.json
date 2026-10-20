@@ -85,25 +85,71 @@
   "deadline": "Fecha Límite",
   "skillsMore": "+{{count}} más",
   "publicList": {
-    "title": "Posiciones Disponibles",
-    "subtitle": "Encontrá tu próxima oportunidad laboral",
-    "empty": "No hay posiciones abiertas disponibles en este momento.",
-    "checking": "Verificando postulación...",
-    "viewApplication": "Ver Postulación"
+    "title": "Bolsa de Trabajo",
+    "subtitle": "Explorá nuestras vacantes disponibles y postulate directamente con tus habilidades clave.",
+    "empty": "No hay ofertas disponibles en este momento",
+    "checking": "Verificando...",
+    "viewApplication": "Ya postulado",
+    "badge": "Oportunidades de Empleo",
+    "openJobsCount": "{{count}} ofertas abiertas",
+    "viewMyApplications": "Ver mis postulaciones ({{count}})",
+    "searchPlaceholder": "Buscar por puesto, tecnología (React, Node, Java) o ciudad...",
+    "modalityLabel": "Modalidad:",
+    "modalities": {
+      "all": "Todas",
+      "remote": "Remoto",
+      "hybrid": "Híbrido",
+      "office": "Presencial"
+    },
+    "showingCount": "Mostrando {{filtered}} de {{total}} ofertas",
+    "clearFilters": "Limpiar filtros",
+    "noFilterResults": "No encontramos ofertas que coincidan con tu búsqueda.",
+    "noFilterResultsSubtitle": "Probá modificando las palabras clave o seleccionando otra modalidad."
+  },
+  "jobCard": {
+    "viewDetails": "Ver detalles",
+    "perMonth": "/mes",
+    "requiredSkills": "Habilidades requeridas",
+    "modal": {
+      "title": "Detalles de la oferta",
+      "salaryOffered": "Remuneración ofrecida:",
+      "roleDescription": "Descripción de la posición",
+      "skillsTitle": "Habilidades requeridas",
+      "benefitsTitle": "Beneficios"
+    }
   },
   "landing": {
-    "heroTitle": "Tu próximo paso en tecnología empieza acá.",
-    "heroSubtitle": "Conectamos profesionales IT con proyectos de impacto en empresas globales. Unite a nuestro equipo y desarrollá tu carrera.",
+    "heroBadge": "Portal de Empleo · Consultoría Global",
+    "heroTitlePre": "Sumate a nuestro equipo en",
+    "heroTitleHighlight": "Consultoría Global",
+    "heroSubtitle": "Postulate a nuestras búsquedas activas de forma transparente, demostrá tus habilidades clave y formá parte de nuestros proyectos.",
+    "searchPlaceholder": "Buscar por puesto o tecnología (ej. React, Node, DevOps)...",
+    "searchButton": "Explorar",
+    "popularSearches": "Búsquedas populares:",
+    "howItWorks": {
+      "tag": "Proceso transparente",
+      "title": "¿Cómo es el proceso de selección?",
+      "subtitle": "Diseñado para que puedas destacar tus fortalezas y el equipo de Consultoría Global evalúe tu perfil de forma ágil y transparente.",
+      "step1Title": "1. Perfil completo y verificado",
+      "step1Desc": "Registrate, completá tu experiencia previa, educación formal y subí tu CV en PDF para que conozcamos tu trayectoria profesional.",
+      "step2Title": "2. Match por habilidades reales",
+      "step2Desc": "Al postular, indicás tus años reales de experiencia para cada tecnología requerida. Cero algoritmos opacos: coincidencias claras y honestas.",
+      "step3Title": "3. Entrevistas y seguimiento",
+      "step3Desc": "Accedé a tus postulaciones, enterate de cada cambio de estado y unite a tus entrevistas programadas desde una única consola."
+    },
     "availableJobs": "Posiciones Abiertas",
     "findChallenge": "Encontrá tu próximo desafío",
-    "availableJobsSubtitle": "Descubrí nuestras últimas ofertas y encontrá tu lugar ideal.",
-    "noJobs": "No hay trabajos disponibles por el momento",
-    "noJobsSubtitle": "Por favor, volvé a revisar más tarde.",
-    "alliesTitle": "Nuestros Partners",
+    "availableJobsSubtitle": "Descubrí nuestras ofertas activas y postulá directamente con tu perfil validado.",
+    "viewAllJobs": "Ver todas las ofertas",
+    "noJobs": "No hay ofertas disponibles en este momento",
+    "noJobsSubtitle": "Volvé a consultar pronto para ver nuevas vacantes.",
+    "alliesTitle": "Partners tecnológicos de Consultoría Global",
     "cvCta": {
-      "title": "¿Todavía no encontraste tu match?",
-      "subtitle": "Dejanos tu CV y un reclutador te va a contactar cuando aparezca una posición acorde a tu perfil.",
-      "button": "Subir CV"
+      "badge": "Oportunidades de carrera",
+      "title": "¿Buscás dar tu próximo gran salto laboral?",
+      "subtitle": "Creá tu perfil en nuestro portal, subí tu currículum y postulate a las búsquedas de Consultoría Global.",
+      "button": "Completar mi perfil",
+      "exploreButton": "Explorar vacantes"
     }
   },
   "incompleteProfile": {

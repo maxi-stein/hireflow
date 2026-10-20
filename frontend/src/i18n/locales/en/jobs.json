@@ -85,25 +85,71 @@
   "deadline": "Deadline",
   "skillsMore": "+{{count}} more",
   "publicList": {
-    "title": "Available Positions",
-    "subtitle": "Find your next career opportunity",
-    "empty": "No open positions available at this time.",
-    "checking": "Checking application...",
-    "viewApplication": "View Application"
+    "title": "Job Board",
+    "subtitle": "Explore our available openings and apply directly with your key skills.",
+    "empty": "No job offers available at this time",
+    "checking": "Checking...",
+    "viewApplication": "Applied",
+    "badge": "Career Opportunities",
+    "openJobsCount": "{{count}} open positions",
+    "viewMyApplications": "View my applications ({{count}})",
+    "searchPlaceholder": "Search by title, technology (React, Node, Java) or city...",
+    "modalityLabel": "Work Mode:",
+    "modalities": {
+      "all": "All",
+      "remote": "Remote",
+      "hybrid": "Hybrid",
+      "office": "On-site"
+    },
+    "showingCount": "Showing {{filtered}} of {{total}} offers",
+    "clearFilters": "Clear filters",
+    "noFilterResults": "No jobs found matching your search.",
+    "noFilterResultsSubtitle": "Try modifying your keywords or selecting another modality."
+  },
+  "jobCard": {
+    "viewDetails": "View details",
+    "perMonth": "/mo",
+    "requiredSkills": "Required skills",
+    "modal": {
+      "title": "Job Offer Details",
+      "salaryOffered": "Offered compensation:",
+      "roleDescription": "Role description",
+      "skillsTitle": "Required skills",
+      "benefitsTitle": "Benefits"
+    }
   },
   "landing": {
-    "heroTitle": "Your next step in IT starts here.",
-    "heroSubtitle": "We connect IT professionals with impactful projects at global companies. Join our team and develop your career.",
+    "heroBadge": "Careers Portal · Consultoría Global",
+    "heroTitlePre": "Join our team at",
+    "heroTitleHighlight": "Consultoría Global",
+    "heroSubtitle": "Apply directly to our active job openings, demonstrate your skills, and be part of our projects.",
+    "searchPlaceholder": "Search by role or tech (e.g. React, Node, DevOps)...",
+    "searchButton": "Explore",
+    "popularSearches": "Popular searches:",
+    "howItWorks": {
+      "tag": "Transparent process",
+      "title": "How does the selection process work?",
+      "subtitle": "Designed so you can highlight your strengths and our recruitment team can evaluate your profile clearly and swiftly.",
+      "step1Title": "1. Complete and verified profile",
+      "step1Desc": "Sign up, fill in your experience, education, and upload your PDF resume so our team can learn about your journey.",
+      "step2Title": "2. Match by real skills",
+      "step2Desc": "When applying, indicate your real years of experience for each required technology. No opaque filters: clear, honest matches.",
+      "step3Title": "3. Interviews and follow-up",
+      "step3Desc": "Access your applications, track status changes, and join your scheduled interviews from a single dashboard."
+    },
     "availableJobs": "Open Positions",
     "findChallenge": "Find your next challenge",
-    "availableJobsSubtitle": "Discover our latest offers and find your ideal place.",
+    "availableJobsSubtitle": "Discover our active openings and apply directly with your validated profile.",
+    "viewAllJobs": "View all positions",
     "noJobs": "No jobs available at the moment",
-    "noJobsSubtitle": "Please check back later.",
-    "alliesTitle": "Our Partners",
+    "noJobsSubtitle": "Please check back later for new openings.",
+    "alliesTitle": "Technology partners of Consultoría Global",
     "cvCta": {
-      "title": "Haven't found your match yet?",
-      "subtitle": "Send us your CV and a recruiter will reach out when a position that fits your profile comes up.",
-      "button": "Upload CV"
+      "badge": "Career opportunities",
+      "title": "Looking to take your next big career leap?",
+      "subtitle": "Create your profile, upload your resume, and apply to openings at Consultoría Global.",
+      "button": "Complete my profile",
+      "exploreButton": "Explore openings"
     }
   },
   "incompleteProfile": {
