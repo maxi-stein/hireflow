@@ -1,5 +1,11 @@
 {
   "title": "Interview Calendar",
+  "subtitle": "Manage and track interviews and application deadlines",
+  "today": "Today",
+  "legend": {
+    "interviews": "Interviews",
+    "deadlines": "Deadlines"
+  },
   "actions": {
     "schedule": "Schedule Interview",
     "cancel": "Cancel Interview",

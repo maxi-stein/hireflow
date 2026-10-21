@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Modal, Button, TextInput, Select, MultiSelect, Stack, Group, Text } from '@mantine/core';
+import { Modal, Button, TextInput, Select, MultiSelect, Stack, Group, Text, Box } from '@mantine/core';
+import { IconCalendar } from '@tabler/icons-react';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useCreateInterviewMutation, useUpdateInterviewMutation } from '../../../hooks/api/useInterviews';
@@ -173,7 +174,22 @@ export function ScheduleInterviewModal({ opened, onClose, initialApplicationId, 
   const isCompleted = interviewToEdit?.status === InterviewStatus.COMPLETED;
 
   return (
-    <Modal opened={opened} onClose={onClose} title={interviewToEdit ? t('modal.rescheduleTitle') : t('modal.scheduleTitle')}>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      radius="lg"
+      size="lg"
+      title={
+        <Group gap="xs">
+          <Box p={6} bg="light-dark(#eff6ff, rgba(37, 99, 235, 0.15))" style={{ borderRadius: 8, color: '#2563eb' }}>
+            <IconCalendar size={18} />
+          </Box>
+          <Text fw={700} size="md">
+            {interviewToEdit ? t('modal.rescheduleTitle') : t('modal.scheduleTitle')}
+          </Text>
+        </Group>
+      }
+    >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <TextInput

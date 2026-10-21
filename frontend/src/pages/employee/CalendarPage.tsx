@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, useMantineColorScheme } from '@mantine/core';
-import { IconChevronLeft, IconChevronRight, IconPlus } from '@tabler/icons-react';
+import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, Box, Badge, useMantineColorScheme } from '@mantine/core';
+import { IconChevronLeft, IconChevronRight, IconPlus, IconCalendarEvent } from '@tabler/icons-react';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { notifications } from '@mantine/notifications';
@@ -155,35 +155,112 @@ export function CalendarPage() {
 
   return (
     <Container size={APP_MAX_WIDTH} py="xl">
-      <Group justify="space-between" mb="lg">
-        <Title order={2}>{t('title')}</Title>
-        <Button leftSection={<IconPlus size={16} />} onClick={() => setIsScheduleModalOpen(true)}>
-          {t('candidate.actions.schedule', { ns: 'profile' })}
+      {/* Page Header */}
+      <Group justify="space-between" align="flex-start" mb="xl" wrap="wrap" gap="md">
+        <Box>
+          <Title order={2} c="light-dark(#0f172a, #f8fafc)" style={{ fontWeight: 800 }}>
+            {t('title')}
+          </Title>
+          <Text size="sm" c="dimmed" mt={2}>
+            {t('subtitle', 'Gestión y seguimiento de entrevistas y fechas límite de postulaciones')}
+          </Text>
+        </Box>
+
+        <Button
+          color="blue"
+          leftSection={<IconPlus size={16} />}
+          radius="md"
+          style={{ fontWeight: 600 }}
+          onClick={() => setIsScheduleModalOpen(true)}
+        >
+          {t('candidate.actions.schedule', { ns: 'profile', defaultValue: 'Agendar Entrevista' })}
         </Button>
       </Group>
 
-      <Paper withBorder p="md" radius="md" mb="xl">
-        {/* Calendar Header */}
-        <Group justify="center" mb="md" w={220} mx="auto" wrap="nowrap">
-          <ActionIcon variant="subtle" onClick={handlePrevMonth}>
-            <IconChevronLeft size={20} />
-          </ActionIcon>
-          <Title order={4} style={{ flex: 1, textAlign: 'center', whiteSpace: 'nowrap' }}>
-            {currentDate.toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' })}
-          </Title>
-          <ActionIcon variant="subtle" onClick={handleNextMonth}>
-            <IconChevronRight size={20} />
-          </ActionIcon>
+      {/* Main Calendar Card */}
+      <Paper
+        withBorder
+        p="xl"
+        radius="lg"
+        mb="xl"
+        bg="light-dark(#ffffff, #1e293b)"
+        style={{
+          borderColor: 'light-dark(#e2e8f0, #334155)',
+          boxShadow: isDark ? '0 4px 20px -2px rgba(0, 0, 0, 0.4)' : '0 4px 20px -2px rgba(15, 23, 42, 0.05)',
+        }}
+      >
+        {/* Navigation Toolbar */}
+        <Group justify="space-between" align="center" mb="xl" wrap="wrap" gap="md">
+          <Group gap="sm" align="center">
+            <Paper
+              withBorder
+              radius="xl"
+              p={4}
+              bg="light-dark(#f8fafc, #0f172a)"
+              style={{ borderColor: 'light-dark(#e2e8f0, #334155)' }}
+            >
+              <Group gap={6} align="center">
+                <ActionIcon
+                  variant="subtle"
+                  color="gray"
+                  radius="xl"
+                  size="md"
+                  onClick={handlePrevMonth}
+                  aria-label="Previous month"
+                >
+                  <IconChevronLeft size={18} />
+                </ActionIcon>
+                <Text fw={700} size="md" px="xs" tt="capitalize" c="light-dark(#0f172a, #f8fafc)">
+                  {currentDate.toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' })}
+                </Text>
+                <ActionIcon
+                  variant="subtle"
+                  color="gray"
+                  radius="xl"
+                  size="md"
+                  onClick={handleNextMonth}
+                  aria-label="Next month"
+                >
+                  <IconChevronRight size={18} />
+                </ActionIcon>
+              </Group>
+            </Paper>
+
+            <Button
+              variant="light"
+              size="xs"
+              color="blue"
+              radius="xl"
+              onClick={() => setCurrentDate(new Date())}
+            >
+              {t('today', 'Hoy')}
+            </Button>
+          </Group>
+
+          {/* Color coding legend */}
+          <Group gap="sm">
+            <Badge variant="dot" color="blue" size="md">
+              {t('legend.interviews', 'Entrevistas')}
+            </Badge>
+            <Badge variant="dot" color="red" size="md">
+              {t('legend.deadlines', 'Fechas límite')}
+            </Badge>
+          </Group>
         </Group>
 
-        {/* Calendar Grid */}
-        <Grid columns={7} gutter="xs">
+        {/* Weekday Column Headers */}
+        <Grid columns={7} gutter="xs" mb="xs" pb="xs" style={{ borderBottom: '1px solid light-dark(#f1f5f9, #334155)' }}>
           {(t('weekdays', { returnObjects: true }) as string[]).map(day => (
             <Grid.Col span={1} key={day}>
-              <Text ta="center" fw={500} c="dimmed">{day}</Text>
+              <Text ta="center" fw={700} size="xs" tt="uppercase" c="light-dark(#64748b, #94a3b8)">
+                {day}
+              </Text>
             </Grid.Col>
           ))}
+        </Grid>
 
+        {/* Days Grid */}
+        <Grid columns={7} gutter="xs">
           {days.map((date, index) => {
             const isToday = date?.toDateString() === new Date().toDateString();
             const dayInterviews = date ? getInterviewsForDay(date) : [];

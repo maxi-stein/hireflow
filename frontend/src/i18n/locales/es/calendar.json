@@ -1,5 +1,11 @@
 {
   "title": "Calendario de Entrevistas",
+  "subtitle": "Gestión y seguimiento de entrevistas y fechas límite de postulaciones",
+  "today": "Hoy",
+  "legend": {
+    "interviews": "Entrevistas",
+    "deadlines": "Fechas límite"
+  },
   "actions": {
     "schedule": "Agendar Entrevista",
     "cancel": "Cancelar Entrevista",
