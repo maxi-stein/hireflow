@@ -1,19 +1,16 @@
-import { Box, Group, Stack, Title } from '@mantine/core';
+import { Box, Group, Stack, Title, Text } from '@mantine/core';
 import { IconCalendarEvent } from '@tabler/icons-react';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ReviewDateGroupProps {
   dateKey: string;
   children: ReactNode;
 }
 
-/**
- * Formats a YYYY-MM-DD date string into a friendly localized string.
- */
-function getFriendlyDate(dateKey: string): string {
-  // We parse the string manually or use Date parsing ensuring local time zone alignment
-  // Because "2024-03-25" parsed as UTC might shift to previous day in local time,
-  // we split it and use local date construction.
+export function ReviewDateGroup({ dateKey, children }: ReviewDateGroupProps) {
+  const { t, i18n } = useTranslation('reviews');
+
   const [year, month, day] = dateKey.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   
@@ -23,29 +20,46 @@ function getFriendlyDate(dateKey: string): string {
   const diffTime = date.getTime() - todayDateOnly.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return 'Hoy';
-  if (diffDays === 1) return 'Mañana';
-  if (diffDays === -1) return 'Ayer';
-  
-  return date.toLocaleDateString(undefined, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
+  let displayDate: string;
+  if (diffDays === 0) {
+    displayDate = t('dates.today', 'Hoy');
+  } else if (diffDays === 1) {
+    displayDate = t('dates.tomorrow', 'Mañana');
+  } else if (diffDays === -1) {
+    displayDate = t('dates.yesterday', 'Ayer');
+  } else {
+    displayDate = date.toLocaleDateString(i18n.language, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
 
-/**
- * Renders the date header and wraps candidate cards for a single date group.
- */
-export function ReviewDateGroup({ dateKey, children }: ReviewDateGroupProps) {
-  const displayDate = getFriendlyDate(dateKey);
+  const formattedFullDate = date.toLocaleDateString(i18n.language, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
 
   return (
     <Box mb="xl">
-      <Group mb="md">
-        <IconCalendarEvent size={20} style={{ opacity: 0.7 }} />
-        <Title order={4} tt="capitalize">{displayDate}</Title>
+      <Group mb="md" gap="xs" align="center">
+        <Box
+          p={6}
+          bg="light-dark(#eff6ff, rgba(37, 99, 235, 0.15))"
+          style={{ borderRadius: 8, color: '#2563eb' }}
+        >
+          <IconCalendarEvent size={18} />
+        </Box>
+        <Title order={4} tt="capitalize" c="light-dark(#0f172a, #f8fafc)" style={{ fontWeight: 700 }}>
+          {displayDate}
+        </Title>
+        {(diffDays === 0 || diffDays === 1 || diffDays === -1) && (
+          <Text size="sm" c="dimmed">
+            · {formattedFullDate}
+          </Text>
+        )}
       </Group>
       <Stack gap="md" pl={{ base: 0, md: 'md' }}>
         {children}

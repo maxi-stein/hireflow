@@ -1,14 +1,15 @@
-import { Accordion, Group, Text, Badge, Stack } from '@mantine/core';
+import { Accordion, Group, Text, Badge, Stack, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { CompletedReviewCard } from './CompletedReviewCard';
 import { StyledAccordion } from './styled';
 import type { GroupedCompletedReviews } from './groupCompletedReviews';
 import type { InterviewReview } from '../../../services/interview-review.service';
+import { IconBriefcase } from '@tabler/icons-react';
 
 interface CompletedReviewsAccordionProps {
   groups: GroupedCompletedReviews[];
   selectedInterviewId: string | null;
-  onReviewClick: (interviewId: string) => void;
+  onReviewClick: (interviewId: string, reviewId?: string) => void;
   onCloseReview: () => void;
   isMyReview: (review: InterviewReview) => boolean;
 }
@@ -27,24 +28,37 @@ export function CompletedReviewsAccordion({
   }
 
   return (
-    <StyledAccordion variant="separated">
+    <StyledAccordion variant="separated" radius="lg">
       {groups.map((group) => {
         const { jobOffer, totalReviews, candidates } = group;
 
         return (
-          <Accordion.Item key={jobOffer.id} value={jobOffer.id}>
-            <Accordion.Control>
+          <Accordion.Item key={jobOffer.id} value={jobOffer.id} style={{ borderRadius: 12 }}>
+            <Accordion.Control style={{ borderRadius: 12 }}>
               <Group justify="space-between" wrap="nowrap">
-                <div>
-                  <Text fw={500} size="lg">{jobOffer.position}</Text>
-                  <Text size="md" c="dimmed" tt="capitalize">{jobOffer.work_mode}</Text>
-                </div>
-                <Group gap="md" pr="md">
-                  <Badge variant="light" color="blue" size='lg'>
-                    {candidates.length} {candidates.length === 1 ? t('card.candidateSingular', 'Candidate') : t('card.candidatePlural', 'Candidates')}
+                <Group gap="sm" align="center">
+                  <Box
+                    p={8}
+                    bg="light-dark(#eff6ff, rgba(37, 99, 235, 0.15))"
+                    style={{ borderRadius: 8, color: '#2563eb' }}
+                  >
+                    <IconBriefcase size={18} />
+                  </Box>
+                  <div>
+                    <Text fw={700} size="md" c="light-dark(#0f172a, #f8fafc)">
+                      {jobOffer.position}
+                    </Text>
+                    <Text size="xs" c="dimmed" tt="capitalize">
+                      {jobOffer.work_mode}
+                    </Text>
+                  </div>
+                </Group>
+                <Group gap="sm" pr="xs">
+                  <Badge variant="light" color="blue" size="md" radius="md">
+                    {candidates.length} {candidates.length === 1 ? t('card.candidateSingular', 'Candidato') : t('card.candidatePlural', 'Candidatos')}
                   </Badge>
-                  <Badge variant="light" color="green" size='lg'>
-                    {totalReviews} {totalReviews === 1 ? t('buttons.reviewSingular') : t('buttons.reviews')}
+                  <Badge variant="light" color="teal" size="md" radius="md">
+                    {totalReviews} {totalReviews === 1 ? t('buttons.reviewSingular', 'evaluación') : t('buttons.reviews', 'evaluaciones')}
                   </Badge>
                 </Group>
               </Group>

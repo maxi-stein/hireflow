@@ -1,5 +1,11 @@
 {
   "title": "My Reviews",
+  "subtitle": "Review and technical feedback of interviews conducted with candidates",
+  "dates": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday"
+  },
   "tabs": {
     "pending": "Pending Reviews",
     "completed": "Completed Reviews"
@@ -25,7 +31,6 @@
     "interviewDate": "Interview: {{date}}",
     "interviewedBy": "Interviewed by:",
     "priorityWarning": "This review has been pending for over {{count}} days — prioritize it.",
-    "googleMeet": "Google Meet",
     "meetingLink": "Meeting link"
   },
   "buttons": {
@@ -75,7 +80,6 @@
     "reviewPending": "Review Pending",
     "waitingFeedback": "Interview completed. Waiting for feedback.",
     "by": "By",
-    "score": "Score",
     "strengths": "Strengths",
     "weaknesses": "Weaknesses",
     "viewDetails": "View details",

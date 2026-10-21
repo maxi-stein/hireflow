@@ -1,5 +1,11 @@
 {
   "title": "Mis Evaluaciones",
+  "subtitle": "Revisión y feedback técnico de las entrevistas realizadas a los candidatos",
+  "dates": {
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "yesterday": "Ayer"
+  },
   "tabs": {
     "pending": "Evaluaciones Pendientes",
     "completed": "Evaluaciones Completadas"
@@ -25,7 +31,6 @@
     "interviewDate": "Entrevista: {{date}}",
     "interviewedBy": "Entrevistó:",
     "priorityWarning": "Esta evaluación supera los {{count}} días de espera — priorizala.",
-    "googleMeet": "Google Meet",
     "meetingLink": "Enlace de reunión"
   },
   "buttons": {
@@ -75,7 +80,6 @@
     "reviewPending": "Evaluación Pendiente",
     "waitingFeedback": "Entrevista completada. Esperando comentarios.",
     "by": "Por",
-    "score": "Puntaje",
     "strengths": "Fortalezas",
     "weaknesses": "Debilidades",
     "viewDetails": "Ver detalles",

@@ -18,7 +18,9 @@ export interface UseReviewsReturn {
 
   // Selection
   selectedInterviewId: string | null;
-  handleReviewClick: (interviewId: string) => void;
+  selectedInterview: Interview | null;
+  selectedReviewId: string | undefined;
+  handleReviewClick: (interviewId: string, reviewId?: string, interview?: Interview) => void;
   handleCloseReview: () => void;
 
   // Ownership
@@ -32,6 +34,8 @@ export interface UseReviewsReturn {
 export function useReviews(): UseReviewsReturn {
   const user = useAppStore(state => state.user);
   const [selectedInterviewId, setSelectedInterviewId] = useState<string | null>(null);
+  const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
+  const [selectedReviewId, setSelectedReviewId] = useState<string | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: pendingReviewsData } = useMyPendingReviewsQuery();
@@ -40,12 +44,16 @@ export function useReviews(): UseReviewsReturn {
   const pendingReviews = pendingReviewsData?.data || [];
   const completedReviews = completedReviewsData?.data || [];
 
-  const handleReviewClick = (interviewId: string) => {
-    setSelectedInterviewId(currentId => currentId === interviewId ? null : interviewId);
+  const handleReviewClick = (interviewId: string, reviewId?: string, interview?: Interview) => {
+    setSelectedInterviewId(interviewId);
+    setSelectedReviewId(reviewId);
+    setSelectedInterview(interview ?? null);
   };
 
   const handleCloseReview = () => {
     setSelectedInterviewId(null);
+    setSelectedReviewId(undefined);
+    setSelectedInterview(null);
   };
 
   const isMyReview = (r: InterviewReview): boolean => {
@@ -90,6 +98,8 @@ export function useReviews(): UseReviewsReturn {
     searchQuery,
     setSearchQuery,
     selectedInterviewId,
+    selectedInterview,
+    selectedReviewId,
     handleReviewClick,
     handleCloseReview,
     isMyReview,

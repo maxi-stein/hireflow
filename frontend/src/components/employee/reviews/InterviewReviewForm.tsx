@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Paper, Group, Text, Button, Stack, Textarea, NumberInput, TagsInput, LoadingOverlay, Grid, Divider, Box, Title } from '@mantine/core';
+import { Paper, Group, Text, Button, Stack, Textarea, NumberInput, TagsInput, LoadingOverlay, Grid, Divider, Box, Badge } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { IconDeviceFloppy } from '@tabler/icons-react';
+import { IconDeviceFloppy, IconBriefcase, IconCalendar, IconUserCheck } from '@tabler/icons-react';
 import { useInterviewQuery } from '../../../hooks/api/useInterviews';
 import { useInterviewReviewsQuery, useCreateReviewMutation, useUpdateReviewMutation } from '../../../hooks/api/useInterviewReviews';
 
@@ -101,9 +101,9 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
         await createReviewMutation.mutateAsync(payload);
         notifications.show({ title: 'Success', message: t('form.notifications.createSuccess'), color: 'green' });
       }
-      if (onSuccess) onSuccess();
-      // Redirect to candidate profile
-      if (candidateId) {
+      if (onSuccess) {
+        onSuccess();
+      } else if (candidateId) {
         navigate(`/manage/candidates/list/${candidateId}`);
       }
     } catch (error) {
@@ -127,61 +127,117 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
   const jobOffer = interview.applications?.[0]?.job_offer;
 
   return (
-    <Box>
-      <Title order={3}>
-        {isEditMode ? t('form.editTitle') : t('form.title')}
-      </Title>
+    <Box pt="xs">
 
       <Grid gutter="lg">
+        {/* Left Column: Candidate & Interview Details */}
         <Grid.Col span={{ base: 12, md: 4 }}>
-          <Stack>
-            <Paper withBorder p="md" radius="md">
-              <Stack gap="xs">
-                <Box>
-                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.candidate')}</Text>
-                  <Group gap="xs" align="center">
-                    <Text size="lg" fw={500}>{candidate?.first_name} {candidate?.last_name}</Text>
-                    {isEditMode && <ScoreBadge score={form.values.score} size="xs" />}
-                  </Group>
-                  <Text size="sm" c="dimmed">{candidate?.email}</Text>
-                </Box>
-                <Divider />
-                <Box>
-                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.position')}</Text>
-                  <Text fw={500}>{jobOffer?.position}</Text>
-                </Box>
-                <Divider />
-                <Box>
-                  <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.interviewDate')}</Text>
-                  <Text>{new Date(interview.scheduled_time).toLocaleString(i18n.language)}</Text>
-                </Box>
-                {myReview?.employee?.user && (
-                  <>
-                    <Divider />
-                    <Box>
-                      <Text c="dimmed" size="xs" tt="uppercase" fw={700}>{t('form.labels.reviewer')}</Text>
-                      <Text fw={500}>{myReview.employee.user.first_name} {myReview.employee.user.last_name}</Text>
-                    </Box>
-                  </>
-                )}
-              </Stack>
-            </Paper>
-
-            <Paper withBorder p="md" radius="md">
-              <Stack align="center" justify="center" py="md">
+          <Stack gap="md">
+            <Paper
+              withBorder
+              p="lg"
+              radius="lg"
+              bg="light-dark(#f8fafc, #0f172a)"
+              style={{ borderColor: 'light-dark(#e2e8f0, #334155)' }}
+            >
+              <Stack gap="md" align="center" ta="center">
                 <CandidateAvatar
                   candidateId={candidateId || ''}
                   firstName={candidate?.first_name}
                   lastName={candidate?.last_name}
-                  size={256}
+                  size={96}
                 />
+                <Box>
+                  <Text fw={700} size="md" c="light-dark(#0f172a, #f8fafc)">
+                    {candidate?.first_name} {candidate?.last_name}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {candidate?.email}
+                  </Text>
+                  {isEditMode && (
+                    <Box mt={6}>
+                      <ScoreBadge score={form.values.score} size="sm" />
+                    </Box>
+                  )}
+                </Box>
+              </Stack>
+
+              <Divider my="md" style={{ borderColor: 'light-dark(#e2e8f0, #334155)' }} />
+
+              <Stack gap="sm">
+                <Group gap="xs" align="flex-start" wrap="nowrap">
+                  <Box mt={2}>
+                    <IconBriefcase size={16} color="#64748b" />
+                  </Box>
+                  <Box>
+                    <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
+                      {t('form.labels.position')}
+                    </Text>
+                    <Text size="sm" fw={600} c="light-dark(#0f172a, #f8fafc)">
+                      {jobOffer?.position}
+                    </Text>
+                  </Box>
+                </Group>
+
+                {interview.title && (
+                  <Group gap="xs" align="flex-start" wrap="nowrap">
+                    <Box mt={2}>
+                      <IconCalendar size={16} color="#64748b" />
+                    </Box>
+                    <Box>
+                      <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
+                        {t('form.labels.interviewName', { defaultValue: 'Entrevista' })}
+                      </Text>
+                      <Text size="sm" fw={600} c="light-dark(#0f172a, #f8fafc)">
+                        {interview.title}
+                      </Text>
+                    </Box>
+                  </Group>
+                )}
+
+                <Group gap="xs" align="flex-start" wrap="nowrap">
+                  <Box mt={2}>
+                    <IconCalendar size={16} color="#64748b" />
+                  </Box>
+                  <Box>
+                    <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
+                      {t('form.labels.interviewDate')}
+                    </Text>
+                    <Text size="sm" fw={500} c="light-dark(#0f172a, #f8fafc)">
+                      {new Date(interview.scheduled_time).toLocaleString(i18n.language)}
+                    </Text>
+                  </Box>
+                </Group>
+
+                {myReview?.employee?.user && (
+                  <Group gap="xs" align="flex-start" wrap="nowrap">
+                    <Box mt={2}>
+                      <IconUserCheck size={16} color="#64748b" />
+                    </Box>
+                    <Box>
+                      <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
+                        {t('form.labels.reviewer')}
+                      </Text>
+                      <Text size="sm" fw={500} c="light-dark(#0f172a, #f8fafc)">
+                        {myReview.employee.user.first_name} {myReview.employee.user.last_name}
+                      </Text>
+                    </Box>
+                  </Group>
+                )}
               </Stack>
             </Paper>
           </Stack>
         </Grid.Col>
 
+        {/* Right Column: Review Input Form */}
         <Grid.Col span={{ base: 12, md: 8 }}>
-          <Paper withBorder p="xl" radius="md">
+          <Paper
+            withBorder
+            p="xl"
+            radius="lg"
+            bg="light-dark(#ffffff, #1e293b)"
+            style={{ borderColor: 'light-dark(#e2e8f0, #334155)' }}
+          >
             <form onSubmit={form.onSubmit(
               handleSubmit,
               (_errors) => {
@@ -199,6 +255,7 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                   min={1}
                   max={10}
                   required
+                  radius="md"
                   readOnly={isReadOnly}
                   variant={isReadOnly ? 'filled' : 'default'}
                   {...form.getInputProps('score')}
@@ -209,6 +266,7 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                   placeholder={t('form.labels.notesPlaceholder')}
                   minRows={5}
                   autosize
+                  radius="md"
                   readOnly={isReadOnly}
                   variant={isReadOnly ? 'filled' : 'default'}
                   {...form.getInputProps('notes')}
@@ -217,6 +275,7 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                 <TagsInput
                   label={t('form.labels.strengths')}
                   placeholder={t('form.labels.strengthsPlaceholder')}
+                  radius="md"
                   readOnly={isReadOnly}
                   variant={isReadOnly ? 'filled' : 'default'}
                   value={form.values.strengths}
@@ -227,6 +286,7 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                 <TagsInput
                   label={t('form.labels.weaknesses')}
                   placeholder={t('form.labels.weaknessesPlaceholder')}
+                  radius="md"
                   readOnly={isReadOnly}
                   variant={isReadOnly ? 'filled' : 'default'}
                   value={form.values.weaknesses}
@@ -235,11 +295,19 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
                 />
 
                 {!isReadOnly && (
-                  <Group justify="flex-end" mt="xl">
+                  <Group justify="flex-end" mt="xl" gap="sm">
                     {isEditMode && (
-                      <Button variant="default" onClick={() => form.reset()}>{t('form.buttons.reset')}</Button>
+                      <Button variant="default" radius="md" onClick={() => form.reset()}>
+                        {t('form.buttons.reset')}
+                      </Button>
                     )}
-                    <Button type="submit" leftSection={<IconDeviceFloppy size={16} />}>
+                    <Button
+                      type="submit"
+                      color="blue"
+                      radius="md"
+                      leftSection={<IconDeviceFloppy size={16} />}
+                      style={{ fontWeight: 600 }}
+                    >
                       {isEditMode ? t('form.buttons.update') : t('form.buttons.submit')}
                     </Button>
                   </Group>

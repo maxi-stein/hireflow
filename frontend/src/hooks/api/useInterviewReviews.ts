@@ -32,6 +32,7 @@ export function useCreateReviewMutation() {
     mutationFn: (data: CreateInterviewReviewDto) => interviewReviewService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: REVIEWS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['interviews'] });
     },
   });
 }
@@ -43,6 +44,7 @@ export function useUpdateReviewMutation() {
       interviewReviewService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: REVIEWS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['interviews'] });
     },
   });
 }
