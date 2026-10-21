@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Container, Flex, Box, ScrollArea } from '@mantine/core';
+import { Container, Flex, Box, ScrollArea, Text, useMantineColorScheme } from '@mantine/core';
 import { ComparisonViewHeader } from './ComparisonViewHeader';
 import { CandidateComparisonCard } from './CandidateComparisonCard';
 import { CandidateActionModals } from '../common/CandidateActionModals';
@@ -11,6 +11,7 @@ import { APP_MAX_WIDTH } from '../../../constants/layout';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import type { JobOffer } from '../../../services/job-offer.service';
 import type { TechStats } from '../../../hooks/useCandidateTechExperience';
+import { useTranslation } from 'react-i18next';
 
 interface ComparisonViewProps {
   candidatesToCompare: CandidateApplication[];
@@ -28,6 +29,9 @@ export function ComparisonView({
   techStats
 }: ComparisonViewProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation('candidates');
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
   const [accordionValue, setAccordionValue] = useState<string[]>(['skills']);
   const dragScroll = useDragScroll<HTMLDivElement>();
 
@@ -65,7 +69,16 @@ export function ComparisonView({
   }, [candidateActions]);
 
   return (
-    <Box py="xl">
+    <Box
+      py="xl"
+      style={{
+        minHeight: '100vh',
+        background: isDark
+          ? 'radial-gradient(ellipse at top, #0f172a 0%, #020617 100%)'
+          : 'radial-gradient(ellipse at top, #f0f4ff 0%, #f8fafc 100%)',
+      }}
+    >
+      {/* Header */}
       <Container size={APP_MAX_WIDTH} mb="xl">
         <ComparisonViewHeader
           candidateCount={candidatesToCompare.length}
@@ -74,7 +87,7 @@ export function ComparisonView({
         />
       </Container>
 
-      {/* Full width container with horizontal scroll (CSS Breakout for full-bleed) */}
+      {/* Full-width horizontal scroll of cards */}
       <Box
         w="100vw"
         style={{
@@ -85,26 +98,32 @@ export function ComparisonView({
           marginRight: '-50vw',
         }}
       >
-        <ScrollArea 
-          w="100%" 
-          type="auto" 
-          offsetScrollbars 
+        <ScrollArea
+          w="100%"
+          type="auto"
+          offsetScrollbars
           viewportRef={dragScroll.ref}
           {...dragScroll.events}
           style={{ cursor: dragScroll.isDragging ? 'grabbing' : 'grab' }}
         >
           <Flex
             wrap="nowrap"
-            gap="lg"
+            gap="xl"
             px="xl"
             mx="auto"
             w="fit-content"
-            style={{ 
-              paddingBottom: '1rem', // Give some space for the scrollbar
+            style={{
+              paddingBottom: '1.5rem',
+              paddingTop: '0.5rem',
+              alignItems: 'stretch',
             }}
           >
             {candidatesToCompare.map(application => (
-              <Box key={application.candidate.id} w={{ base: 400, sm: 475, md: 525 }}>
+              <Box
+                key={application.candidate.id}
+                w={{ base: 380, sm: 440, md: 480 }}
+                style={{ display: 'flex', flexDirection: 'column' }}
+              >
                 <CandidateComparisonCard
                   application={application}
                   onHire={handleHireClick}

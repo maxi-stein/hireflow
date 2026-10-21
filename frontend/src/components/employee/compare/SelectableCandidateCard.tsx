@@ -1,8 +1,9 @@
 import { memo } from 'react';
-import { Paper, Group, Checkbox, Badge, Text } from '@mantine/core';
+import { Group, Checkbox, Badge, Text, Box, useMantineColorScheme } from '@mantine/core';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { getApplicationStatusColor } from '../../../utils/application.utils';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
+import { useTranslation } from 'react-i18next';
 
 export interface SelectableCandidateCardProps {
   application: CandidateApplication;
@@ -11,59 +12,82 @@ export interface SelectableCandidateCardProps {
   isDark: boolean;
 }
 
-/**
- * Individual candidate card with checkbox selection
- * Displays avatar, name, email, and application status
- * Memoized to prevent unnecessary re-renders when other candidates change
- */
 function SelectableCandidateCardComponent({
   application,
   isSelected,
   onToggle,
   isDark,
 }: SelectableCandidateCardProps) {
+  const { t } = useTranslation('common');
+
   return (
-    <Paper
-      p="sm"
-      withBorder
+    <Box
       onClick={onToggle}
       style={{
         cursor: 'pointer',
-        transition: 'background-color 0.2s'
+        padding: '10px 14px',
+        borderRadius: 12,
+        border: `1px solid ${
+          isSelected
+            ? (isDark ? '#3b82f6' : '#93c5fd')
+            : (isDark ? '#334155' : '#e2e8f0')
+        }`,
+        background: isSelected
+          ? (isDark ? 'rgba(59,130,246,0.12)' : '#eff6ff')
+          : (isDark ? '#1e293b' : '#ffffff'),
+        transition: 'all 0.15s ease',
+        boxShadow: isSelected
+          ? (isDark ? '0 0 0 1px #3b82f6 inset' : '0 0 0 1px #93c5fd inset')
+          : 'none',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = isDark
-          ? 'var(--mantine-color-dark-6)'
-          : 'var(--mantine-color-gray-0)';
+        if (!isSelected) {
+          (e.currentTarget as HTMLElement).style.background = isDark
+            ? '#263347'
+            : '#f8faff';
+          (e.currentTarget as HTMLElement).style.borderColor = isDark ? '#475569' : '#cbd5e1';
+        }
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = '';
+        if (!isSelected) {
+          (e.currentTarget as HTMLElement).style.background = isDark ? '#1e293b' : '#ffffff';
+          (e.currentTarget as HTMLElement).style.borderColor = isDark ? '#334155' : '#e2e8f0';
+        }
       }}
     >
-      <Group justify="space-between">
-        <Group>
+      <Group justify="space-between" wrap="nowrap">
+        <Group gap="sm" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
           <Checkbox
             checked={isSelected}
             onChange={onToggle}
             onClick={(e) => e.stopPropagation()}
+            color="blue"
+            radius="sm"
           />
           <CandidateAvatar
             candidateId={application.candidate.id}
             firstName={application.candidate.user.first_name}
             lastName={application.candidate.user.last_name}
+            size="sm"
           />
-          <div>
-            <Text fw={500}>
+          <Box style={{ flex: 1, minWidth: 0 }}>
+            <Text fw={600} size="sm" truncate>
               {application.candidate.user.first_name} {application.candidate.user.last_name}
             </Text>
-            <Text size="xs" c="dimmed">{application.candidate.user.email}</Text>
-          </div>
+            <Text size="xs" c="dimmed" truncate>{application.candidate.user.email}</Text>
+          </Box>
         </Group>
-        <Badge color={getApplicationStatusColor(application.status)} variant="light">
-          {application.status}
+        <Badge
+          color={getApplicationStatusColor(application.status)}
+          variant="light"
+          size="sm"
+          radius="md"
+          style={{ flexShrink: 0 }}
+        >
+          {t('applicationStatus.' + application.status)}
         </Badge>
       </Group>
-    </Paper>
+    </Box>
   );
 }
 

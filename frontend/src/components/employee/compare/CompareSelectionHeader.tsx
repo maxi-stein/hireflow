@@ -1,4 +1,4 @@
-import { Group, Title, Text, Button } from '@mantine/core';
+import { Group, Title, Text, Button, Badge } from '@mantine/core';
 import { IconX, IconScale } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,38 +8,50 @@ export interface CompareSelectionHeaderProps {
   onCompare: () => void;
 }
 
-/**
- * Header component for the selection view
- * Shows title, description, and action buttons for selecting candidates
- */
 export function CompareSelectionHeader({
   selectedCount,
   onClearSelection,
   onCompare,
 }: CompareSelectionHeaderProps) {
   const { t } = useTranslation('candidates');
+
   return (
-    <Group justify="space-between" align="flex-end">
+    <Group justify="space-between" align="flex-end" wrap="wrap" gap="lg">
       <div>
         <Title order={2}>{t('compare.title')}</Title>
-        <Text c="dimmed" size="sm">{t('compare.subtitle')}</Text>
+        <Text c="dimmed" size="sm" mt={4}>{t('compare.subtitle')}</Text>
       </div>
-      <Group gap="sm">
+
+      <Group gap="md" align="center">
+
         <Button
           variant="subtle"
           color="gray"
           onClick={onClearSelection}
           disabled={selectedCount === 0}
-          leftSection={<IconX size={16} />}
+          leftSection={<IconX size={15} />}
+          size="sm"
         >
           {t('compare.buttons.clear')}
         </Button>
+
         <Button
-          leftSection={<IconScale size={20} />}
+          leftSection={<IconScale size={18} />}
           disabled={selectedCount < 2}
           onClick={onCompare}
+          size="sm"
+          style={{
+            background: selectedCount >= 2
+              ? 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)'
+              : undefined,
+          }}
         >
           {t('compare.buttons.compare')}
+          {selectedCount >= 2 && (
+            <Badge size="xs" circle ml="xs" color="white" style={{ color: '#2563eb', fontWeight: 800 }}>
+              {selectedCount}
+            </Badge>
+          )}
         </Button>
       </Group>
     </Group>

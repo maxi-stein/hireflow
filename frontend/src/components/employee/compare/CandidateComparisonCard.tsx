@@ -1,16 +1,16 @@
 import {
-  Card,
   Stack,
   Group,
   Text,
   Button,
-  Accordion,
   LoadingOverlay,
-  Paper,
   Box,
   Progress,
   Timeline,
-  ActionIcon
+  ActionIcon,
+  Badge,
+  Tooltip,
+  useMantineColorScheme,
 } from '@mantine/core';
 import {
   IconX,
@@ -21,9 +21,10 @@ import {
   IconSchool,
   IconBriefcase,
   IconMapPin,
-  IconUsers,
   IconBrandLinkedin,
-  IconBrandGithub
+  IconBrandGithub,
+  IconChevronDown,
+  IconChevronRight,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useCandidateQuery } from '../../../hooks/api/useCandidates';
@@ -38,16 +39,6 @@ import { CandidateInterviewsDisplay } from '../../shared/candidate-display/Candi
 import type { TechExperienceStats } from '../../../hooks/useCandidateTechExperience';
 import { TopSkillProgressBar } from './TopSkillProgressBar';
 import { parseLocalDate } from '../../../utils/dateUtils';
-import styled from 'styled-components';
-
-const StyledActionButton = styled(Button as any)`
-  transition: background-color 0.3s ease, color 0.3s ease !important;
-
-  &:not([disabled]):hover {
-    background-color: #1864ab !important; /* Premium dark blue */
-    color: #ffffff !important;
-  }
-`;
 
 interface CandidateComparisonCardProps {
   application: CandidateApplication;
@@ -60,6 +51,62 @@ interface CandidateComparisonCardProps {
   techStats?: TechExperienceStats;
 }
 
+interface SectionProps {
+  title: string;
+  icon: React.ReactNode;
+  value: string;
+  accordionValue: string[];
+  onToggle: () => void;
+  isDark: boolean;
+  children: React.ReactNode;
+}
+
+function CollapsibleSection({ title, icon, value, accordionValue, onToggle, isDark, children }: SectionProps) {
+  const isOpen = accordionValue.includes(value);
+
+  return (
+    <Box
+      style={{
+        borderRadius: 12,
+        border: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
+        overflow: 'hidden',
+      }}
+    >
+      <Box
+        px="md"
+        py="sm"
+        onClick={onToggle}
+        style={{
+          cursor: 'pointer',
+          background: isDark ? '#0f172a' : '#f8fafc',
+          borderBottom: isOpen ? `1px solid ${isDark ? '#334155' : '#f1f5f9'}` : 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          userSelect: 'none',
+        }}
+      >
+        <Group gap="sm">
+          {icon}
+          <Text size="xs" fw={700} style={{ color: isDark ? '#94a3b8' : '#475569', letterSpacing: '0.03em' }}>
+            {title}
+          </Text>
+        </Group>
+        {isOpen ? (
+          <IconChevronDown size={14} color={isDark ? '#64748b' : '#94a3b8'} />
+        ) : (
+          <IconChevronRight size={14} color={isDark ? '#64748b' : '#94a3b8'} />
+        )}
+      </Box>
+      {isOpen && (
+        <Box p="md" style={{ background: isDark ? '#1e293b' : '#ffffff' }}>
+          {children}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
 export function CandidateComparisonCard({
   application,
   onReject,
@@ -70,6 +117,8 @@ export function CandidateComparisonCard({
   techStats
 }: CandidateComparisonCardProps) {
   const { t } = useTranslation(['candidates', 'profile']);
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
   const { data: candidateProfile, isLoading: isLoadingProfile } = useCandidateQuery(application.candidate.id);
   const { data: interviewsData, isLoading: isLoadingInterviews } = useCandidateInterviewsQuery(application.candidate.id);
   const { data: files, isLoading: isLoadingFiles } = useCandidateFilesQuery(application.candidate.id);
@@ -88,7 +137,7 @@ export function CandidateComparisonCard({
       link.click();
       link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
+    } catch {
       notifications.show({
         title: t('candidate.notifications.errorTitle', { ns: 'profile' }),
         message: t('candidate.actions.downloadError', { ns: 'profile' }),
@@ -111,320 +160,339 @@ export function CandidateComparisonCard({
 
   const isLoading = isLoadingProfile || isLoadingInterviews || isLoadingFiles;
 
+  const handleToggleSection = (sectionValue: string) => {
+    onAccordionChange(
+      accordionValue.includes(sectionValue)
+        ? accordionValue.filter(v => v !== sectionValue)
+        : [...accordionValue, sectionValue]
+    );
+  };
+
   return (
-    <Card
-      shadow="sm"
-      padding={0}
-      radius="md"
-      withBorder
+    <Box
       style={{
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        overflow: 'hidden'
+        borderRadius: 20,
+        border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
+        background: isDark ? '#1e293b' : '#ffffff',
+        boxShadow: isDark
+          ? '0 8px 32px rgba(0,0,0,0.4)'
+          : '0 8px 32px rgba(15,23,42,0.08)',
+        overflow: 'hidden',
       }}
     >
       <LoadingOverlay visible={isLoading} />
 
-      {/* Sticky Header */}
-      <Paper
-        p="md"
+      {/* ── HEADER ── */}
+      <Box
         style={{
           position: 'sticky',
           top: 0,
           zIndex: 10,
-          borderBottom: '1px solid var(--mantine-color-default-border)',
-          backgroundColor: 'var(--mantine-color-body)',
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          backgroundImage: 'radial-gradient(circle at bottom right, rgba(51, 154, 240, 0.15) 0%, transparent 50%)',
-          minHeight: 130
+          borderBottom: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
+          overflow: 'hidden',
         }}
       >
-        <Group mb="sm" align="flex-start" wrap="nowrap">
-          <CandidateAvatar
-            candidateId={application.candidate.id}
-            firstName={application.candidate.user.first_name}
-            lastName={application.candidate.user.last_name}
-            size="lg"
-          />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <Stack gap={3}>
-              <Text fw={700} size="lg" truncate style={{ lineHeight: 1.2 }}>
+        {/* Cover gradient strip */}
+        <Box
+          h={56}
+          style={{
+            background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #2563eb 100%)',
+          }}
+        />
+
+        <Box px="lg" pb="md" style={{ background: isDark ? '#1e293b' : '#ffffff' }}>
+          {/* Avatar overlaps cover */}
+          <Group mb="sm" align="flex-end" style={{ marginTop: -32 }} wrap="nowrap">
+            <Box style={{ flexShrink: 0 }}>
+              <Box
+                style={{
+                  borderRadius: 14,
+                  border: `3px solid ${isDark ? '#1e293b' : '#ffffff'}`,
+                  display: 'inline-block',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                  overflow: 'hidden',
+                }}
+              >
+                <CandidateAvatar
+                  candidateId={application.candidate.id}
+                  firstName={application.candidate.user.first_name}
+                  lastName={application.candidate.user.last_name}
+                  size={60}
+                />
+              </Box>
+            </Box>
+            <Box style={{ flex: 1, minWidth: 0, paddingBottom: 2 }}>
+              <Text fw={700} size="md" truncate style={{ lineHeight: 1.2, color: isDark ? '#f1f5f9' : '#0f172a' }}>
                 {application.candidate.user.first_name} {application.candidate.user.last_name}
               </Text>
               {latestExperience && (
-                <Text size="sm" fw={500} c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-2))" truncate style={{ lineHeight: 1.2 }}>
+                <Text size="xs" fw={500} c="dimmed" truncate style={{ lineHeight: 1.2 }}>
                   {latestExperience.position}
                 </Text>
               )}
               {(candidateProfile?.city || candidateProfile?.country) && (
-                <Group gap={4} wrap="nowrap" style={{ lineHeight: 1.2 }}>
-                  <IconMapPin size={14} style={{ opacity: 0.6, flexShrink: 0 }} />
+                <Group gap={4} wrap="nowrap" style={{ lineHeight: 1.2, marginTop: 2 }}>
+                  <IconMapPin size={12} style={{ opacity: 0.5, flexShrink: 0 }} />
                   <Text size="xs" c="dimmed" truncate>
                     {candidateProfile.city}{candidateProfile.city && candidateProfile.country ? ', ' : ''}{candidateProfile.country}
                   </Text>
                 </Group>
               )}
-            </Stack>
-          </div>
-        </Group>
+            </Box>
+          </Group>
 
-        <Group gap="xs" mt="sm" wrap="wrap">
-          <StyledActionButton
-            variant="subtle"
-            size="xs"
-            disabled={!resume}
-            onClick={handleDownloadResume}
-            px="sm"
-            py={4}
-            style={{ height: 'auto' }}
-            leftSection={<IconDownload size={14} />}
-          >
-            {t('candidate.management.links.downloadResume', { ns: 'profile' })}
-          </StyledActionButton>
+          {/* Action links */}
+          <Group gap="xs" mt={4} wrap="wrap">
+            <Tooltip label={resume ? t('candidate.management.links.downloadResume', { ns: 'profile' }) : t('candidate.management.links.noResume', { ns: 'profile' })}>
+              <Button
+                variant="light"
+                size="xs"
+                disabled={!resume}
+                onClick={handleDownloadResume}
+                radius="md"
+                leftSection={<IconDownload size={13} />}
+              >
+                CV
+              </Button>
+            </Tooltip>
 
-          <StyledActionButton
-            variant="subtle"
-            size="xs"
-            component="a"
-            href={candidateProfile?.linkedin || undefined}
-            target="_blank"
-            rel="noopener noreferrer"
-            disabled={!candidateProfile?.linkedin}
-            px="sm"
-            py={4}
-            style={{ height: 'auto' }}
-            leftSection={<IconBrandLinkedin size={14} />}
-          >
-            LinkedIn
-          </StyledActionButton>
+            <Tooltip label="LinkedIn">
+              <ActionIcon
+                variant="light"
+                color="blue"
+                size="sm"
+                component="a"
+                href={candidateProfile?.linkedin || undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                disabled={!candidateProfile?.linkedin}
+                radius="md"
+              >
+                <IconBrandLinkedin size={14} />
+              </ActionIcon>
+            </Tooltip>
 
-          {candidateProfile?.github && (
-            <StyledActionButton
-              variant="subtle"
-              size="xs"
-              component="a"
-              href={candidateProfile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              px="sm"
-              py={4}
-              style={{ height: 'auto' }}
-              leftSection={<IconBrandGithub size={14} />}
+            {candidateProfile?.github && (
+              <Tooltip label="GitHub">
+                <ActionIcon
+                  variant="light"
+                  color="gray"
+                  size="sm"
+                  component="a"
+                  href={candidateProfile.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  radius="md"
+                >
+                  <IconBrandGithub size={14} />
+                </ActionIcon>
+              </Tooltip>
+            )}
+
+            <Badge
+              variant="light"
+              color={application.status === ApplicationStatus.HIRED ? 'green' : application.status === ApplicationStatus.REJECTED ? 'red' : 'blue'}
+              size="sm"
+              radius="md"
+              ml="auto"
             >
-              GitHub
-            </StyledActionButton>
-          )}
-        </Group>
-      </Paper>
+              {application.status}
+            </Badge>
+          </Group>
+        </Box>
+      </Box>
 
-      {/* Scrollable Content */}
+      {/* ── SCROLLABLE CONTENT ── */}
       <Box style={{ flex: 1, overflowY: 'auto', position: 'relative' }} p="md">
-        <Stack gap="md">
-          {/* Skills Section - Always rendered */}
-          <Box>
-            <Accordion
-              variant="separated"
-              multiple
-              value={accordionValue}
-              onChange={onAccordionChange}
-            >
-              <Accordion.Item value="skills">
-                <Accordion.Control icon={<IconStar size={15} color="var(--mantine-color-blue-filled)" />}>
-                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>{t('compare.card.sections.yearsPerTech')}</Text>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  {application.skill_answers && application.skill_answers.length > 0 ? (
-                    <Stack gap="md">
-                      {application.skill_answers.map(answer => {
-                        const skillName = answer.job_offer_skill.skill_name;
-                        const years = answer.years_of_experience;
-                        const isTop = techStats ? techStats.isTopCandidateForSkill(skillName, years) : false;
-                        const maxYears = techStats?.maxYearsBySkill[skillName] || 10;
-                        const progressValue = maxYears > 0 ? (years / maxYears) * 100 : 0;
+        <Stack gap="sm">
+          {/* Skills Section */}
+          <CollapsibleSection
+            title={t('compare.card.sections.yearsPerTech')}
+            icon={<IconStar size={13} color="#f59e0b" />}
+            value="skills"
+            accordionValue={accordionValue}
+            onToggle={() => handleToggleSection('skills')}
+            isDark={isDark}
+          >
+            {application.skill_answers && application.skill_answers.length > 0 ? (
+              <Stack gap="md">
+                {application.skill_answers.map(answer => {
+                  const skillName = answer.job_offer_skill.skill_name;
+                  const years = answer.years_of_experience;
+                  const isTop = techStats ? techStats.isTopCandidateForSkill(skillName, years) : false;
+                  const maxYears = techStats?.maxYearsBySkill[skillName] || 10;
+                  const progressValue = maxYears > 0 ? (years / maxYears) * 100 : 0;
 
-                        return (
-                          <Box key={answer.id}>
-                            <Group justify="space-between" mb={4}>
-                              <Group gap={4} style={{ maxWidth: '70%' }} wrap="nowrap">
-                                <Text size="sm" fw={500}>
-                                  {skillName}
-                                </Text>
-                                {isTop && (
-                                  <ActionIcon
-                                    variant="transparent"
-                                    size="sm"
-                                    color='yellow'
-                                  >
-                                    <IconStar size={14} />
-                                  </ActionIcon>
-                                )}
-                              </Group>
-                              <Text size="xs" c="dimmed">
-                                {years} {years === 1 ? t('compare.card.year') : t('compare.card.years')}
-                              </Text>
-                            </Group>
-                            {isTop ? (
-                              <TopSkillProgressBar />
-                            ) : (
-                              <Progress
-                                value={progressValue}
-                                color="gray.5"
-                                size="sm"
-                                radius="xl"
-                              />
-                            )}
-                          </Box>
-                        );
-                      })}
-                    </Stack>
-                  ) : (
-                    <Text size="sm" c="dimmed">{t('compare.card.empty.skills')}</Text>
-                  )}
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
-          </Box>
+                  return (
+                    <Box key={answer.id}>
+                      <Group justify="space-between" mb={5}>
+                        <Group gap={5} style={{ maxWidth: '70%' }} wrap="nowrap">
+                          <Text size="sm" fw={500}>
+                            {skillName}
+                          </Text>
+                          {isTop && (
+                            <Box style={{ color: '#f59e0b', display: 'flex', alignItems: 'center' }}>
+                              <IconStar size={13} />
+                            </Box>
+                          )}
+                        </Group>
+                        <Text size="xs" fw={700} c={isTop ? 'yellow.6' : 'dimmed'}>
+                          {years} {years === 1 ? t('compare.card.year') : t('compare.card.years')}
+                        </Text>
+                      </Group>
+                      {isTop ? (
+                        <TopSkillProgressBar />
+                      ) : (
+                        <Progress
+                          value={progressValue}
+                          color="blue.4"
+                          size="sm"
+                          radius="xl"
+                        />
+                      )}
+                    </Box>
+                  );
+                })}
+              </Stack>
+            ) : (
+              <Text size="sm" c="dimmed">{t('compare.card.empty.skills')}</Text>
+            )}
+          </CollapsibleSection>
 
           {/* Work Experience Section */}
-          <Box>
-            <Accordion
-              variant="separated"
-              multiple
-              value={accordionValue}
-              onChange={onAccordionChange}
-            >
-              <Accordion.Item value="experience">
-                <Accordion.Control icon={<IconBriefcase size={15} color="var(--mantine-color-blue-filled)" />}>
-                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>{t('experience.title', { ns: 'profile' })}</Text>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  {candidateProfile?.work_experiences && candidateProfile.work_experiences.length > 0 ? (
-                    <Timeline active={candidateProfile.work_experiences.length} bulletSize={14} lineWidth={2} color="var(--mantine-color-blue-3)">
-                      {candidateProfile.work_experiences.map(exp => (
-                        <Timeline.Item key={exp.id} title={<Text fw={600} size="sm">{exp.position}</Text>}>
-                          <Text size="xs" c="dimmed">{exp.company_name}</Text>
-                          <Text size="xs" c="dimmed" mt={4}>
-                            {parseLocalDate(exp.start_date)?.toLocaleDateString()} - {exp.end_date ? parseLocalDate(exp.end_date)?.toLocaleDateString() : t('present', { ns: 'common' })}
-                          </Text>
-                          {exp.description && (
-                            <Text size="xs" mt={4} c="dimmed">{exp.description}</Text>
-                          )}
-                        </Timeline.Item>
-                      ))}
-                    </Timeline>
-                  ) : (
-                    <Text size="sm" c="dimmed">{t('compare.card.empty.experience')}</Text>
-                  )}
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
-          </Box>
+          <CollapsibleSection
+            title={t('experience.title', { ns: 'profile' })}
+            icon={<IconBriefcase size={13} color="#3b82f6" />}
+            value="experience"
+            accordionValue={accordionValue}
+            onToggle={() => handleToggleSection('experience')}
+            isDark={isDark}
+          >
+            {candidateProfile?.work_experiences && candidateProfile.work_experiences.length > 0 ? (
+              <Timeline
+                active={candidateProfile.work_experiences.length}
+                bulletSize={12}
+                lineWidth={1}
+                color="blue.3"
+              >
+                {candidateProfile.work_experiences.map(exp => (
+                  <Timeline.Item key={exp.id} title={<Text fw={600} size="sm">{exp.position}</Text>}>
+                    <Text size="xs" c="dimmed">{exp.company_name}</Text>
+                    <Text size="xs" c="dimmed" mt={2}>
+                      {parseLocalDate(exp.start_date)?.toLocaleDateString()} — {exp.end_date ? parseLocalDate(exp.end_date)?.toLocaleDateString() : t('present', { ns: 'common' })}
+                    </Text>
+                    {exp.description && (
+                      <Text size="xs" mt={4} c="dimmed" lineClamp={2}>{exp.description}</Text>
+                    )}
+                  </Timeline.Item>
+                ))}
+              </Timeline>
+            ) : (
+              <Text size="sm" c="dimmed">{t('compare.card.empty.experience')}</Text>
+            )}
+          </CollapsibleSection>
 
           {/* Education Section */}
-          <Box>
-            <Accordion
-              variant="separated"
-              multiple
-              value={accordionValue}
-              onChange={onAccordionChange}
-            >
-              <Accordion.Item value="education">
-                <Accordion.Control icon={<IconSchool size={15} color="var(--mantine-color-blue-filled)" />}>
-                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>{t('education.title', { ns: 'profile' })}</Text>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  {candidateProfile?.educations && candidateProfile.educations.length > 0 ? (
-                    <Stack gap="xs">
-                      {candidateProfile.educations.map(edu => (
-                        <Paper key={edu.id} py="xs" pr="xs" pl="md" withBorder>
-                          <Text fw={600} size="sm">{edu.degree_type} - {edu.field_of_study}</Text>
-                          <Text size="xs" c="dimmed">{edu.institution}</Text>
-                          <Text size="xs" c="dimmed" mt={4}>
-                            {parseLocalDate(edu.start_date)?.toLocaleDateString()} - {edu.end_date ? parseLocalDate(edu.end_date)?.toLocaleDateString() : t('present', { ns: 'common' })}
-                          </Text>
-                          {edu.description && (
-                            <Text size="xs" mt={4}>{edu.description}</Text>
-                          )}
-                        </Paper>
-                      ))}
-                    </Stack>
-                  ) : (
-                    <Text size="sm" c="dimmed">{t('compare.card.empty.education')}</Text>
-                  )}
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
-          </Box>
+          <CollapsibleSection
+            title={t('education.title', { ns: 'profile' })}
+            icon={<IconSchool size={13} color="#10b981" />}
+            value="education"
+            accordionValue={accordionValue}
+            onToggle={() => handleToggleSection('education')}
+            isDark={isDark}
+          >
+            {candidateProfile?.educations && candidateProfile.educations.length > 0 ? (
+              <Stack gap="sm">
+                {candidateProfile.educations.map(edu => (
+                  <Box
+                    key={edu.id}
+                    p="sm"
+                    style={{
+                      borderRadius: 10,
+                      border: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
+                      background: isDark ? '#0f172a' : '#f8fafc',
+                    }}
+                  >
+                    <Text fw={600} size="sm">{edu.degree_type} — {edu.field_of_study}</Text>
+                    <Text size="xs" c="dimmed">{edu.institution}</Text>
+                    <Text size="xs" c="dimmed" mt={2}>
+                      {parseLocalDate(edu.start_date)?.toLocaleDateString()} — {edu.end_date ? parseLocalDate(edu.end_date)?.toLocaleDateString() : t('present', { ns: 'common' })}
+                    </Text>
+                  </Box>
+                ))}
+              </Stack>
+            ) : (
+              <Text size="sm" c="dimmed">{t('compare.card.empty.education')}</Text>
+            )}
+          </CollapsibleSection>
 
-
-          {/* Interviews & Reviews Section */}
-          <Box>
-            <Accordion
-              variant="separated"
-              multiple
-              value={accordionValue}
-              onChange={onAccordionChange}
-            >
-              <Accordion.Item value="interviews">
-                <Accordion.Control icon={<IconUsers size={15} color="var(--mantine-color-blue-filled)" />}>
-                  <Text size="xs" fw={700} style={{ textTransform: 'uppercase' }}>{t('compare.card.sections.interviewHistory')}</Text>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <CandidateInterviewsDisplay
-                    interviews={interviews}
-                    applicationId={application.id}
-                  />
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
-          </Box>
+          {/* Interviews Section */}
+          <CollapsibleSection
+            title={t('compare.card.sections.interviewHistory')}
+            icon={<IconCalendarEvent size={13} color="#8b5cf6" />}
+            value="interviews"
+            accordionValue={accordionValue}
+            onToggle={() => handleToggleSection('interviews')}
+            isDark={isDark}
+          >
+            <CandidateInterviewsDisplay
+              interviews={interviews}
+              applicationId={application.id}
+            />
+          </CollapsibleSection>
         </Stack>
       </Box>
 
-      {/* Fixed Footer with Action Buttons */}
-      <Paper
+      {/* ── FOOTER ACTIONS ── */}
+      <Box
         p="md"
-        radius={0}
         style={{
-          borderTop: '1px solid var(--mantine-color-default-border)',
-          marginTop: 'auto',
-          backgroundColor: 'var(--mantine-color-body)'
+          borderTop: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
+          background: isDark ? '#0f172a' : '#f8fafc',
         }}
       >
         <Stack gap="xs">
           {application.status !== ApplicationStatus.HIRED && application.status !== ApplicationStatus.REJECTED && (
             <Button
-              leftSection={<IconCheck size={16} />}
+              leftSection={<IconCheck size={15} />}
               variant="filled"
               color="green"
               fullWidth
+              radius="md"
+              size="sm"
               onClick={() => onHire(application)}
+              style={{ fontWeight: 700 }}
             >
               {t('candidate.actions.hire', { ns: 'profile' })}
             </Button>
           )}
           <Button
-            leftSection={<IconCalendarEvent size={16} />}
+            leftSection={<IconCalendarEvent size={15} />}
             variant="light"
             fullWidth
+            radius="md"
+            size="sm"
             onClick={() => onScheduleInterview(application.id)}
           >
             {t('candidate.actions.schedule', { ns: 'profile' })}
           </Button>
           <Button
-            leftSection={<IconX size={16} />}
-            variant="light"
+            leftSection={<IconX size={15} />}
+            variant="subtle"
             color="red"
             fullWidth
+            radius="md"
+            size="sm"
             onClick={() => onReject(application)}
           >
             {t('candidate.actions.reject', { ns: 'profile' })}
           </Button>
         </Stack>
-      </Paper>
-    </Card>
+      </Box>
+    </Box>
   );
 }
