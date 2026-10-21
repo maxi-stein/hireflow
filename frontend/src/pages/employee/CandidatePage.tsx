@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { getApplicationStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert } from '@mantine/core';
+import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert, Box, useMantineColorScheme } from '@mantine/core';
 import { IconChevronLeft, IconX, IconCheck, IconCircleCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
 import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
@@ -26,6 +26,8 @@ export function CandidatePage() {
   const { t } = useTranslation('profile');
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
 
   // Data fetching
   const { data: candidate, isLoading: isLoadingCandidate } = useCandidateQuery(id || '');
@@ -77,7 +79,7 @@ export function CandidatePage() {
       link.click();
       link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
+    } catch {
       notifications.show({
         title: t('candidate.notifications.errorTitle'),
         message: t('candidate.actions.downloadError'),
@@ -86,7 +88,6 @@ export function CandidatePage() {
     }
   };
 
-  // Wrapper handlers to pass position context to the shared hook
   const handleRejectClick = (applicationId: string, position: string) => {
     candidateActions.handleRejectClick(applicationId, `application for ${position}`);
   };
@@ -122,6 +123,8 @@ export function CandidatePage() {
         leftSection={<IconChevronLeft size={16} />}
         onClick={() => navigate(-1)}
         mb="lg"
+        color="gray"
+        size="sm"
       >
         {t('candidate.actions.backToList')}
       </Button>
@@ -145,6 +148,7 @@ export function CandidatePage() {
             color="green"
             title={t('candidate.management.hiredTitle')}
             icon={<IconCircleCheck size={18} />}
+            radius="xl"
           >
             <Trans
               i18nKey="candidate.management.hiredMessage"
@@ -165,11 +169,28 @@ export function CandidatePage() {
         )}
 
         {/* Section 3: Details */}
-        <Stack gap="lg">
-          <EducationSection educations={candidate.educations || []} />
-
-          <WorkExperienceSection experiences={candidate.work_experiences || []} />
-        </Stack>
+        <Box
+          style={{
+            borderRadius: 16,
+            border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
+            background: isDark ? '#1e293b' : '#ffffff',
+            overflow: 'hidden',
+          }}
+        >
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing={0}>
+            <Box
+              p="xl"
+              style={{
+                borderRight: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
+              }}
+            >
+              <EducationSection educations={candidate.educations || []} />
+            </Box>
+            <Box p="xl">
+              <WorkExperienceSection experiences={candidate.work_experiences || []} />
+            </Box>
+          </SimpleGrid>
+        </Box>
 
       </Stack>
 

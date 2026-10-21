@@ -6,6 +6,8 @@ export interface TechExperienceStats {
   isTopCandidateForSkill: (skillName: string, years: number) => boolean;
 }
 
+export type TechStats = TechExperienceStats;
+
 export function useCandidateTechExperience(allApplications: CandidateApplication[]): TechExperienceStats {
   const maxYearsBySkill = useMemo(() => {
     const maxYears: Record<string, number> = {};

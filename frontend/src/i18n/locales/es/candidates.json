@@ -20,7 +20,7 @@
       "empty": "No se encontraron candidatos con esos criterios.",
       "applicationsCount": "{{count}} Postulación",
       "applicationsCount_plural": "{{count}} Postulaciones",
-      "moreApplications": "+ {{count}} postulación más",
+      "moreApplications": "{{count}} postulación más",
       "moreApplications_plural": "+ {{count}} postulaciones más",
       "noApplications": "Sin postulaciones"
     }
@@ -38,6 +38,8 @@
     "subtitle": "Seleccione candidatos de una oferta para comparar",
     "viewTitle": "Comparación detallada",
     "viewSubtitle": "Comparando {{count}} candidatos",
+    "candidateCount": "{{count}} candidato",
+    "candidateCount_plural": "{{count}} candidatos",
     "buttons": {
       "clear": "Limpiar Selección",
       "compare": "Comparar Candidatos",
@@ -48,7 +50,8 @@
       "loading": "Cargando ofertas...",
       "empty": "No se encontraron ofertas",
       "emptyCandidates": "No hay candidatos disponibles para comparar",
-      "applicants": "{{count}} postulantes",
+      "applicants": "{{count}} postulante",
+      "applicants_plural": "{{count}} postulantes",
       "candidateSearch": "Buscar candidatos..."
     },
     "card": {

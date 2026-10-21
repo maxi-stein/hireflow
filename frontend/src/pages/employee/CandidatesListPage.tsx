@@ -2,7 +2,6 @@ import {
   Container,
   Title,
   Text,
-  Paper,
   Group,
   Pagination,
   Stack,
@@ -11,7 +10,10 @@ import {
   Table,
   Tooltip,
   LoadingOverlay,
-  Button
+  Button,
+  Box,
+  Badge,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +27,8 @@ import { APP_MAX_WIDTH } from '../../constants/layout';
 export function CandidatesListPage() {
   const { t } = useTranslation('candidates');
   const navigate = useNavigate();
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebouncedValue(search, 500);
@@ -39,7 +43,7 @@ export function CandidatesListPage() {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
-    setPage(1); // Reset to first page on search
+    setPage(1);
   };
 
   const handleSortChange = (value: string | null) => {
@@ -50,17 +54,24 @@ export function CandidatesListPage() {
   };
 
   const rows = candidatesData?.data.map((candidate) => (
-    <Table.Tr key={candidate.id} >
+    <Table.Tr
+      key={candidate.id}
+      style={{
+        cursor: 'pointer',
+        transition: 'background-color 0.15s ease',
+      }}
+      onClick={() => navigate(`/manage/candidates/list/${candidate.id}`)}
+    >
       <Table.Td>
-        <Group gap="sm" style={{ margin: '10px 5px' }}>
+        <Group gap="sm" py={8}>
           <CandidateAvatar
             candidateId={candidate.id}
             firstName={candidate.user.first_name}
             lastName={candidate.user.last_name}
-            size="lg"
+            size="md"
           />
           <div>
-            <Text fw={500}>
+            <Text fw={600} size="sm">
               {candidate.user.first_name} {candidate.user.last_name}
             </Text>
             <Text size="xs" c="dimmed">{candidate.user.email}</Text>
@@ -69,9 +80,9 @@ export function CandidatesListPage() {
       </Table.Td>
       <Table.Td>
         {candidate.headline ? (
-          <Text size="sm">{candidate.headline}</Text>
+          <Text size="sm" lineClamp={2}>{candidate.headline}</Text>
         ) : (
-          <Text size="sm" c="dimmed">{t('na', { ns: 'common' })}</Text>
+          <Text size="sm" c="dimmed" fs="italic">{t('na', { ns: 'common' })}</Text>
         )}
       </Table.Td>
       <Table.Td>
@@ -79,9 +90,9 @@ export function CandidatesListPage() {
           const applications = (candidate.applications || []).filter((app: any) => app.status !== 'REJECTED');
           if (applications.length === 0) {
             return (
-              <Paper p="xs" radius="sm" bg="var(--mantine-color-gray-light)" c="var(--mantine-color-gray-light-color)" bd="1px solid var(--mantine-color-gray-light-color)" shadow="none">
-                <Text size="sm" fw={500}>{t('list.table.noApplications')}</Text>
-              </Paper>
+              <Badge variant="light" color="gray" size="sm">
+                {t('list.table.noApplications')}
+              </Badge>
             );
           }
 
@@ -102,40 +113,43 @@ export function CandidatesListPage() {
 
           if (latestInterview) {
             return (
-              <Paper p="xs" radius="sm" bg="var(--mantine-color-blue-light)" c="var(--mantine-color-blue-light-color)" bd="1px solid var(--mantine-color-blue-light-color)" shadow="none">
-                <Text size="sm" fw={600}>{latestInterview.title}</Text>
-                <Text size="xs" mt={2} opacity={0.8}>
+              <Box>
+                <Badge variant="light" color="blue" size="sm" mb={4}>
+                  {latestInterview.title}
+                </Badge>
+                <Text size="xs" c="dimmed">
                   {jobOfferForInterview?.position}
-                  {remainingAppsCount > 0 && ` ${t('list.table.moreApplications', { count: remainingAppsCount })}`}
+                  {remainingAppsCount > 0 && ` +${t('list.table.moreApplications', { count: remainingAppsCount })}`}
                 </Text>
-              </Paper>
+              </Box>
             );
           }
 
           const latestApp = applications[applications.length - 1];
           return (
-            <Paper p="xs" radius="sm" bg="var(--mantine-color-green-light)" c="var(--mantine-color-green-light-color)" bd="1px solid var(--mantine-color-green-light-color)" shadow="none">
-              <Text size="sm" fw={600}>{t('list.table.applicationsCount', { count: applications.length })}</Text>
-              <Text size="xs" mt={2} opacity={0.8}>
+            <Box>
+              <Badge variant="light" color="teal" size="sm" mb={4}>
+                {t('list.table.applicationsCount', { count: applications.length })}
+              </Badge>
+              <Text size="xs" c="dimmed">
                 {latestApp.job_offer?.position}
-                {remainingAppsCount > 0 && ` ${t('list.table.moreApplications', { count: remainingAppsCount })}`}
+                {remainingAppsCount > 0 && ` +${t('list.table.moreApplications', { count: remainingAppsCount })}`}
               </Text>
-            </Paper>
+            </Box>
           );
         })()}
       </Table.Td>
       <Table.Td>
-        {/* Update date */}
-        <Text size="sm">{new Date(candidate.profile_updated_at).toLocaleDateString()}</Text>
+        <Text size="sm" c="dimmed">{new Date(candidate.profile_updated_at).toLocaleDateString()}</Text>
       </Table.Td>
-      <Table.Td>
+      <Table.Td onClick={(e) => e.stopPropagation()}>
         <Group gap="xs" justify="flex-end">
           <Tooltip label={t('table.tooltips.viewCandidate', { ns: 'applications' })}>
             <Button
               variant="light"
               color="blue"
               onClick={() => navigate(`/manage/candidates/list/${candidate.id}`)}
-              leftSection={<IconEye size={18} />}
+              leftSection={<IconEye size={15} />}
               size="xs"
             >
               {t('list.table.viewProfile')}
@@ -143,7 +157,7 @@ export function CandidatesListPage() {
           </Tooltip>
         </Group>
       </Table.Td>
-    </Table.Tr >
+    </Table.Tr>
   ));
 
   return (
@@ -152,46 +166,83 @@ export function CandidatesListPage() {
         <Group justify="space-between" align="flex-end">
           <div>
             <Title order={2}>{t('list.title')}</Title>
-            <Text c="dimmed" size="sm">
+            <Text c="dimmed" size="sm" mt={4}>
               {t('list.subtitle')}
             </Text>
           </div>
         </Group>
 
-        <Paper p="md" withBorder radius="md">
-          <Group justify="space-between" mb="md">
-            <TextInput
-              placeholder={t('list.searchPlaceholder')}
-              leftSection={<IconSearch size={16} />}
-              value={search}
-              onChange={handleSearchChange}
-              w={300}
-            />
-            <Select
-              label={t('list.sort.label')}
-              placeholder={t('list.sort.placeholder')}
-              leftSection={sortBy === 'updated_at' ? <IconSortDescending size={16} /> : <IconSortAscending size={16} />}
-              data={[
-                { value: 'updated_at', label: t('list.sort.updatedAt') },
-                { value: 'last_name', label: t('list.sort.lastName') },
-              ]}
-              value={sortBy}
-              onChange={handleSortChange}
-              allowDeselect={false}
-              w={200}
-            />
-          </Group>
+        <Box
+          style={{
+            borderRadius: 16,
+            border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
+            background: isDark ? '#1e293b' : '#ffffff',
+            overflow: 'hidden',
+            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 4px 20px rgba(15,23,42,0.05)',
+          }}
+        >
+          {/* Toolbar */}
+          <Box
+            px="xl"
+            py="md"
+            style={{
+              borderBottom: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
+              background: isDark ? '#0f172a' : '#f8fafc',
+            }}
+          >
+            <Group justify="space-between" wrap="wrap" gap="md">
+              <TextInput
+                placeholder={t('list.searchPlaceholder')}
+                leftSection={<IconSearch size={15} />}
+                value={search}
+                onChange={handleSearchChange}
+                w={280}
+                radius="md"
+              />
+              <Select
+                label={t('list.sort.label')}
+                leftSection={sortBy === 'updated_at' ? <IconSortDescending size={15} /> : <IconSortAscending size={15} />}
+                data={[
+                  { value: 'updated_at', label: t('list.sort.updatedAt') },
+                  { value: 'last_name', label: t('list.sort.lastName') },
+                ]}
+                value={sortBy}
+                onChange={handleSortChange}
+                allowDeselect={false}
+                w={200}
+                radius="md"
+              />
+            </Group>
+          </Box>
 
-          <Paper pos="relative" mih={300}>
-            <LoadingOverlay visible={isLoading} zIndex={100} overlayProps={{ radius: "sm", blur: 2 }} />
+          {/* Table */}
+          <Box pos="relative" mih={300}>
+            <LoadingOverlay visible={isLoading} zIndex={100} overlayProps={{ radius: 'sm', blur: 2 }} />
 
-            <Table horizontalSpacing="md" verticalSpacing="sm" highlightOnHover>
+            <Table
+              horizontalSpacing="xl"
+              verticalSpacing="xs"
+              highlightOnHover
+              styles={{
+                th: {
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  color: isDark ? '#64748b' : '#94a3b8',
+                  paddingTop: 12,
+                  paddingBottom: 12,
+                  borderBottom: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
+                  background: isDark ? '#0f172a' : '#f8fafc',
+                },
+              }}
+            >
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th w="30%">{t('list.table.candidate')}</Table.Th>
                   <Table.Th w="20%">{t('list.table.profile')}</Table.Th>
-                  <Table.Th w="30%">{t('list.table.applications')}</Table.Th>
-                  <Table.Th w="10%">{t('list.table.lastUpdated')}</Table.Th>
+                  <Table.Th w="28%">{t('list.table.applications')}</Table.Th>
+                  <Table.Th w="12%">{t('list.table.lastUpdated')}</Table.Th>
                   <Table.Th w="10%" style={{ textAlign: 'right' }}>{t('list.table.actions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
@@ -201,26 +252,37 @@ export function CandidatesListPage() {
                   <Table.Tr>
                     <Table.Td colSpan={5}>
                       <Stack align="center" py="xl" gap="xs">
-                        <IconUser size={40} color="gray" style={{ opacity: 0.5 }} />
-                        <Text c="dimmed">{t('list.table.empty')}</Text>
+                        <Box
+                          p="lg"
+                          style={{
+                            borderRadius: '50%',
+                            background: isDark ? '#334155' : '#f1f5f9',
+                          }}
+                        >
+                          <IconUser size={32} color={isDark ? '#64748b' : '#94a3b8'} />
+                        </Box>
+                        <Text c="dimmed" fw={500}>{t('list.table.empty')}</Text>
                       </Stack>
                     </Table.Td>
                   </Table.Tr>
                 )}
               </Table.Tbody>
             </Table>
-          </Paper>
+          </Box>
 
           {candidatesData && candidatesData.pagination.totalPages > 1 && (
-            <Group justify="center" mt="xl">
-              <Pagination
-                total={candidatesData.pagination.totalPages}
-                value={page}
-                onChange={setPage}
-              />
-            </Group>
+            <Box px="xl" py="md" style={{ borderTop: `1px solid ${isDark ? '#334155' : '#f1f5f9'}` }}>
+              <Group justify="center">
+                <Pagination
+                  total={candidatesData.pagination.totalPages}
+                  value={page}
+                  onChange={setPage}
+                  size="sm"
+                />
+              </Group>
+            </Box>
           )}
-        </Paper>
+        </Box>
       </Stack>
     </Container>
   );

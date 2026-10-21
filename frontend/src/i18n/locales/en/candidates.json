@@ -38,6 +38,8 @@
     "subtitle": "Select candidates from a job offer to compare",
     "viewTitle": "Detailed comparison",
     "viewSubtitle": "Comparing {{count}} candidates",
+    "candidateCount": "{{count}} candidate",
+    "candidateCount_plural": "{{count}} candidates",
     "buttons": {
       "clear": "Clear Selection",
       "compare": "Compare Candidates",
@@ -48,7 +50,8 @@
       "loading": "Loading job offers...",
       "empty": "No job offers found",
       "emptyCandidates": "No candidates available for comparison",
-      "applicants": "{{count}} applicants",
+      "applicants": "{{count}} applicant",
+      "applicants_plural": "{{count}} applicants",
       "candidateSearch": "Search candidates..."
     },
     "card": {
