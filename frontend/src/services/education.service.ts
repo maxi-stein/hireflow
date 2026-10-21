@@ -27,15 +27,15 @@ export type UpdateEducationDto = Partial<Omit<CreateEducationDto, 'candidate_id'
 
 export const educationService = {
   getAll: async (candidateId: string): Promise<Education[]> => {
-    const { data } = await apiClient.get<Education[]>(`/candidates/${candidateId}/educations`); // Ensuring this exists or similar
+    const { data } = await apiClient.get<Education[]>(`/educations?candidate_id=${candidateId}`);
     return data;
   },
 
   create: async (candidateId: string, education: CreateEducationDto): Promise<Education> => {
-    const { data } = await apiClient.post<Education>(
-      `/candidates/${candidateId}/educations`,
-      education,
-    );
+    const { data } = await apiClient.post<Education>('/educations', {
+      ...education,
+      candidate_id: candidateId,
+    });
     return data;
   },
 
