@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Paper, Group, Text, Button, Stack, Textarea, NumberInput, TagsInput, LoadingOverlay, Grid, Divider, Box, Badge } from '@mantine/core';
+import { Paper, Group, Text, Button, Stack, Textarea, NumberInput, TagsInput, LoadingOverlay, Grid, Divider, Box } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconDeviceFloppy, IconBriefcase, IconCalendar, IconUserCheck } from '@tabler/icons-react';

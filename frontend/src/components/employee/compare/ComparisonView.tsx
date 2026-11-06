@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Container, Flex, Box, ScrollArea, Text, useMantineColorScheme } from '@mantine/core';
+import { Container, Flex, Box, ScrollArea, useMantineColorScheme } from '@mantine/core';
 import { ComparisonViewHeader } from './ComparisonViewHeader';
 import { CandidateComparisonCard } from './CandidateComparisonCard';
 import { CandidateActionModals } from '../common/CandidateActionModals';
@@ -11,7 +11,6 @@ import { APP_MAX_WIDTH } from '../../../constants/layout';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import type { JobOffer } from '../../../services/job-offer.service';
 import type { TechStats } from '../../../hooks/useCandidateTechExperience';
-import { useTranslation } from 'react-i18next';
 
 interface ComparisonViewProps {
   candidatesToCompare: CandidateApplication[];
@@ -29,7 +28,6 @@ export function ComparisonView({
   techStats
 }: ComparisonViewProps) {
   const navigate = useNavigate();
-  const { t } = useTranslation('candidates');
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
   const [accordionValue, setAccordionValue] = useState<string[]>(['skills']);

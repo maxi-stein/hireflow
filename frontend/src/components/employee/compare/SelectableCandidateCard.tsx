@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Group, Checkbox, Badge, Text, Box, useMantineColorScheme } from '@mantine/core';
+import { Group, Checkbox, Badge, Text, Box } from '@mantine/core';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { getApplicationStatusColor } from '../../../utils/application.utils';
 import type { CandidateApplication } from '../../../services/candidate-application.service';

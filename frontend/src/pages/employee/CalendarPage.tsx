@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { Container, Title, Paper, Grid, Button, Group, Text, ActionIcon, Box, Badge, useMantineColorScheme } from '@mantine/core';
-import { IconChevronLeft, IconChevronRight, IconPlus, IconCalendarEvent } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconPlus } from '@tabler/icons-react';
 import { useInterviewsQuery, useUpdateInterviewMutation } from '../../hooks/api/useInterviews';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { notifications } from '@mantine/notifications';

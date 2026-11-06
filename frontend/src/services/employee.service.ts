@@ -3,6 +3,8 @@ import type { PaginatedResponse } from '../types/common';
 
 export interface Employee {
   id: string;
+  position?: string;
+  roles?: string[];
   user: {
     id: string;
     first_name: string;
@@ -25,6 +27,11 @@ export interface CreateEmployeeUser {
 export const employeeService = {
   getAll: async (params?: { limit?: number }): Promise<PaginatedResponse<Employee>> => {
     const response = await apiClient.get<PaginatedResponse<Employee>>('/employees', { params });
+    return response.data;
+  },
+
+  getById: async (id: string): Promise<Employee> => {
+    const response = await apiClient.get<Employee>(`/employees/${id}`);
     return response.data;
   },
 

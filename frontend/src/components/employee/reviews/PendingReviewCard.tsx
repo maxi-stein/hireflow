@@ -7,9 +7,7 @@ import { useTranslation } from 'react-i18next';
 interface PendingReviewCardProps {
   candidateId: string;
   interviews: Interview[];
-  selectedInterviewId: string | null;
   onReviewClick: (interviewId: string, reviewId?: string, interview?: Interview) => void;
-  onCloseReview: () => void;
 }
 
 /**
@@ -25,9 +23,7 @@ function getDaysSince(dateStr: string): number {
 export function PendingReviewCard({
   candidateId,
   interviews,
-  selectedInterviewId,
   onReviewClick,
-  onCloseReview,
 }: PendingReviewCardProps) {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
@@ -62,7 +58,6 @@ export function PendingReviewCard({
           .map(i => `${i.user.first_name} ${i.user.last_name}`)
           .join(', ');
 
-        const isSelected = selectedInterviewId === interview.id;
 
         return (
           <Paper

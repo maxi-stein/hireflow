@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Box, Text, Badge, LoadingOverlay, Stack, useMantineColorScheme } from '@mantine/core';
+import { Box, Text, Badge, LoadingOverlay } from '@mantine/core';
 import { IconChevronDown, IconChevronUp, IconBriefcase, IconUsers } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { CandidateSelectionList } from './CandidateSelectionList';
