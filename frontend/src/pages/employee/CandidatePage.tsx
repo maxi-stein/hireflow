@@ -10,7 +10,8 @@ import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { useCandidateFilesQuery } from '../../hooks/api/useUserFiles';
 import { useCandidateActions } from '../../hooks/useCandidateActions';
 import { ApplicationStatus } from '../../services/candidate-application.service';
-import { FileType, userFileService } from '../../services/user-file.service';
+import { FileType } from '../../services/user-file.service';
+import { useFileDownloader } from '../../hooks/useFileDownloader';
 import { notifications } from '@mantine/notifications';
 import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';
 import { WorkExperienceSection } from '../../components/employee/candidate-details/WorkExperienceSection';
@@ -46,6 +47,7 @@ export function CandidatePage() {
   const [scheduleApplicationId, setScheduleApplicationId] = useState<string | undefined>(undefined);
 
   const resume = files?.find(f => f.file_type === FileType.RESUME);
+  const { downloadFile } = useFileDownloader();
 
   // Shared hook for reject/hire actions with notification callbacks
   const candidateActions = useCandidateActions({
@@ -67,24 +69,9 @@ export function CandidatePage() {
     },
   });
 
-  const handleDownloadResume = async () => {
-    if (!resume) return;
-    try {
-      const blob = await userFileService.downloadFile(resume.id);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', resume.file_name);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch {
-      notifications.show({
-        title: t('candidate.notifications.errorTitle'),
-        message: t('candidate.actions.downloadError'),
-        color: 'red',
-      });
+  const handleDownloadResume = () => {
+    if (resume) {
+      downloadFile(resume.id, resume.file_name);
     }
   };
 

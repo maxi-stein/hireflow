@@ -23,19 +23,18 @@ import {
   IconMapPin,
   IconBrandLinkedin,
   IconBrandGithub,
-  IconChevronDown,
-  IconChevronRight,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useCandidateQuery } from '../../../hooks/api/useCandidates';
 import { useCandidateInterviewsQuery } from '../../../hooks/api/useInterviews';
 import { useCandidateFilesQuery } from '../../../hooks/api/useUserFiles';
+import { useFileDownloader } from '../../../hooks/useFileDownloader';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
-import { FileType, userFileService } from '../../../services/user-file.service';
-import { notifications } from '@mantine/notifications';
+import { FileType } from '../../../services/user-file.service';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
+import { CollapsibleSection } from '../../shared/CollapsibleSection';
 import type { TechExperienceStats } from '../../../hooks/useCandidateTechExperience';
 import { TopSkillProgressBar } from './TopSkillProgressBar';
 import { parseLocalDate } from '../../../utils/dateUtils';
@@ -49,62 +48,6 @@ interface CandidateComparisonCardProps {
   accordionValue: string[];
   onAccordionChange: (value: string[]) => void;
   techStats?: TechExperienceStats;
-}
-
-interface SectionProps {
-  title: string;
-  icon: React.ReactNode;
-  value: string;
-  accordionValue: string[];
-  onToggle: () => void;
-  isDark: boolean;
-  children: React.ReactNode;
-}
-
-function CollapsibleSection({ title, icon, value, accordionValue, onToggle, isDark, children }: SectionProps) {
-  const isOpen = accordionValue.includes(value);
-
-  return (
-    <Box
-      style={{
-        borderRadius: 12,
-        border: `1px solid ${isDark ? '#334155' : '#f1f5f9'}`,
-        overflow: 'hidden',
-      }}
-    >
-      <Box
-        px="md"
-        py="sm"
-        onClick={onToggle}
-        style={{
-          cursor: 'pointer',
-          background: isDark ? '#0f172a' : '#f8fafc',
-          borderBottom: isOpen ? `1px solid ${isDark ? '#334155' : '#f1f5f9'}` : 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          userSelect: 'none',
-        }}
-      >
-        <Group gap="sm">
-          {icon}
-          <Text size="xs" fw={700} style={{ color: isDark ? '#94a3b8' : '#475569', letterSpacing: '0.03em' }}>
-            {title}
-          </Text>
-        </Group>
-        {isOpen ? (
-          <IconChevronDown size={14} color={isDark ? '#64748b' : '#94a3b8'} />
-        ) : (
-          <IconChevronRight size={14} color={isDark ? '#64748b' : '#94a3b8'} />
-        )}
-      </Box>
-      {isOpen && (
-        <Box p="md" style={{ background: isDark ? '#1e293b' : '#ffffff' }}>
-          {children}
-        </Box>
-      )}
-    </Box>
-  );
 }
 
 export function CandidateComparisonCard({
@@ -124,25 +67,11 @@ export function CandidateComparisonCard({
   const { data: files, isLoading: isLoadingFiles } = useCandidateFilesQuery(application.candidate.id);
 
   const resume = files?.find(f => f.file_type === FileType.RESUME);
+  const { downloadFile } = useFileDownloader();
 
-  const handleDownloadResume = async () => {
-    if (!resume) return;
-    try {
-      const blob = await userFileService.downloadFile(resume.id);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', resume.file_name);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch {
-      notifications.show({
-        title: t('candidate.notifications.errorTitle', { ns: 'profile' }),
-        message: t('candidate.actions.downloadError', { ns: 'profile' }),
-        color: 'red',
-      });
+  const handleDownloadResume = () => {
+    if (resume) {
+      downloadFile(resume.id, resume.file_name);
     }
   };
 
