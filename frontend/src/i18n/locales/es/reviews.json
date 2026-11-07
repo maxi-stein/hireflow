@@ -10,11 +10,13 @@
     "pending": "Evaluaciones Pendientes",
     "completed": "Evaluaciones Completadas"
   },
-  "searchPlaceholder": "Buscar por nombre de candidato...",
+  "searchPlaceholder": "Buscar por candidato o puesto de trabajo...",
   "empty": {
     "pending": "No se encontraron evaluaciones pendientes.",
     "completed": "Aún no hay evaluaciones.",
-    "team": "No se encontraron evaluaciones del equipo."
+    "team": "No se encontraron evaluaciones del equipo.",
+    "noSearchResults": "No se encontraron evaluaciones que coincidan con la búsqueda.",
+    "clearSearch": "Limpiar búsqueda"
   },
   "sections": {
     "myReviews": "Mis Evaluaciones",

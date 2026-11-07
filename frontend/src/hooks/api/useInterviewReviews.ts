@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { interviewReviewService } from '../../services/interview-review.service';
-import type { CreateInterviewReviewDto, UpdateInterviewReviewDto } from '../../services/interview-review.service';
+import type { CreateInterviewReviewDto, UpdateInterviewReviewDto, FilterInterviewReviewsDto } from '../../services/interview-review.service';
 
 export const REVIEWS_QUERY_KEY = ['interview-reviews'];
 
@@ -23,6 +23,13 @@ export function useMyCompletedReviewsQuery(page = 1, limit = 10) {
   return useQuery({
     queryKey: [...REVIEWS_QUERY_KEY, 'my-completed', { page, limit }],
     queryFn: () => interviewReviewService.findMyCompletedReviews(page, limit),
+  });
+}
+
+export function useAllCompletedReviewsQuery(filters?: FilterInterviewReviewsDto) {
+  return useQuery({
+    queryKey: [...REVIEWS_QUERY_KEY, 'completed-all', filters],
+    queryFn: () => interviewReviewService.getAllCompletedReviews(filters),
   });
 }
 

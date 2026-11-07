@@ -1,5 +1,5 @@
-import { Container, Title, Paper, Stack, Box, Text, Tabs, Badge, TextInput, Group, useMantineColorScheme } from '@mantine/core';
-import { IconClipboardCheck, IconHistory, IconSearch, IconUserCheck, IconUsers } from '@tabler/icons-react';
+import { Container, Title, Paper, Stack, Box, Text, Tabs, Badge, TextInput, Group, Pagination, LoadingOverlay, ActionIcon, Button, useMantineColorScheme } from '@mantine/core';
+import { IconClipboardCheck, IconHistory, IconSearch, IconUserCheck, IconUsers, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { APP_MAX_WIDTH } from '../../constants/layout';
@@ -19,9 +19,14 @@ export function ReviewsPage() {
 
   const {
     pendingReviews,
+    completedReviews,
     filteredPendingReviews,
     myCompletedReviews,
     otherCompletedReviews,
+    completedPagination,
+    completedPage,
+    setCompletedPage,
+    isLoadingCompleted,
     searchQuery,
     setSearchQuery,
     selectedInterviewId,
@@ -52,9 +57,16 @@ export function ReviewsPage() {
         <TextInput
           placeholder={t('searchPlaceholder')}
           leftSection={<IconSearch size={16} />}
+          rightSection={
+            searchQuery ? (
+              <ActionIcon size="sm" variant="subtle" color="gray" onClick={() => setSearchQuery('')}>
+                <IconX size={14} />
+              </ActionIcon>
+            ) : null
+          }
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.currentTarget.value)}
-          w={{ base: '100%', sm: 300 }}
+          w={{ base: '100%', sm: 340 }}
           radius="md"
         />
       </Group>
@@ -81,7 +93,14 @@ export function ReviewsPage() {
             leftSection={<IconHistory size={16} />}
             style={{ fontWeight: 700, fontSize: '0.9375rem' }}
           >
-            <span>{t('tabs.completed')}</span>
+            <Group gap="xs" align="center">
+              <span>{t('tabs.completed')}</span>
+              {completedPagination?.total !== undefined && completedPagination.total > 0 && (
+                <Badge size="sm" radius="xl" color="teal" variant="light">
+                  {completedPagination.total}
+                </Badge>
+              )}
+            </Group>
           </Tabs.Tab>
         </Tabs.List>
 
@@ -143,9 +162,7 @@ export function ReviewsPage() {
                             key={candidateId}
                             candidateId={candidateId}
                             interviews={interviews}
-                            selectedInterviewId={selectedInterviewId}
                             onReviewClick={handleReviewClick}
-                            onCloseReview={handleCloseReview}
                           />
                         ))}
                       </Stack>
@@ -163,85 +180,123 @@ export function ReviewsPage() {
             withBorder
             p="xl"
             radius="lg"
+            pos="relative"
             bg="light-dark(#ffffff, #1e293b)"
             style={{
               borderColor: 'light-dark(#e2e8f0, #334155)',
               boxShadow: isDark ? '0 4px 20px -2px rgba(0, 0, 0, 0.4)' : '0 4px 20px -2px rgba(15, 23, 42, 0.05)',
             }}
           >
-            <Stack gap="xl">
-              {/* My Reviews Section */}
-              <Box>
-                <Group gap="xs" mb="md" align="center">
-                  <Box p={6} bg="light-dark(#eff6ff, rgba(37, 99, 235, 0.15))" style={{ borderRadius: 8, color: '#2563eb' }}>
-                    <IconUserCheck size={16} />
-                  </Box>
-                  <Title order={4} c="light-dark(#0f172a, #f8fafc)" size="h4" style={{ fontWeight: 800 }}>
-                    {t('sections.myReviews')}
-                  </Title>
-                </Group>
+            <LoadingOverlay visible={isLoadingCompleted} zIndex={100} overlayProps={{ radius: 'lg', blur: 2 }} />
 
-                {myCompletedReviews.length === 0 ? (
-                  <Paper
-                    p="2rem"
-                    radius="md"
-                    ta="center"
-                    style={{
-                      border: '1px dashed light-dark(#e2e8f0, #334155)',
-                      backgroundColor: 'light-dark(#f8fafc, #0f172a)',
-                    }}
-                  >
-                    <Text c="dimmed" size="sm">
-                      {t('empty.completed')}
-                    </Text>
-                  </Paper>
-                ) : (
-                  <CompletedReviewsAccordion
-                    groups={myCompletedGroups}
-                    selectedInterviewId={selectedInterviewId}
-                    onReviewClick={handleReviewClick}
-                    onCloseReview={handleCloseReview}
-                    isMyReview={isMyReview}
-                  />
+            {completedReviews.length === 0 && !isLoadingCompleted ? (
+              <Paper
+                p="3rem"
+                radius="md"
+                ta="center"
+                style={{
+                  border: '2px dashed light-dark(#e2e8f0, #334155)',
+                  backgroundColor: 'light-dark(#f8fafc, #0f172a)',
+                }}
+              >
+                <Text fw={600} size="md" c="dimmed">
+                  {searchQuery
+                    ? t('empty.noSearchResults', { defaultValue: 'No se encontraron evaluaciones que coincidan con la búsqueda.' })
+                    : t('empty.completed')}
+                </Text>
+                {searchQuery && (
+                  <Button variant="subtle" size="xs" mt="sm" onClick={() => setSearchQuery('')}>
+                    {t('empty.clearSearch', { defaultValue: 'Limpiar búsqueda' })}
+                  </Button>
                 )}
-              </Box>
+              </Paper>
+            ) : (
+              <Stack gap="xl">
+                {/* My Reviews Section */}
+                <Box>
+                  <Group gap="xs" mb="md" align="center">
+                    <Box p={6} bg="light-dark(#eff6ff, rgba(37, 99, 235, 0.15))" style={{ borderRadius: 8, color: '#2563eb' }}>
+                      <IconUserCheck size={16} />
+                    </Box>
+                    <Title order={4} c="light-dark(#0f172a, #f8fafc)" size="h4" style={{ fontWeight: 800 }}>
+                      {t('sections.myReviews')}
+                    </Title>
+                  </Group>
 
-              {/* Team Reviews Section */}
-              <Box pt="md" style={{ borderTop: `1px solid ${isDark ? '#334155' : '#f1f5f9'}` }}>
-                <Group gap="xs" mb="md" align="center">
-                  <Box p={6} bg="light-dark(#f0fdf4, rgba(22, 163, 74, 0.15))" style={{ borderRadius: 8, color: '#16a34a' }}>
-                    <IconUsers size={16} />
-                  </Box>
-                  <Title order={4} c="light-dark(#0f172a, #f8fafc)" size="h4" style={{ fontWeight: 800 }}>
-                    {t('sections.teamReviews')}
-                  </Title>
-                </Group>
+                  {myCompletedReviews.length === 0 ? (
+                    <Paper
+                      p="2rem"
+                      radius="md"
+                      ta="center"
+                      style={{
+                        border: '1px dashed light-dark(#e2e8f0, #334155)',
+                        backgroundColor: 'light-dark(#f8fafc, #0f172a)',
+                      }}
+                    >
+                      <Text c="dimmed" size="sm">
+                        {t('empty.completed')}
+                      </Text>
+                    </Paper>
+                  ) : (
+                    <CompletedReviewsAccordion
+                      groups={myCompletedGroups}
+                      selectedInterviewId={selectedInterviewId}
+                      onReviewClick={handleReviewClick}
+                      onCloseReview={handleCloseReview}
+                      isMyReview={isMyReview}
+                    />
+                  )}
+                </Box>
 
-                {otherCompletedReviews.length === 0 ? (
-                  <Paper
-                    p="2rem"
-                    radius="md"
-                    ta="center"
-                    style={{
-                      border: '1px dashed light-dark(#e2e8f0, #334155)',
-                      backgroundColor: 'light-dark(#f8fafc, #0f172a)',
-                    }}
-                  >
-                    <Text c="dimmed" size="sm">
-                      {t('empty.team', { defaultValue: 'No se encontraron evaluaciones del equipo.' })}
-                    </Text>
-                  </Paper>
-                ) : (
-                  <CompletedReviewsAccordion
-                    groups={otherCompletedGroups}
-                    selectedInterviewId={selectedInterviewId}
-                    onReviewClick={handleReviewClick}
-                    onCloseReview={handleCloseReview}
-                    isMyReview={isMyReview}
-                  />
+                {/* Team Reviews Section */}
+                <Box pt="md" style={{ borderTop: `1px solid ${isDark ? '#334155' : '#f1f5f9'}` }}>
+                  <Group gap="xs" mb="md" align="center">
+                    <Box p={6} bg="light-dark(#f0fdf4, rgba(22, 163, 74, 0.15))" style={{ borderRadius: 8, color: '#16a34a' }}>
+                      <IconUsers size={16} />
+                    </Box>
+                    <Title order={4} c="light-dark(#0f172a, #f8fafc)" size="h4" style={{ fontWeight: 800 }}>
+                      {t('sections.teamReviews')}
+                    </Title>
+                  </Group>
+
+                  {otherCompletedReviews.length === 0 ? (
+                    <Paper
+                      p="2rem"
+                      radius="md"
+                      ta="center"
+                      style={{
+                        border: '1px dashed light-dark(#e2e8f0, #334155)',
+                        backgroundColor: 'light-dark(#f8fafc, #0f172a)',
+                      }}
+                    >
+                      <Text c="dimmed" size="sm">
+                        {t('empty.team', { defaultValue: 'No se encontraron evaluaciones del equipo.' })}
+                      </Text>
+                    </Paper>
+                  ) : (
+                    <CompletedReviewsAccordion
+                      groups={otherCompletedGroups}
+                      selectedInterviewId={selectedInterviewId}
+                      onReviewClick={handleReviewClick}
+                      onCloseReview={handleCloseReview}
+                      isMyReview={isMyReview}
+                    />
+                  )}
+                </Box>
+
+                {/* Pagination */}
+                {completedPagination && completedPagination.totalPages > 1 && (
+                  <Group justify="center" mt="lg" pt="md" style={{ borderTop: `1px solid ${isDark ? '#334155' : '#f1f5f9'}` }}>
+                    <Pagination
+                      total={completedPagination.totalPages}
+                      value={completedPage}
+                      onChange={setCompletedPage}
+                      size="sm"
+                    />
+                  </Group>
                 )}
-              </Box>
-            </Stack>
+              </Stack>
+            )}
           </Paper>
         </Tabs.Panel>
       </Tabs>

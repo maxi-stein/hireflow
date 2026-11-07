@@ -33,6 +33,17 @@ export interface CreateInterviewReviewDto {
 export interface UpdateInterviewReviewDto
   extends Partial<CreateInterviewReviewDto> {}
 
+export interface FilterInterviewReviewsDto {
+  page?: number;
+  limit?: number;
+  search?: string;
+  employee_id?: string;
+  candidate_id?: string;
+  job_offer_id?: string;
+  candidate_application_id?: string;
+  interview_id?: string;
+}
+
 export const interviewReviewService = {
   create: async (data: CreateInterviewReviewDto): Promise<InterviewReview> => {
     const response = await apiClient.post<InterviewReview>(
@@ -93,6 +104,27 @@ export const interviewReviewService = {
       {
         params: { page, limit },
       }
+    );
+    return response.data;
+  },
+
+  getAllCompletedReviews: async (
+    filters?: FilterInterviewReviewsDto
+  ): Promise<PaginatedResponse<InterviewReview>> => {
+    const params = new URLSearchParams();
+    if (filters) {
+      if (filters.page) params.append('page', filters.page.toString());
+      if (filters.limit) params.append('limit', filters.limit.toString());
+      if (filters.search) params.append('search', filters.search);
+      if (filters.employee_id) params.append('employee_id', filters.employee_id);
+      if (filters.candidate_id) params.append('candidate_id', filters.candidate_id);
+      if (filters.job_offer_id) params.append('job_offer_id', filters.job_offer_id);
+      if (filters.candidate_application_id)
+        params.append('candidate_application_id', filters.candidate_application_id);
+      if (filters.interview_id) params.append('interview_id', filters.interview_id);
+    }
+    const response = await apiClient.get<PaginatedResponse<InterviewReview>>(
+      `/interview-reviews?${params.toString()}`
     );
     return response.data;
   },

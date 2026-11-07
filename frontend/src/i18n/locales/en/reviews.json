@@ -10,11 +10,13 @@
     "pending": "Pending Reviews",
     "completed": "Completed Reviews"
   },
-  "searchPlaceholder": "Search by candidate name...",
+  "searchPlaceholder": "Search by candidate or job position...",
   "empty": {
     "pending": "No pending reviews found.",
     "completed": "No reviews yet.",
-    "team": "No team reviews found."
+    "team": "No team reviews found.",
+    "noSearchResults": "No reviews match your search.",
+    "clearSearch": "Clear search"
   },
   "sections": {
     "myReviews": "My Reviews",
