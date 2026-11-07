@@ -18,6 +18,7 @@ import {
   PaginatedResponse,
   PaginationDto,
 } from '../../shared/dto/pagination/pagination.dto';
+import { FilterInterviewReviewsDto } from './dto/filter-interview-reviews.dto';
 
 @Injectable()
 export class InterviewReviewService {
@@ -227,6 +228,87 @@ export class InterviewReviewService {
       .skip(skip)
       .take(limit)
       .getManyAndCount();
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findAll(
+    filterDto: FilterInterviewReviewsDto = { page: 1, limit: 10 },
+  ): Promise<PaginatedResponse<InterviewReview>> {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      employee_id,
+      candidate_id,
+      job_offer_id,
+      candidate_application_id,
+      interview_id,
+    } = filterDto;
+    const skip = (page - 1) * limit;
+
+    const query = this.reviewRepository
+      .createQueryBuilder('review')
+      .innerJoinAndSelect('review.interview', 'interview')
+      .innerJoinAndSelect('interview.interviewers', 'interviewer')
+      .innerJoinAndSelect('interviewer.user', 'interviewer_user')
+      .innerJoinAndSelect('review.candidate_application', 'candidate_application')
+      .innerJoinAndSelect('candidate_application.candidate', 'candidate')
+      .innerJoinAndSelect('candidate.user', 'candidate_user')
+      .innerJoinAndSelect('candidate_application.job_offer', 'job_offer')
+      .innerJoinAndSelect('review.employee', 'employee')
+      .innerJoinAndSelect('employee.user', 'employee_user');
+
+    if (search && search.trim()) {
+      query.andWhere(
+        '(LOWER(candidate_user.first_name) LIKE LOWER(:search) OR ' +
+        'LOWER(candidate_user.last_name) LIKE LOWER(:search) OR ' +
+        'LOWER(candidate_user.email) LIKE LOWER(:search) OR ' +
+        'CONCAT(LOWER(candidate_user.first_name), \' \', LOWER(candidate_user.last_name)) LIKE LOWER(:search) OR ' +
+        'LOWER(job_offer.position) LIKE LOWER(:search))',
+        { search: `%${search.trim()}%` },
+      );
+    }
+
+    if (employee_id) {
+      query.andWhere('review.employee_id = :employee_id', { employee_id });
+    }
+
+    if (candidate_id) {
+      query.andWhere('candidate.id = :candidate_id', { candidate_id });
+    }
+
+    if (job_offer_id) {
+      query.andWhere('candidate_application.job_offer_id = :job_offer_id', {
+        job_offer_id,
+      });
+    }
+
+    if (candidate_application_id) {
+      query.andWhere(
+        'review.candidate_application_id = :candidate_application_id',
+        { candidate_application_id },
+      );
+    }
+
+    if (interview_id) {
+      query.andWhere('review.interview_id = :interview_id', { interview_id });
+    }
+
+    query
+      .orderBy('review.created_at', 'DESC')
+      .skip(skip)
+      .take(limit);
+
+    const [data, total] = await query.getManyAndCount();
 
     return {
       data,

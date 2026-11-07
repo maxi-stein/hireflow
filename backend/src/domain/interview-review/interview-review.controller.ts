@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { CreateInterviewReviewDto } from './dto/create-interview-review.dto';
 import { UpdateInterviewReviewDto } from './dto/update-interview-review.dto';
+import { FilterInterviewReviewsDto } from './dto/filter-interview-reviews.dto';
 import { InterviewReviewService } from './interview-review.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PaginationDto } from '../../shared/dto/pagination/pagination.dto';
@@ -29,6 +30,11 @@ export class InterviewReviewController {
   @Post()
   create(@Body() createDto: CreateInterviewReviewDto) {
     return this.reviewService.create(createDto);
+  }
+
+  @Get()
+  findAll(@Query() filterDto: FilterInterviewReviewsDto) {
+    return this.reviewService.findAll(filterDto);
   }
 
   @Get('interview/:interviewId')
