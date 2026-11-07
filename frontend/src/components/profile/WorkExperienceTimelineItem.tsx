@@ -136,3 +136,4 @@ export const WorkExperienceTimelineItem = ({
     </Timeline.Item>
   );
 };
+
