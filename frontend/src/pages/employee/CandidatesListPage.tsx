@@ -8,157 +8,31 @@ import {
   TextInput,
   Select,
   Table,
-  Tooltip,
   LoadingOverlay,
-  Button,
   Box,
-  Badge,
   useMantineColorScheme,
 } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
-import { IconSearch, IconEye, IconSortAscending, IconSortDescending, IconUser } from '@tabler/icons-react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCandidatesQuery } from '../../hooks/api/useCandidates';
-import { CandidateAvatar } from '../../components/shared/candidate-display/CandidateAvatar';
+import { IconSearch, IconSortAscending, IconSortDescending, IconUser } from '@tabler/icons-react';
 import { APP_MAX_WIDTH } from '../../constants/layout';
+import { useCandidatesList } from '../../hooks/domain/useCandidatesList';
+import { CandidateTableRow } from '../../components/employee/candidates/CandidateTableRow';
 
 export function CandidatesListPage() {
   const { t } = useTranslation('candidates');
-  const navigate = useNavigate();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 500);
-  const [sortBy, setSortBy] = useState<'updated_at' | 'last_name'>('updated_at');
 
-  const { data: candidatesData, isLoading } = useCandidatesQuery({
+  const {
     page,
-    limit: 10,
-    search: debouncedSearch,
-    sort: sortBy,
-  });
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.currentTarget.value);
-    setPage(1);
-  };
-
-  const handleSortChange = (value: string | null) => {
-    if (value === 'updated_at' || value === 'last_name') {
-      setSortBy(value);
-      setPage(1);
-    }
-  };
-
-  const rows = candidatesData?.data.map((candidate) => (
-    <Table.Tr
-      key={candidate.id}
-      style={{
-        cursor: 'pointer',
-        transition: 'background-color 0.15s ease',
-      }}
-      onClick={() => navigate(`/manage/candidates/list/${candidate.id}`)}
-    >
-      <Table.Td>
-        <Group gap="sm" py={8}>
-          <CandidateAvatar
-            candidateId={candidate.id}
-            firstName={candidate.user.first_name}
-            lastName={candidate.user.last_name}
-            size="md"
-          />
-          <div>
-            <Text fw={600} size="sm">
-              {candidate.user.first_name} {candidate.user.last_name}
-            </Text>
-            <Text size="xs" c="dimmed">{candidate.user.email}</Text>
-          </div>
-        </Group>
-      </Table.Td>
-      <Table.Td>
-        {candidate.headline ? (
-          <Text size="sm" lineClamp={2}>{candidate.headline}</Text>
-        ) : (
-          <Text size="sm" c="dimmed" fs="italic">{t('na', { ns: 'common' })}</Text>
-        )}
-      </Table.Td>
-      <Table.Td>
-        {(() => {
-          const applications = (candidate.applications || []).filter((app: any) => app.status !== 'REJECTED');
-          if (applications.length === 0) {
-            return (
-              <Badge variant="light" color="gray" size="sm">
-                {t('list.table.noApplications')}
-              </Badge>
-            );
-          }
-
-          let latestInterview: any = null;
-          let jobOfferForInterview: any = null;
-
-          for (const app of applications) {
-            if (app.interviews && app.interviews.length > 0) {
-              const sortedInterviews = [...app.interviews].sort((a: any, b: any) => new Date(b.scheduled_time).getTime() - new Date(a.scheduled_time).getTime());
-              if (!latestInterview || new Date(sortedInterviews[0].scheduled_time) > new Date(latestInterview.scheduled_time)) {
-                latestInterview = sortedInterviews[0];
-                jobOfferForInterview = app.job_offer;
-              }
-            }
-          }
-
-          const remainingAppsCount = applications.length - 1;
-
-          if (latestInterview) {
-            return (
-              <Box>
-                <Badge variant="light" color="blue" size="sm" mb={4}>
-                  {latestInterview.title}
-                </Badge>
-                <Text size="xs" c="dimmed">
-                  {jobOfferForInterview?.position}
-                  {remainingAppsCount > 0 && ` +${t('list.table.moreApplications', { count: remainingAppsCount })}`}
-                </Text>
-              </Box>
-            );
-          }
-
-          const latestApp = applications[applications.length - 1];
-          return (
-            <Box>
-              <Badge variant="light" color="teal" size="sm" mb={4}>
-                {t('list.table.applicationsCount', { count: applications.length })}
-              </Badge>
-              <Text size="xs" c="dimmed">
-                {latestApp.job_offer?.position}
-                {remainingAppsCount > 0 && ` +${t('list.table.moreApplications', { count: remainingAppsCount })}`}
-              </Text>
-            </Box>
-          );
-        })()}
-      </Table.Td>
-      <Table.Td>
-        <Text size="sm" c="dimmed">{new Date(candidate.profile_updated_at).toLocaleDateString()}</Text>
-      </Table.Td>
-      <Table.Td onClick={(e) => e.stopPropagation()}>
-        <Group gap="xs" justify="flex-end">
-          <Tooltip label={t('table.tooltips.viewCandidate', { ns: 'applications' })}>
-            <Button
-              variant="light"
-              color="blue"
-              onClick={() => navigate(`/manage/candidates/list/${candidate.id}`)}
-              leftSection={<IconEye size={15} />}
-              size="xs"
-            >
-              {t('list.table.viewProfile')}
-            </Button>
-          </Tooltip>
-        </Group>
-      </Table.Td>
-    </Table.Tr>
-  ));
+    setPage,
+    search,
+    sortBy,
+    candidatesData,
+    isLoading,
+    handleSearchChange,
+    handleSortChange,
+  } = useCandidatesList();
 
   return (
     <Container size={APP_MAX_WIDTH} py="xl">
@@ -247,7 +121,9 @@ export function CandidatesListPage() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {rows}
+                {candidatesData?.data.map((candidate) => (
+                  <CandidateTableRow key={candidate.id} candidate={candidate} />
+                ))}
                 {!isLoading && candidatesData?.data.length === 0 && (
                   <Table.Tr>
                     <Table.Td colSpan={5}>
