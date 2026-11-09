@@ -4,7 +4,7 @@ import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconCheck, IconX, IconUserPlus, IconMail, IconId, IconBriefcase, IconShield } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { employeeService } from '../../services/employee.service';
+import { useCreateEmployeeMutation } from '../../hooks/api/useEmployees';
 import { validateWithJoi } from '../../utils/form-validation';
 import { createEmployeeSchema } from '../../schemas/employee.schema';
 
@@ -13,6 +13,8 @@ export const CreateEmployeePage = () => {
   const navigate = useNavigate();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
+
+  const createMutation = useCreateEmployeeMutation();
 
   const EMPLOYEE_ROLES = [
     { value: 'hr', label: t('employee.rolesList.hr') },
@@ -33,7 +35,7 @@ export const CreateEmployeePage = () => {
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
-      await employeeService.create({
+      await createMutation.mutateAsync({
         first_name: values.first_name,
         last_name: values.last_name,
         email: values.email,
@@ -215,6 +217,7 @@ export const CreateEmployeePage = () => {
                 fullWidth
                 size="md"
                 radius="md"
+                loading={createMutation.isPending}
                 leftSection={<IconUserPlus size={17} />}
                 style={{
                   background: 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
