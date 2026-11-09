@@ -1,31 +1,40 @@
-import { Title, Text, Stack, LoadingOverlay, Button, Box, TextInput, SegmentedControl, Group, Badge, Paper } from '@mantine/core';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Title, Text, Stack, LoadingOverlay, Button, Box, Group, Badge } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
 import { useIncompleteProfile } from '../../hooks/useIncompleteProfile';
 import { useAppStore } from '../../store/useAppStore';
-import { JobOfferStatus, WorkMode } from '../../services/job-offer.service';
-import type { JobOffer } from '../../services/job-offer.service';
-import { useEffect, useState, useMemo } from 'react';
+import { JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
+import { useEffect, useState } from 'react';
 import { candidateApplicationService } from '../../services/candidate-application.service';
 import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 import { IncompleteProfileModal } from '../../components/jobs/IncompleteProfileModal';
 import { JobOfferGrid } from '../../components/jobs/JobOfferGrid';
+import { JobFiltersBar } from '../../components/jobs/JobFiltersBar';
+import { useJobListFilters } from '../../hooks/domain/useJobListFilters';
 import { useTranslation } from 'react-i18next';
-import { IconSearch, IconX, IconBriefcase, IconCheck, IconFilter } from '@tabler/icons-react';
+import { IconBriefcase, IconCheck } from '@tabler/icons-react';
 
 export const JobListPage = () => {
   const { t } = useTranslation(['common', 'jobs']);
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const user = useAppStore((state) => state.user);
-
-  const [searchKeyword, setSearchKeyword] = useState(searchParams.get('search') || '');
-  const [selectedModality, setSelectedModality] = useState<string>('all');
 
   const { data: jobOffers, isLoading } = useJobOffersQuery({
     status: JobOfferStatus.OPEN,
     candidateId: user?.type === 'candidate' ? user.id : undefined,
   });
+
+  const allJobs = jobOffers?.data ?? [];
+
+  const {
+    searchKeyword,
+    selectedModality,
+    setSelectedModality,
+    filteredJobs,
+    handleSearchChange,
+    handleClearSearch,
+    handleClearFilters,
+  } = useJobListFilters({ allJobs });
 
   const { isProfileIncomplete } = useIncompleteProfile(user?.type === 'candidate' ? user.id : '');
 
@@ -41,9 +50,9 @@ export const JobListPage = () => {
       try {
         const applications = await candidateApplicationService.getAll({
           candidate_id: user.id,
-          limit: 100
+          limit: 100,
         });
-        const ids = new Set(applications.data.map(app => app.job_offer.id));
+        const ids = new Set(applications.data.map((app) => app.job_offer.id));
         setAppliedJobIds(ids);
       } catch {
         // Fallback
@@ -58,14 +67,6 @@ export const JobListPage = () => {
   useEffect(() => {
     fetchApplications();
   }, [user]);
-
-  // Keep search keyword in sync if URL query changes
-  useEffect(() => {
-    const q = searchParams.get('search');
-    if (q !== null && q !== searchKeyword) {
-      setSearchKeyword(q);
-    }
-  }, [searchParams]);
 
   const handleApplyClick = (job: JobOffer) => {
     if (!user) {
@@ -84,46 +85,12 @@ export const JobListPage = () => {
       return;
     }
 
-    // Open modal
     setSelectedJob(job);
     setModalOpen(true);
   };
 
   const handleApplicationSuccess = () => {
     fetchApplications();
-  };
-
-  // Filter jobs based on searchKeyword and selectedModality
-  const allJobs = jobOffers?.data ?? [];
-  const filteredJobs = useMemo(() => {
-    return allJobs.filter((job) => {
-      // Modality filter
-      if (selectedModality !== 'all') {
-        const jobMode = job.work_mode?.toLowerCase() || '';
-        if (selectedModality === 'remote' && jobMode !== WorkMode.REMOTE) return false;
-        if (selectedModality === 'hybrid' && jobMode !== WorkMode.HYBRID) return false;
-        if (selectedModality === 'office' && jobMode !== 'office' && jobMode !== 'presencial') return false;
-      }
-
-      // Keyword search
-      if (searchKeyword.trim()) {
-        const term = searchKeyword.toLowerCase();
-        const matchesPosition = job.position?.toLowerCase().includes(term);
-        const matchesDescription = job.description?.toLowerCase().includes(term);
-        const matchesLocation = job.location?.toLowerCase().includes(term);
-        const matchesSkill = job.skills?.some(s => s.skill_name?.toLowerCase().includes(term));
-
-        return matchesPosition || matchesDescription || matchesLocation || matchesSkill;
-      }
-
-      return true;
-    });
-  }, [allJobs, searchKeyword, selectedModality]);
-
-  const handleClearFilters = () => {
-    setSearchKeyword('');
-    setSelectedModality('all');
-    setSearchParams({});
   };
 
   if (isLoading) {
@@ -177,70 +144,16 @@ export const JobListPage = () => {
           </Box>
 
           {/* Search & Filter Toolbar */}
-          <Paper p="md" radius="lg" withBorder bg="light-dark(#f8fafc, #0f172a)" style={{ borderColor: 'light-dark(#e2e8f0, #334155)' }}>
-            <Stack gap="sm">
-              <Group justify="space-between" align="center" wrap="wrap" gap="md">
-                <TextInput
-                  placeholder={t('jobs:publicList.searchPlaceholder', 'Buscar por puesto, tecnología (React, Node, Java) o ciudad...')}
-                  leftSection={<IconSearch size={18} color="#64748b" />}
-                  rightSection={
-                    searchKeyword ? (
-                      <IconX
-                        size={16}
-                        style={{ cursor: 'pointer', color: '#94a3b8' }}
-                        onClick={() => {
-                          setSearchKeyword('');
-                          setSearchParams({});
-                        }}
-                      />
-                    ) : null
-                  }
-                  value={searchKeyword}
-                  onChange={(e) => {
-                    const val = e.currentTarget.value;
-                    setSearchKeyword(val);
-                    if (val) setSearchParams({ search: val });
-                    else setSearchParams({});
-                  }}
-                  style={{ flex: '1', minWidth: 260 }}
-                  size="md"
-                />
-
-                <Group gap="xs" align="center">
-                  <Text size="xs" fw={700} c="dimmed" tt="uppercase" style={{ letterSpacing: '0.5px' }}>
-                    {t('jobs:publicList.modalityLabel', 'Modalidad:')}
-                  </Text>
-                  <SegmentedControl
-                    value={selectedModality}
-                    onChange={setSelectedModality}
-                    data={[
-                      { label: t('jobs:publicList.modalities.all', 'Todas'), value: 'all' },
-                      { label: t('jobs:publicList.modalities.remote', 'Remoto'), value: 'remote' },
-                      { label: t('jobs:publicList.modalities.hybrid', 'Híbrido'), value: 'hybrid' },
-                      { label: t('jobs:publicList.modalities.office', 'Presencial'), value: 'office' },
-                    ]}
-                    size="sm"
-                    radius="md"
-                  />
-                </Group>
-              </Group>
-
-              {/* Status summary of filter */}
-              {(searchKeyword || selectedModality !== 'all') && (
-                <Group justify="space-between" align="center" pt="xs" style={{ borderTop: '1px solid #e2e8f0' }}>
-                  <Group gap="xs">
-                    <IconFilter size={15} color="#64748b" />
-                    <Text size="sm" c="dimmed">
-                      {t('jobs:publicList.showingCount', { filtered: filteredJobs.length, total: allJobs.length, defaultValue: `Mostrando ${filteredJobs.length} de ${allJobs.length} ofertas` })}
-                    </Text>
-                  </Group>
-                  <Button variant="subtle" color="red" size="xs" onClick={handleClearFilters}>
-                    {t('jobs:publicList.clearFilters', 'Limpiar filtros')}
-                  </Button>
-                </Group>
-              )}
-            </Stack>
-          </Paper>
+          <JobFiltersBar
+            searchKeyword={searchKeyword}
+            onSearchChange={handleSearchChange}
+            onClearSearch={handleClearSearch}
+            selectedModality={selectedModality}
+            onModalityChange={setSelectedModality}
+            filteredCount={filteredJobs.length}
+            totalCount={allJobs.length}
+            onClearFilters={handleClearFilters}
+          />
 
           {/* Job Offers Grid */}
           <JobOfferGrid
