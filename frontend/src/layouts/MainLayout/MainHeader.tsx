@@ -5,8 +5,6 @@ import {
   Title,
   Divider,
   Burger,
-  Drawer,
-  ScrollArea,
   Container,
   Button,
 } from '@mantine/core';
@@ -19,7 +17,7 @@ import { getNavItemsForUser, getAllRoutes, type RouteConfig } from '../../router
 import { useTranslation } from 'react-i18next';
 import { UserMenu } from '../../components/shared/UserMenu';
 import { LanguageSelector } from '../../components/shared/LanguageSelector';
-import { SideNav } from './SideNav';
+import { MobileNavDrawer } from './MobileNavDrawer';
 import { NavButton } from './MainHeader.styled';
 
 export function MainHeader() {
@@ -63,11 +61,10 @@ export function MainHeader() {
 
   return (
     <>
-      <Container fluid h="100%" px="md" mx={isMobile ? 0 : 190} >
+      <Container fluid h="100%" px="md" mx={isMobile ? 0 : 190}>
         <Group h="100%" justify="space-between" wrap="nowrap">
           {/* ── Left: burger (mobile) + logo + nav items ── */}
           <Group gap={4} wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-            {/* Burger — only on mobile */}
             {isMobile && (
               <Burger
                 opened={drawerOpened}
@@ -88,7 +85,6 @@ export function MainHeader() {
               Consultoría Global
             </Title>
 
-            {/* Nav items — hidden on mobile */}
             {!isMobile && (
               <Group gap={4} wrap="nowrap">
                 {navItems.map((item) => {
@@ -140,7 +136,6 @@ export function MainHeader() {
                     );
                   }
 
-                  // Simple item (no children)
                   return (
                     <NavButton
                       key={item.path}
@@ -195,21 +190,7 @@ export function MainHeader() {
       </Container>
 
       {/* ── Mobile Drawer ── */}
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        size="xs"
-        padding={0}
-        withCloseButton={false}
-        styles={{
-          content: { backgroundColor: '#112240' },
-          body: { padding: 0, height: '100%' },
-        }}
-      >
-        <ScrollArea h="100%">
-          <SideNav onNavigate={closeDrawer} />
-        </ScrollArea>
-      </Drawer>
+      <MobileNavDrawer opened={drawerOpened} onClose={closeDrawer} />
     </>
   );
 }
