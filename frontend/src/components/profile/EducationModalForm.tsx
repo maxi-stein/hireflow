@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import type { UseFormReturnType } from '@mantine/form';
 import { IconSchool } from '@tabler/icons-react';
 import { DegreeType } from '../../services/education.service';
-import type { EducationFormValues } from '../../hooks/domain/useEducationManager';
+import type { EducationFormValues } from '../../hooks/profile/useEducationManager';
 
 export const DEGREE_LABELS: Record<string, string> = {
   high_school: 'Secundario',

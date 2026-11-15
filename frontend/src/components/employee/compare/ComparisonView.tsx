@@ -4,13 +4,13 @@ import { ComparisonViewHeader } from './ComparisonViewHeader';
 import { CandidateComparisonCard } from './CandidateComparisonCard';
 import { CandidateActionModals } from '../common/CandidateActionModals';
 import { getApplicationStatusColor } from '../../../utils/application.utils';
-import { useCandidateActions } from '../../../hooks/useCandidateActions';
-import { useDragScroll } from '../../../hooks/useDragScroll';
+import { useCandidateActions } from '../../../hooks/candidates/useCandidateActions';
+import { useDragScroll } from '../../../hooks/common/useDragScroll';
 import { useNavigate } from 'react-router-dom';
 import { APP_MAX_WIDTH } from '../../../constants/layout';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import type { JobOffer } from '../../../services/job-offer.service';
-import type { TechStats } from '../../../hooks/useCandidateTechExperience';
+import type { TechStats } from '../../../hooks/profile/useCandidateTechExperience';
 
 interface ComparisonViewProps {
   candidatesToCompare: CandidateApplication[];

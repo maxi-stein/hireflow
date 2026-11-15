@@ -14,7 +14,7 @@ import { IconClipboardCheck, IconHistory, IconSearch, IconX } from '@tabler/icon
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { APP_MAX_WIDTH } from '../../constants/layout';
-import { useReviews } from '../../hooks/useReviews';
+import { useReviews } from '../../hooks/reviews/useReviews';
 import { PendingReviewsTabContent } from '../../components/employee/reviews/PendingReviewsTabContent';
 import { CompletedReviewsTabContent } from '../../components/employee/reviews/CompletedReviewsTabContent';
 import { ReviewModal } from '../../components/employee/reviews/ReviewModal';

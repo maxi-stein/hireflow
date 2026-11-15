@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { IconPlus, IconSchool } from '@tabler/icons-react';
 import type { Education } from '../../services/education.service';
 import { DeleteConfirmationModal } from '../shared/DeleteConfirmationModal';
-import { useEducationManager } from '../../hooks/domain/useEducationManager';
+import { useEducationManager } from '../../hooks/profile/useEducationManager';
 import { EducationModalForm } from './EducationModalForm';
 import { EducationCardItem } from './EducationCardItem';
 

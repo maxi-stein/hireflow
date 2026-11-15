@@ -2,8 +2,8 @@ import { useState } from 'react';
 import {
   useUpdateApplicationStatusMutation,
   useHireApplicationMutation,
-} from './api/useCandidateApplications';
-import { ApplicationStatus } from '../services/candidate-application.service';
+} from '../api/useCandidateApplications';
+import { ApplicationStatus } from '../../services/candidate-application.service';
 
 export interface CandidateActionTarget {
   id: string;

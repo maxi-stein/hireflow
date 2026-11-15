@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Grid, LoadingOverlay, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { useInterviewReviewForm } from '../../../hooks/domain/useInterviewReviewForm';
+import { useInterviewReviewForm } from '../../../hooks/reviews/useInterviewReviewForm';
 import { InterviewReviewHeaderSummary } from './InterviewReviewHeaderSummary';
 import { InterviewReviewFields } from './InterviewReviewFields';
 import { ScheduleInterviewModal } from '../interviews/ScheduleInterviewModal';

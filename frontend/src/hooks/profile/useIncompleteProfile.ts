@@ -1,4 +1,4 @@
-import { useCandidateQuery } from './api/useCandidates';
+import { useCandidateQuery } from '../api/useCandidates';
 
 /**
  * Reusable hook to check whether a candidate's profile is incomplete.

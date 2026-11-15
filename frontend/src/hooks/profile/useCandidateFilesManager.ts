@@ -6,7 +6,7 @@ import { fileService } from '../../services/file.service';
 import { userFileService, FileType, type UserFile as ServiceUserFile } from '../../services/user-file.service';
 import { queryClient } from '../../services/queryClient';
 import { FILES_QUERY_KEY, useCandidateFilesQuery } from '../api/useUserFiles';
-import { useFileDownloader } from '../useFileDownloader';
+import { useFileDownloader } from '../common/useFileDownloader';
 import type { Candidate, UserFile as ModelUserFile } from '../../types/models/user.types';
 
 export type CandidateFileItem = ServiceUserFile | ModelUserFile;

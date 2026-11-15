@@ -24,7 +24,7 @@ import {
   IconBrandLinkedin,
   IconUser,
 } from '@tabler/icons-react';
-import type { CandidateProfileFormValues } from '../../hooks/domain/useCandidateProfileForm';
+import type { CandidateProfileFormValues } from '../../hooks/profile/useCandidateProfileForm';
 
 export interface ProfilePersonalInfoTabProps {
   form: UseFormReturnType<CandidateProfileFormValues>;

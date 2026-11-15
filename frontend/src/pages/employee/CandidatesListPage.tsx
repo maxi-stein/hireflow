@@ -15,7 +15,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { IconSearch, IconSortAscending, IconSortDescending, IconUser } from '@tabler/icons-react';
 import { APP_MAX_WIDTH } from '../../constants/layout';
-import { useCandidatesList } from '../../hooks/domain/useCandidatesList';
+import { useCandidatesList } from '../../hooks/candidates/useCandidatesList';
 import { CandidateTableRow } from '../../components/employee/candidates/CandidateTableRow';
 
 export function CandidatesListPage() {

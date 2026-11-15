@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { APP_MAX_WIDTH } from '../../constants/layout';
 import { StatsGrid } from '../../components/shared/StatsGrid';
-import { useDashboardData } from '../../hooks/domain/useDashboardData';
+import { useDashboardData } from '../../hooks/dashboard/useDashboardData';
 import { ApplicationsPerWeekChart } from '../../components/dashboard/ApplicationsPerWeekChart';
 import { CandidatesPerJobWidget } from '../../components/dashboard/CandidatesPerJobWidget';
 import { PendingReviewsWidget } from '../../components/dashboard/PendingReviewsWidget';

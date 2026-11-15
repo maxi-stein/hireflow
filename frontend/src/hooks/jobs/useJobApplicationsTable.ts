@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useAllCandidateApplicationsQuery } from '../api/useCandidateApplications';
 import { ApplicationStatus } from '../../services/candidate-application.service';
-import { useCandidateTechExperience } from '../useCandidateTechExperience';
+import { useCandidateTechExperience } from '../profile/useCandidateTechExperience';
 
 interface UseJobApplicationsTableOptions {
   jobOfferId: string;

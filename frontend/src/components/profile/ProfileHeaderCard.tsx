@@ -23,7 +23,7 @@ import {
 } from '@tabler/icons-react';
 import { CandidateAvatar } from '../shared/candidate-display/CandidateAvatar';
 import type { User, Candidate } from '../../types/models/user.types';
-import type { CandidateFileItem } from '../../hooks/domain/useCandidateFilesManager';
+import type { CandidateFileItem } from '../../hooks/profile/useCandidateFilesManager';
 
 export interface ProfileHeaderCardProps {
   user: User;

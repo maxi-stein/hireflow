@@ -2,7 +2,7 @@ import { Text } from '@mantine/core';
 import { IconX, IconCheck } from '@tabler/icons-react';
 import { useTranslation, Trans } from 'react-i18next';
 import { ConfirmActionModal } from '../../shared/ConfirmActionModal';
-import type { CandidateActionTarget } from '../../../hooks/useCandidateActions';
+import type { CandidateActionTarget } from '../../../hooks/candidates/useCandidateActions';
 
 export interface CandidateActionModalsProps {
   // Reject modal

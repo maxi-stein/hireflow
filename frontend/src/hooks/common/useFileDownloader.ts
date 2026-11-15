@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import { userFileService } from '../services/user-file.service';
+import { userFileService } from '../../services/user-file.service';
 
 export interface UseFileDownloaderOptions {
   downloadFn?: (fileId: string) => Promise<Blob>;

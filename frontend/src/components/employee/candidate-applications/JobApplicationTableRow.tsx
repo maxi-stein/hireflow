@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import type { CandidateApplication } from '../../../services/candidate-application.service';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 import { getApplicationStatusColor } from '../../../utils/application.utils';
-import type { useCandidateTechExperience } from '../../../hooks/useCandidateTechExperience';
+import type { useCandidateTechExperience } from '../../../hooks/profile/useCandidateTechExperience';
 
 interface JobApplicationTableRowProps {
   application: CandidateApplication;

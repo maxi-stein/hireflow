@@ -2,7 +2,7 @@ import { Grid, Card, Center, Stack, Text, Pagination } from '@mantine/core';
 import type { ReactNode } from 'react';
 import type { JobOffer } from '../../services/job-offer.service';
 import { JobOfferCard } from './JobOfferCard';
-import { useHighlightEffect } from '../../hooks/useHighlightEffect';
+import { useHighlightEffect } from '../../hooks/common/useHighlightEffect';
 import { useTranslation } from 'react-i18next';
 
 interface JobOfferGridProps {

@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useMyPendingReviewsQuery, useAllCompletedReviewsQuery } from './api/useInterviewReviews';
-import { useAppStore } from '../store/useAppStore';
-import type { InterviewReview } from '../services/interview-review.service';
-import type { Interview } from '../services/interview.service';
-import type { PaginationMeta } from '../types/common';
+import { useMyPendingReviewsQuery, useAllCompletedReviewsQuery } from '../api/useInterviewReviews';
+import { useAppStore } from '../../store/useAppStore';
+import type { InterviewReview } from '../../services/interview-review.service';
+import type { Interview } from '../../services/interview.service';
+import type { PaginationMeta } from '../../types/common';
 
 export interface UseReviewsReturn {
   // Data

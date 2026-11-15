@@ -1,7 +1,7 @@
 import { Box, Group, Text, Badge, Progress, useMantineColorScheme } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { IconCheck } from '@tabler/icons-react';
-import type { CandidateProfileCompleteness } from '../../hooks/domain/useCandidateProfileCompleteness';
+import type { CandidateProfileCompleteness } from '../../hooks/profile/useCandidateProfileCompleteness';
 
 export interface ProfileCompletenessBarProps {
   completeness: CandidateProfileCompleteness;

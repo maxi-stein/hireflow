@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IconDeviceFloppy } from '@tabler/icons-react';
 import { ROUTES } from '../../router/routes.config';
 import { useTranslation } from 'react-i18next';
-import { useJobOfferForm } from '../../hooks/domain/useJobOfferForm';
+import { useJobOfferForm } from '../../hooks/jobs/useJobOfferForm';
 import { JobBasicInfoFields } from '../../components/employee/job-postings/JobBasicInfoFields';
 import { JobCompensationFields } from '../../components/employee/job-postings/JobCompensationFields';
 import { JobRequirementsFields } from '../../components/employee/job-postings/JobRequirementsFields';

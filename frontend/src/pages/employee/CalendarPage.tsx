@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Container, Title, Paper, Button, Group, Text, Box, useMantineColorScheme } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { APP_MAX_WIDTH } from '../../constants/layout';
-import { useCalendarPageState } from '../../hooks/domain/useCalendarPageState';
+import { useCalendarPageState } from '../../hooks/calendar/useCalendarPageState';
 import { CalendarHeaderControls } from '../../components/employee/interviews/CalendarHeaderControls';
 import { CalendarMonthGrid } from '../../components/employee/interviews/CalendarMonthGrid';
 import { CalendarModalsContainer } from '../../components/employee/interviews/CalendarModalsContainer';

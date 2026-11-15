@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { CandidateApplication } from '../services/candidate-application.service';
+import type { CandidateApplication } from '../../services/candidate-application.service';
 
 export interface TechExperienceStats {
   maxYearsBySkill: Record<string, number>;

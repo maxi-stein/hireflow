@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../router/routes.config";
+import { ROUTES } from "../../router/routes.config";
 import {
   InterviewStatus,
   interviewService,
-} from "../services/interview.service";
-import type { Interview } from "../services/interview.service";
-import type { CandidateApplication } from "../services/candidate-application.service";
+} from "../../services/interview.service";
+import type { Interview } from "../../services/interview.service";
+import type { CandidateApplication } from "../../services/candidate-application.service";
 
 interface UseInterviewSchedulingReturn {
   handleScheduleClick: (

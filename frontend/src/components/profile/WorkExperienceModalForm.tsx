@@ -13,7 +13,7 @@ import { DateInput } from '@mantine/dates';
 import { useTranslation } from 'react-i18next';
 import type { UseFormReturnType } from '@mantine/form';
 import { IconBriefcase, IconBuilding } from '@tabler/icons-react';
-import type { WorkExperienceFormValues } from '../../hooks/domain/useWorkExperienceManager';
+import type { WorkExperienceFormValues } from '../../hooks/profile/useWorkExperienceManager';
 
 export interface WorkExperienceModalFormProps {
   opened: boolean;

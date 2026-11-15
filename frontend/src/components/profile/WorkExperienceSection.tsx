@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { IconPlus, IconBriefcase } from '@tabler/icons-react';
 import type { WorkExperience } from '../../services/work-experience.service';
 import { DeleteConfirmationModal } from '../shared/DeleteConfirmationModal';
-import { useWorkExperienceManager } from '../../hooks/domain/useWorkExperienceManager';
+import { useWorkExperienceManager } from '../../hooks/profile/useWorkExperienceManager';
 import { WorkExperienceModalForm } from './WorkExperienceModalForm';
 import { WorkExperienceTimelineItem } from './WorkExperienceTimelineItem';
 

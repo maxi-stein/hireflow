@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import type { JobOffer } from '../../services/job-offer.service';
 import { IconBriefcase, IconSparkles, IconCheck } from '@tabler/icons-react';
-import { useJobApplicationForm } from '../../hooks/domain/useJobApplicationForm';
+import { useJobApplicationForm } from '../../hooks/jobs/useJobApplicationForm';
 import { SkillExperienceInputRow } from './SkillExperienceInputRow';
 
 interface JobApplicationModalProps {

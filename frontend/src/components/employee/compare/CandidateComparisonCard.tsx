@@ -10,8 +10,8 @@ import type { CandidateApplication } from '../../../services/candidate-applicati
 import type { ApplicationStatus } from '../../../services/candidate-application.service';
 import { CandidateInterviewsDisplay } from '../../shared/candidate-display/CandidateInterviewsDisplay';
 import { CollapsibleSection } from '../../shared/CollapsibleSection';
-import type { TechExperienceStats } from '../../../hooks/useCandidateTechExperience';
-import { useCandidateComparisonCardData } from '../../../hooks/domain/useCandidateComparisonCardData';
+import type { TechExperienceStats } from '../../../hooks/profile/useCandidateTechExperience';
+import { useCandidateComparisonCardData } from '../../../hooks/comparison/useCandidateComparisonCardData';
 import { CandidateComparisonHeader } from './CandidateComparisonHeader';
 import { ComparisonSkillsSection } from './ComparisonSkillsSection';
 import { ComparisonExperienceSection } from './ComparisonExperienceSection';

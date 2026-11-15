@@ -6,7 +6,7 @@ import { InterviewType } from '../../../services/interview.service';
 import type { Interview } from '../../../services/interview.service';
 import type { Employee } from '../../../services/employee.service';
 import { StyledSelect } from './styled';
-import { useScheduleInterviewForm } from '../../../hooks/domain/useScheduleInterviewForm';
+import { useScheduleInterviewForm } from '../../../hooks/calendar/useScheduleInterviewForm';
 
 interface ScheduleInterviewModalProps {
   opened: boolean;

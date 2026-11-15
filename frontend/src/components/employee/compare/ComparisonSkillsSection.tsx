@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CollapsibleSection } from '../../shared/CollapsibleSection';
 import { TopSkillProgressBar } from './TopSkillProgressBar';
 import type { CandidateSkillAnswer } from '../../../services/candidate-application.service';
-import type { TechExperienceStats } from '../../../hooks/useCandidateTechExperience';
+import type { TechExperienceStats } from '../../../hooks/profile/useCandidateTechExperience';
 
 export interface ComparisonSkillsSectionProps {
   skillAnswers?: CandidateSkillAnswer[];

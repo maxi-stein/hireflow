@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import type { Interview } from '../../../services/interview.service';
 import { useAppStore } from '../../../store/useAppStore';
 import { ReviewModal } from '../../employee/reviews/ReviewModal';
-import { useCandidateInterviewsState } from '../../../hooks/domain/useCandidateInterviewsState';
+import { useCandidateInterviewsState } from '../../../hooks/candidates/useCandidateInterviewsState';
 import { CandidateInterviewCard } from './CandidateInterviewCard';
 
 interface CandidateInterviewsDisplayProps {

@@ -4,7 +4,7 @@ import type { UseFormReturnType } from '@mantine/form';
 import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { normalizeText } from '../../../utils/string';
-import type { InterviewReviewFormValues } from '../../../hooks/domain/useInterviewReviewForm';
+import type { InterviewReviewFormValues } from '../../../hooks/reviews/useInterviewReviewForm';
 
 export interface InterviewReviewFieldsProps {
   form: UseFormReturnType<InterviewReviewFormValues>;

@@ -24,9 +24,9 @@ import { ChangePasswordForm } from '../../components/profile/ChangePasswordForm'
 import { ProfileHeaderCard } from '../../components/profile/ProfileHeaderCard';
 import { ProfileCompletenessBar } from '../../components/profile/ProfileCompletenessBar';
 import { ProfilePersonalInfoTab } from '../../components/profile/ProfilePersonalInfoTab';
-import { useCandidateProfileCompleteness } from '../../hooks/domain/useCandidateProfileCompleteness';
-import { useCandidateProfileForm } from '../../hooks/domain/useCandidateProfileForm';
-import { useCandidateFilesManager } from '../../hooks/domain/useCandidateFilesManager';
+import { useCandidateProfileCompleteness } from '../../hooks/profile/useCandidateProfileCompleteness';
+import { useCandidateProfileForm } from '../../hooks/profile/useCandidateProfileForm';
+import { useCandidateFilesManager } from '../../hooks/profile/useCandidateFilesManager';
 
 interface CandidateProfileProps {
   user: User;

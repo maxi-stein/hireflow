@@ -9,7 +9,7 @@ import { ApplicationStatus } from '../../services/candidate-application.service'
 import { CompareSelectionHeader } from '../../components/employee/compare/CompareSelectionHeader';
 import { JobOfferSearchPanel } from '../../components/employee/compare/JobOfferSearchPanel';
 import { ComparisonView } from '../../components/employee/compare/ComparisonView';
-import { useCandidateTechExperience } from '../../hooks/useCandidateTechExperience';
+import { useCandidateTechExperience } from '../../hooks/profile/useCandidateTechExperience';
 import { APP_MAX_WIDTH } from '../../constants/layout';
 
 

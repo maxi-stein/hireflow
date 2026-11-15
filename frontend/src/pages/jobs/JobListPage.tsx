@@ -1,7 +1,7 @@
 import { Title, Text, Stack, LoadingOverlay, Button, Box, Group, Badge } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useJobOffersQuery } from '../../hooks/api/useJobOffers';
-import { useIncompleteProfile } from '../../hooks/useIncompleteProfile';
+import { useIncompleteProfile } from '../../hooks/profile/useIncompleteProfile';
 import { useAppStore } from '../../store/useAppStore';
 import { JobOfferStatus, type JobOffer } from '../../services/job-offer.service';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ import { JobApplicationModal } from '../../components/jobs/JobApplicationModal';
 import { IncompleteProfileModal } from '../../components/jobs/IncompleteProfileModal';
 import { JobOfferGrid } from '../../components/jobs/JobOfferGrid';
 import { JobFiltersBar } from '../../components/jobs/JobFiltersBar';
-import { useJobListFilters } from '../../hooks/domain/useJobListFilters';
+import { useJobListFilters } from '../../hooks/jobs/useJobListFilters';
 import { useTranslation } from 'react-i18next';
 import { IconBriefcase, IconCheck } from '@tabler/icons-react';
 

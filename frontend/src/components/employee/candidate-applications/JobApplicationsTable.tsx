@@ -15,7 +15,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
 import { IconSearch } from '@tabler/icons-react';
-import { useJobApplicationsTable } from '../../../hooks/domain/useJobApplicationsTable';
+import { useJobApplicationsTable } from '../../../hooks/jobs/useJobApplicationsTable';
 import { JobApplicationTableRow } from './JobApplicationTableRow';
 
 interface JobApplicationsTableProps {
