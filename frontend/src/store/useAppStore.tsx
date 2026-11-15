@@ -11,7 +11,7 @@ type AppStore = {
 };
 
 export const useAppStore = create<AppStore>()(
-  persist(
+  persist( // This method saves the object app-store in the LocalStorage
     (set) => ({
       user: null,
       token: null,

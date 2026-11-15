@@ -48,6 +48,7 @@ export const resources = {
   },
 } as const;
 
+// if no language is set in localStorage, then set 'es' language
 if (typeof window !== 'undefined' && !localStorage.getItem('i18nextLng')) {
   localStorage.setItem('i18nextLng', 'es');
 }
@@ -66,6 +67,7 @@ i18n
     detection: {
       order: ['queryString', 'cookie', 'localStorage', 'navigator', 'htmlTag'],
     },
+    // queryString -> ?lng=es in url
   });
 
 export default i18n;

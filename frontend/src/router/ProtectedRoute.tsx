@@ -5,6 +5,7 @@ export const ProtectedRoute = ({ allowedRoles }: { allowedRoles: string[] }) => 
   const user = useAppStore((state) => state.user);
   const location = useLocation();
 
+  // If not authenticated, login and then redirect
   if (!user) {
     // Pass the current location in state so we can redirect back after login
     return <Navigate to="/login" state={{ from: location }} replace />;
