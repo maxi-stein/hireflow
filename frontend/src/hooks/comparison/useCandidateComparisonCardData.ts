@@ -2,7 +2,7 @@ import { useCandidateQuery } from '../api/useCandidates';
 import { useCandidateInterviewsQuery } from '../api/useInterviews';
 import { useCandidateFilesQuery } from '../api/useUserFiles';
 import { useFileDownloader } from '../common/useFileDownloader';
-import { FileType, type UserFile } from '../../services/user-file.service';
+import { FileType, type UserFile } from '../../services/file.service';
 import type { CandidateProfile } from '../../services/candidate.service';
 import type { WorkExperience } from '../../services/work-experience.service';
 import type { Interview } from '../../services/interview.service';

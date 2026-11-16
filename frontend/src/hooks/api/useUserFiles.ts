@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { userFileService, FileType } from '../../services/user-file.service';
+import { fileService, FileType } from '../../services/file.service';
 
 export const FILES_QUERY_KEY = ['user-files'];
 
 export function useCandidateFilesQuery(candidateId: string) {
   return useQuery({
     queryKey: [...FILES_QUERY_KEY, 'candidate', candidateId],
-    queryFn: () => userFileService.getAllByCandidate(candidateId),
+    queryFn: () => fileService.getAllByCandidate(candidateId),
     enabled: !!candidateId,
   });
 }
@@ -25,7 +25,7 @@ export function useProfilePictureDataUrl(candidateId?: string) {
   return useQuery({
     queryKey: [...FILES_QUERY_KEY, 'profile-picture-blob', profilePictureFileId],
     queryFn: async () => {
-      const blob = await userFileService.downloadFile(profilePictureFileId!);
+      const blob = await fileService.downloadFile(profilePictureFileId!);
       return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result as string);

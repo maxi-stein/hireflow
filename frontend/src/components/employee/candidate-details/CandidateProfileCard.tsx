@@ -10,7 +10,7 @@ import {
   IconCalendar
 } from '@tabler/icons-react';
 import { type CandidateProfile } from '../../../services/candidate.service';
-import { type UserFile } from '../../../services/user-file.service';
+import { type UserFile } from '../../../services/file.service';
 import { CandidateAvatar } from '../../shared/candidate-display/CandidateAvatar';
 
 interface CandidateProfileCardProps {

@@ -10,7 +10,7 @@ import { useCandidateInterviewsQuery } from '../../hooks/api/useInterviews';
 import { useCandidateFilesQuery } from '../../hooks/api/useUserFiles';
 import { useCandidateActions } from '../../hooks/candidates/useCandidateActions';
 import { ApplicationStatus } from '../../services/candidate-application.service';
-import { FileType } from '../../services/user-file.service';
+import { FileType } from '../../services/file.service';
 import { useFileDownloader } from '../../hooks/common/useFileDownloader';
 import { notifications } from '@mantine/notifications';
 import { CandidateActionModals } from '../../components/employee/common/CandidateActionModals';

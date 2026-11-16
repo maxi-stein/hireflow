@@ -2,8 +2,7 @@ import { useState, createElement } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
 import { IconCheck } from '@tabler/icons-react';
-import { fileService } from '../../services/file.service';
-import { userFileService, FileType, type UserFile as ServiceUserFile } from '../../services/user-file.service';
+import { fileService, FileType, type UserFile as ServiceUserFile } from '../../services/file.service';
 import { queryClient } from '../../services/queryClient';
 import { FILES_QUERY_KEY, useCandidateFilesQuery } from '../api/useUserFiles';
 import { useFileDownloader } from '../common/useFileDownloader';
@@ -108,7 +107,7 @@ export function useCandidateFilesManager({
   const handleViewCV = async () => {
     if (!cvFile) return;
     try {
-      const blob = await userFileService.downloadFile(cvFile.id);
+      const blob = await fileService.downloadFile(cvFile.id);
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch {
