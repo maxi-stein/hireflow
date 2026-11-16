@@ -1,7 +1,7 @@
 import { Box, Title, Group, Button, Stack, Text } from '@mantine/core';
 import { IconExternalLink } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { DashboardListItem } from '../../pages/employee/components/DashboardListItem';
+import { DashboardListItem } from './DashboardListItem';
 
 interface PendingReviewsWidgetProps {
   pendingReviews: any[];
