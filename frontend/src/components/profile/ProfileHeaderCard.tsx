@@ -23,12 +23,12 @@ import {
 } from '@tabler/icons-react';
 import { CandidateAvatar } from '../shared/candidate-display/CandidateAvatar';
 import type { User, Candidate } from '../../types/models/user.types';
-import type { CandidateFileItem } from '../../hooks/profile/useCandidateFilesManager';
+import type { UserFile } from '../../services/file.service';
 
 export interface ProfileHeaderCardProps {
   user: User;
   candidate?: Candidate | null;
-  cvFile?: CandidateFileItem | null;
+  cvFile?: UserFile | null;
   uploadingPhoto: boolean;
   uploadingCV: boolean;
   onPhotoUpload: (file: File | null) => void;

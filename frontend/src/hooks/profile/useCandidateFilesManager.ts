@@ -2,13 +2,11 @@ import { useState, createElement } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
 import { IconCheck } from '@tabler/icons-react';
-import { fileService, FileType, type UserFile as ServiceUserFile } from '../../services/file.service';
+import { fileService, FileType, type UserFile } from '../../services/file.service';
 import { queryClient } from '../../services/queryClient';
 import { FILES_QUERY_KEY, useCandidateFilesQuery } from '../api/useUserFiles';
-import { useFileDownloader } from '../common/useFileDownloader';
-import type { Candidate, UserFile as ModelUserFile } from '../../types/models/user.types';
-
-export type CandidateFileItem = ServiceUserFile | ModelUserFile;
+import { FILE_CONSTANTS } from '../../constants/file.constants';
+import type { Candidate } from '../../types/models/user.types';
 
 export interface UseCandidateFilesManagerParams {
   candidate?: Candidate | null;
@@ -16,15 +14,13 @@ export interface UseCandidateFilesManagerParams {
 }
 
 export interface UseCandidateFilesManagerReturn {
-  cvFile: CandidateFileItem | undefined;
-  photoFile: CandidateFileItem | undefined;
+  cvFile: UserFile | undefined;
+  photoFile: UserFile | undefined;
   uploadingPhoto: boolean;
   uploadingCV: boolean;
-  isDownloading: boolean;
   handlePhotoUpload: (file: File | null) => Promise<void>;
   handleCVUpload: (file: File | null) => Promise<void>;
   handleViewCV: () => Promise<void>;
-  handleDownloadCV: () => Promise<void>;
 }
 
 export function useCandidateFilesManager({
@@ -34,31 +30,29 @@ export function useCandidateFilesManager({
   const { t } = useTranslation('profile');
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingCV, setUploadingCV] = useState(false);
-  const { downloadFile, isDownloading } = useFileDownloader();
 
   const { data: candidateFiles } = useCandidateFilesQuery(candidate?.id || '');
 
-  const cvFile: CandidateFileItem | undefined =
-    candidateFiles?.find((f) => f.file_type === FileType.RESUME) ||
-    candidate?.files?.find((f) => f.file_type === 'cv');
-
-  const photoFile: CandidateFileItem | undefined =
-    candidateFiles?.find((f) => f.file_type === FileType.PROFILE_PICTURE) ||
-    candidate?.files?.find((f) => f.file_type === 'profile_picture');
+  const cvFile = candidateFiles?.find((f) => f.file_type === FileType.RESUME);
+  const photoFile = candidateFiles?.find((f) => f.file_type === FileType.PROFILE_PICTURE);
 
   const handlePhotoUpload = async (file: File | null) => {
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > FILE_CONSTANTS.MAX_PHOTO_SIZE_BYTES) {
       notifications.show({
         title: t('candidate.notifications.errorTitle', 'Archivo muy grande'),
-        message: t('candidate.notifications.fileTooLarge', 'La foto no debe superar los 5MB'),
+        message: t(
+          'candidate.notifications.fileTooLarge',
+          `La foto no debe superar los ${FILE_CONSTANTS.MAX_PHOTO_SIZE_MB}MB`,
+        ),
         color: 'red',
       });
       return;
     }
 
     setUploadingPhoto(true);
+
     try {
       await fileService.uploadProfilePicture(file);
       queryClient.invalidateQueries({ queryKey: [...FILES_QUERY_KEY, 'candidate', candidate?.id] });
@@ -119,20 +113,13 @@ export function useCandidateFilesManager({
     }
   };
 
-  const handleDownloadCV = async () => {
-    if (!cvFile) return;
-    await downloadFile(cvFile.id, cvFile.file_name);
-  };
-
   return {
     cvFile,
     photoFile,
     uploadingPhoto,
     uploadingCV,
-    isDownloading,
     handlePhotoUpload,
     handleCVUpload,
     handleViewCV,
-    handleDownloadCV,
   };
 }
