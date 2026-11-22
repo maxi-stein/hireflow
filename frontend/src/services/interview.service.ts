@@ -39,7 +39,6 @@ export interface Interview {
   applications: CandidateApplication[];
   interviewers: Interviewer[];
   reviews?: InterviewReview[];
-  average_score?: number | null;
 }
 
 export interface CreateInterviewDto {

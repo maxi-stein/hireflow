@@ -58,8 +58,7 @@ export const CandidateInterviewCard = ({
   const hasUserReviewed = reviews.some(r => r.employee?.id === currentUserId);
   const canUploadReview = effectiveStatus === InterviewStatus.COMPLETED && isInterviewer && !hasUserReviewed;
 
-  const applicationScore = interview.applications?.find(a => a.id === applicationId)?.average_score;
-  const avgScore = applicationScore ?? interview.average_score ?? null;
+  const avgScore = interview.applications?.find(a => a.id === applicationId)?.average_score ?? null;
   const hasScore = avgScore !== null && avgScore !== undefined;
 
   const scoreColor = isReviewed && hasScore ? getScoreColor(avgScore) : isScheduled ? 'blue' : 'orange';
