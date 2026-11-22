@@ -22,6 +22,7 @@ export function InterviewReviewForm({ interviewId, applicationId, reviewId, read
     form,
     interview,
     myReview,
+    targetApplication,
     candidateId,
     isLoading,
     isReadOnly,
@@ -40,10 +41,6 @@ export function InterviewReviewForm({ interviewId, applicationId, reviewId, read
     if (!interview) {
       return <Text>{t('form.notifications.notFound')}</Text>;
     }
-
-    const targetApplication = (applicationId || myReview?.candidate_application_id)
-      ? interview.applications?.find(a => a.id === (applicationId || myReview?.candidate_application_id))
-      : interview.applications?.[0];
 
     const candidate = targetApplication?.candidate?.user;
     const jobOffer = targetApplication?.job_offer;

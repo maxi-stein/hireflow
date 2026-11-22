@@ -15,6 +15,7 @@ import { validateWithJoi } from '../../utils/form-validation';
 import { interviewReviewSchema } from '../../schemas/interveiw-review.schema';
 import { normalizeText } from '../../utils/string';
 import type { Interview } from '../../services/interview.service';
+import type { CandidateApplication } from '../../services/candidate-application.service';
 import type { InterviewReview } from '../../services/interview-review.service';
 
 export interface InterviewReviewFormValues {
@@ -36,6 +37,7 @@ export interface UseInterviewReviewFormReturn {
   form: UseFormReturnType<InterviewReviewFormValues>;
   interview: Interview | undefined;
   myReview: InterviewReview | undefined;
+  targetApplication: CandidateApplication | undefined;
   candidateId: string | undefined;
   isLoading: boolean;
   isReadOnly: boolean;
@@ -51,7 +53,7 @@ export function useInterviewReviewForm({
   onSuccess,
 }: UseInterviewReviewFormParams): UseInterviewReviewFormReturn {
   const { t } = useTranslation('reviews');
-  const user = useAppStore(state => state.user);
+  const user = useAppStore((state) => state.user);
   const navigate = useNavigate();
 
   const { data: interview, isLoading: isLoadingInterview } = useInterviewQuery(interviewId);
@@ -60,19 +62,21 @@ export function useInterviewReviewForm({
   const createReviewMutation = useCreateReviewMutation();
   const updateReviewMutation = useUpdateReviewMutation();
 
+  // reviewId is for editing. Get the user review among all reviews.
   const myReview = reviewId
-    ? reviews?.find(r => r.id === reviewId)
+    ? reviews?.find((r) => r.id === reviewId)
     : reviews?.find(
-        r =>
+        (r) =>
           r.employee_id === user?.id &&
           (!applicationId || r.candidate_application_id === applicationId),
       );
 
-  const effectiveApplicationId =
-    applicationId || myReview?.candidate_application_id;
+  // Get the application id for the form (create or edit review) in order to get the candidate
+  const effectiveApplicationId = applicationId || myReview?.candidate_application_id;
 
+  // Get the full candidateApplication with the applicationId
   const targetApplication = effectiveApplicationId
-    ? interview?.applications?.find(a => a.id === effectiveApplicationId)
+    ? interview?.applications?.find((a) => a.id === effectiveApplicationId)
     : interview?.applications?.[0];
 
   const candidateId = targetApplication?.candidate?.id;
@@ -104,7 +108,11 @@ export function useInterviewReviewForm({
 
   const onSubmit = async (values: InterviewReviewFormValues) => {
     if (!interview || !user?.id) {
-      notifications.show({ title: 'Error', message: t('form.notifications.missingData'), color: 'red' });
+      notifications.show({
+        title: 'Error',
+        message: t('form.notifications.missingData'),
+        color: 'red',
+      });
       return;
     }
 
@@ -128,10 +136,18 @@ export function useInterviewReviewForm({
     try {
       if (isEditMode && myReview) {
         await updateReviewMutation.mutateAsync({ id: myReview.id, data: payload });
-        notifications.show({ title: 'Success', message: t('form.notifications.updateSuccess'), color: 'green' });
+        notifications.show({
+          title: 'Success',
+          message: t('form.notifications.updateSuccess'),
+          color: 'green',
+        });
       } else {
         await createReviewMutation.mutateAsync(payload);
-        notifications.show({ title: 'Success', message: t('form.notifications.createSuccess'), color: 'green' });
+        notifications.show({
+          title: 'Success',
+          message: t('form.notifications.createSuccess'),
+          color: 'green',
+        });
       }
 
       if (onSuccess) {
@@ -140,25 +156,27 @@ export function useInterviewReviewForm({
         navigate(`/manage/candidates/list/${candidateId}`);
       }
     } catch {
-      notifications.show({ title: 'Error', message: t('form.notifications.submitError'), color: 'red' });
-    }
-  };
-
-  const handleSubmit = form.onSubmit(
-    onSubmit,
-    (_errors) => {
       notifications.show({
-        title: 'Validation Error',
-        message: t('form.notifications.validationError'),
+        title: 'Error',
+        message: t('form.notifications.submitError'),
         color: 'red',
       });
     }
-  );
+  };
+
+  const handleSubmit = form.onSubmit(onSubmit, (_errors) => {
+    notifications.show({
+      title: 'Validation Error',
+      message: t('form.notifications.validationError'),
+      color: 'red',
+    });
+  });
 
   return {
     form,
     interview,
     myReview,
+    targetApplication,
     candidateId,
     isLoading: isLoadingInterview || isLoadingReviews,
     isReadOnly,
@@ -166,4 +184,3 @@ export function useInterviewReviewForm({
     handleSubmit,
   };
 }
-
