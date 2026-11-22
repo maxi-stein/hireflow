@@ -7,6 +7,7 @@ interface ReviewModalProps {
   opened: boolean;
   onClose: () => void;
   interviewId: string | null;
+  applicationId?: string;
   interview?: unknown; // accepted but not used — kept for API compatibility
   reviewId?: string;
   readOnly?: boolean;
@@ -17,6 +18,7 @@ export function ReviewModal({
   opened,
   onClose,
   interviewId,
+  applicationId,
   reviewId,
   readOnly,
   onSuccess,
@@ -49,6 +51,7 @@ export function ReviewModal({
     >
       <InterviewReviewForm
         interviewId={interviewId}
+        applicationId={applicationId}
         reviewId={reviewId}
         readOnly={readOnly}
         onSuccess={() => {

@@ -5,6 +5,7 @@ import type { Interview } from '../../services/interview.service';
 export interface ReviewModalState {
   opened: boolean;
   interviewId: string | null;
+  applicationId?: string;
   reviewId?: string;
   readOnly?: boolean;
 }
@@ -26,19 +27,21 @@ export function useCandidateInterviewsState(interviews?: Interview[]) {
     setExpandedIds(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const openCreateReview = (interviewId: string) => {
+  const openCreateReview = (interviewId: string, applicationId?: string) => {
     setModalState({
       opened: true,
       interviewId,
+      applicationId,
       reviewId: undefined,
       readOnly: false,
     });
   };
 
-  const openEditReview = (interviewId: string, reviewId: string) => {
+  const openEditReview = (interviewId: string, reviewId: string, applicationId?: string) => {
     setModalState({
       opened: true,
       interviewId,
+      applicationId,
       reviewId,
       readOnly: false,
     });

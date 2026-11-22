@@ -85,6 +85,7 @@ export function CandidateInterviewsDisplay({ interviews, applicationId }: Candid
         opened={modalState.opened}
         onClose={closeReview}
         interviewId={modalState.interviewId}
+        applicationId={modalState.applicationId || applicationId}
         reviewId={modalState.reviewId}
         readOnly={modalState.readOnly}
         onSuccess={handleReviewSuccess}

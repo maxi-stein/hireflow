@@ -26,6 +26,7 @@ export interface InterviewReviewFormValues {
 
 export interface UseInterviewReviewFormParams {
   interviewId: string;
+  applicationId?: string;
   reviewId?: string;
   readOnly?: boolean;
   onSuccess?: () => void;
@@ -44,6 +45,7 @@ export interface UseInterviewReviewFormReturn {
 
 export function useInterviewReviewForm({
   interviewId,
+  applicationId,
   reviewId,
   readOnly,
   onSuccess,
@@ -53,7 +55,6 @@ export function useInterviewReviewForm({
   const navigate = useNavigate();
 
   const { data: interview, isLoading: isLoadingInterview } = useInterviewQuery(interviewId);
-  const candidateId = interview?.applications?.[0]?.candidate?.id;
   const { data: reviews, isLoading: isLoadingReviews } = useInterviewReviewsQuery(interviewId);
 
   const createReviewMutation = useCreateReviewMutation();
@@ -61,7 +62,20 @@ export function useInterviewReviewForm({
 
   const myReview = reviewId
     ? reviews?.find(r => r.id === reviewId)
-    : reviews?.find(r => r.employee_id === user?.id);
+    : reviews?.find(
+        r =>
+          r.employee_id === user?.id &&
+          (!applicationId || r.candidate_application_id === applicationId),
+      );
+
+  const effectiveApplicationId =
+    applicationId || myReview?.candidate_application_id;
+
+  const targetApplication = effectiveApplicationId
+    ? interview?.applications?.find(a => a.id === effectiveApplicationId)
+    : interview?.applications?.[0];
+
+  const candidateId = targetApplication?.candidate?.id;
 
   const isEditMode = !!myReview;
   const isOwner = !!myReview && !!user?.id && myReview.employee_id === user.id;
@@ -94,8 +108,10 @@ export function useInterviewReviewForm({
       return;
     }
 
-    const applicationId = interview.applications?.[0]?.id;
-    if (!applicationId) {
+    const resolvedApplicationId =
+      applicationId || myReview?.candidate_application_id || interview.applications?.[0]?.id;
+
+    if (!resolvedApplicationId) {
       notifications.show({ title: 'Error', message: t('form.notifications.noApp'), color: 'red' });
       return;
     }
@@ -103,7 +119,7 @@ export function useInterviewReviewForm({
     const payload = {
       employee_id: user.id,
       interview_id: interview.id,
-      candidate_application_id: applicationId,
+      candidate_application_id: resolvedApplicationId,
       ...values,
       strengths: normalizeText(values.strengths),
       weaknesses: normalizeText(values.weaknesses),

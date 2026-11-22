@@ -28,8 +28,8 @@ export interface CandidateInterviewCardProps {
   applicationId: string;
   isExpanded: boolean;
   onToggleExpand: () => void;
-  onOpenCreateReview: (interviewId: string) => void;
-  onOpenEditReview: (interviewId: string, reviewId: string) => void;
+  onOpenCreateReview: (interviewId: string, applicationId: string) => void;
+  onOpenEditReview: (interviewId: string, reviewId: string, applicationId: string) => void;
   currentUserId?: string;
 }
 
@@ -255,7 +255,7 @@ export const CandidateInterviewCard = ({
                     key={r.id}
                     review={r}
                     currentUserId={currentUserId}
-                    onEditReview={(reviewId) => onOpenEditReview(interview.id, reviewId)}
+                    onEditReview={(reviewId) => onOpenEditReview(interview.id, reviewId, applicationId)}
                   />
                 ))}
               </Stack>
@@ -270,7 +270,7 @@ export const CandidateInterviewCard = ({
               formattedDate={formattedDate}
               formattedTime={formattedTime}
               meetingLink={interview.meeting_link}
-              onUploadReview={() => onOpenCreateReview(interview.id)}
+              onUploadReview={() => onOpenCreateReview(interview.id, applicationId)}
               onViewSchedule={() => {
                 const date = new Date(interview.scheduled_time).toISOString().split('T')[0];
                 navigate(`/manage/interviews?date=${date}&interviewId=${interview.id}`);

@@ -8,12 +8,13 @@ import { ScheduleInterviewModal } from '../interviews/ScheduleInterviewModal';
 
 interface InterviewReviewFormProps {
   interviewId: string;
+  applicationId?: string;
   reviewId?: string;
   readOnly?: boolean;
   onSuccess?: () => void;
 }
 
-export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess }: InterviewReviewFormProps) {
+export function InterviewReviewForm({ interviewId, applicationId, reviewId, readOnly, onSuccess }: InterviewReviewFormProps) {
   const { t } = useTranslation('reviews');
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
@@ -26,7 +27,7 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
     isReadOnly,
     isEditMode,
     handleSubmit,
-  } = useInterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess });
+  } = useInterviewReviewForm({ interviewId, applicationId, reviewId, readOnly, onSuccess });
 
     if (isLoading) {
       return (
@@ -40,8 +41,12 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
       return <Text>{t('form.notifications.notFound')}</Text>;
     }
 
-    const candidate = interview.applications?.[0]?.candidate?.user;
-    const jobOffer = interview.applications?.[0]?.job_offer;
+    const targetApplication = (applicationId || myReview?.candidate_application_id)
+      ? interview.applications?.find(a => a.id === (applicationId || myReview?.candidate_application_id))
+      : interview.applications?.[0];
+
+    const candidate = targetApplication?.candidate?.user;
+    const jobOffer = targetApplication?.job_offer;
     const reviewerName = myReview?.employee?.user
       ? `${myReview.employee.user.first_name} ${myReview.employee.user.last_name}`
       : undefined;
@@ -77,7 +82,7 @@ export function InterviewReviewForm({ interviewId, reviewId, readOnly, onSuccess
         <ScheduleInterviewModal
           opened={isScheduleModalOpen}
           onClose={() => setIsScheduleModalOpen(false)}
-          initialApplicationId={interview.applications[0]?.id}
+          initialApplicationId={targetApplication?.id || interview.applications[0]?.id}
         />
       </Box>
     );
