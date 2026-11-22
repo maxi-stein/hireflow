@@ -65,4 +65,6 @@ export class CandidateApplication {
     (answer) => answer.candidate_application,
   )
   skill_answers: CandidateSkillAnswer[];
+
+  average_score?: number | null;
 }

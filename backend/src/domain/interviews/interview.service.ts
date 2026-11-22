@@ -14,6 +14,7 @@ import { CandidateApplicationService } from '../candidate-application/candidate-
 import { CreateInterviewDto } from './dto/create-interview.dto';
 import { UpdateInterviewDto } from './dto/update-interview.dto';
 import { Interview } from './entities/interview.entity';
+import { InterviewReview } from '../interview-review/entity/interview-review.entity';
 import { InterviewStatus } from './interfaces/interview-status.enum';
 import { EmployeesService } from '../users/employee/employee.service';
 import { FilterInterviewsDto } from './dto/filter-interviews.dto';
@@ -34,6 +35,44 @@ export class InterviewService {
     @Inject(MailerService)
     private readonly mailerService: MailerService,
   ) {}
+
+  private calculateAverageScore(
+    reviews?: InterviewReview[],
+    applicationId?: string,
+  ): number | null {
+    if (!reviews || reviews.length === 0) return null;
+
+    const relevantReviews = applicationId
+      ? reviews.filter((r) => r.candidate_application_id === applicationId)
+      : reviews;
+
+    const scoredReviews = relevantReviews.filter(
+      (r) =>
+        r.score !== null &&
+        r.score !== undefined &&
+        !isNaN(Number(r.score)),
+    );
+
+    if (scoredReviews.length === 0) return null;
+
+    const total = scoredReviews.reduce((sum, r) => sum + Number(r.score), 0);
+    const avg = total / scoredReviews.length;
+
+    return Math.round(avg * 10) / 10;
+  }
+
+  private enrichInterviewWithScores(interview: Interview): Interview {
+    if (interview.applications && interview.applications.length > 0) {
+      for (const app of interview.applications) {
+        app.average_score = this.calculateAverageScore(
+          interview.reviews,
+          app.id,
+        );
+      }
+    }
+
+    return interview;
+  }
 
   async create(createDto: CreateInterviewDto): Promise<Interview> {
     //If type === individual, then validate if the application_ids array's length is 1
@@ -133,7 +172,7 @@ export class InterviewService {
       );
     }
 
-    return savedInterview;
+    return this.enrichInterviewWithScores(savedInterview);
   }
 
   async findAll(
@@ -159,7 +198,10 @@ export class InterviewService {
       .leftJoinAndSelect('interview.interviewers', 'interviewer')
       .leftJoinAndSelect('interviewer.user', 'interviewer_user')
       .leftJoinAndSelect('application.candidate', 'candidate')
-      .leftJoinAndSelect('candidate.user', 'user');
+      .leftJoinAndSelect('candidate.user', 'user')
+      .leftJoinAndSelect('interview.reviews', 'review')
+      .leftJoinAndSelect('review.employee', 'review_employee')
+      .leftJoinAndSelect('review_employee.user', 'review_user');
 
     if (status && status.length > 0) {
       queryBuilder.andWhere('interview.status IN (:...status)', { status });
@@ -204,6 +246,8 @@ export class InterviewService {
       .orderBy('interview.scheduled_time', order || 'ASC')
       .getManyAndCount();
 
+    data.forEach((interview) => this.enrichInterviewWithScores(interview));
+
     return {
       data,
       pagination: {
@@ -225,6 +269,9 @@ export class InterviewService {
         'applications.job_offer',
         'interviewers',
         'interviewers.user',
+        'reviews',
+        'reviews.employee',
+        'reviews.employee.user',
       ],
     });
 
@@ -232,7 +279,7 @@ export class InterviewService {
       throw new NotFoundException(`Interview with ID ${id} not found`);
     }
 
-    return interview;
+    return this.enrichInterviewWithScores(interview);
   }
 
   async update(id: string, updateDto: UpdateInterviewDto): Promise<Interview> {
@@ -326,7 +373,7 @@ export class InterviewService {
       }
     }
 
-    return savedInterview;
+    return this.enrichInterviewWithScores(savedInterview);
   }
 
   async remove(id: string): Promise<void> {
@@ -355,6 +402,9 @@ export class InterviewService {
       .createQueryBuilder('interview')
       .innerJoinAndSelect('interview.interviewers', 'interviewer')
       .innerJoinAndSelect('interview.applications', 'application')
+      .leftJoinAndSelect('interview.reviews', 'review')
+      .leftJoinAndSelect('review.employee', 'review_employee')
+      .leftJoinAndSelect('review_employee.user', 'review_user')
       .where('interviewer.id = :employeeId', { employeeId })
       .andWhere('interview.status != :cancelledStatus', {
         cancelledStatus: InterviewStatus.CANCELLED,
@@ -362,6 +412,8 @@ export class InterviewService {
       .skip(skip)
       .take(limit)
       .getManyAndCount();
+
+    data.forEach((interview) => this.enrichInterviewWithScores(interview));
 
     return {
       data,
@@ -399,6 +451,8 @@ export class InterviewService {
       .skip(skip)
       .take(limit)
       .getManyAndCount();
+
+    data.forEach((interview) => this.enrichInterviewWithScores(interview));
 
     return {
       data,
