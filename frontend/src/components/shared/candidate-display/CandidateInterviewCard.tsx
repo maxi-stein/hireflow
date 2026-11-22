@@ -58,11 +58,11 @@ export const CandidateInterviewCard = ({
   const hasUserReviewed = reviews.some(r => r.employee?.id === currentUserId);
   const canUploadReview = effectiveStatus === InterviewStatus.COMPLETED && isInterviewer && !hasUserReviewed;
 
-  const avgScore = reviews.length > 0
-    ? reviews.reduce((acc, curr) => acc + (curr.score || 0), 0) / reviews.length
-    : 0;
+  const applicationScore = interview.applications?.find(a => a.id === applicationId)?.average_score;
+  const avgScore = applicationScore ?? interview.average_score ?? null;
+  const hasScore = avgScore !== null && avgScore !== undefined;
 
-  const scoreColor = isReviewed ? getScoreColor(avgScore) : isScheduled ? 'blue' : 'orange';
+  const scoreColor = isReviewed && hasScore ? getScoreColor(avgScore) : isScheduled ? 'blue' : 'orange';
 
   const interviewersText = interview.interviewers && interview.interviewers.length > 0
     ? interview.interviewers.map(i => `${i.user.first_name} ${i.user.last_name}`).join(', ')
@@ -188,7 +188,7 @@ export const CandidateInterviewCard = ({
                 whiteSpace: 'nowrap',
               }}
             >
-              {isReviewed ? (
+              {isReviewed && hasScore ? (
                 <>
                   <IconStarFilled
                     size={13}

@@ -43,6 +43,7 @@ export interface CandidateApplication {
   candidate: Candidate;
   job_offer: JobOffer;
   skill_answers?: CandidateSkillAnswer[];
+  average_score?: number | null;
 }
 
 export interface ApplicationFilters {
