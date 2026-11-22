@@ -32,7 +32,7 @@ export const getDateHeader = (date: Date | string) => {
     year: 'numeric',
   });
 
-  if (isToday) return `Today, ${dateString}`;
-  if (isTomorrow) return `Tomorrow, ${dateString}`;
+  if (isToday) return `${dateString}`;
+  if (isTomorrow) return `${dateString}`;
   return dateString;
 };
