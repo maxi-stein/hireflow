@@ -118,44 +118,29 @@ export class FileStorageService {
 
   // Used by controller for getting file metadata
   async getFileMetadataById(fileId: string) {
-    return this.userFileRepository.findOne({
+    const userFile = this.userFileRepository.findOne({
       where: { id: fileId },
       relations: ['candidate'],
     });
+
+    if (!userFile) {
+      throw new NotFoundException('File not found.');
+    }
+
+    return userFile;
   }
 
   // Used by controller for getting all files metadata for a candidate
   async getAllUserFilesMetadata(candidateId: string) {
-    return this.userFileRepository.find({
+    const files = await this.userFileRepository.find({
       where: { candidate: { id: candidateId } },
     });
-  }
 
-  // TODO: evaluar si este metodo es necesario
-  async deleteFile(fileId: string, candidateId: string): Promise<void> {
-    const userFile = await this.userFileRepository.findOne({
-      where: { id: fileId, candidate: { id: candidateId } },
-    });
-
-    if (!userFile) {
-      throw new NotFoundException('File not found');
+    if (!files) {
+      throw new NotFoundException('No files found for the user');
     }
 
-    await this.userFileRepository.manager.transaction(
-      async (transactionalEntityManager) => {
-        // Delete physical file
-        try {
-          await fs.unlink(userFile.file_path);
-        } catch (error) {
-          console.warn(
-            `Physical file could not be deleted: ${userFile.file_path}`,
-          );
-        }
-
-        // Delete BD registry
-        await transactionalEntityManager.remove(UserFile, userFile);
-      },
-    );
+    return files;
   }
 
   private validateFileForType(file: Express.Multer.File, fileType: FileType) {

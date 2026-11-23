@@ -36,9 +36,12 @@ export class FileController {
   @Post('cv')
   @UseGuards(UserTypeGuard)
   @RequireUserType(UserType.CANDIDATE)
+  // Gets the 'resume' field from the multipart/form-data sent from the client
+  // and sets the request.file with this resume
   @UseInterceptors(FileInterceptor('resume'))
   async uploadCV(
     @UploadedFile(
+      // Extracts the file in request.file and asings it to the 'file' variable
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: FILE.MAX_SIZE }),
@@ -59,9 +62,12 @@ export class FileController {
   @Post('profile-picture')
   @UseGuards(UserTypeGuard)
   @RequireUserType(UserType.CANDIDATE)
+  // Gets the 'profile-picture' field from the multipart/form-data sent from the client
+  // and sets the request.file with this profile-picture
   @UseInterceptors(FileInterceptor('profile-picture'))
   async uploadProfilePicture(
     @UploadedFile(
+      // Extracts the file in request.file and asings it to the 'file' variable
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: FILE.MAX_SIZE }), // 5MB
@@ -88,27 +94,23 @@ export class FileController {
     // Get file metadata
     const userFile = await this.fileStorageService.getFileMetadataById(fileId);
 
-    if (!userFile) {
-      throw new NotFoundException('File not found.');
-    }
-
     // Authorization Check - Employees can access all files, candidates only their own
-    if (req.user.user_type === UserType.CANDIDATE && 
-        userFile.candidate.id !== req.user.entity_id) {
+    if (
+      req.user.user_type === UserType.CANDIDATE &&
+      userFile.candidate.id !== req.user.entity_id
+    ) {
       throw new ForbiddenException('You do not have access to this file');
     }
 
     res.setHeader('Content-Type', userFile.mime_type);
     res.setHeader('Content-Length', userFile.size.toString());
 
-    // Set Content-Disposition header based on file type
-    if (userFile.mime_type.startsWith('image/')) {
-      res.setHeader(
-        'Content-Disposition',
-        `inline; filename="${userFile.file_name}"`,
-      );
-    } else if (userFile.mime_type === 'application/pdf') {
-      // Show in explorer
+    // Set Content-Disposition header (tells the browser what to do with the file)
+    // 'inline' means 'show it on screen, dont download it'
+    if (
+      userFile.mime_type.startsWith('image/') ||
+      userFile.mime_type === 'application/pdf'
+    ) {
       res.setHeader(
         'Content-Disposition',
         `inline; filename="${userFile.file_name}"`,
