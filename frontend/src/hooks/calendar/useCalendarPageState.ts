@@ -7,7 +7,7 @@ import { useJobOffersQuery } from '../api/useJobOffers';
 import type { Interview } from '../../services/interview.service';
 import { InterviewStatus } from '../../services/interview.service';
 import type { JobOffer } from '../../services/job-offer.service';
-import { getDaysInMonth } from '../../utils/date-utils';
+import { getDaysInMonth, parseLocalDate } from '../../utils/date-utils';
 
 export function useCalendarPageState() {
   const { t } = useTranslation(['calendar']);
@@ -93,7 +93,8 @@ export function useCalendarPageState() {
   const getJobOffersForDay = (date: Date) => {
     return jobOffers.filter(offer => {
       if (!offer.deadline) return false;
-      const deadlineDate = new Date(offer.deadline);
+      const deadlineDate = parseLocalDate(offer.deadline);
+      if (!deadlineDate) return false;
       return (
         deadlineDate.getDate() === date.getDate() &&
         deadlineDate.getMonth() === date.getMonth() &&

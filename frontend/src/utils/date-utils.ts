@@ -16,6 +16,31 @@ export const getDaysInMonth = (date: Date): (Date | null)[] => {
   return daysArray;
 };
 
+/**
+ * Parsea una fecha sin hora (YYYY-MM-DD o ISO) como fecha local (sin desfase horario UTC).
+ * Evita el desvío de 1 día que ocurre en zonas horarias negativas (ej. UTC-3 Buenos Aires)
+ * cuando new Date("YYYY-MM-DD") se evalúa como medianoche UTC.
+ */
+export const parseLocalDate = (date: string | Date | null | undefined): Date | null => {
+  if (!date) return null;
+  if (date instanceof Date) return date;
+
+  const match = date.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    const [, year, month, day] = match;
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+  return new Date(date);
+};
+
+/**
+ * Formatea una fecha local respetando el día del calendario sin desfases de huso horario.
+ */
+export const formatLocalDate = (date: string | Date | null | undefined, locale?: string): string => {
+  const parsed = parseLocalDate(date);
+  return parsed ? parsed.toLocaleDateString(locale) : '-';
+};
+
 export const getDateHeader = (date: Date | string) => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   const today = new Date();

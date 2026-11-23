@@ -1,6 +1,7 @@
 import { Group, Text, ThemeIcon } from '@mantine/core';
 import { IconCurrencyDollar, IconClock } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { formatLocalDate } from '../../../utils/date-utils';
 
 interface JobOfferDetailsProps {
   salary?: string;
@@ -10,7 +11,7 @@ interface JobOfferDetailsProps {
 
 export const JobOfferDetails = ({ salary, deadline, showSensitiveData }: JobOfferDetailsProps) => {
   const { t, i18n } = useTranslation('jobs');
-  const formattedDeadline = deadline ? new Date(deadline).toLocaleDateString(i18n.language) : null;
+  const formattedDeadline = deadline ? formatLocalDate(deadline, i18n.language) : null;
 
   return (
     <Group gap="lg">

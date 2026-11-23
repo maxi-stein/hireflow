@@ -1,5 +1,6 @@
 import { Table, Badge, ActionIcon, Text, Group } from '@mantine/core';
 import { IconEye, IconEdit, IconTrash } from '@tabler/icons-react';
+import { formatLocalDate } from '../../../utils/date-utils';
 import { useTranslation } from 'react-i18next';
 import { JobOfferStatus, type JobOffer } from '../../../services/job-offer.service';
 import { getWorkModeColor } from '../../../utils/job.utils';
@@ -66,7 +67,7 @@ export function JobPostingsTable({
               {new Date(offer.created_at).toLocaleDateString(i18n.language)}
             </Table.Td>
             <Table.Td>
-              {offer.deadline ? new Date(offer.deadline).toLocaleDateString(i18n.language) : '-'}
+              {formatLocalDate(offer.deadline, i18n.language)}
             </Table.Td>
             <Table.Td>
               <Group gap={4} wrap="nowrap">

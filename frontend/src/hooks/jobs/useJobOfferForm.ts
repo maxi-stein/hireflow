@@ -15,6 +15,7 @@ import { ROUTES } from '../../router/routes.config';
 import { createJobOfferSchema } from '../../schemas/job-offer.schema';
 import { validateWithJoi } from '../../utils/form-validation';
 import { normalizeText } from '../../utils/string';
+import { parseLocalDate } from '../../utils/date-utils';
 
 export function useJobOfferForm() {
   const { t } = useTranslation(['jobs', 'common']);
@@ -76,7 +77,7 @@ export function useJobOfferForm() {
         salaryMin: parsedMin,
         salaryMax: parsedMax,
         benefits: jobOffer.benefits || '',
-        deadline: jobOffer.deadline ? new Date(jobOffer.deadline) : null,
+        deadline: jobOffer.deadline ? parseLocalDate(jobOffer.deadline) : null,
         skills: jobOffer.skills.map((s) => s.skill_name),
         status: jobOffer.status,
       });

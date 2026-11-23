@@ -15,6 +15,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { ApplicationStatus } from '../../../services/candidate-application.service';
 import { IconSearch } from '@tabler/icons-react';
+import { formatLocalDate } from '../../../utils/date-utils';
 import { useJobApplicationsTable } from '../../../hooks/jobs/useJobApplicationsTable';
 import { JobApplicationTableRow } from './JobApplicationTableRow';
 
@@ -60,7 +61,7 @@ export function JobApplicationsTable({
           <Title order={4}>{jobTitle}</Title>
           {deadline && (
             <Text size="xs" c="red" mt={2}>
-              {t('table.deadline')} {new Date(deadline).toLocaleDateString()}
+              {t('table.deadline')} {formatLocalDate(deadline)}
             </Text>
           )}
         </Box>
