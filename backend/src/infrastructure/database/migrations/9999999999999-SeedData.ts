@@ -214,42 +214,57 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  *   Entrevista Inicial - Alice
  *     ID: 550e8400-e29b-41d4-a716-446655440050
  *     Type: INDIVIDUAL
- *     Status: COMPLETED
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-03 10:00:00 (Jueves 03 de Diciembre 2026)
+ *     Scheduled: 2026-12-03 10:00:00
+ *
+ *   Entrevista Inicial - Bob
+ *     ID: 550e8400-e29b-41d4-a716-446655440300
+ *     Type: INDIVIDUAL
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-04 11:00:00 (Viernes 04 de Diciembre 2026)
+ *
+ *   Entrevista Inicial - Charlie
+ *     ID: 550e8400-e29b-41d4-a716-446655440301
+ *     Type: INDIVIDUAL
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-07 10:00:00 (Lunes 07 de Diciembre 2026)
+ *
+ *   Entrevista HR - George
+ *     ID: 550e8400-e29b-41d4-a716-446655440407
+ *     Type: INDIVIDUAL
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-08 11:00:00 (Martes 08 de Diciembre 2026)
+ *
+ *   Entrevista HR - Fiona
+ *     ID: 550e8400-e29b-41d4-a716-446655440408
+ *     Type: INDIVIDUAL
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-09 14:00:00 (Miércoles 09 de Diciembre 2026)
+ *
+ *   Panel QA Automation - Bob
+ *     ID: 550e8400-e29b-41d4-a716-446655440409
+ *     Type: INDIVIDUAL
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-10 15:00:00 (Jueves 10 de Diciembre 2026)
  *
  *   Entrevista Técnica - Alice
  *     ID: 550e8400-e29b-41d4-a716-446655440110
  *     Type: INDIVIDUAL
  *     Status: SCHEDULED
+ *     Scheduled: 2026-12-11 14:00:00 (Viernes 11 de Diciembre 2026)
  *
- *   Entrevista Inicial - Bob
- *     ID: 550e8400-e29b-41d4-a716-446655440300
+ *   Entrevista Técnica - Alice
+ *     ID: 550e8400-e29b-41d4-a716-446655440110
  *     Type: INDIVIDUAL
- *     Status: COMPLETED
- *
- *   Entrevista Inicial - Charlie
- *     ID: 550e8400-e29b-41d4-a716-446655440301
- *     Type: INDIVIDUAL
- *     Status: COMPLETED
- *
- *   Entrevista HR - George
- *     ID: 550e8400-e29b-41d4-a716-446655440407
- *     Type: INDIVIDUAL
- *     Status: COMPLETED
- *
- *   Entrevista HR - Fiona
- *     ID: 550e8400-e29b-41d4-a716-446655440408
- *     Type: INDIVIDUAL
- *     Status: COMPLETED
- *
- *   Panel QA Automation - Bob
- *     ID: 550e8400-e29b-41d4-a716-446655440409
- *     Type: INDIVIDUAL
- *     Status: COMPLETED
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-11 14:00:00
  *
  *   Entrevista Inicial Full Stack - Charlie
  *     ID: 550e8400-e29b-41d4-a716-44665544040a
  *     Type: INDIVIDUAL
- *     Status: COMPLETED
+ *     Status: SCHEDULED
+ *     Scheduled: 2026-12-14 10:00:00 (Lunes 14 de Diciembre 2026)
  *
  * ============================================================
  */
@@ -463,23 +478,23 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "interviews" 
         ("id", "title", "type", "scheduled_time", "meeting_link", "status", "created_at", "updated_at")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440050', 'Entrevista Inicial', 'INDIVIDUAL', '2026-11-05 10:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', '2026-11-01 09:00:00', '2026-11-05 11:00:00'),
+        ('550e8400-e29b-41d4-a716-446655440050', 'Entrevista Inicial', 'INDIVIDUAL', '2026-12-03 10:00:00', 'https://meet.google.com/abc-defg-hij', 'SCHEDULED', '2026-11-20 09:00:00', '2026-11-20 09:00:00'),
+        ('550e8400-e29b-41d4-a716-446655440300', 'Entrevista Inicial', 'INDIVIDUAL', '2026-12-04 11:00:00', 'https://meet.google.com/abc-defg-hij', 'SCHEDULED', '2026-11-20 10:00:00', '2026-11-20 10:00:00'),
+        ('550e8400-e29b-41d4-a716-446655440301', 'Entrevista Inicial', 'INDIVIDUAL', '2026-12-07 10:00:00', 'https://meet.google.com/abc-defg-hij', 'SCHEDULED', '2026-11-20 11:00:00', '2026-11-20 11:00:00'),
+        ('550e8400-e29b-41d4-a716-446655440407', 'Entrevista HR', 'INDIVIDUAL', '2026-12-08 11:00:00', 'https://meet.google.com/george', 'SCHEDULED', '2026-11-20 12:00:00', '2026-11-20 12:00:00'),
+        ('550e8400-e29b-41d4-a716-446655440408', 'Entrevista HR', 'INDIVIDUAL', '2026-12-09 14:00:00', 'https://meet.google.com/fiona', 'SCHEDULED', '2026-11-20 13:00:00', '2026-11-20 13:00:00'),
+        ('550e8400-e29b-41d4-a716-446655440409', 'Panel QA Automation', 'INDIVIDUAL', '2026-12-10 15:00:00', 'https://meet.google.com/bob', 'SCHEDULED', '2026-11-20 14:00:00', '2026-11-20 14:00:00'),
         (
           '550e8400-e29b-41d4-a716-446655440110',
           'Entrevista Técnica',
           'INDIVIDUAL',
-          '2026-12-02 14:00:00',
+          '2026-12-11 14:00:00',
           'https://meet.google.com/tech-alice-2026',
           'SCHEDULED',
-          '2026-11-20 10:00:00',
-          '2026-11-20 10:00:00'
+          '2026-11-20 15:00:00',
+          '2026-11-20 15:00:00'
         ),
-        ('550e8400-e29b-41d4-a716-446655440300', 'Entrevista Inicial', 'INDIVIDUAL', '2026-11-12 16:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', '2026-11-08 10:00:00', '2026-11-12 17:00:00'),
-        ('550e8400-e29b-41d4-a716-446655440301', 'Entrevista Inicial', 'INDIVIDUAL', '2026-11-16 11:00:00', 'https://meet.google.com/abc-defg-hij', 'COMPLETED', '2026-11-10 10:00:00', '2026-11-16 12:00:00'),
-        ('550e8400-e29b-41d4-a716-446655440407', 'Entrevista HR', 'INDIVIDUAL', '2026-11-18 10:00:00', 'https://meet.google.com/george', 'COMPLETED', '2026-11-14 09:00:00', '2026-11-18 11:00:00'),
-        ('550e8400-e29b-41d4-a716-446655440408', 'Entrevista HR', 'INDIVIDUAL', '2026-11-19 11:00:00', 'https://meet.google.com/fiona', 'COMPLETED', '2026-11-15 09:00:00', '2026-11-19 12:00:00'),
-        ('550e8400-e29b-41d4-a716-446655440409', 'Panel QA Automation', 'INDIVIDUAL', '2026-11-20 15:00:00', 'https://meet.google.com/bob', 'COMPLETED', '2026-11-16 09:00:00', '2026-11-20 16:30:00'),
-        ('550e8400-e29b-41d4-a716-44665544040a', 'Entrevista Inicial Full Stack', 'INDIVIDUAL', '2026-11-21 10:00:00', 'https://meet.google.com/charlie', 'COMPLETED', '2026-11-17 09:00:00', '2026-11-21 11:00:00')
+        ('550e8400-e29b-41d4-a716-44665544040a', 'Entrevista Inicial Full Stack', 'INDIVIDUAL', '2026-12-14 10:00:00', 'https://meet.google.com/charlie', 'SCHEDULED', '2026-11-20 16:00:00', '2026-11-20 16:00:00')
     `);
 
     await queryRunner.query(`
