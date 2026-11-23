@@ -114,21 +114,27 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  *
  *   Full Stack Developer
  *     ID: 550e8400-e29b-41d4-a716-446655440006
+ *     Deadline: 2027-01-10
  *
  *   Backend Developer
  *     ID: 550e8400-e29b-41d4-a716-446655440007
+ *     Deadline: 2027-01-15
  *
  *   Frontend Developer React
  *     ID: 550e8400-e29b-41d4-a716-446655440098
+ *     Deadline: 2027-01-20
  *
  *   DevOps Engineer
  *     ID: 550e8400-e29b-41d4-a716-446655440099
+ *     Deadline: 2026-12-02
  *
  *   QA Automation Engineer
  *     ID: 550e8400-e29b-41d4-a716-446655440100
+ *     Deadline: 2027-01-25
  *
  *   Junior Node Dev
  *     ID: 550e8400-e29b-41d4-a716-446655440404
+ *     Deadline: 2027-01-28
  *
  * ============================================================
  * 6. JOB OFFER SKILLS
@@ -246,25 +252,6 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  *     Status: COMPLETED
  *
  * ============================================================
- * 9. INTERVIEW REVIEWS
- * ============================================================
- *
- *   Review 1 - Alice / Entrevista Inicial / HR2
- *     ID: 550e8400-e29b-41d4-a716-446655440200
- *     Application ID: 550e8400-e29b-41d4-a716-446655440008
- *     Score: 4
- *
- *   Review 2 - Alice / Entrevista Inicial / HR1
- *     ID: 550e8400-e29b-41d4-a716-446655440201
- *     Application ID: 550e8400-e29b-41d4-a716-446655440008
- *     Score: 3
- *
- *   Review 3 - Bob / Entrevista Inicial / HR2
- *     ID: 550e8400-e29b-41d4-a716-446655440302
- *     Application ID: 550e8400-e29b-41d4-a716-44665544000a
- *     Score: 3
- *
- * ============================================================
  */
 
 export class SeedData9999999999999 implements MigrationInterface {
@@ -341,24 +328,24 @@ export class SeedData9999999999999 implements MigrationInterface {
       INSERT INTO "job_offers" 
         ("id", "position", "location", "work_mode", "description", "salary", "benefits", "status", "deleted", "created_at", "updated_at", "deadline")
       VALUES 
-        ('550e8400-e29b-41d4-a716-446655440006', 'Desarrollador Full Stack', 'Remoto', 'remote', 'Estamos buscando un Desarrollador Full Stack con sólida experiencia en TypeScript, React y Node.js para participar en el desarrollo de aplicaciones web modernas de alto impacto. La persona seleccionada trabajará en todo el ciclo de vida del producto, desde el diseño y desarrollo de nuevas funcionalidades hasta la optimización de rendimiento, escalabilidad y experiencia de usuario. Valoramos perfiles con mentalidad colaborativa, orientación a resultados y pasión por construir soluciones tecnológicas de calidad.', '50000-70000', 'Cobertura médica integral, modalidad 100% remota, horario flexible, presupuesto anual para capacitaciones y certificaciones, equipamiento para home office, días adicionales de vacaciones, programas de bienestar y oportunidades de crecimiento profesional.', 'OPEN', false, '2026-10-01 10:00:00', '2026-10-01 10:00:00', '2026-12-02'),
-        ('550e8400-e29b-41d4-a716-446655440007', 'Desarrollador Backend', 'Remoto', 'remote', 'Buscamos un Desarrollador Backend con experiencia en Node.js, TypeScript y PostgreSQL para diseñar, desarrollar y mantener APIs y servicios escalables. Formará parte de un equipo ágil enfocado en arquitectura de software, buenas prácticas de desarrollo y mejora continua. Será responsable de construir soluciones robustas, optimizar procesos y colaborar con equipos multidisciplinarios para garantizar productos de alta calidad.', '45000-65000', 'Seguro médico y dental, trabajo remoto, horario flexible, capacitaciones técnicas continuas, acceso a certificaciones profesionales, bono por desempeño, licencia extendida y plan de desarrollo de carrera.', 'OPEN', false, '2026-10-02 11:00:00', '2026-10-02 11:00:00', '2026-12-02'),
+        ('550e8400-e29b-41d4-a716-446655440006', 'Desarrollador Full Stack', 'Remoto', 'remote', 'Estamos buscando un Desarrollador Full Stack con sólida experiencia en TypeScript, React y Node.js para participar en el desarrollo de aplicaciones web modernas de alto impacto. La persona seleccionada trabajará en todo el ciclo de vida del producto, desde el diseño y desarrollo de nuevas funcionalidades hasta la optimización de rendimiento, escalabilidad y experiencia de usuario. Valoramos perfiles con mentalidad colaborativa, orientación a resultados y pasión por construir soluciones tecnológicas de calidad.', '50000-70000', 'Cobertura médica integral, modalidad 100% remota, horario flexible, presupuesto anual para capacitaciones y certificaciones, equipamiento para home office, días adicionales de vacaciones, programas de bienestar y oportunidades de crecimiento profesional.', 'OPEN', false, '2026-10-01 10:00:00', '2026-10-01 10:00:00', '2027-01-10'),
+        ('550e8400-e29b-41d4-a716-446655440007', 'Desarrollador Backend', 'Remoto', 'remote', 'Buscamos un Desarrollador Backend con experiencia en Node.js, TypeScript y PostgreSQL para diseñar, desarrollar y mantener APIs y servicios escalables. Formará parte de un equipo ágil enfocado en arquitectura de software, buenas prácticas de desarrollo y mejora continua. Será responsable de construir soluciones robustas, optimizar procesos y colaborar con equipos multidisciplinarios para garantizar productos de alta calidad.', '45000-65000', 'Seguro médico y dental, trabajo remoto, horario flexible, capacitaciones técnicas continuas, acceso a certificaciones profesionales, bono por desempeño, licencia extendida y plan de desarrollo de carrera.', 'OPEN', false, '2026-10-02 11:00:00', '2026-10-02 11:00:00', '2027-01-15'),
         ('550e8400-e29b-41d4-a716-446655440098', 'Frontend Developer React', 'Remoto', 'remote',
         'Buscamos un Frontend Developer con experiencia en React, TypeScript y desarrollo de interfaces modernas enfocadas en experiencia de usuario.',
         '45000-65000',
         'Seguro médico, horario flexible, capacitaciones, presupuesto para home office',
-        'OPEN', false, '2026-10-05 09:30:00', '2026-10-05 09:30:00', '2026-12-03'),
+        'OPEN', false, '2026-10-05 09:30:00', '2026-10-05 09:30:00', '2027-01-20'),
         ('550e8400-e29b-41d4-a716-446655440099', 'DevOps Engineer', 'Remoto', 'remote',
         'Estamos buscando un DevOps Engineer para diseñar, automatizar y mantener pipelines de CI/CD e infraestructura cloud escalable.',
         '60000-85000',
         'Seguro premium, capacitaciones, certificaciones cloud, días extra de vacaciones',
-        'OPEN', false, '2026-10-08 14:00:00', '2026-10-08 14:00:00', '2026-12-03'),
+        'OPEN', false, '2026-10-08 14:00:00', '2026-10-08 14:00:00', '2026-12-02'),
         ('550e8400-e29b-41d4-a716-446655440100', 'QA Automation Engineer', 'Híbrido', 'hybrid',
         'Buscamos un QA Automation Engineer con experiencia en automatización de pruebas, integración continua y aseguramiento de calidad de aplicaciones web.',
         '50000-70000',
         'Cobertura médica, capacitaciones técnicas, horario flexible y bonos por desempeño',
-        'OPEN', false, '2026-10-10 10:15:00', '2026-10-10 10:15:00', '2026-12-04'),
-        ('550e8400-e29b-41d4-a716-446655440404', 'Junior Node Dev', 'Remoto', 'remote', 'Desarrollador Junior Node.js.', '30000-40000', 'Seguro médico', 'OPEN', false, '2026-10-15 16:00:00', '2026-10-15 16:00:00', '2026-12-04')
+        'OPEN', false, '2026-10-10 10:15:00', '2026-10-10 10:15:00', '2027-01-25'),
+        ('550e8400-e29b-41d4-a716-446655440404', 'Junior Node Dev', 'Remoto', 'remote', 'Desarrollador Junior Node.js.', '30000-40000', 'Seguro médico', 'OPEN', false, '2026-10-15 16:00:00', '2026-10-15 16:00:00', '2027-01-28')
     `);
 
     await queryRunner.query(`
@@ -529,15 +516,6 @@ export class SeedData9999999999999 implements MigrationInterface {
         ('550e8400-e29b-41d4-a716-446655440408', '550e8400-e29b-41d4-a716-446655440081'),
         ('550e8400-e29b-41d4-a716-446655440409', '550e8400-e29b-41d4-a716-446655440081'),
         ('550e8400-e29b-41d4-a716-44665544040a', '550e8400-e29b-41d4-a716-446655440081')
-    `);
-
-    await queryRunner.query(`
-      INSERT INTO "interview_reviews" 
-        ("id", "interview_id", "employee_id", "candidate_application_id", "notes", "score", "strengths", "weaknesses", "created_at", "updated_at")
-      VALUES 
-        ('550e8400-e29b-41d4-a716-446655440200', '550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440083', '550e8400-e29b-41d4-a716-446655440008', 'Gran capacidad de comunicación y sólidos conocimientos en React.', 4, 'Comunicación,React,Trabajo en equipo', 'Falta de experiencia en testing', '2026-11-05 11:30:00', '2026-11-05 11:30:00'),
-        ('550e8400-e29b-41d4-a716-446655440201', '550e8400-e29b-41d4-a716-446655440050', '550e8400-e29b-41d4-a716-446655440081', '550e8400-e29b-41d4-a716-446655440008', 'Muy buena actitud, aunque le falta un poco de experiencia en backend.', 3, 'Proactividad', 'Backend,Node.js', '2026-11-05 12:00:00', '2026-11-05 12:00:00'),
-        ('550e8400-e29b-41d4-a716-446655440302', '550e8400-e29b-41d4-a716-446655440300', '550e8400-e29b-41d4-a716-446655440083', '550e8400-e29b-41d4-a716-44665544000a', 'Buen candidato, conocimientos acordes.', 3, 'Backend', 'Testing', '2026-11-12 17:15:00', '2026-11-12 17:15:00')
     `);
   }
 
