@@ -3,6 +3,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import { getApplicationStatusColor } from '../../utils/application.utils';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Stack, LoadingOverlay, Text, SimpleGrid, Alert, Box, useMantineColorScheme } from '@mantine/core';
+import { CardBox } from '../../components/shared/CardBox';
 import { IconChevronLeft, IconX, IconCheck, IconCircleCheck } from '@tabler/icons-react';
 import { useCandidateQuery } from '../../hooks/api/useCandidates';
 import { useAllCandidateApplicationsQuery } from '../../hooks/api/useCandidateApplications';
@@ -156,13 +157,9 @@ export function CandidatePage() {
         )}
 
         {/* Section 3: Details */}
-        <Box
-          style={{
-            borderRadius: 16,
-            border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
-            background: isDark ? '#1e293b' : '#ffffff',
-            overflow: 'hidden',
-          }}
+        <CardBox
+          isDark={isDark}
+          style={{ overflow: 'hidden' }}
         >
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing={0}>
             <Box
@@ -177,11 +174,9 @@ export function CandidatePage() {
               <WorkExperienceSection experiences={candidate.work_experiences || []} />
             </Box>
           </SimpleGrid>
-        </Box>
+        </CardBox>
 
       </Stack>
-
-      {/* Shared Reject/Hire Confirmation Modals */}
       <CandidateActionModals
         candidateToReject={candidateActions.candidateToReject}
         onRejectClose={candidateActions.handleCancelReject}

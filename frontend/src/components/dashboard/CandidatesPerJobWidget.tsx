@@ -1,5 +1,6 @@
-import { Box, Title, Stack, Group, Text, Progress } from '@mantine/core';
+import { Title, Stack, Group, Text, Progress } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import { CardBox } from '../shared/CardBox';
 
 interface CandidatesPerJobWidgetProps {
   candidatesPerJob: Array<{ jobTitle: string; count: number }>;
@@ -17,19 +18,7 @@ export function CandidatesPerJobWidget({
   const { t } = useTranslation('dashboard');
 
   return (
-    <Box
-      style={{
-        borderRadius: 16,
-        border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
-        background: isDark
-          ? 'linear-gradient(160deg, #1e293b 0%, #0f172a 100%)'
-          : '#ffffff',
-        boxShadow: isDark
-          ? '0 4px 20px rgba(0,0,0,0.3)'
-          : '0 4px 20px rgba(15,23,42,0.05)',
-        padding: '24px',
-      }}
-    >
+    <CardBox isDark={isDark} variant="gradient" style={{ padding: '24px 24px 48px 24px' }}>
       <Title order={4} mb="lg" fw={700} style={{ color: isDark ? '#f1f5f9' : '#0f172a' }}>
         {t('candidatesPerJob.title')}
       </Title>
@@ -60,7 +49,7 @@ export function CandidatesPerJobWidget({
           </Text>
         )}
       </Stack>
-    </Box>
+    </CardBox>
   );
 }
 

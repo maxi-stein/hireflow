@@ -1,4 +1,5 @@
 import { Container, Title, TextInput, MultiSelect, Button, Box, Stack, Group, Text, useMantineColorScheme } from '@mantine/core';
+import { CardBox } from '../../components/shared/CardBox';
 import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
@@ -88,11 +89,10 @@ export const CreateEmployeePage = () => {
       </Box>
 
       {/* Form card */}
-      <Box
+      <CardBox
+        isDark={isDark}
         style={{
           borderRadius: 20,
-          border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
-          background: isDark ? '#1e293b' : '#ffffff',
           boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.3)' : '0 8px 32px rgba(15,23,42,0.06)',
           overflow: 'hidden',
         }}
@@ -229,7 +229,7 @@ export const CreateEmployeePage = () => {
             </Box>
           </Stack>
         </form>
-      </Box>
+      </CardBox>
     </Container>
   );
 };

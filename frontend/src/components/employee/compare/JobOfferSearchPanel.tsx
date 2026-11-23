@@ -1,4 +1,5 @@
 import { Box, TextInput, SimpleGrid, Text, useMantineColorScheme } from '@mantine/core';
+import { CardBox } from '../../shared/CardBox';
 import { IconSearch } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { JobOfferAccordionItem } from './JobOfferAccordionItem';
@@ -43,14 +44,9 @@ export function JobOfferSearchPanel({
   };
 
   return (
-    <Box
-      style={{
-        borderRadius: 16,
-        border: `1px solid ${dark ? '#334155' : '#e2e8f0'}`,
-        background: dark ? '#1e293b' : '#ffffff',
-        overflow: 'hidden',
-        boxShadow: dark ? '0 4px 20px rgba(0,0,0,0.25)' : '0 4px 20px rgba(15,23,42,0.05)',
-      }}
+    <CardBox
+      isDark={isDark}
+      style={{ overflow: 'hidden' }}
     >
       {/* Search toolbar */}
       <Box
@@ -115,6 +111,6 @@ export function JobOfferSearchPanel({
           })}
         </SimpleGrid>
       </Box>
-    </Box>
+    </CardBox>
   );
 }

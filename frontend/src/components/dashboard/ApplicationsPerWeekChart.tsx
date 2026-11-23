@@ -1,7 +1,8 @@
-import { Box, Title, Text } from '@mantine/core';
+import { Title, Text } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
 import { useTranslation } from 'react-i18next';
+import { CardBox } from '../shared/CardBox';
 
 interface ApplicationsPerWeekChartProps {
   data: Array<{ date: string; count: number }>;
@@ -12,19 +13,7 @@ export function ApplicationsPerWeekChart({ data, isDark }: ApplicationsPerWeekCh
   const { t } = useTranslation('dashboard');
 
   return (
-    <Box
-      style={{
-        borderRadius: 16,
-        border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
-        background: isDark
-          ? 'linear-gradient(160deg, #1e293b 0%, #0f172a 100%)'
-          : '#ffffff',
-        boxShadow: isDark
-          ? '0 4px 20px rgba(0,0,0,0.3)'
-          : '0 4px 20px rgba(15,23,42,0.05)',
-        padding: '24px',
-      }}
-    >
+    <CardBox isDark={isDark} variant="gradient" style={{ padding: '24px' }}>
       <Title order={4} mb="lg" fw={700} style={{ color: isDark ? '#f1f5f9' : '#0f172a' }}>
         {t('applicationsPerWeek.title')}
       </Title>
@@ -48,7 +37,7 @@ export function ApplicationsPerWeekChart({ data, isDark }: ApplicationsPerWeekCh
           {t('applicationsPerWeek.empty')}
         </Text>
       )}
-    </Box>
+    </CardBox>
   );
 }
 

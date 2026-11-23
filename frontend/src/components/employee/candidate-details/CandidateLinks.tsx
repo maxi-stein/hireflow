@@ -1,4 +1,5 @@
 import { Text, Group, Button, ActionIcon, Stack, Box, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { CardBox } from '../../shared/CardBox';
 import {
   IconDownload,
   IconBrandLinkedin,
@@ -30,14 +31,10 @@ export function CandidateLinks({
   const { user } = candidate;
 
   return (
-    <Box
+    <CardBox
       p="xl"
-      style={{
-        borderRadius: 16,
-        border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
-        background: isDark ? '#1e293b' : '#ffffff',
-        height: '100%',
-      }}
+      isDark={isDark}
+      style={{ height: '100%' }}
     >
       <Stack gap="lg">
         {/* Contact info */}
@@ -134,6 +131,6 @@ export function CandidateLinks({
           </Box>
         )}
       </Stack>
-    </Box>
+    </CardBox>
   );
 }

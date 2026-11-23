@@ -8,6 +8,7 @@ import {
   Box,
   useMantineColorScheme,
 } from '@mantine/core';
+import { CardBox } from '../../components/shared/CardBox';
 import { useTranslation } from 'react-i18next';
 import { APP_MAX_WIDTH } from '../../constants/layout';
 import { useCandidatesList } from '../../hooks/candidates/useCandidatesList';
@@ -42,14 +43,9 @@ export function CandidatesListPage() {
           </div>
         </Group>
 
-        <Box
-          style={{
-            borderRadius: 16,
-            border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
-            background: isDark ? '#1e293b' : '#ffffff',
-            overflow: 'hidden',
-            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 4px 20px rgba(15,23,42,0.05)',
-          }}
+        <CardBox
+          isDark={isDark}
+          style={{ overflow: 'hidden' }}
         >
           {/* Toolbar */}
           <CandidatesListToolbar
@@ -80,7 +76,7 @@ export function CandidatesListPage() {
               </Group>
             </Box>
           )}
-        </Box>
+        </CardBox>
       </Stack>
     </Container>
   );

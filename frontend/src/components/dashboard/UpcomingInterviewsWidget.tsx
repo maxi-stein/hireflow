@@ -1,4 +1,5 @@
 import { Box, Title, Group, Button, Stack, Text } from '@mantine/core';
+import { CardBox } from '../shared/CardBox';
 import { IconCalendarEvent } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { DashboardListItem } from './DashboardListItem';
@@ -18,19 +19,7 @@ export function UpcomingInterviewsWidget({
   const { t } = useTranslation('dashboard');
 
   return (
-    <Box
-      style={{
-        borderRadius: 16,
-        border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
-        background: isDark
-          ? 'linear-gradient(160deg, #1e293b 0%, #0f172a 100%)'
-          : '#ffffff',
-        boxShadow: isDark
-          ? '0 4px 20px rgba(0,0,0,0.3)'
-          : '0 4px 20px rgba(15,23,42,0.05)',
-        padding: '24px',
-      }}
-    >
+    <CardBox isDark={isDark} variant="gradient" style={{ padding: '24px' }}>
       <Group justify="space-between" mb="lg">
         <Title order={4} fw={700} style={{ color: isDark ? '#f1f5f9' : '#0f172a' }}>
           {t('upcomingInterviews.title')}
@@ -81,7 +70,7 @@ export function UpcomingInterviewsWidget({
           })}
         </Stack>
       )}
-    </Box>
+    </CardBox>
   );
 }
 
