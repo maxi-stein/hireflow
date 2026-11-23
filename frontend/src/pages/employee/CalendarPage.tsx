@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Container, Title, Paper, Button, Group, Text, Box, useMantineColorScheme } from '@mantine/core';
+import { Container, Title, Paper, Button, Group, Text, Box, useMantineColorScheme, LoadingOverlay } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { APP_MAX_WIDTH } from '../../constants/layout';
 import { useCalendarPageState } from '../../hooks/calendar/useCalendarPageState';
@@ -36,10 +36,17 @@ export function CalendarPage() {
     handleCloseScheduleModal,
     handleScheduleSuccess,
     isCancelling,
+    isLoading,
   } = useCalendarPageState();
 
   return (
-    <Container size={APP_MAX_WIDTH} py="xl">
+    <Container size={APP_MAX_WIDTH} py="xl" style={{ position: 'relative' }}>
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={200}
+        overlayProps={{ radius: 'sm', blur: 4 }}
+        loaderProps={{ type: 'dots', size: 'xl', color: 'blue' }}
+      />
       {/* Page Header */}
       <Group justify="space-between" align="flex-start" mb="xl" wrap="wrap" gap="md">
         <Box>

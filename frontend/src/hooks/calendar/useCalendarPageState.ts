@@ -42,13 +42,13 @@ export function useCalendarPageState() {
   const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
   const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-  const { data: interviewsData } = useInterviewsQuery({
+  const { data: interviewsData, isLoading: isLoadingInterviews } = useInterviewsQuery({
     start_date: startOfMonth.toISOString(),
     end_date: endOfMonth.toISOString(),
     limit: 100,
   });
 
-  const { data: jobOffersData } = useJobOffersQuery({
+  const { data: jobOffersData, isLoading: isLoadingJobOffers } = useJobOffersQuery({
     deadline_from: startOfMonth.toISOString(),
     deadline_to: endOfMonth.toISOString(),
     limit: 100,
@@ -177,6 +177,7 @@ export function useCalendarPageState() {
     handleCloseScheduleModal,
     handleScheduleSuccess,
     isCancelling: updateMutation.isPending,
+    isLoading: isLoadingInterviews || isLoadingJobOffers,
   };
 }
 
