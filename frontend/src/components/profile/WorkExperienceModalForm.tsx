@@ -1,6 +1,6 @@
 import {
   Modal,
-  Title,
+  Text,
   Button,
   Group,
   Stack,
@@ -49,9 +49,9 @@ export const WorkExperienceModalForm = ({
           >
             <IconBriefcase size={20} />
           </Box>
-          <Title order={3} size="h4" c="light-dark(#0f172a, #f8fafc)" style={{ fontWeight: 800 }}>
+          <Text fw={800} size="lg" c="light-dark(#0f172a, #f8fafc)">
             {isEditing ? t('experience.edit', 'Editar experiencia') : t('experience.add', 'Agregar experiencia')}
-          </Title>
+          </Text>
         </Group>
       }
     >

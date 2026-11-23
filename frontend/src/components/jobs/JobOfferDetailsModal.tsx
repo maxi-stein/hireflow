@@ -26,9 +26,9 @@ export function JobOfferDetailsModal({
       opened={opened}
       onClose={onClose}
       title={
-        <Title order={3} size="h3" c="light-dark(#0f172a, #f8fafc)" style={{ fontWeight: 800 }}>
+        <Text fw={800} size="xl" c="light-dark(#0f172a, #f8fafc)">
           {t('jobCard.modal.title', 'Detalles de la oferta')}
-        </Title>
+        </Text>
       }
       size={780}
       radius="xl"

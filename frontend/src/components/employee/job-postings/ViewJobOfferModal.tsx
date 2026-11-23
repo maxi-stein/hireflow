@@ -1,4 +1,4 @@
-import { Modal, Title, Stack, Text, Group, Button, LoadingOverlay, Alert } from '@mantine/core';
+import { Modal, Stack, Text, Group, Button, LoadingOverlay, Alert } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useJobOfferQuery } from '../../../hooks/api/useJobOffers';
@@ -18,7 +18,7 @@ export function ViewJobOfferModal({ opened, onClose, jobOfferId }: ViewJobOfferM
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>{t('list.viewModal.title')}</Title>}
+      title={<Text fw={700} size="lg">{t('list.viewModal.title')}</Text>}
       size="lg"
     >
       <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />

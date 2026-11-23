@@ -1,6 +1,6 @@
 import {
   Modal,
-  Title,
+  Text,
   Button,
   Group,
   Stack,
@@ -68,9 +68,9 @@ export const EducationModalForm = ({
           >
             <IconSchool size={20} />
           </Box>
-          <Title order={3} size="h4" c="light-dark(#0f172a, #f8fafc)" style={{ fontWeight: 800 }}>
+          <Text fw={800} size="lg" c="light-dark(#0f172a, #f8fafc)">
             {isEditing ? t('education.edit', 'Editar educación') : t('education.add', 'Agregar educación')}
-          </Title>
+          </Text>
         </Group>
       }
     >

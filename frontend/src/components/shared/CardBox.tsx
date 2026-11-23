@@ -1,10 +1,10 @@
 import { Box, type BoxProps } from '@mantine/core';
-import type { ReactNode } from 'react';
+import type { ReactNode, HTMLAttributes } from 'react';
 
 export const CARD_BORDER_DARK = '#334155';
 export const CARD_BORDER_LIGHT = '#e2e8f0';
 
-interface CardBoxProps extends BoxProps {
+interface CardBoxProps extends BoxProps, Omit<HTMLAttributes<HTMLDivElement>, 'style'> {
   isDark: boolean;
   // 'gradient' for widgets
   // 'flat' default

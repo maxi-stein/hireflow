@@ -1,4 +1,4 @@
-import { Modal, Title, Stack, Text, Group, Button } from '@mantine/core';
+import { Modal, Stack, Text, Group, Button } from '@mantine/core';
 import { useTranslation, Trans } from 'react-i18next';
 import { IconTrash } from '@tabler/icons-react';
 import { type JobOffer } from '../../../services/job-offer.service';
@@ -25,7 +25,7 @@ export function DeleteJobOfferModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>{t('list.deleteModal.title')}</Title>}
+      title={<Text fw={700} size="lg">{t('list.deleteModal.title')}</Text>}
       size="sm"
     >
       <Stack gap="md">

@@ -6,7 +6,6 @@ import {
   Group,
   Box,
   Paper,
-  Title,
   Divider,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
@@ -51,9 +50,9 @@ export const JobApplicationModal = ({
             <IconBriefcase size={20} />
           </Box>
           <Box>
-            <Title order={3} size="h4" c="light-dark(#0f172a, #f8fafc)" style={{ fontWeight: 800 }}>
+            <Text fw={800} size="lg" c="light-dark(#0f172a, #f8fafc)">
               {jobOffer.position}
-            </Title>
+            </Text>
             <Text size="xs" c="dimmed">
               {t('applications:modal.completeExperience', 'Completar experiencia requerida')}
             </Text>
